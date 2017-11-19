@@ -1,0 +1,110 @@
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Event Manager - For managing all events"> 
+        <meta name="author" content="Taiwo Kolawole"> 
+        <title>Materialize</title>         
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat" rel="stylesheet"> 
+        <link href="../css/materialize.min.css" rel="stylesheet"> 
+        <link href="../css/style.css" rel="stylesheet"> 
+    </head>     
+    <body class="black"> 
+        <div class="page-wrap"> 
+            <header class="gradient-blue"> 
+                <div class="top-head"> 
+                    <div class="container"> 
+                        <div class="acc-wrap"> 
+                            <div class="login-container"> 
+                                <a href="create.htm"><span class="material-icons">add</span>CREATE</a> 
+                            </div>                             
+                            <div class="login-container"> 
+                                <a href="register.htm">LOG OUT</a> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>
+                <div class="menu-section"> 
+                    <div class="container"> 
+                        <div class="row margin_0"> 
+                            <div class="col s12 m4 l4"> 
+                                <h3><a href="#"> 
+                                        <img src="../images/logo.png"> 
+                                    </a></h3> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>                 
+            </header>
+            <div class="main-wrapper">
+                <div class="container small-container card user-container">
+                    <div class="row card">
+                        <div class="col s12 m12 l12">
+                            <h5>EDIT PROFILE</h5>
+                            <form>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <input id="first_name" type="text" class="validate">
+                                        <label for="first_name">First Name</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input id="last_name" type="text" class="validate">
+                                        <label for="last_name">Last Name</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <input id="address" type="text" class="validate">
+                                        <label for="address">Address</label>
+                                    </div>
+                                    <div class="input-field col s12 m4 l4">
+                                        <select>
+                                            <option value="" disabled selected>Choose your option</option>
+                                            <option value="1">Option 1</option>
+                                            <option value="2">Option 2</option>
+                                            <option value="3">Option 3</option>
+                                        </select>
+                                        <label>Materialize Select</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <input id="email_address" type="text" class="validate">
+                                        <label for="email_address">Email Address</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input id="username" type="text" class="validate">
+                                        <label for="username">username</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s6">
+                                        <input id="password" type="password" class="validate">
+                                        <label for="password">Password</label>
+                                    </div>
+                                    <div class="input-field col s6">
+                                        <input id="repassword" type="password" class="validate">
+                                        <label for="repassword">Retype Password</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+</div>
+                                <input type="submit" class="btn btn-large blue" value="UPDATE">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>             
+            <footer class="page-footer blue"> 
+                <div class="footer-copyright"> 
+                    <div class="container">© 2017 Copyright
+</div>                     
+                </div>                 
+            </footer>             
+        </div>         
+    </body>     
+</html>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/materialize.min.js"></script>
+<script src="../js/materialize-binding.js"></script>

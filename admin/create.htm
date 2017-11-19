@@ -1,0 +1,157 @@
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Event Manager - For managing all events"> 
+        <meta name="author" content="Taiwo Kolawole"> 
+        <title>Materialize</title>         
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat" rel="stylesheet"> 
+        <link href="../css/materialize.min.css" rel="stylesheet"> 
+        <link href="../css/style.css" rel="stylesheet"> 
+    </head>     
+    <body class="black"> 
+        <div class="page-wrap"> 
+            <header class="gradient-blue"> 
+                <div class="top-head"> 
+                    <div class="container"> 
+                        <div class="acc-wrap"> 
+                            <div class="login-container"> 
+                                <a href="index.htm"><span class="material-icons">add</span>DASH BOARD</a> 
+                            </div>
+                            <div class="login-container"> 
+                                <a href="create.htm"><span class="material-icons">add</span>CREATE</a> 
+                            </div>
+                            <div class="login-container"> 
+                                <a href="events.htm"><span class="material-icons">add</span>EVENTS</a> 
+                            </div>
+                            <div class="login-container"> 
+                                <a href="centers.htm"><span class="material-icons">add</span>CENTERS</a> 
+                            </div>                             
+                            <div class="login-container"> 
+                                <a href="register.htm">LOG OUT</a> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>
+                <div class="menu-section"> 
+                    <div class="container"> 
+                        <div class="row margin_0"> 
+                            <div class="col s12 m4 l4"> 
+                                <h3><a href="#"> 
+                                        <img src="../images/logo.png"> 
+                                    </a></h3> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>                 
+            </header>
+            <div class="main-wrapper">
+                <div class="container small-container card admin-container center register">
+                    <div class="row">
+                        <div class="col s12 m10 l9">
+                            <h5 class="left">REGISTER CENTER</h5> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m11 l11">
+                            <form> 
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="center_name" type="text" class="validate"> 
+                                        <label for="center_name">Center Name</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="capacity" type="text" class="validate"> 
+                                        <label for="capacity">Capacity</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <select id="center_category">
+                                            <option value="" disabled selected>Select Center Type</option>
+                                        </select>
+                                        <label>Center Category</label>
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="address" type="text" class="validate"> 
+                                        <label for="address">Address</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <select id="state">
+                                            <option value="" disabled selected>Select State</option>
+                                        </select>
+                                        <label>Event State</label>
+                                    </div>                                     
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s6 m12 l12"> 
+                                        <input id="facilities" type="text" class="validate"> 
+                                        <label for="facilities">Center Facilities</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="center_amount" type="text" class="validate"> 
+                                        <label for="center_amount">Amount Center (N)</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s12"> 
+                                        <textarea id="summary" class="materialize-textarea"></textarea>                                         
+                                        <label for="event_summary">Summary</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <h5>Contact Person</h5>
+                                    <div class="input-field col s6"> 
+                                        <input id="first_name" type="text" class="validate"> 
+                                        <label for="first_name">First Name</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <input id="last_name" type="text" class="validate"> 
+                                        <label for="last_name">Last Name</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="address" type="text" class="validate"> 
+                                        <label for="address">Address</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <select id="state">
+                                            <option value="" disabled selected>Select State</option>
+                                        </select>
+                                        <label>State</label>
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="phone_number" type="text" class="validate"> 
+                                        <label for="phone_number">Phone Number</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <input id="email" type="text" class="validate"> 
+                                        <label for="email">Email Address</label>                                         
+                                    </div>                                     
+                                </div>                                 
+                                <input type="submit" class="btn btn-large blue right" value="REGISTER CENTER"> 
+                            </form>                             
+                        </div>
+                    </div>
+                </div>
+            </div>             
+            <footer class="page-footer blue"> 
+                <div class="footer-copyright"> 
+                    <div class="container">© 2017 Copyright
+</div>                     
+                </div>                 
+            </footer>             
+        </div>         
+    </body>     
+</html>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/materialize.min.js"></script>
+<script src="../js/materialize-binding.js"></script>

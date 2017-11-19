@@ -1,0 +1,281 @@
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Event Manager - For managing all events"> 
+        <meta name="author" content="Taiwo Kolawole"> 
+        <title>Materialize</title>         
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat" rel="stylesheet"> 
+        <link href="../css/materialize.min.css" rel="stylesheet"> 
+        <link href="../css/style.css" rel="stylesheet"> 
+    </head>     
+    <body class="black"> 
+        <div class="page-wrap"> 
+            <header class="gradient-blue"> 
+                <div class="top-head"> 
+                    <div class="container"> 
+                        <div class="acc-wrap"> 
+                            <div class="login-container"> 
+                                <a href="index.htm"><span class="material-icons">add</span>DASH BOARD</a> 
+                            </div>
+                            <div class="login-container"> 
+                                <a href="create.htm"><span class="material-icons">add</span>CREATE</a> 
+                            </div>
+                            <div class="login-container"> 
+                                <a href="events.htm"><span class="material-icons">add</span>EVENTS</a> 
+                            </div>
+                            <div class="login-container"> 
+                                <a href="centers.htm"><span class="material-icons">add</span>CENTERS</a> 
+                            </div>                             
+                            <div class="login-container"> 
+                                <a href="register.htm">LOG OUT</a> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>
+                <div class="menu-section"> 
+                    <div class="container"> 
+                        <div class="row margin_0"> 
+                            <div class="col s12 m4 l4"> 
+                                <h3><a href="#"> 
+                                        <img src="../images/logo.png"> 
+                                    </a></h3> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>                 
+            </header>
+            <div class="main-wrapper">
+                <div class="container small-container card admin-container center event-centers">
+                    <div class="row">
+                        <div class="col s12 m12 l12"> 
+                            <ul id="tabs-swipe-demo" class="tabs left">
+                                <li class="tab col s3">
+                                    <a href="#test-swipe-1" class="active">Centers By State</a>
+                                </li>
+                                <li class="tab col s3">
+                                    <a href="#test-swipe-2">Center Listing</a>
+                                </li>
+                            </ul>
+                            <div id="test-swipe-1" class="col s12 swipe active">
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <form> 
+                                            <div class="row"> 
+                                                <div class="input-field col s12 m4 l4 offset-s6 offset-m6 offset-l6"> 
+                                                    <select id="state"> 
+                                                        <option value="" disabled selected>Choose your option</option>                                                         
+                                                    </select>                                                     
+                                                    <label>Materialize Select</label>                                                     
+                                                </div>
+                                                <div class="input-field col s12 m2 l2">
+                                                    <input type="submit" class="btn green" value="SEARCH"> 
+                                                </div>                                                 
+                                            </div>                                             
+                                        </form>                                         
+                                    </div>
+                                </div>
+                                <h5>EVENT CENTERS IN AKWA IBOM</h5>
+                                <div class="row center">
+                                    <div class="col s12 center recent-event card m5 l5"> 
+                                        <div class="card-panel list-center no-padding relative">
+                                            <img src="../images/party-room.jpg" />
+                                            <div class="over-img">
+                                                <h4 class="white-text">Royal Court</h4>
+                                                <p class="white-text">Lagos</p>
+                                                <p class="white-text">CCTV, Air Conditional, Projector</p>
+                                            </div>                                             
+                                        </div>
+                                    </div>
+                                    <div class="col s12 center recent-event card m5 l5 offset-s1 offset-m1 offset-l1"> 
+                                        <div class="card-panel list-center no-padding relative">
+                                            <img src="../images/party-room.jpg" />
+                                            <div class="over-img">
+                                                <h4 class="white-text">Royal Court</h4>
+                                                <p class="white-text">Lagos</p>
+                                                <p class="white-text">CCTV, Air Conditional, Projector</p>
+                                            </div>                                             
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="test-swipe-2" class="col s12 swipe">
+                                <div class="row">
+                                    <table> 
+                                        <thead> 
+                                            <tr> 
+                                                <th data-field="id">Name</th> 
+                                                <th data-field="name">Category</th> 
+                                                <th data-field="price">Capacity</th>
+                                                <th data-field="price">State</th>
+                                                <th data-field="price">Number of Time Booked</th>
+                                                <th data-field="price">Contact Person</th>
+                                                <th data-field="price">Phone Number</th> 
+                                            </tr>                                             
+                                        </thead>                                         
+                                        <tbody>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>
+                                            <tr> 
+                                                <td>Jonathan</td> 
+                                                <td>Lollipop</td> 
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td>
+                                                <td>$7.00</td> 
+                                            </tr>                                                                                                                                                                                    
+                                        </tbody>                                         
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>             
+            <footer class="page-footer blue"> 
+                <div class="footer-copyright"> 
+                    <div class="container">© 2017 Copyright
+</div>                     
+                </div>                 
+            </footer>             
+        </div>         
+    </body>     
+</html>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/materialize.min.js"></script>
+<script src="../js/materialize-binding.js"></script>

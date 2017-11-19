@@ -1,0 +1,128 @@
+<html lang="en"> 
+    <head> 
+        <meta charset="utf-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Event Manager - For managing all events"> 
+        <meta name="author" content="Taiwo Kolawole"> 
+        <title>Materialize</title>         
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Merriweather|Montserrat" rel="stylesheet"> 
+        <link href="../css/materialize.min.css" rel="stylesheet"> 
+        <link href="../css/style.css" rel="stylesheet"> 
+    </head>     
+    <body class="black"> 
+        <div class="page-wrap"> 
+            <header class="gradient-blue"> 
+                <div class="top-head"> 
+                    <div class="container"> 
+                        <div class="acc-wrap"> 
+                            <div class="login-container"> 
+                                <a href="create.htm"><span class="material-icons">add</span>CREATE</a> 
+                            </div>                             
+                            <div class="login-container"> 
+                                <a href="register.htm">LOG OUT</a> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>
+                <div class="menu-section"> 
+                    <div class="container"> 
+                        <div class="row margin_0"> 
+                            <div class="col s12 m4 l4"> 
+                                <h3><a href="#"> 
+                                        <img src="../images/logo.png"> 
+                                    </a></h3> 
+                            </div>                             
+                        </div>                         
+                    </div>                     
+                </div>                 
+            </header>
+            <div class="main-wrapper">
+                <div class="container small-container card user-container">
+                    <div class="row">
+                        <div class="col s12 m10 l9">
+                            <h4>CREATE&nbsp;EVENT</h4> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12 m11 l11">
+                            <form> 
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="event_name" type="text" class="validate"> 
+                                        <label for="event_name">Event Name</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <input id="last_name" type="text" class="validate"> 
+                                        <label for="event_type">Event Type</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="start_date" type="text" class="validate"> 
+                                        <label for="start_date">Start Date</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <input id="end_date" type="text" class="validate"> 
+                                        <label for="end_date">End Date</label>                                         
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="time" type="text" class="validate"> 
+                                        <label for="time">Time</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <select id="estimated_hour">
+                                            <option value="" disabled selected>Estimated Time in Hours</option>
+                                        </select>
+                                        <label>Estimated Time in Hours</label>
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6"> 
+                                        <input id="estimated_audience" type="text" class="validate"> 
+                                        <label for="estimated_audience">Estimated Audience</label>                                         
+                                    </div>
+                                    <div class="input-field col s6"> 
+                                        <select id="state">
+                                            <option value="" disabled selected>Select State</option>
+                                        </select>
+                                        <label>Event State</label>
+                                    </div>                                     
+                                </div>
+                                <div class="row"> 
+                                    <div class="input-field col s6 m12 l12"> 
+                                        <select>
+                                            <option value="" disabled selected>Select Center</option>
+                                            <option value="1">1</option>
+                                            <option value="2">Option 2</option>
+                                            <option value="3">Option 3</option>
+                                        </select>
+                                        <label>Centers in State</label>
+                                    </div>                                     
+                                </div>                                 
+                                <div class="row"> 
+                                    <div class="input-field col s12"> 
+                                        <textarea id="event_summary" class="materialize-textarea"></textarea>                                         
+                                        <label for="event_summary">Event Summary</label>                                         
+                                    </div>                                     
+                                </div>                                 
+                                <input type="submit" class="btn btn-large blue right" value="REQUEST"> 
+                            </form>                             
+                        </div>
+                    </div>
+                </div>
+            </div>             
+            <footer class="page-footer blue"> 
+                <div class="footer-copyright"> 
+                    <div class="container">© 2017 Copyright
+</div>                     
+                </div>                 
+            </footer>             
+        </div>         
+    </body>     
+</html>
+<script src="../js/jquery.min.js"></script>
+<script src="../js/materialize.min.js"></script>
+<script src="../js/materialize-binding.js"></script>
