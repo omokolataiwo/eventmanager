@@ -1,0 +1,346 @@
+.gradient-blue {
+    background: -moz-linear-gradient(right, #1f98da 0%, #987ad9 100%);
+    background: -webkit-linear-gradient(right, #1f98da 0%, #987ad9 100%);
+    background: linear-gradient(to right, #1f98da 0%, #987ad9 100%);
+}
+h1,h2,h3,h4,h5{
+	margin: 0;
+}
+.margin_0{margin: 0 !important;}
+
+.banner {
+	height: 340px;
+	background: #9a4a11;
+}
+
+.container.feature {
+	width: 90%;
+}
+
+.row .list-item.card {
+	width: 31%;
+	margin: auto 1%;
+}
+
+.feature .events{
+	padding: 1% 4%;
+	margin: 6% auto 4% auto;
+}
+
+.list-center img, .list-event img {
+	width: 100%;
+	display: inline-block;
+	margin: 0 0 20px 0;
+	height: 340px;
+}
+
+.contact-us {
+	background: #000;
+	padding: 5%;
+}
+
+.contact-us h5 {
+	margin-bottom: 6%;
+}
+
+.login-form .submit {
+	margin-top: 3%;
+	padding: 0 2%;
+}
+
+.login-form .row {
+	margin-bottom: 0;
+}
+
+.searchEvent_panel {
+	color: #fff;
+	font-size: 34px;
+	position: absolute;
+	top: 10%;
+}
+
+
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    line-height: 24px;
+    color: #2f2f2f;
+    background-color: #FFF;
+}
+header {
+    float: left;
+    width: 100%;
+    position: relative;
+    background: rgb(32, 141, 189);
+    border-bottom: 1px solid rgba(62, 62, 62, 0.8);
+    z-index: 800;
+}
+.page-wrap {
+    position: relative;
+    float: left;
+    width: 100%;
+    overflow: hidden;
+}
+
+.top-head {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding: 5px 15px;
+    color: #fff;
+    background: #426898;
+}
+
+.acc-wrap {
+    float: right;
+}
+
+.login-container {
+    float: left;
+    padding-left: 10px;
+}
+
+.login-container a {
+    color: #fff;
+    font-size: 13px;
+    margin-left: 5px;
+}
+.login-container a:hover, .login-container a:focus {
+    color: #000;
+}
+
+.main_menu_continer {
+    float: right;
+}
+nav {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.container {
+	width: 85% !important;
+}
+
+.menu-section {
+    position: relative;
+    float: left;
+    width: 100%;
+}
+
+.relative {
+    position: relative;
+}
+
+.search_slider_panel {
+    position: relative;
+    float: left;
+    width: 100%;
+}
+
+.menu-section img {
+    padding: 5px 0 0;
+}
+
+.over-img {
+    position: absolute;
+    top: 29%;
+    left: 12%;
+    background: #000;
+    opacity: 0.5;
+    padding: 18px;
+}
+
+
+
+#how_it_works h3 {
+    color: #426898;
+    font-size: 36px;
+    letter-spacing: -5px;
+    margin: 45px auto;
+}
+
+#how_it_works .col {
+    margin: 28px 0;
+}
+
+#how_it_works img {
+    display: inline-block;
+    margin: auto  auto 35px auto;
+}
+
+h2.intro_title {
+    margin: auto 45px;
+}
+
+.list-event {
+    background: #50392b;
+    padding: 5px;
+}
+
+.list-event h4 {
+    text-transform: uppercase;
+    color: #ffd27d !important;
+}
+
+.events h5, .event_center h5 {
+    margin-bottom: 5px !important;
+    font-size: 23px;
+    padding: 7px;
+    border-bottom: 3px solid;
+    width: 100%;
+    margin-left: 18%;
+    margin-top: 35px;
+    text-align: left;
+}
+
+.container.small-container {
+    width: 60% !important;
+    margin: 10% auto auto auto;
+}
+
+.row.card, .container.card {
+    padding: 25px;
+}
+
+div.container.user-container, div.container.admin-container {
+    width: 75% !important;
+}
+
+.user-container .row h4 {
+    margin: 10px auto 34px auto;
+    letter-spacing: -5px;
+    font-size: 39px;
+}
+
+a.btn.btn-large.m12.l12 {
+    width: 100%;
+}
+
+ul.pagination {
+    margin: 56px 0 0 0;
+}
+
+.paging {
+    border: 1px solid;
+}
+
+.search.full {
+    margin: 10px;
+}
+
+.search.full a.btn {
+    margin: 20px auto auto auto;
+}
+
+.user-container .over-img {
+    top: 62px;
+    left: 9px;
+    border: 2px solid white;
+}
+
+.user-container h5.center {
+    color: orange;
+    background: #426898;
+    padding: 20px;
+}
+
+.label {
+    color: #b34a00;
+    font-size: 14px;
+    letter-spacing: -1px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.row.card .row {
+    margin: 30px 0 0 0;
+}
+
+.booked-center {
+    padding: 24px 115px !important;
+}
+
+p.facilities span {
+    display: inline-block;
+    margin: 9px 0 0 4px;
+    background: #2196f3;
+    padding: 0 10px;
+}
+
+.center-img img {
+    width: 100%;
+}
+
+.center-img {
+    margin: 15px 0 0 0;
+}
+
+.admin-container h5 {margin: 10px 0 45px 0;letter-spacing: -2px;}
+
+div.admin-container {
+    padding-left: 95px !important;
+}
+
+.states.adminsearch a {
+    display: inline-block;
+    margin: 2px;
+    background: #000;
+    color: white;
+    padding: 0 8px;
+}
+
+.states.adminsearch {
+    margin: 0 0 55px 0;
+}
+
+.location-date p {
+    margin: 0;
+}
+
+
+.register h5 {
+    color: #216eab;
+}
+
+.events table thead {
+    margin: 37px 0 0 0 !important;
+}
+
+div.swipe {
+    margin: 95px 80px 0 0;
+}
+
+.events tab {
+    text-align: left;
+}
+
+.tabs .tab, ul.tabs {
+    text-align: left !important;
+}
+
+div.event-centers div.swipe {
+    margin-top: 0 !important;
+}
+
+.row.card.login {
+    margin-bottom: 10%;
+    margin-left: 20%;
+    width: 60%;
+}
+
+.event_center h5, .featured_events h5 {
+    margin: 0 0 3% 0 !important;
+    text-align: center;
+    border: 0;
+}
+
+.center-details h4 {
+    margin: 0 0 5% 0;
+    letter-spacing: -3px;
+}
+
+.center-details h5 {
+    margin: 0;
+}
