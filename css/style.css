@@ -212,6 +212,7 @@ div.container.user-container, div.container.admin-container {
     margin: 10px auto 34px auto;
     letter-spacing: -5px;
     font-size: 39px;
+    font-weight: 600;
 }
 
 a.btn.btn-large.m12.l12 {
