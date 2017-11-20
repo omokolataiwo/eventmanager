@@ -345,3 +345,8 @@ div.event-centers div.swipe {
 .center-details h5 {
     margin: 0;
 }
+
+span.event_action {
+    display: inline-block;
+    font-weight: 600;
+}
