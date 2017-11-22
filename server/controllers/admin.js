@@ -2,21 +2,21 @@ import database from '../models';
 
 module.exports = {
   createCenter(req, res) {
-    let center = req.body;
-    let centers = database.centers;
-    let newCenterKey = database.keys.centers++;
+    const center = req.body;
+    const { centers } = database;
+    const newCenterKey = database.keys.centers + 1;
 
     centers[newCenterKey] = center;
     return res.json(centers);
   },
 
-  centers (req, res) {
+  centers(req, res) {
     res.send('All centers');
   },
-  center (req, res) {
+  center(req, res) {
     res.send('Get center with id');
   },
-  editCenter (req, res) {
+  editCenter(req, res) {
     res.send('Edit center');
-  }
+  },
 };
