@@ -16,7 +16,15 @@ module.exports = {
     return res.json({ error: false });
   },
   deleteEvent(req, res) {
-   
+    const id = req.params.id;
+    let events = database.events;
+
+    if (!events[id]) {
+      return res.json({ error: true, message: 'Invalid event' });
+    }
+    const event = events[id];
+    delete events[id];
+    return res.json(event);
   },
   editEvent(req, res) {
     
