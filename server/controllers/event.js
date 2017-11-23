@@ -27,6 +27,20 @@ module.exports = {
     return res.json(event);
   },
   editEvent(req, res) {
-    
+    const id = req.params.id;
+    let events = database.events;
+
+    if (!events[id]) {
+      return res.json({ error: true, message: 'Invalid event' });
+    }
+
+    const event = new Event(events[id]);
+    event.load(req.body);
+    event.validate();
+    if (!event.safe()) {
+      return res.json({ error: true, message: event.getErrors() });
+    }
+    events[id] = event.toJSON();
+    return res.json({ error: false });
   },
 };
