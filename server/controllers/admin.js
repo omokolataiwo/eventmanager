@@ -17,10 +17,10 @@ module.exports = {
   },
 
   centers(req, res) {
-    
+    return res.json(database.centers);
   },
   center(req, res) {
-    
+    res.json(database.centers[req.params.id] || {});
   },
   editCenter(req, res) {
     const id = req.params.id;
