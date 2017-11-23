@@ -1,5 +1,7 @@
-import admin from './admin'
+import admin from './admin';
+import event from './event';
 
 module.exports = {
-	admin,
+  admin,
+  event,
 };
