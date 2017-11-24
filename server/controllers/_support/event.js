@@ -1,4 +1,4 @@
-import database from '../../models';
+import database from '../../db.json';
 import validator from 'validator';
 
 class Event {
@@ -9,13 +9,28 @@ class Event {
   }
 
   load(event) {
-    this.name = event.name || '';
-    this.startDate = event.startDate || '';
-    this.endDate = event.endDate || '';
-    this.time = event.time || '';
-    this.state = event.state || 0;
-    this.summary = event.summary || '';
-    this.center = event.center || 0;
+    this.name = event.name + '' || '';
+    this.startDate = event.startDate + '' || '';
+    this.endDate = event.endDate + '' || '';
+    this.time = event.time + '' || '';
+    this.state = event.state + '' || 0;
+    this.summary = event.summary + '' || '';
+    this.center = event.center + '' || 0;
+    this.id = null;
+    this.centerdb = database.centers;
+  }
+
+  setId(id) {
+    this.id = id;
+  }
+
+  updateCenter(){
+    if (this.centerdb[this.center].events){
+      this.centerdb[this.center].events.push(this.id);
+      return;
+    }
+    this.centerdb[this.center].events = [this.id];
+    return
   }
 
   validate() {
@@ -29,8 +44,9 @@ class Event {
       this.error = true;
     }
 
-    let events = database.events;
-    if (!validator.isInt(this.center) || !events[this.center]) {
+    let center = this.centerdb;
+
+    if (!validator.isInt(this.center) || !center[this.center]) {
       this.errorMessages.state = 'Event center not a valid center';
       this.error = true;
     }
@@ -44,6 +60,7 @@ class Event {
   }
   toJSON() {
     return {
+      id: this.id,
       name: this.name,
       startDate: this.startDate,
       endDate: this.endDate,
