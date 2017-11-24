@@ -3,7 +3,6 @@ import Center from './_support/center';
 
 module.exports = {
   createCenter(req, res) {
-    console.log(database);
     const center = new Center(req.body);
     let centers = database.centers;
     const newCenterKey = database.keys.centers;

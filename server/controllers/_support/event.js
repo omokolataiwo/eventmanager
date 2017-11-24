@@ -16,7 +16,7 @@ class Event {
     this.state = event.state + '' || 0;
     this.summary = event.summary + '' || '';
     this.center = event.center + '' || 0;
-    this.id = null;
+    this.id = event.id || null;
     this.centerdb = database.centers;
   }
 
