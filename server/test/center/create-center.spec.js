@@ -23,7 +23,7 @@ describe('/centers', () => {
 		.end((err, res) => {
 			expect(res).to.have.status(200);
 			expect(res).to.be.json;
-			expect(res.body).to.deep.equal({error:true});
+			expect(res.body).to.deep.equal({error:false});
 			done();
 		});
 	});
