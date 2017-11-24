@@ -3,4 +3,4 @@ node_js:
   - "node"
   - "7"
 before_script: cd server
-script: npm install
+script: npm install && npm install mocha -g
