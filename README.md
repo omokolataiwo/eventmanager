@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/omokolataiwo/eventmanager.svg?branch=develop)](https://travis-ci.org/omokolataiwo/eventmanager)
 ### What the project does
   - Introduction/Background Information
   - Features
