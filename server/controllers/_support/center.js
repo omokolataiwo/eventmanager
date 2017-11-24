@@ -8,15 +8,20 @@ class Center {
   }
 
   load(center) {
-    this.name = center.name || '';
-    this.capacity = center.capacity || 0;
-    this.category = center.category || '';
-    this.address = center.address || '';
-    this.area = center.area || '';
-    this.state = center.state || '';
-    this.facilities = center.facilities || '';
-    this.amount = center.amount || '';
-    this.summary = center.summary || '';
+    this.name = center.name + "" || '';
+    this.capacity = center.capacity + "" || 0;
+    this.category = center.category + "" || '';
+    this.address = center.address + "" || '';
+    this.area = center.area + "" || '';
+    this.state = center.state + "" || '';
+    this.facilities = center.facilities + "" || '';
+    this.amount = center.amount + "" || '';
+    this.summary = center.summary + "" || '';
+    this.id = null;
+  }
+
+  setId(id) {
+    this.id = id;
   }
 
   validate() {
@@ -46,6 +51,7 @@ class Center {
   }
   toJSON() {
     return {
+      id: this.id,
       name: this.name,
       capacity: this.capacity,
       address: this.address,
