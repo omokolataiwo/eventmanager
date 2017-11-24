@@ -4,7 +4,7 @@
   "description": "Event Manager",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --compilers js:babel-core/register test/**/**.spec.js",
     "build": "rimraf dist/ && babel ./ --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start": "npm run build && nodemon dist/index.js"
   },
@@ -35,6 +35,8 @@
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "validator": "^9.1.1"
+    "validator": "^9.1.1",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
   }
 }

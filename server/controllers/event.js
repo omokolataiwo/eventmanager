@@ -49,6 +49,7 @@ module.exports = {
     const oldCenter = event.center;
     event.load(req.body);
     event.validate();
+
     if (!event.safe()) {
       return res.status(400).json({ error: true, message: event.getErrors() });
     }
@@ -58,6 +59,7 @@ module.exports = {
       const index = center.events.findIndex(function(e) {
       return e == id;
     });
+    
     center.events.splice(index, 1);
     event.updateCenter();
     }

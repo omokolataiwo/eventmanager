@@ -67,7 +67,7 @@ class Event {
       time: this.time,
       state: this.state,
       summary: this.summary,
-      center: this.center,
+      center: this.center
     };
   }
 }

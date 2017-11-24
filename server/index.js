@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 adminRoute(app);
 eventRoute(app);
 app.get('/', (req, res) => {
-  res.send('HELLO COME TO EVENT MANAGER');
+  res.send('HELLO WELCOME TO EVENT MANAGER');
 });
 
 app.listen(3000, () => {

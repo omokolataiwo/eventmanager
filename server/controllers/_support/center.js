@@ -59,7 +59,7 @@ class Center {
       state: this.state,
       facilities: this.facilities,
       amount: this.amount,
-      summary: this.summary,
+      summary: this.summary
     };
   }
 }
