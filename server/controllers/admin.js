@@ -14,7 +14,7 @@ module.exports = {
     }
     centers[newCenterKey] = center.toJSON();
     database.keys.centers += 1;
-    return res.status(200).json({ error: false });
+    return res.status(200).json({ error: false, "center": center.toJSON() });
   },
 
   centers(req, res) {
@@ -32,11 +32,13 @@ module.exports = {
     }
     const center = new Center(centers[id]);
     center.load(req.body);
+    center.setId(id);
+    
     center.validate();
     if (!center.safe()) {
       return res.status(406).json({ error: true, message: center.getErrors() });
     }
     centers[id] = center.toJSON();
-    return res.status(201).send({ error: false });
+    return res.status(201).send({ error: false, center: center.toJSON() });
   },
 };

@@ -8,15 +8,15 @@ class Center {
   }
 
   load(center) {
-    this.name = center.name + "" || '';
-    this.capacity = center.capacity + "" || 0;
-    this.category = center.category + "" || '';
-    this.address = center.address + "" || '';
-    this.area = center.area + "" || '';
-    this.state = center.state + "" || '';
-    this.facilities = center.facilities + "" || '';
-    this.amount = center.amount + "" || '';
-    this.summary = center.summary + "" || '';
+    this.name = center.name || '';
+    this.capacity = center.capacity || '0';
+    this.category = center.category || '';
+    this.address = center.address || '';
+    this.area = center.area || '';
+    this.state = center.state || '';
+    this.facilities = center.facilities || '';
+    this.amount = center.amount || '';
+    this.summary = center.summary || '';
     this.id = null;
   }
 
@@ -25,19 +25,19 @@ class Center {
   }
 
   validate() {
-    if (validator.isEmpty(this.name)) {
+    if (validator.isEmpty(this.name ? '' + this.name : '')) {
       this.errorMessages.name = 'Center name can not be empty.';
       this.error = true;
     }
-    if (!validator.isInt(this.capacity)) {
-      this.errorMessages.capacity = 'Center capacity is not a number.';
+    if (!validator.isInt(this.capacity ? '' + this.capacity : '') || parseInt(this.capacity) < 1) {
+      this.errorMessages.capacity = 'Center capacity is not a number or capacity too small.';
       this.error = true;
     }
     if (this.address.trim().length === 0) {
       this.errorMessages.address = 'Center must have an address.';
       this.error = true;
     }
-    if (!validator.isInt(this.amount)) {
+    if (!validator.isInt(this.amount ? '' + this.amount : '')) {
       this.errorMessages.amount = 'Amount given must be a number';
       this.error = true;
     }

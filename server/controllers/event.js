@@ -48,6 +48,7 @@ module.exports = {
     const event = new Event(events[id]);
     const oldCenter = event.center;
     event.load(req.body);
+    event.setId(id);
     event.validate();
 
     if (!event.safe()) {
@@ -55,7 +56,7 @@ module.exports = {
     }
 
     if (oldCenter !== event.center) {
-      let center = database.centers[event.oldCenter];
+      let center = database.centers[oldCenter];
       const index = center.events.findIndex(function(e) {
       return e == id;
     });
@@ -65,6 +66,6 @@ module.exports = {
     }
 
     events[id] = event.toJSON();
-    return res.status(201).json({ error: false });
+    return res.status(201).json({ error: false, event: event.toJSON() });
   },
 };
