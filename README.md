@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/omokolataiwo/eventmanager.svg?branch=develop)](https://travis-ci.org/omokolataiwo/eventmanager)
+[![Coverage Status](https://coveralls.io/repos/github/omokolataiwo/eventmanager/badge.svg?branch=develop)](https://coveralls.io/github/omokolataiwo/eventmanager?branch=develop)
 ### What the project does
   - Introduction/Background Information
   - Features
