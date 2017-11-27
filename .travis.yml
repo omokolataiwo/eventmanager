@@ -5,3 +5,6 @@ node_js:
 
 after_success:
   - npm run coverage
+
+before_script: cd server
+script: npm install && npm install mocha -g
