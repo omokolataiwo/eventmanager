@@ -1,8 +1,8 @@
 module.exports = {
   validEvent: {
     name: "Birthday Party",
-    startDate: "20-11-2017",
-    endDate: "30-11-2017",
+    startDate: "2017-11-28",
+    endDate: "2017-11-30",
     time: "13:00",
     state: 7,
     summary: "",
@@ -10,8 +10,17 @@ module.exports = {
   },
   invalidEventName: {
     name: "",
-    startDate: "20-11-2017",
-    endDate: "30-11-2017",
+    startDate: "2017-11-28",
+    endDate: "2017-11-28",
+    time: "13:00",
+    state: 7,
+    summary: "",
+    center: "1"
+  },
+  invalidEventDate: {
+    name: "Birthday Party",
+    startDate: "2017-11-28",
+    endDate: "",
     time: "13:00",
     state: 7,
     summary: "",
@@ -20,7 +29,7 @@ module.exports = {
   invalidDateFormat: {
     name: "Birthday Party",
     startDate: "20112017",
-    endDate: "35-11-2017",
+    endDate: "2017-11-35",
     time: "13:00",
     state: 7,
     summary: "",
@@ -28,8 +37,8 @@ module.exports = {
   },
   invalidStartDate: {
     name: "Birthday Party",
-    startDate: "20-11-2017",
-    endDate: "30-11-2017",
+    startDate: "2017-11-20",
+    endDate: "2017-11-30",
     time: "13:00",
     state: 7,
     summary: "",
@@ -37,8 +46,8 @@ module.exports = {
   },
   invalidState: {
     name: "Birthday Party",
-    startDate: "20-11-2017",
-    endDate: "30-11-2017",
+    startDate: "2017-11-28",
+    endDate: "2017-11-28",
     time: "13:00",
     state: 38,
     summary: "",
@@ -46,8 +55,8 @@ module.exports = {
   },
   invalidTimeFormat: {
     name: "Birthday Party",
-    startDate: "20-11-2017",
-    endDate: "30-11-2017",
+    startDate: "2017-11-28",
+    endDate: "2017-11-28",
     time: "53:00",
     state: 7,
     summary: "",
@@ -55,8 +64,8 @@ module.exports = {
   },
   invalidCenter: {
     name: "Birthday Party",
-    startDate: "20-11-2017",
-    endDate: "30-11-2017",
+    startDate: "2017-11-28",
+    endDate: "2017-11-28",
     time: "13:00",
     state: 7,
     summary: "",

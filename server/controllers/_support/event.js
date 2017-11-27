@@ -50,7 +50,49 @@ class Event {
       this.errorMessages.center = 'Event center not a valid center';
       this.error = true;
     }
+
+    if (validator.isEmpty(this.toValidatorString(this.startDate)) || !this.isValidDate(this.endDate)) {
+      this.errorMessages.startDate = 'Event must have a valid start date';
+      this.error = true;
+    }
+
+    if (validator.isBefore(this.toValidatorString(this.startDate))) {
+      this.errorMessages.startDate = "Event date is a passed date.";
+      this.error = true;
+    }
+
+    if (validator.isEmpty(this.toValidatorString(this.endDate)) || !this.isValidDate(this.endDate)) {
+      this.errorMessages.endDate = "Event must have a valid end date.";
+      this.error = true;
+    }
   }
+
+toValidatorString(field) {
+  return field ? '' + field : '';
+}
+
+isValidDate(dateString)
+{
+    //https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
+    if(!/^\d{4}\-\d{1,2}\-\d{1,2}$/.test(dateString))
+      return false;
+
+    var parts = dateString.split("-");
+    var day = parseInt(parts[2], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[0], 10);
+
+    if(year < 1000 || year > 3000 || month == 0 || month > 12)
+      return false;
+
+    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+      monthLength[1] = 29;
+
+    return day > 0 && day <= monthLength[month - 1];
+  }
+
   safe() {
     return !this.error;
   }

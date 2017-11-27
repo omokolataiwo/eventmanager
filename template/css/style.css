@@ -127,6 +127,7 @@ nav {
     position: relative;
     float: left;
     width: 100%;
+    padding: 10px 0 20px 0;
 }
 
 .relative {
@@ -147,8 +148,8 @@ nav {
     position: absolute;
     top: 29%;
     left: 12%;
-    background: #000;
-    opacity: 0.5;
+    background-color: rgba(0, 0, 0, 0.77);
+    /* opacity: 0.5; */
     padding: 18px;
 }
 
@@ -242,7 +243,7 @@ ul.pagination {
 }
 
 .user-container h5.center {
-    color: orange;
+    color: fff;
     background: #426898;
     padding: 20px;
 }
@@ -290,6 +291,7 @@ div.admin-container {
     background: #000;
     color: white;
     padding: 0 8px;
+    border-radius: 50px;
 }
 
 .states.adminsearch {
@@ -329,6 +331,7 @@ div.event-centers div.swipe {
     margin-bottom: 10%;
     margin-left: 20%;
     width: 60%;
+    margin-top: 25%;
 }
 
 .event_center h5, .featured_events h5 {
@@ -349,4 +352,16 @@ div.event-centers div.swipe {
 span.event_action {
     display: inline-block;
     font-weight: 600;
+}
+
+.faint-grey {
+    background: #cccaca;
+}
+
+.events.center h5 {
+    color: #426898;
+}
+
+.card.register {
+    margin-top: 23%;
 }

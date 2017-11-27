@@ -69,5 +69,18 @@ describe('post /events', () => {
 			expect(res.body).to.have.property('message').that.have.property('center');
 			done();
 		});
-	});	
+	});
+
+	it('should not create event if startDate is before now', (done) => {
+		chai.request(server)
+		.post('/events')
+		.send(fixture.invalidEventDate)
+		.end((err, res) => {
+			expect(res).to.have.status(400);
+			expect(res).to.be.json;
+			expect(res.body).to.deep.have.property("error").that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('startDate');
+			done();
+		});
+	})	
 })

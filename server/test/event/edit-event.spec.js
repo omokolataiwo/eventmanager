@@ -26,8 +26,8 @@ describe('put /events', () => {
 	it('should update all event property', (done) => {
 		let mfixture = fixture.validEvent;
 		mfixture.name = "Fire Band";
-		mfixture.startDate = "7-12-2017";
-		mfixture.endDate = "9-12-2017";
+		mfixture.startDate = "2017-12-7";
+		mfixture.endDate = "2017-12-9";
 		mfixture.time = "9:00";
 		mfixture.state = 9;
 		mfixture.center = 2;
@@ -41,8 +41,8 @@ describe('put /events', () => {
 			expect(res.body).to.deep.have.property("error").that.equal(false);
 			expect(res.body).to.deep.have.property('event').that.have.property('id').that.equal('1');
 			expect(res.body).to.deep.have.property('event').that.have.property('name').that.equal('Fire Band');
-			expect(res.body).to.deep.have.property('event').that.have.property('startDate').that.equal("7-12-2017");
-			expect(res.body).to.deep.have.property('event').that.have.property('endDate').that.equal('9-12-2017');
+			expect(res.body).to.deep.have.property('event').that.have.property('startDate').that.equal("2017-12-7");
+			expect(res.body).to.deep.have.property('event').that.have.property('endDate').that.equal('2017-12-9');
 			expect(res.body).to.deep.have.property('event').that.have.property('time').that.equal('9:00');
 			expect(res.body).to.deep.have.property('event').that.have.property('state').that.equal(9);
 			expect(res.body).to.deep.have.property('event').that.have.property('center').that.equal(2);
@@ -138,20 +138,7 @@ describe('put /events', () => {
 			expect(res).to.have.status(400);
 			expect(res.body).to.have.property('error').that.equal(true);
 			expect(res.body).to.have.property('message').that.have.property('startDate');
-			done();
-		});
-	});
-
-
-
-	it('should not update with invalid time', (done) => {
-		chai.request(server)
-		.put('/events/1')
-		.send(fixture.invalidTimeFormat)
-		.end((err, res) => {
-			expect(res).to.have.status(400);
-			expect(res.body).to.have.property('error').that.equal(true);
-			expect(res.body).to.have.property('message').that.have.property('time');
+			expect(res.body).to.have.property('message').that.have.property('endDate');
 			done();
 		});
 	});
