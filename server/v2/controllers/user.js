@@ -2,13 +2,10 @@ import database from '../db.json';
 import Event from './_support/event';
 
 module.exports = {
-  createEvent(req, res) {
+  create(req, res) {
     
   },
-  deleteEvent(req, res) {
+  login(req, res) {
     
-  },
-  editEvent(req, res) {
-    
-  },
+  }
 };

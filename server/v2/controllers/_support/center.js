@@ -1,10 +1,9 @@
 import validator from 'validator';
+import Base from './base';
 
 class Center {
   constructor(center) {
-    this.error = false;
-    this.errorMessages = {};
-    this.load(center);
+    super(center);
   }
 
   load(center) {
@@ -18,10 +17,6 @@ class Center {
     this.amount = center.amount || '';
     this.summary = center.summary || '';
     this.id = null;
-  }
-
-  setId(id) {
-    this.id = id;
   }
 
   validate() {
@@ -42,13 +37,7 @@ class Center {
       this.error = true;
     }
   }
-  safe() {
-    return !this.error;
-  }
-  getErrors() {
-    if (!this.error) return {};
-    return this.errorMessages;
-  }
+  
   toJSON() {
     return {
       id: this.id,

@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/v1', apiv1);
 app.use('/v2', apiv2);
 
-app.use('/', apiv1);
+app.use('/', apiv2);
 
 app.listen(3000, () => {
   console.log('Listening on 3000');
