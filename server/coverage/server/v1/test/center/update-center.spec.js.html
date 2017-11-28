@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for server/v1/test/center/update-center.spec.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\..\index.html">All files</a> / <a href="index.html">server/v1/test/center</a> update-center.spec.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>83/83</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>19/19</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>83/83</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">'use strict'
+&nbsp;
+import chai from 'chai';
+import chaiHttp from 'chai-http';
+const expect = chai.expect;
+import server from '../../../index';
+import fixture from '../fixture'
+&nbsp;
+chai.use(chaiHttp);
+&nbsp;
+describe('put /centers', () =&gt; {
+	it('should update event center name', (done) =&gt; {
+		let mfixture = fixture.validCenter;
+		mfixture.name = "Bay Event Center";
+		chai.request(server)
+		.put('/centers/2')
+		.send(mfixture)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(201);
+			expect(res).to.be.json;
+			expect(res.body).to.deep.have.property("error").that.equal(false);
+			done();
+		});
+	});
+&nbsp;
+	it('should update all center property', (done) =&gt; {
+		let mfixture = fixture.validCenter;
+		mfixture.name = "Bay Event Center";
+		mfixture.capacity = 200;
+		mfixture.address = "1 Bay Close";
+		mfixture.area = "Yaba";
+		mfixture.state = "7";
+		mfixture.facilities = "CCTV,Parking Space";
+		mfixture.amount = 3000;
+		mfixture.summary = "Cool party environment";
+&nbsp;
+		chai.request(server)
+		.put('/centers/2')
+		.send(mfixture)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(201);
+			expect(res).to.be.json;
+			expect(res.body).to.deep.have.property("error").that.equal(false);
+			expect(res.body).to.deep.have.property('center').that.have.property('id').that.equal('2');
+			expect(res.body).to.deep.have.property('center').that.have.property('name').that.equal('Bay Event Center');
+			expect(res.body).to.deep.have.property('center').that.have.property('capacity').that.equal(200);
+			expect(res.body).to.deep.have.property('center').that.have.property('address').that.equal('1 Bay Close');
+			expect(res.body).to.deep.have.property('center').that.have.property('area').that.equal('Yaba');
+			expect(res.body).to.deep.have.property('center').that.have.property('state').that.equal('7');
+			expect(res.body).to.deep.have.property('center').that.have.property('facilities').that.equal('CCTV,Parking Space');
+			expect(res.body).to.deep.have.property('center').that.have.property('amount').that.equal(3000);
+			expect(res.body).to.deep.have.property('center').that.have.property('summary').that.equal('Cool party environment');
+			done();
+		});
+	});	
+&nbsp;
+	it('should not return error for non existing center', (done) =&gt; {
+		let mfixture = fixture.validCenter;
+		mfixture.name = "Bay Event Center";
+		chai.request(server)
+		.put('/centers/4')
+		.send(mfixture)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(400);
+			expect(res).to.be.json;
+			expect(res.body).to.deep.have.property("error").that.equal(true);
+			done();
+		});
+	});
+&nbsp;
+&nbsp;
+	it('should not update without a name', (done) =&gt; {
+		chai.request(server)
+		.put('/centers/2')
+		.send(fixture.centerWithoutName)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(406);
+			expect(res.body).to.have.property('error').that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('name');
+			done();
+		});
+	});
+&nbsp;
+	it('should not update without capacity', (done) =&gt; {
+		chai.request(server)
+		.put('/centers/2')
+		.send(fixture.noCapacity)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(406);
+			expect(res.body).to.have.property('error').that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('capacity');
+			done();
+		})
+	});
+&nbsp;
+	it('should not have capacity that is zero', (done) =&gt; {
+		chai.request(server)
+		.put('/centers/2')
+		.send(fixture.zeroCapacity)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(406);
+			expect(res.body).to.have.property('error').that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('capacity');
+			done();
+		})
+	});
+&nbsp;
+	
+	it('should have capacity that is only number', (done) =&gt; {
+		chai.request(server)
+		.put('/centers/2')
+		.send(fixture.invalidCapacity)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(406);
+			expect(res.body).to.have.property('error').that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('capacity');
+			done();
+		})
+	});
+	
+	it('should have amount', (done) =&gt; {
+		chai.request(server)
+		.put('/centers/2')
+		.send(fixture.noAmount)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(406);
+			expect(res.body).to.have.property('error').that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('amount');
+			done();
+		})
+	});
+	
+	it('should have amount that is only number', (done) =&gt; {
+		chai.request(server)
+		.put('/centers/2')
+		.send(fixture.invalidAmount)
+		.end((err, res) =&gt; {
+			expect(res).to.have.status(406);
+			expect(res.body).to.have.property('error').that.equal(true);
+			expect(res.body).to.have.property('message').that.have.property('amount');
+			done();
+		});
+	});
+	
+})
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Nov 28 2017 11:43:12 GMT+0100 (W. Central Africa Standard Time)
+</div>
+</div>
+<script src="..\..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\..\sorter.js"></script>
+</body>
+</html>
