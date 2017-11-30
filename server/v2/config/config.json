@@ -1,0 +1,22 @@
+{
+  "development": {
+    "username": "andela",
+    "password": "snakman",
+    "database": "eventmanager",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "andela",
+    "password": "snakman",
+    "database": "eventmanager_test",
+    "host": "127.0.0.1",
+    "port": 5432,
+    "dialect": "postgres"
+  },
+  "production": {
+    "dialect": "postgres"
+  },
+  "tksecret": "sidlsldk39237282xxdesds"
+}

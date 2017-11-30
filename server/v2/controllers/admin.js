@@ -1,44 +1,87 @@
-import database from '../db.json';
 import Center from './_support/center';
+import models from '../models';
 
 module.exports = {
   createCenter(req, res) {
-    const center = new Center(req.body);
-    let centers = database.centers;
-    const newCenterKey = database.keys.centers;
-    center.setId(newCenterKey);
 
-    center.validate();
-    if (!center.safe()) {
-      return res.status(406).json({ error: true, message: center.getErrors() });
+    const fields = Center.getFields();
+    const len = fields.length;
+    let i = -1;
+
+    while (++i < len) {
+      if (!Center[fields[i] +'Validate'](req.body[fields[i]], res)) {
+        console.log(fields[i] +'Validate');
+        return;
+      }
     }
-    centers[newCenterKey] = center.toJSON();
-    database.keys.centers += 1;
-    return res.status(200).json({ error: false, "center": center.toJSON() });
+
+    req.body.ownerid = 1; // REPLACE AFTER AUTH
+
+    return models.users.findById(req.body.ownerid)
+    .then((user) => {
+      if (!user) {
+        return res.status(400).send('Center must have a valid owner');
+      }
+
+      return models.centers.create(req.body).then((center) => {
+        return res.status(200).json(center);
+      }).catch((error) => res.status(400).send(error));
+
+    });
+
+    
+
   },
 
   centers(req, res) {
-    return res.status(200).json(database.centers);
+    return mCenter
+    .all()
+    .then((centers) => res.status(200).json(centers))
+    .catch((error) => res.status(400).send(error));
   },
   center(req, res) {
-    res.status(200).json(database.centers[req.params.id] || {});
+    return mCenter
+    .findById(req.params.id)
+    .then((center) => {
+      if (!center) {
+        return res.status(404).json({ message: 'Center not found' });
+      }
+
+      return res.status(200).json(center);
+    })
+    .catch((error) => res.status(400).send(error));
   },
   editCenter(req, res) {
-    const id = req.params.id;
-    let centers = database.centers;
 
-    if (!centers[id]) {
-      return res.status(400).json({ error: true, message: 'Invalid center' });
+    if (!req.params.id || parseInt(req.params.id) != req.params.id) {
+      return res.status(400).send("Invalid center");
     }
-    const center = new Center(centers[id]);
-    center.load(req.body);
-    center.setId(id);
-    
-    center.validate();
-    if (!center.safe()) {
-      return res.status(406).json({ error: true, message: center.getErrors() });
-    }
-    centers[id] = center.toJSON();
-    return res.status(201).send({ error: false, center: center.toJSON() });
+
+    models.centers.findById(req.params.id)
+    .then((center) => {
+      center = center.toJSON();
+
+
+      Object.keys(center).forEach((field) => {
+        center[field] = req.body[field] ? req.body[field] : center[field];
+      });  
+
+      const fields = Center.getFields();
+      const len = fields.length;
+      let i = -1;
+
+      while (++i < len) {
+        if (!Center[fields[i] +'Validate'](center[fields[i]], res)) {
+          return;
+        }
+      }
+
+      return models.centers.update(center, {
+        where: { id: req.params.id }
+      }).then((center) => {
+        res.status(200).json(center);
+      })
+    })
+    .catch((error) => res.status(400).send(error));
   },
 };
