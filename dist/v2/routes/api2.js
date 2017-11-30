@@ -22,5 +22,4 @@ var app = _express2.default.Router();
 (0, _admin2.default)(app);
 (0, _event2.default)(app);
 (0, _user2.default)(app);
-
 module.exports = app;

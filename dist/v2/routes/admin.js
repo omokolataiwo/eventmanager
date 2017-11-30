@@ -16,12 +16,12 @@ var auth = function auth(req, res, next) {
     return res.status(401).send({ auth: false, message: 'No token provided' });
   }
 
-  _jsonwebtoken2.default.verify(token, _config.tksecret, function (error, decoded) {
+  return _jsonwebtoken2.default.verify(token, _config.tksecret, function (error, decoded) {
     if (error) {
       return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
     }
     if (decoded.role > 1 || decoded.role < 0) {
-      return res.status(401).send("Not authorized");
+      return res.status(401).send('Not authorized');
     }
 
     req.user = decoded;
@@ -34,4 +34,7 @@ module.exports = function (app) {
   app.get('/centers', _controllers.admin.centers);
   app.get('/centers/:id', _controllers.admin.center);
   app.put('/centers/:id', auth, _controllers.admin.editCenter);
+  app.get('/', function (req, res) {
+    return res.status(200).send('Welcome to EventMan - The event manager');
+  });
 };
