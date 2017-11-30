@@ -90,4 +90,5 @@ class Event {
     };
   }
 }
+
 export { Event as default };

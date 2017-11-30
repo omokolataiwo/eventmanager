@@ -70,7 +70,6 @@ class Center {
   }
 
   update(res, req) {
-    console.log("fffffi");
     return this.mCenter.findOne({
       where: { id: req.params.id },
     }).then((center) => {

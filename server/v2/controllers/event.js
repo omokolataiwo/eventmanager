@@ -8,7 +8,6 @@ const mEvent = models.events;
 module.exports = {
   createEvent(req, res) {
     const event = new Event(req.body);
-    
     if (!event.safe()) {
       return res.status(400).json(event.getErrors());
     }
@@ -19,7 +18,7 @@ module.exports = {
 
   // check if center exist
   models.centers.findOne({
-    where: { id: req.body.centerid }
+    where: { id: req.body.centerid },
   }).then((center) => {
     if (!center) {
       return res.status(400).send('Invalid center');
@@ -30,9 +29,9 @@ module.exports = {
       centerid: center.id,
       startdate: {
         [sequelize.Op.gte]: new Date(event.startdate),
-        [sequelize.Op.lte]: new Date(event.enddate)
-      }
-    }
+        [sequelize.Op.lte]: new Date(event.enddate),
+      },
+    },
   }).then((existingEvent) => {
     if (existingEvent) {
       return res.status(400).send('Center is not available');
@@ -40,15 +39,15 @@ module.exports = {
 
   // user must exist
   models.users.findOne({
-    where: { id: 2 } // USE TOKEN
+    where: { id: req.user.id },
   })
   .then((existingUsers) => {
     if (!existingUsers) {
       return res.status(400).send('Invalid user');
     }
 
-  // create event 
-  const validatedEvent = Object.assign({userid: existingUsers.id, centerid: center.id }, event.toJSON());
+  // create event
+  const validatedEvent = Object.assign({ userid: existingUsers.id, centerid: center.id }, event.toJSON());
 
   models.events.create(validatedEvent)
   .then((newEvent) => {
@@ -58,13 +57,15 @@ module.exports = {
     return res.status(200).json(newEvent);
   });
 
-  })
-  });
+  })});
   })
 },
 
 deleteEvent(req, res) {
-  return mEvent.delete(req.params.id)
+  if (!req.params.id || parseInt(req.params.id) != req.params.id) {
+      return res.status(400).send("Invalid event");
+  }
+  return models.events.delete(req.params.id)
   .then((event) => {
    return res.status(200).json(event);
  })
@@ -95,11 +96,7 @@ editEvent(req, res) {
       }
 
       const mEvent = new Event(event);
-      //console.log(event); 
       mEvent.load(req.body);
-
-      
-      
 
       if (!mEvent.safe()) {
         return res.status(400).json(mEvent.getErrors());

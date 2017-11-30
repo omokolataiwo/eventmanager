@@ -1,6 +1,6 @@
 import { event } from '../controllers';
 
-const auth = function(req, res, next) {
+const auth = (req, res, next) => {
   next();
 };
 

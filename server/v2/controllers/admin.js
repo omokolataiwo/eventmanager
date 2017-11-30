@@ -8,14 +8,14 @@ module.exports = {
     const len = fields.length;
     let i = -1;
 
-    while (++i < len) {
-      if (!Center[fields[i] +'Validate'](req.body[fields[i]], res)) {
-        console.log(fields[i] +'Validate');
+    while (i < len) {
+      if (!Center[fields [i] + 'Validate'](req.body[fields[i]], res)) {
         return;
       }
+      i += 1;
     }
 
-    req.body.ownerid = 1; // REPLACE AFTER AUTH
+    req.body.ownerid = req.user.id;
 
     return models.users.findById(req.body.ownerid)
     .then((user) => {
@@ -28,19 +28,21 @@ module.exports = {
       }).catch((error) => res.status(400).send(error));
 
     });
-
-    
-
   },
 
   centers(req, res) {
-    return mCenter
+    return models.centers
     .all()
     .then((centers) => res.status(200).json(centers))
     .catch((error) => res.status(400).send(error));
   },
   center(req, res) {
-    return mCenter
+    
+    if (!req.params.id || parseInt(req.params.id) != req.params.id) {
+      return res.status(400).send("Invalid center");
+    }
+
+    return models.centers
     .findById(req.params.id)
     .then((center) => {
       if (!center) {
@@ -52,7 +54,6 @@ module.exports = {
     .catch((error) => res.status(400).send(error));
   },
   editCenter(req, res) {
-
     if (!req.params.id || parseInt(req.params.id) != req.params.id) {
       return res.status(400).send("Invalid center");
     }
@@ -71,13 +72,13 @@ module.exports = {
       let i = -1;
 
       while (++i < len) {
-        if (!Center[fields[i] +'Validate'](center[fields[i]], res)) {
+        if (!Center[fields[i] + 'Validate'](center[fields[i]], res)) {
           return;
         }
       }
 
       return models.centers.update(center, {
-        where: { id: req.params.id }
+        where: { id: req.params.id },
       }).then((center) => {
         res.status(200).json(center);
       })

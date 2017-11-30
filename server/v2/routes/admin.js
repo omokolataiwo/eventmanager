@@ -23,7 +23,7 @@ const auth = function (req, res, next) {
 
 module.exports = (app) => {
   app.post('/centers', auth, admin.createCenter);
-  app.get('/centers', auth, admin.centers);
-  app.get('/centers/:id', auth, admin.center);
+  app.get('/centers', admin.centers);
+  app.get('/centers/:id', admin.center);
   app.put('/centers/:id', auth, admin.editCenter);
 };
