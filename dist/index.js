@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
-var _express = require('express');
+var _express = require("express");
 
 var _express2 = _interopRequireDefault(_express);
 
-var _bodyParser = require('body-parser');
+var _bodyParser = require("body-parser");
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
-var _api = require('./v2/routes/api2');
+var _api = require("./v2/routes/api2");
 
 var _api2 = _interopRequireDefault(_api);
 
@@ -21,14 +21,12 @@ app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 
 // app.use('/v1', apiv1);
-app.use('/v2', _api2.default);
+app.use("/v2", _api2.default);
 
-app.get('/', function (req, res) {
-  return res.status(200).send('Welcome to EventMan');
+app.get("/", function (req, res) {
+  return res.status(200).send("Welcome to EventMan");
 });
 
-app.listen(3000, function () {
-  console.log('Listening on 3000');
-});
+app.listen(process.env.PORT || 5000);
 
 module.exports = app;
