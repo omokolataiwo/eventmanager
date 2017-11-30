@@ -3,8 +3,8 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 const expect = chai.expect;
-import server from '../../index';
-import fixture from '../fixture'
+import server from '../../../index';
+import fixture from '../fixtures/centers'
 
 chai.use(chaiHttp);
 

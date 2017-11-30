@@ -1,11 +1,12 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
-import server from '../../index';
+import server from '../../../index';
 import fixture from '../fixtures/events';
 const expect = chai.expect;
 chai.use(chaiHttp);
 
 describe('put /events', () => {
+
   it('should update event name', (done) => {
     let mfixture = fixture.validEvent;
     mfixture.name = "Fire Band";

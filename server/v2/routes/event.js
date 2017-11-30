@@ -1,7 +1,11 @@
 import { event } from '../controllers';
 
+const auth = (req, res, next) => {
+  next();
+};
+
 module.exports = (app) => {
-  app.post('/events', event.createEvent);
-  app.delete('/events/:id', event.deleteEvent);
-  app.put('/events/:id', event.editEvent);
+  app.post('/events', auth, event.createEvent);
+  app.delete('/events/:id', auth, event.deleteEvent);
+  app.put('/events/:id', auth, event.editEvent);
 };
