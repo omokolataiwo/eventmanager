@@ -23,7 +23,7 @@ app.use(_bodyParser2.default.urlencoded({ extended: false }));
 // app.use('/v1', apiv1);
 app.use('/v2', _api2.default);
 
-app.use('/', function (req, res) {
+app.get('/', function (req, res) {
   return res.status(200).send('Welcome to EventMan');
 });
 

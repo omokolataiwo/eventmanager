@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use('/v1', apiv1);
 app.use('/v2', apiv2);
 
-app.use('/', (req, res) => res.status(200).send('Welcome to EventMan'));
+app.get('/', (req, res) => res.status(200).send('Welcome to EventMan'));
 
 app.listen(3000, () => {
   console.log('Listening on 3000');
