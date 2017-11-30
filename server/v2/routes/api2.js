@@ -7,6 +7,4 @@ const app = express.Router();
 adminRoute(app);
 eventRoute(app);
 userRoute(app);
-
-
 module.exports = app;
