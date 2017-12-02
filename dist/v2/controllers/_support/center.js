@@ -7,154 +7,97 @@ exports.default = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _validator = require('validator');
+var _moment = require('moment');
 
-var _validator2 = _interopRequireDefault(_validator);
+var _validate2 = require('validate.js');
 
-var _base = require('./base');
-
-var _base2 = _interopRequireDefault(_base);
-
-var _models = require('../../models');
-
-var _models2 = _interopRequireDefault(_models);
+var _validate3 = _interopRequireDefault(_validate2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Center = function () {
-  function Center() {
+  function Center(center) {
     _classCallCheck(this, Center);
+
+    this.error = false;
+    this.errorMessages = {};
+
+    this.name = center.name;
+    this.address = center.address;
+    this.state = center.state;
+    this.capacity = parseInt(center.capacity);
+    this.ownerid = center.ownerid;
+    this.facilities = center.facilities;
+    this.amount = parseInt(center.amount);
   }
 
   _createClass(Center, [{
-    key: 'update',
-    value: function update(res, req) {
-      return this.mCenter.findOne({
-        where: { id: req.params.id }
-      }).then(function (center) {
-        console.log(center);
-        if (!center) {
-          res.status(401).send({ error: true, message: 'Invalid center' });
-        }
-        console.log(center.get({ plain: true }));
-
-        var existingCenter = new Center(center.toJSON());
-        existingCenter.load(req.body);
-        return existingCenter.save(center.id);
-      }).catch(function (error) {
-        return res.status(400).send(error);
-      });
+    key: 'load',
+    value: function load(center) {
+      this.name = center.name || this.name;
+      this.address = center.address || this.address;
+      this.state = center.state || this.state;
+      this.capacity = parseInt(center.capacity) || this.capacity;
+      this.ownerid = center.ownerid || this.ownerid;
+      this.facilities = center.facilities || this.facilities;
+      this.amount = parseInt(center.amount) || this.amount;
     }
   }, {
     key: 'validate',
     value: function validate() {
-
-      if (!_validator2.default.isInt(this.toValidatorString(this.ownerid)) && this.ownerid < 1) {
-        this.errorMessages.ownerid = 'Center must have an owner';
+      var stateCode = Math.floor(parseInt(this.state));
+      if (stateCode < 1 || stateCode > 37) {
+        this.errorMessages.state = 'state must be a valid state code';
         this.error = true;
       }
-      /*
-      this.userExist(this.ownerid).then((owner) => {
-        return owner;
-      }, function(res){
-        console.log("this is result");
-      });
-      */
 
-      return this.error;
+      var invalidName = _validate3.default.single(this.name, { presence: true, length: { minimum: 5, message: 'must be more than 4 characters.' } });
+      if (invalidName) {
+        this.errorMessages.name = invalidName[0];
+        this.error = true;
+      }
+
+      if (!_validate3.default.isInteger(this.amount) || this.amount < 0 || this.amount > 2000000000) {
+        this.errorMessages.amount = 'Amount is not a valid value';
+        this.error = true;
+      }
+
+      if (!_validate3.default.isInteger(this.capacity) || this.capacity < 1 || this.capacity > 2000000000) {
+        this.errorMessages.amount = 'Capacity is not a valid value';
+        this.error = true;
+      }
+
+      var invalidAddress = _validate3.default.single(this.address, { presence: true, length: { minimum: 5, message: 'must be more than 4 characters.' } });
+      if (invalidAddress) {
+        this.errorMessages.address = invalidAddress;
+        this.error = true;
+      }
     }
-
-    /*userExist(id) {
-      ;
-    }*/
-
+  }, {
+    key: 'getErrors',
+    value: function getErrors() {
+      if (!this.error) return {};
+      return this.errorMessages;
+    }
+  }, {
+    key: 'safe',
+    value: function safe() {
+      this.validate();
+      return !this.error;
+    }
   }, {
     key: 'toJSON',
     value: function toJSON() {
       return {
         name: this.name,
-        capacity: this.capacity,
         address: this.address,
         state: this.state,
-        facilities: this.facilities,
-        amount: this.amount,
-        ownerid: this.ownerid
+        capacity: this.capacity,
+        facilites: this.facilities,
+        amount: this.amount
       };
-    }
-  }], [{
-    key: 'getFields',
-    value: function getFields() {
-      return ['name', 'capacity', 'address', 'state', 'facilities', 'amount'];
-    }
-  }, {
-    key: 'nameValidate',
-    value: function nameValidate(value, res) {
-      if (_validator2.default.isEmpty(_base2.default.toValidatorString(value))) {
-        res.status(400).send('Center name can not be empty.');
-        return false;
-      }
-      return true;
-    }
-  }, {
-    key: 'capacityValidate',
-    value: function capacityValidate(value, res) {
-      if (!_validator2.default.isInt(_base2.default.toValidatorString(value)) || parseInt(value) < 1) {
-        res.status(400).send('Center capacity is not a number or capacity too small.');
-        return false;
-      }
-      return true;
-    }
-  }, {
-    key: 'addressValidate',
-    value: function addressValidate(value, res) {
-      if (value.trim().length === 0) {
-        res.status(400).send('Center must have an address.');
-        return false;
-      }
-      return true;
-    }
-  }, {
-    key: 'stateValidate',
-    value: function stateValidate(value, res) {
-      var stateCode = Math.floor(parseInt(value));
-      if (!_validator2.default.isInt(_base2.default.toValidatorString(stateCode)) || stateCode < 1 || stateCode > 37) {
-        res.status(400).send('Center state must be a state code');
-        return false;
-      }
-      return true;
-    }
-  }, {
-    key: 'facilitiesValidate',
-    value: function facilitiesValidate(value, res) {
-      return true;
-    }
-  }, {
-    key: 'amountValidate',
-    value: function amountValidate(value, res) {
-      if (!_validator2.default.isInt(_base2.default.toValidatorString(value)) || value < 0) {
-        return res.status(400).send('Amount given must be a number');
-        return false;
-      }
-      return true;
-    }
-    /**/
-
-  }, {
-    key: 'save',
-    value: function save(id, res, req) {
-      if (!this.safe()) {
-        return false;
-      }
-
-      if (id) {
-        return this.mCenter.update(req.body, {
-          where: { id: req.params.id }
-        });
-      }
-
-      return this.mCenter.create(this.toJSON());
     }
   }]);
 

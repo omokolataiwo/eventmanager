@@ -59,8 +59,13 @@ var Event = function () {
         this.errorMessages.enddate = 'Event must have a valid end date.';
         this.error = true;
       }
+      var mEndDate = (0, _moment2.default)(this.enddate, 'YYYY-MM-DD');
+      var mStartDate = (0, _moment2.default)(this.startdate, 'YYYY-MM-DD');
 
-      // END DATE CAN NOT BE LESS THAN START DATE
+      if (mEndDate.diff(mStartDate, 'days') < 0) {
+        this.errorMessages.startdate = 'Start date can not be greater than end date';
+        this.error = true;
+      }
     }
   }, {
     key: 'toValidatorString',

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for server/v2/controllers/_support/center.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\..\index.html">All files</a> / <a href="index.html">server/v2/controllers/_support</a> center.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">69.77% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>30/43</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">58.82% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>20/34</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/1</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">71.43% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>30/42</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { invalid } from "moment";
+import validate from 'validate.js';
+&nbsp;
+class Center {
+  constructor(center) {
+    this.error = false;
+    this.errorMessages = {};
+&nbsp;
+    this.name = center.name;
+    this.address = center.address;
+    this.state = center.state;
+    this.capacity = parseInt(center.capacity);
+    this.ownerid = center.ownerid;
+    this.facilities = center.facilities;
+    this.amount = parseInt(center.amount);
+  }
+  load(center) {
+    this.name = center.name || <span class="branch-1 cbranch-no" title="branch not covered" >this.name;</span>
+    this.address = center.address || <span class="branch-1 cbranch-no" title="branch not covered" >this.address;</span>
+    this.state = center.state || <span class="branch-1 cbranch-no" title="branch not covered" >this.state;</span>
+    this.capacity = parseInt(center.capacity) || <span class="branch-1 cbranch-no" title="branch not covered" >this.capacity;</span>
+    this.ownerid = center.ownerid || <span class="branch-1 cbranch-no" title="branch not covered" >this.ownerid;</span>
+    this.facilities = center.facilities || <span class="branch-1 cbranch-no" title="branch not covered" >this.facilities;</span>
+    this.amount = parseInt(center.amount) || <span class="branch-1 cbranch-no" title="branch not covered" >this.amount;</span>
+  }
+&nbsp;
+  validate() {
+    const stateCode = Math.floor(parseInt(this.state));
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (stateCode &lt; 1 || stateCode &gt; 37) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.state = 'state must be a valid state code';</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+&nbsp;
+    const invalidName = validate.single(this.name, {presence: true, length: {minimum: 5, message: 'must be more than 4 characters.'}});
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (invalidName) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.name = invalidName[0];</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!validate.isInteger(this.amount) || this.amount &lt; 0 || this.amount &gt; 2000000000) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.amount = 'Amount is not a valid value';</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!validate.isInteger(this.capacity) || this.capacity &lt; 1 || this.capacity &gt; 2000000000) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.amount = 'Capacity is not a valid value';</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+&nbsp;
+    const invalidAddress = validate.single(this.address, {presence: true, length: {minimum: 5, message: 'must be more than 4 characters.'}});
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (invalidAddress) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.address = invalidAddress;</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+  }
+&nbsp;
+  getErrors() {
+<span class="cstat-no" title="statement not covered" >    if (!this.error) <span class="cstat-no" title="statement not covered" >r</span>eturn {};</span>
+<span class="cstat-no" title="statement not covered" >    return this.errorMessages;</span>
+  }
+&nbsp;
+  safe() {
+    this.validate();
+    return !this.error;
+  }
+  
+  toJSON() {
+    return {
+      name: this.name,
+      address: this.address,
+      state: this.state,
+      capacity: this.capacity,
+      facilites: this.facilities,
+      amount: this.amount
+    };
+  }
+}
+export { Center as default };
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Dec 02 2017 14:55:19 GMT+0100 (W. Central Africa Standard Time)
+</div>
+</div>
+<script src="..\..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\..\sorter.js"></script>
+</body>
+</html>
