@@ -85,6 +85,17 @@ module.exports = {
       return res.status(500).json(error);
     });
   },
+  getEvents: function getEvents(req, res) {
+    return _models2.default.events.findAll({
+      where: {
+        userid: req.user.id
+      }
+    }).then(function (centers) {
+      return res.status(200).json(centers);
+    }).catch(function (error) {
+      return res.status(400).send(error);
+    });
+  },
   editEvent: function editEvent(req, res) {
     return _models2.default.events.findOne({
       where: {

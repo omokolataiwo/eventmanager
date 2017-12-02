@@ -90,6 +90,16 @@ module.exports = {
       })
       .catch(error => res.status(500).json(error));
   },
+  getEvents(req, res) {
+    return models.events
+      .findAll({
+        where: {
+          userid: req.user.id,
+        },
+      })
+      .then(centers => res.status(200).json(centers))
+      .catch(error => res.status(400).send(error));
+  },
 
   editEvent(req, res) {
     return models.events

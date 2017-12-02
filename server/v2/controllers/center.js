@@ -1,3 +1,4 @@
+import sequelize from 'sequelize';
 import Center from './_support/center';
 import models from '../models';
 
@@ -26,7 +27,7 @@ module.exports = {
 
   getCenters(req, res) {
     return models.centers
-      .all()
+      .findAll()
       .then(centers => res.status(200).json(centers))
       .catch(error => res.status(400).send(error));
   },
@@ -70,8 +71,8 @@ module.exports = {
       .catch(error => res.status(400).send(error));
   },
   getEvents(req, res) {
-    return models
-      .centers({
+    return models.centers
+      .findOne({
         include: [
           {
             model: models.events,
@@ -80,6 +81,7 @@ module.exports = {
         ],
         where: {
           id: req.params.id,
+          ownerid: req.user.id,
         },
       })
       .then(center => res.status(200).json(center))

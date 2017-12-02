@@ -14,6 +14,11 @@ module.exports = function (sequelize, DataTypes) {
       foreignKey: 'userid',
       onDelete: 'CASCADE'
     });
+
+    Event.belongsTo(models.centers, {
+      foreignKey: 'centerid',
+      onDelete: 'CASCADE'
+    });
   };
 
   return Event;

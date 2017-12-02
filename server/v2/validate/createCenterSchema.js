@@ -12,16 +12,18 @@ module.exports = {
       .required(),
     state: Joi.number()
       .integer()
+      .min(1)
+      .max(37)
       .required(),
     capacity: Joi.number()
       .integer()
       .min(5)
-      .max(10000)
+      .max(100000)
       .required(),
     ownerid: Joi.number()
       .integer()
       .required(),
-    facilities: Joi.string(),
+    facilities: Joi.string().required(),
     amount: Joi.number()
       .integer()
       .min(1)

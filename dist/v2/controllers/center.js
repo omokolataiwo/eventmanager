@@ -1,5 +1,9 @@
 'use strict';
 
+var _sequelize = require('sequelize');
+
+var _sequelize2 = _interopRequireDefault(_sequelize);
+
 var _center = require('./_support/center');
 
 var _center2 = _interopRequireDefault(_center);
@@ -35,7 +39,7 @@ module.exports = {
     });
   },
   getCenters: function getCenters(req, res) {
-    return _models2.default.centers.all().then(function (centers) {
+    return _models2.default.centers.findAll().then(function (centers) {
       return res.status(200).json(centers);
     }).catch(function (error) {
       return res.status(400).send(error);
@@ -75,13 +79,14 @@ module.exports = {
     });
   },
   getEvents: function getEvents(req, res) {
-    return _models2.default.centers({
+    return _models2.default.centers.findOne({
       include: [{
         model: _models2.default.events,
         as: 'events'
       }],
       where: {
-        id: req.params.id
+        id: req.params.id,
+        ownerid: req.user.id
       }
     }).then(function (center) {
       return res.status(200).json(center);
@@ -95,9 +100,9 @@ module.exports = {
       where: {
         centerid: center.id,
         $or: [{
-          $and: [{ startdate: _defineProperty({}, sequelize.Op.lte, new Date(date)) }, { enddate: _defineProperty({}, sequelize.Op.gte, new Date(date)) }]
+          $and: [{ startdate: _defineProperty({}, _sequelize2.default.Op.lte, new Date(date)) }, { enddate: _defineProperty({}, _sequelize2.default.Op.gte, new Date(date)) }]
         }, {
-          $and: [{ startdate: _defineProperty({}, sequelize.Op.lte, new Date(date)) }, { enddate: _defineProperty({}, sequelize.Op.gte, new Date(date)) }]
+          $and: [{ startdate: _defineProperty({}, _sequelize2.default.Op.lte, new Date(date)) }, { enddate: _defineProperty({}, _sequelize2.default.Op.gte, new Date(date)) }]
         }]
       }
     }).then(function (centersid) {

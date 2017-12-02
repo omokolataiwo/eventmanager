@@ -1,6 +1,9 @@
 import jwt from 'jsonwebtoken';
+import Joi from 'joi';
+import expressJoi from 'express-joi-validator';
 import { event } from '../controllers';
 import { tksecret } from '../config/config.json';
+import idroute from '../validate/idroute';
 
 const auth = (req, res, next) => {
   const token = req.headers['x-access-token'];
@@ -21,6 +24,7 @@ const auth = (req, res, next) => {
 
 module.exports = (app) => {
   app.post('/events', auth, event.createEvent);
-  app.delete('/events/:id', auth, event.deleteEvent);
-  app.put('/events/:id', auth, event.editEvent);
+  app.delete('/events/:id', expressJoi(idroute), auth, event.deleteEvent);
+  app.put('/events/:id', expressJoi(idroute), auth, event.editEvent);
+  app.get('/events', auth, event.getEvents);
 };

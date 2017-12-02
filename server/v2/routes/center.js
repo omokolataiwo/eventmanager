@@ -4,7 +4,7 @@ import expressJoi from 'express-joi-validator';
 import { center } from '../controllers';
 import { tksecret } from '../config/config.json';
 import createCenterSchema from '../validate/createCenterSchema';
-import getCenterSchema from '../validate/getCenterSchema';
+import idroute from '../validate/idroute';
 
 const auth = (req, res, next) => {
   const token = req.headers['x-access-token'];
@@ -26,9 +26,8 @@ const auth = (req, res, next) => {
 module.exports = (app) => {
   app.post('/centers', auth, expressJoi(createCenterSchema), center.createCenter);
   app.get('/centers', center.getCenters);
-  app.get('/centers/:id', center.getCenter);
-  app.put('/centers/:id', auth, center.editCenter);
-  app.get('/centers/:id/events', auth, center.getEvents);
-  app.get('/centers/date/:date?', center.getCenterByDate);
+  app.get('/centers/:id', expressJoi(idroute), center.getCenter);
+  app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter);
+  app.get('/centers/:id/events', expressJoi(idroute), auth, center.getEvents);
   app.get('/', (req, res) => res.status(200).send('Welcome to EventMan - The event manager'));
 };

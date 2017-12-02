@@ -29,7 +29,7 @@ var Center = function () {
     this.state = center.state;
     this.capacity = parseInt(center.capacity);
     this.ownerid = center.ownerid;
-    this.facilities = center.facilities;
+    this.facilities = center.facilities || 'No facilities';
     this.amount = parseInt(center.amount);
   }
 
