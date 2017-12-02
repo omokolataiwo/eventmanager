@@ -25,7 +25,7 @@ const auth = (req, res, next) => {
 
 module.exports = (app) => {
   app.post('/centers', auth, expressJoi(createCenterSchema), center.createCenter);
-  app.get('/centers', expressJoi(getCenterSchema), center.getCenters);
+  app.get('/centers', center.getCenters);
   app.get('/centers/:id', center.getCenter);
   app.put('/centers/:id', auth, center.editCenter);
   app.get('/centers/:id/events', auth, center.getEvents);
