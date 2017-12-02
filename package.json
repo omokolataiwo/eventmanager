@@ -4,12 +4,10 @@
   "description": "Event Manager",
   "main": "index.js",
   "scripts": {
-    "test":
-      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register v2/test/**/**.spec.js",
-    "build":
-      "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
+    "test": "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
+    "build": "rimraf dist/ && babel --watch ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log --copy-files",
     "start": "node dist/index.js",
-    "start:dev": "npm run build && nodemon dist/index.js",
+    "start:dev": "nodemon dist/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "postinstall": "npm run build"
   },
@@ -17,7 +15,9 @@
     "type": "git",
     "url": "git+https://github.com/omokolataiwo/eventmanager.git"
   },
-  "keywords": ["Event"],
+  "keywords": [
+    "Event"
+  ],
   "author": "Taiwo Kolawole",
   "license": "ISC",
   "bugs": {
@@ -36,19 +36,22 @@
     "nyc": "^11.3.0"
   },
   "dependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "express": "^4.16.2",
+    "express-joi-validator": "^2.0.0",
+    "joi": "^13.0.2",
     "jsonwebtoken": "^8.1.0",
     "moment": "^2.19.3",
     "pg": "^7.4.0",
     "pg-hstore": "^2.3.2",
-    "sequelize": "^4.23.1",
-    "validator": "^9.1.1",
     "rimraf": "^2.6.2",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-preset-es2015": "^6.24.1"
+    "sequelize": "^4.23.1",
+    "validate.js": "^0.12.0",
+    "validator": "^9.1.1"
   }
 }

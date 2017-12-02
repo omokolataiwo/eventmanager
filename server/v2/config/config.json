@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "pyfprcyk",
-    "password": "B_lRRAdhmgeY12J9-37GCb1RtgtcH3DK",
-    "database": "pyfprcyk",
-    "host": "baasu.db.elephantsql.com",
+    "username": "andela",
+    "password": "snakman",
+    "database": "eventmanager",
+    "host": "127.0.0.1",
     "port": 5432,
     "dialect": "postgres"
   },

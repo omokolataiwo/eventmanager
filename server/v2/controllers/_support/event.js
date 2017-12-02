@@ -2,8 +2,7 @@ import validator from 'validator';
 import moment from 'moment';
 
 class Event {
-
-  constructor (event) {
+  constructor(event) {
     this.error = false;
     this.name = event.name || '';
     this.startdate = moment(event.startdate).format('YYYY-MM-DD') || '';
@@ -37,8 +36,14 @@ class Event {
       this.errorMessages.enddate = 'Event must have a valid end date.';
       this.error = true;
     }
-
-    // END DATE CAN NOT BE LESS THAN START DATE
+    const mEndDate = moment(this.enddate, 'YYYY-MM-DD');
+    const mStartDate = moment(this.startdate, 'YYYY-MM-DD');
+    
+    if (mEndDate.diff(mStartDate, 'days') < 0)
+    {
+      this.errorMessages.startdate = 'Start date can not be greater than end date';
+      this.error = true;
+    }
   }
 
   toValidatorString (field) {

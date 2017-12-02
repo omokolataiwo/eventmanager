@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for server/v2/controllers/_support/event.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="..\..\..\..\prettify.css" />
+    <link rel="stylesheet" href="..\..\..\..\base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(..\..\..\..\sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="..\..\..\..\index.html">All files</a> / <a href="index.html">server/v2/controllers/_support</a> event.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">77.08% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>37/48</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">68.89% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>31/45</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>1/1</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">78.72% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>37/47</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import validator from 'validator';
+import moment from 'moment';
+&nbsp;
+class Event {
+  constructor(event) {
+    this.error = false;
+    this.name = event.name || <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+    this.startdate = moment(event.startdate).format('YYYY-MM-DD') || <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+    this.enddate = moment(event.enddate).format('YYYY-MM-DD')  || <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+    this.errorMessages = {};
+  }
+&nbsp;
+  load(event) {
+    this.name = event.name ? event.name : <span class="branch-1 cbranch-no" title="branch not covered" >this.name;</span>
+    this.startdate = event.startdate ? event.startdate : <span class="branch-1 cbranch-no" title="branch not covered" >moment(this.startdate).format('YYYY-MM-DD');</span>
+    this.enddate = event.enddate ? event.enddate : <span class="branch-1 cbranch-no" title="branch not covered" >moment(this.enddate).format('YYYY-MM-DD');</span>
+  }
+&nbsp;
+  validate() {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (validator.isEmpty(this.toValidatorString(this.name))) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.name = 'Event name can not be empty';</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (validator.isEmpty(this.toValidatorString(this.startdate)) || !this.isValidDate(this.startdate)) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.startdate = 'Event must have a valid start date';</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+&nbsp;
+    if (validator.isBefore(this.toValidatorString(this.startdate))) {
+      this.errorMessages.startdate = 'Event date is a passed date.';
+      this.error = true;
+    }
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (validator.isEmpty(this.toValidatorString(this.enddate)) || !this.isValidDate(this.enddate)) {
+<span class="cstat-no" title="statement not covered" >      this.errorMessages.enddate = 'Event must have a valid end date.';</span>
+<span class="cstat-no" title="statement not covered" >      this.error = true;</span>
+    }
+    const mEndDate = moment(this.enddate, 'YYYY-MM-DD');
+    const mStartDate = moment(this.startdate, 'YYYY-MM-DD');
+    
+    if (mEndDate.diff(mStartDate, 'days') &lt; 0)
+    {
+      this.errorMessages.startdate = 'Start date can not be greater than end date';
+      this.error = true;
+    }
+  }
+&nbsp;
+  toValidatorString (field) {
+    return field ? '' + field : <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
+  }
+&nbsp;
+  isValidDate (dateString)
+  {
+    //https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateString)) {
+<span class="cstat-no" title="statement not covered" >      return false;</span>
+    }
+&nbsp;
+    var parts = dateString.split("-");
+    var day = parseInt(parts[2], 10);
+    var month = parseInt(parts[1], 10);
+    var year = parseInt(parts[0], 10);
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(year &lt; 1000 || year &gt; 3000 || month == 0 || month &gt; 12)
+<span class="cstat-no" title="statement not covered" >      return false;</span>
+&nbsp;
+    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if(year % 400 == 0 || (year % 100 != 0 &amp;&amp; year % 4 == 0))
+<span class="cstat-no" title="statement not covered" >      monthLength[1] = 29;</span>
+&nbsp;
+    return day &gt; 0 &amp;&amp; day &lt;= monthLength[month - 1];
+  }
+&nbsp;
+  getErrors() {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.error) <span class="cstat-no" title="statement not covered" >return {};</span>
+    return this.errorMessages;
+  }
+&nbsp;
+  datetoString(date) {
+<span class="cstat-no" title="statement not covered" >    return date.getYear() + '-' + date.getMonth() + '-' + date.getDay();</span>
+  }
+  safe() {
+    this.validate();
+    return !this.error;
+  }
+&nbsp;
+&nbsp;
+  toJSON() {
+    return {
+      name: this.name,
+      startdate: this.startdate,
+      enddate: this.enddate
+    };
+  }
+}
+&nbsp;
+export { Event as default };
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Dec 02 2017 14:20:22 GMT+0100 (W. Central Africa Standard Time)
+</div>
+</div>
+<script src="..\..\..\..\prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="..\..\..\..\sorter.js"></script>
+</body>
+</html>

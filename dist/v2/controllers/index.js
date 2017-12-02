@@ -1,8 +1,8 @@
 'use strict';
 
-var _admin = require('./admin');
+var _center = require('./center');
 
-var _admin2 = _interopRequireDefault(_admin);
+var _center2 = _interopRequireDefault(_center);
 
 var _event = require('./event');
 
@@ -15,7 +15,7 @@ var _user2 = _interopRequireDefault(_user);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 module.exports = {
-  admin: _admin2.default,
+  center: _center2.default,
   event: _event2.default,
   user: _user2.default
 };
