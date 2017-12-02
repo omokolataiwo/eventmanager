@@ -11,8 +11,20 @@ module.exports = {
       username: 'benmark',
       password: 'klsldskds',
       repassword: 'klsldskds',
-      role: 2,
+      role: 1,
       email: 'benmark@yahoo.com'
+    },
+    validOrdinaryUser: {
+      firstname: 'John',
+      lastname: 'Doe',
+      address: '9 Cole Road',
+      state: 9,
+      phonenumber: 12945678901,
+      username: 'johndoe',
+      password: 'klssdsfsds',
+      repassword: 'klssdsfsds',
+      role: 2,
+      email: 'johndoe@yahoo.com'
     },
     invalidPasswordCombination: {
       firstname: 'Mark',
@@ -42,6 +54,10 @@ module.exports = {
     validAdminUser: {
       username: 'benmark',
       password: 'klsldskds'
+    },
+    validOrdinaryUser: {
+      username: 'johndoe',
+      password: 'klssdsfsds'
     }
   }
 };

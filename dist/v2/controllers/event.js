@@ -22,22 +22,26 @@ module.exports = {
     if (!event.safe()) {
       return res.status(400).json(event.getErrors());
     }
+
     // check if center exist
     _models2.default.centers.findOne({ where: { id: req.body.centerid } }).then(function (center) {
-      var _startdate;
-
       if (!center) {
-        return res.status(400).send('Invalid center');
+        return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
       }
+
       // check if there is center for event at start date
       return _models2.default.events.findOne({
         where: {
           centerid: center.id,
-          startdate: (_startdate = {}, _defineProperty(_startdate, _sequelize2.default.Op.gte, new Date(event.startdate)), _defineProperty(_startdate, _sequelize2.default.Op.lte, new Date(event.enddate)), _startdate)
+          $or: [{
+            $and: [{ startdate: _defineProperty({}, _sequelize2.default.Op.lte, new Date(event.startdate)) }, { enddate: _defineProperty({}, _sequelize2.default.Op.gte, new Date(event.startdate)) }]
+          }, {
+            $and: [{ startdate: _defineProperty({}, _sequelize2.default.Op.lte, new Date(event.enddate)) }, { enddate: _defineProperty({}, _sequelize2.default.Op.gte, new Date(event.enddate)) }]
+          }]
         }
       }).then(function (existingEvent) {
         if (existingEvent) {
-          return res.status(400).send('Center is not available');
+          return res.status(400).json({ error: true, message: { event: 'Center is not available' } });
         }
         // user must exist
         return _models2.default.users.findOne({
@@ -61,27 +65,44 @@ module.exports = {
     });
   },
   deleteEvent: function deleteEvent(req, res) {
-    return _models2.default.events.delete(req.params.id).then(function (event) {
-      return res.status(200).json(event);
+    return _models2.default.events.findOne({
+      where: {
+        $and: [{ id: req.params.id }, { userid: req.user.id }]
+      }
+    }).then(function (event) {
+      if (!event) {
+        return res.status(400).json({ error: true, message: { event: 'Event does not exist.' } });
+      }
+
+      return _models2.default.events.destroy({
+        where: { id: req.params.id }
+      }).then(function (event) {
+        return res.status(200).json(event);
+      }).catch(function (error) {
+        return res.status(500).json(error);
+      });
     }).catch(function (error) {
-      return res.status(400).send(error);
+      return res.status(500).json(error);
     });
   },
   editEvent: function editEvent(req, res) {
-    return _models2.default.events.findOne({ where: { id: req.params.id } }).then(function (event) {
+    return _models2.default.events.findOne({
+      where: {
+        $and: [{ id: req.params.id }, { userid: req.user.id }]
+      }
+    }).then(function (event) {
       if (!event) {
         return res.status(400).send('Event does not exist');
       }
       req.body.centerid = req.body.centerid ? req.body.centerid : event.centerid;
 
       if (parseInt(req.body.centerid) != req.body.centerid || req.body.centerid > 100000) {
-        return res.status(400).send('Invalid center');
+        return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
       }
       _models2.default.centers.findOne({ where: { id: req.body.centerid } }).then(function (center) {
         if (!center) {
-          return res.status(400).send('Invalid center id');
+          return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
         }
-
         var mEvent = new _event2.default(event);
         mEvent.load(req.body);
 
@@ -91,7 +112,8 @@ module.exports = {
         var validatedEvent = Object.assign(mEvent.toJSON(), {
           centerid: center.id
         });
-        _models2.default.events.update(validatedEvent, {
+
+        return _models2.default.events.update(validatedEvent, {
           where: { id: req.params.id }
         }).then(function (event) {
           res.status(200).json(event);

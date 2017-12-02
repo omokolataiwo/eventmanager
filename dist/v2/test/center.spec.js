@@ -20,6 +20,10 @@ var _users = require('./fixtures/users');
 
 var _users2 = _interopRequireDefault(_users);
 
+var _centers = require('./fixtures/centers');
+
+var _centers2 = _interopRequireDefault(_centers);
+
 var _models = require('../models');
 
 var _models2 = _interopRequireDefault(_models);
@@ -29,69 +33,96 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var expect = _chai2.default.expect;
 _chai2.default.use(_chaiHttp2.default);
 
+var adminToken = null;
+var userToken = null;
+var centerid = null;
+
 describe('Base setup', function () {
-  before(function () {
-    _models2.default.centers.destroy({ truncate: true });
+  it('should set up database', function (done) {
     _models2.default.users.destroy({ truncate: true });
+    _models2.default.centers.destroy({ truncate: true });
+    _chai2.default.request(_index2.default).post('/v2/users').send(_users2.default.register.validAdminUser).end(function (err, res) {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
+  it('register ordinary user', function (done) {
+    _chai2.default.request(_index2.default).post('/v2/users').send(_users2.default.register.validOrdinaryUser).end(function (err, res) {
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
+  it('should login admin user', function (done) {
+    _chai2.default.request(_index2.default).post('/v2/users/login').send(_users2.default.login.validAdminUser).end(function (err, res) {
+      adminToken = res.body.token;
+      expect(res).to.have.status(200);
+      done();
+    });
+  });
+
+  it('should login user', function (done) {
+    _chai2.default.request(_index2.default).post('/v2/users/login').send(_users2.default.login.validOrdinaryUser).end(function (err, res) {
+      userToken = res.body.token;
+      expect(res).to.have.status(200);
+      done();
+    });
   });
 });
 
 describe('post /centers', function () {
-  it('should create event', function (done) {
-    _chai2.default.request(_index2.default).post('/events').send(fixture.validEvent).end(function (err, res) {
-      expect(res).to.have.status(201);
-      expect(res).to.be.json;
-      expect(res.body).to.deep.have.property("error").that.equal(false);
-      done();
-    });
-  });
-
-  it('should create event in center', function (done) {
-    _sequelize2.default.db.centers.distroy({ truncate: { cascade: false } });
-    _chai2.default.request(_index2.default).get('/centers/1').end(function (err, res) {
+  it('should create center', function (done) {
+    _chai2.default.request(_index2.default).post('/v2/centers').set('x-access-token', adminToken).send(_centers2.default.create.validCenter).end(function (err, res) {
       expect(res).to.have.status(200);
       expect(res).to.be.json;
-      expect(res.body.events).to.include(1);
+      expect(res.body).to.deep.have.property('id');
+      centerid = res.body.id;
       done();
     });
   });
 
-  it('should not create event without name', function (done) {
-    _chai2.default.request(_index2.default).post('/events').send(fixture.invalidEventName).end(function (err, res) {
-      expect(res).to.have.status(400);
+  it('should not create center for user', function (done) {
+    _chai2.default.request(_index2.default).post('/v2/centers').set('x-access-token', userToken).send(_centers2.default.create.validCenter).end(function (err, res) {
+      expect(res).to.have.status(401);
       expect(res).to.be.json;
-      expect(res.body).to.deep.have.property("error").that.equal(true);
-      expect(res.body).to.have.property('message').that.have.property('name');
+      expect(res.body).to.deep.have.property('message').that.equal('Not authorized');
+      done();
+    });
+  });
+  it('should not create center for non user', function (done) {
+    _chai2.default.request(_index2.default).post('/v2/centers').send(_centers2.default.create.validCenter).end(function (err, res) {
+      expect(res).to.have.status(401);
+      expect(res).to.be.json;
+      expect(res.body).to.deep.have.property('message').that.equal('No token provided');
+      done();
+    });
+  });
+});
+
+describe('put /centers', function () {
+  it('should update center', function (done) {
+    _chai2.default.request(_index2.default).put('/v2/centers/' + centerid).set('x-access-token', adminToken).send(_centers2.default.create.validCenterModified).end(function (err, res) {
+      //console.log(res);
+      expect(res).to.have.status(200);
+      expect(res).to.be.json;
       done();
     });
   });
 
-  it('should not create event without valid state code', function (done) {
-    _chai2.default.request(_index2.default).post('/events').send(fixture.invalidState).end(function (err, res) {
-      expect(res).to.have.status(400);
+  it('should not update center by user', function (done) {
+    _chai2.default.request(_index2.default).put('/v2/centers/' + centerid).set('x-access-token', userToken).send(_centers2.default.create.validCenterModified).end(function (err, res) {
+      expect(res).to.have.status(401);
       expect(res).to.be.json;
-      expect(res.body).to.deep.have.property("error").that.equal(true);
-      expect(res.body).to.have.property('message').that.have.property('state');
+      expect(res.body).to.deep.have.property('message').that.equal('Not authorized');
       done();
     });
   });
-
-  it('should not create event without a valid center id', function (done) {
-    _chai2.default.request(_index2.default).post('/events').send(fixture.invalidCenter).end(function (err, res) {
-      expect(res).to.have.status(400);
+  it('should not update center by non owner', function (done) {
+    _chai2.default.request(_index2.default).put('/v2/centers/' + centerid).send(_centers2.default.create.validCenterModified).end(function (err, res) {
+      expect(res).to.have.status(401);
       expect(res).to.be.json;
-      expect(res.body).to.deep.have.property("error").that.equal(true);
-      expect(res.body).to.have.property('message').that.have.property('center');
-      done();
-    });
-  });
-
-  it('should not create event if startDate is before now', function (done) {
-    _chai2.default.request(_index2.default).post('/events').send(fixture.invalidEventDate).end(function (err, res) {
-      expect(res).to.have.status(400);
-      expect(res).to.be.json;
-      expect(res.body).to.deep.have.property("error").that.equal(true);
-      expect(res.body).to.have.property('message').that.have.property('startDate');
+      expect(res.body).to.deep.have.property('message').that.equal('No token provided');
       done();
     });
   });

@@ -50,7 +50,7 @@ module.exports = {
         if (!center) {
           return res.status(401).json({ error: true, message: 'Center does not exist' });
         }
-        
+
         const mCenter = new Center(center);
         mCenter.load(req.body);
 
@@ -68,5 +68,49 @@ module.exports = {
           });
       })
       .catch(error => res.status(400).send(error));
+  },
+  getEvents(req, res) {
+    return models
+      .centers({
+        include: [
+          {
+            model: models.events,
+            as: 'events',
+          },
+        ],
+        where: {
+          id: req.params.id,
+        },
+      })
+      .then(center => res.status(200).json(center))
+      .catch(error => res.status(500).json(error));
+  },
+  getCenterByDate(req, res) {
+    return models.events
+      .findAll({
+        attributes: ['centerid'],
+        where: {
+          centerid: center.id,
+          $or: [
+            {
+              $and: [
+                { startdate: { [sequelize.Op.lte]: new Date(date) } },
+                { enddate: { [sequelize.Op.gte]: new Date(date) } },
+              ],
+            },
+            {
+              $and: [
+                { startdate: { [sequelize.Op.lte]: new Date(date) } },
+                { enddate: { [sequelize.Op.gte]: new Date(date) } },
+              ],
+            },
+          ],
+        },
+      })
+      .then((centersid) => {
+        console.log(centersid);
+        return res.json(centersii);
+      })
+      .catch(error => res.status(500).json(error));
   },
 };

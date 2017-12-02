@@ -59,6 +59,12 @@ module.exports = {
       });
   },
   getEvents(req, res) {
-    res.send('all events');
-  }
+    return models.events.findAll({
+      where: {
+        userid: req.user.id,
+      }
+    })
+    .then(events => res.status(200).json(events))
+    .catch(error => res.status(500).json(error));
+  },
 };

@@ -30,16 +30,16 @@ var expect = _chai2.default.expect;
 _chai2.default.use(_chaiHttp2.default);
 
 describe('Base setup', function () {
-  before(function () {
+  it('should set up database', function (done) {
     _models2.default.users.destroy({ truncate: true });
+    done();
   });
 });
 
 describe('post /users', function () {
   it('should create a new user', function (done) {
     _chai2.default.request(_index2.default).post('/v2/users').send(_users2.default.register.validAdminUser).end(function (err, res) {
-      console.log(res);
-      expect(true).to.equal(true);
+      expect(res).to.have.status(200);
       done();
     });
   });

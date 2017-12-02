@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55.88% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>19/34</span>
+        <span class='fraction'>19/38</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">40% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>4/10</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">40% </span>
+        <span class="strong">31.58% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>6/15</span>
+        <span class='fraction'>6/19</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55.88% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>19/34</span>
+        <span class='fraction'>19/38</span>
       </div>
     </div>
   </div>
@@ -115,7 +115,26 @@
 70
 71
 72
-73</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -182,6 +201,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -190,7 +228,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Center from './_support/center';
 import models from '../models';
 &nbsp;
-module.exports = <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >{</span></span>
+module.exports = <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >{</span></span></span></span>
   createCenter(req, res) {
     const center = new Center(req.body);
 &nbsp;
@@ -239,7 +277,7 @@ module.exports = <span class="fstat-no" title="function not covered" ><span clas
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!center) {
 <span class="cstat-no" title="statement not covered" >          return res.status(401).json({ error: true, message: 'Center does not exist' });</span>
         }
-        
+&nbsp;
         const mCenter = new Center(center);
         mCenter.load(req.body);
 &nbsp;
@@ -258,6 +296,25 @@ module.exports = <span class="fstat-no" title="function not covered" ><span clas
       })
       .catch(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >error =&gt; res.status(400).send(error));</span></span>
   },
+  getEvents(req, res) {
+<span class="cstat-no" title="statement not covered" >    return models</span>
+      .centers({
+        include: [
+          {
+            model: models.events,
+            as: 'events',
+          },
+        ],
+        where: {
+          id: req.params.id,
+        },
+      })
+      .then(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >center =&gt; res.status(200).json(center))</span></span>
+      .catch(<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >error =&gt; res.status(500).json(error));</span></span>
+  },
+  getCenterByDate(req, res) {
+<span class="cstat-no" title="statement not covered" >    return res.send('all');</span>
+  },
 };
 &nbsp;</pre></td></tr>
 </table></pre>
@@ -265,7 +322,7 @@ module.exports = <span class="fstat-no" title="function not covered" ><span clas
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Dec 02 2017 14:20:22 GMT+0100 (W. Central Africa Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Dec 02 2017 14:55:19 GMT+0100 (W. Central Africa Standard Time)
 </div>
 </div>
 <script src="..\..\..\prettify.js"></script>

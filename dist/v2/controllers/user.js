@@ -65,5 +65,16 @@ module.exports = {
       var token = _jsonwebtoken2.default.sign({ id: user.id, role: user.role }, _config.tksecret, { expiresIn: 86400 });
       res.status(200).send({ auth: true, token: token });
     });
+  },
+  getEvents: function getEvents(req, res) {
+    return _models2.default.events.findAll({
+      where: {
+        userid: req.user.id
+      }
+    }).then(function (events) {
+      return res.status(200).json(events);
+    }).catch(function (error) {
+      return res.status(500).json(error);
+    });
   }
 };
