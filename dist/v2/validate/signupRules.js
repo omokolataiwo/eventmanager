@@ -1,9 +1,13 @@
-import validate from 'validate.js';
+'use strict';
 
-export const STATES = ['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','Federal Capital Territory','Gombe',
-  'Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'];
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.signupRules = undefined;
 
-export const SIGNUP_VALIDATION_RULES = {
+var _validate = require('validate.js');
+
+var signupRules = exports.signupRules = {
 	firstname: {
 		presence: {
 			allowEmpty: false,
@@ -19,7 +23,7 @@ export const SIGNUP_VALIDATION_RULES = {
 	address: {
 		presence: {
 			allowEmpty: false,
-			message: 'is required.',
+			message: 'is required.'
 		},
 		length: {
 			minimum: 4,
@@ -37,10 +41,10 @@ export const SIGNUP_VALIDATION_RULES = {
 	email: {
 		presence: {
 			allowEmpty: false,
-			message: 'address is required',
+			message: 'address is required'
 		},
 		email: {
-			message: 'is not a valid email address',
+			message: 'is not a valid email address'
 		}
 	},
 	username: {
@@ -51,19 +55,21 @@ export const SIGNUP_VALIDATION_RULES = {
 		length: {
 			minimum: 6,
 			maximum: 120,
-			tooShort: 'should be at least 6 chaaracters'
+			tooShort: 'should be at least 6 characters'
 		}
 	},
 	password: {
-			presence: {
+		presence: {
 			allowEmpty: false,
 			message: 'is required.'
-		},
+		}
 	},
 	repassword: {
 		equality: {
 			attribute: 'password',
-			message: (v, a, va, g) => validate.format('^ does not match Password',{v})
+			message: function message(v, a, va, g) {
+				return _validate.validate.format('^ does not match Password', { v: v });
+			}
 		}
 	}
-}
+};

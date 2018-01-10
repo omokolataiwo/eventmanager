@@ -8,7 +8,7 @@ module.exports = {
   create(req, res) {
     req.body.phonenumber += '';
     const user = new User(req.body);
-    
+
     if (!user.safe()) {
       return res.status(400).json({ error: true, message: user.getErrors() });
     }

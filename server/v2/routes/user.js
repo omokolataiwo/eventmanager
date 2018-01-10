@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
-import Joi from 'joi';
-import expressJoi from 'express-joi-validator';
+import { validate } from 'validate.js';
 import { user } from '../controllers';
-import createUserSchema from '../validate/createUserSchema';
+import { signupRules } from '../validate/signupRules';
 import { tksecret } from '../config/config.json';
 
 const auth = (req, res, next) => {
@@ -22,8 +21,16 @@ const auth = (req, res, next) => {
   });
 };
 
+const validateSignup = (req, res, next) => {
+	const errors = validate(req.body, signupRules);;
+	if (errors === undefined) {
+		return next();
+	}
+	return res.status(400).json(errors);
+}
+
 module.exports = (app) => {
   app.post('/users/login', user.login);
-  app.post('/users', expressJoi(createUserSchema), user.create);
+  app.post('/users', validateSignup,  user.create);
   app.get('/users/events', auth, user.getEvents);
 };
