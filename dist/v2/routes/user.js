@@ -4,19 +4,11 @@ var _jsonwebtoken = require('jsonwebtoken');
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
-var _joi = require('joi');
-
-var _joi2 = _interopRequireDefault(_joi);
-
-var _expressJoiValidator = require('express-joi-validator');
-
-var _expressJoiValidator2 = _interopRequireDefault(_expressJoiValidator);
+var _validate = require('validate.js');
 
 var _controllers = require('../controllers');
 
-var _createUserSchema = require('../validate/createUserSchema');
-
-var _createUserSchema2 = _interopRequireDefault(_createUserSchema);
+var _signupRules = require('../validate/signupRules');
 
 var _config = require('../config/config.json');
 
@@ -39,8 +31,16 @@ var auth = function auth(req, res, next) {
   });
 };
 
+var validateSignup = function validateSignup(req, res, next) {
+  var errors = (0, _validate.validate)(req.body, _signupRules.signupRules);;
+  if (errors === undefined) {
+    return next();
+  }
+  return res.status(400).json(errors);
+};
+
 module.exports = function (app) {
   app.post('/users/login', _controllers.user.login);
-  app.post('/users', (0, _expressJoiValidator2.default)(_createUserSchema2.default), _controllers.user.create);
+  app.post('/users', validateSignup, _controllers.user.create);
   app.get('/users/events', auth, _controllers.user.getEvents);
 };

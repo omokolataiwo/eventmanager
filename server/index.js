@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 // import apiv1 from './v1/routes/api1';
 import apiv2 from './v2/routes/api2';
 import { error } from 'util';
@@ -7,9 +8,10 @@ import { error } from 'util';
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 
-// app.use('/v1', apiv1);
-app.use('/v2', apiv2);
+// app.use('/api/v1', apiv1);
+app.use('/api/v2', apiv2);
 
 app.get('/', apiv2);
 app.use((err, req, res, next) => {

@@ -2,29 +2,33 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { validate } from 'validate.js';
 import { NigerianStateComponent } from '../ui/NigerianStateComponent';
+import { SelectComponent } from '../ui/SelectComponent';
 import { Error } from '../ui/Error';
-import { SignupGuestUser } from './../../store/actions';
-import { SIGNUP_VALIDATION_RULES } from '../ui/consts';
+import { signupGuestUser } from './../../store/action-creators';
+import { ACCOUNT_TYPE_GUEST } from '../../store/consts';
+import { SIGNUP_VALIDATION_RULES } from '../ui/consts'
 import { log } from '../ui/log';
-
 
 class Signup extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      first_name: '',
-      last_name: '',
-      address: '',
-      state: '',
-      email: '',
-      username: '',
-      password: '',
-      repassword: '',
+      firstname: 'TestFirstName',
+      lastname: 'TestLastName',
+      address: 'TestAddress',
+      state: '2',
+			phonenumber: '09032108214',
+      email: 'email@test.com',
+      username: 'TestUsername',
+      password: 'testpassword',
+      repassword: 'testpassword',
+			role: ACCOUNT_TYPE_GUEST,
 			errors: {
-				first_name: null,
-				last_name: null,
+				firstname: null,
+				lastname: null,
 				address: null,
 				state: null,
+				phonenumber: null,
 				email: null,
 				username: null,
 				password: null,
@@ -33,6 +37,7 @@ class Signup extends Component {
 	
     };
     this.handleSelectState = this.handleSelectState.bind(this);
+		this.handleChangeRole = this.handleChangeRole.bind(this);
   }
 	resetErrors(callback) {
 		let err = {};
@@ -48,20 +53,22 @@ class Signup extends Component {
 		e.preventDefault();
 		this.resetErrors(() => {
 			let errorMsg = validate(this.state, SIGNUP_VALIDATION_RULES);
-
 			if (errorMsg !== undefined) {
 				let errors = Object.assign({}, {...this.state.errors}, errorMsg);
 				this.setState({errors});
 				return;
 			}
-			alert('Move on');
+			this.props.dispatch(signupGuestUser(this.state));
 		});
 	}
   handleSelectState(value) {
     this.setState({ state: value });
   }
+	handleChangeRole(value) {
+		this.setState({ state: value });
+	}
   handleUnique(field, value) {
-    console.log(this.state.first_name);
+    console.log(this.state.firstname);
   }
   componentDidMount() {
    //alert(log(this.props.user, 'user'));
@@ -77,7 +84,6 @@ class Signup extends Component {
   render() {
     return (
       <div className="main-wrapper">
-				<div>{log(this.state)}</div>
         <div className="container small-container">
           <div className="row card register">
             <div className="col s12 m12 l12">
@@ -87,27 +93,27 @@ class Signup extends Component {
                 <div className="row">
             <div className="input-field col s6">
                     <input
-                      id="first_name"
+                      id="firstname"
                       type="text"
                       className="validate"
-                      value={this.state.first_name}
-        onChange={e => this.setState({ first_name: e.target.value })}
-											onBlur={e => this.validate('first_name', { first_name: e.target.value })}
+                      value={this.state.firstname}
+        onChange={e => this.setState({ firstname: e.target.value })}
+											onBlur={e => this.validate('firstname', { firstname: e.target.value })}
                     />
-											<label htmlFor="first_name">First Name</label>
-											<Error message={this.state.errors.first_name} />
+											<label htmlFor="firstname">First Name</label>
+											<Error message={this.state.errors.firstname} />
                   </div>
                   <div className="input-field col s6">
                     <input
-                      id="last_name"
+                      id="lastname"
                       type="text"
                       className="validate"
-                      value={this.state.last_name}
-											onBlur={e => this.validate('last_name', { last_name: e.target.value })}
-                      onChange={e => this.setState({ last_name: e.target.value })}
+                      value={this.state.lastname}
+											onBlur={e => this.validate('lastname', { lastname: e.target.value })}
+                      onChange={e => this.setState({ lastname: e.target.value })}
                     />
-											<label htmlFor="last_name">Last Name</label>
-											<Error message={this.state.errors.last_name} />
+											<label htmlFor="lastname">Last Name</label>
+											<Error message={this.state.errors.lastname} />
                   </div>
                 </div>
                 <div className="row">
@@ -124,8 +130,19 @@ class Signup extends Component {
             </div>
                   <NigerianStateComponent errorMessage={this.state.errors.state} change={this.handleSelectState} />
                 </div>
-                <div className="row">
-                  <div className="input-field col s6">
+								<div className="row">
+									<div className="input-field col s6">
+										<input
+											id="phonenumber"
+											type="text"
+											className="validate"
+											value={this.state.phonenumber}
+											onChange={e => this.setState({ phonenumber: e.target.value })}
+											onBlur={e => this.validate('phonenumber', { phonenumber: e.target.value })} />
+											<label htmlFor="phonenumber">Phone Number</label>
+											<Error message={this.state.errors.phonenumber} />
+									</div>
+									<div className="input-field col s6">
                     <input
                       id="email_address"
                       type="text"
@@ -136,6 +153,8 @@ class Signup extends Component {
 											<label htmlFor="email_address">Email Address</label>
 											<Error message={this.state.errors.email} />
                   </div>
+								</div>
+                <div className="row">
                   <div className="input-field col s6">
                     <input
                       id="username"
@@ -148,6 +167,9 @@ class Signup extends Component {
 											<label htmlFor="username">username</label>
 											<Error message={this.state.errors.username} />
                   </div>
+									<div className="input-field col s6">
+										<SelectComponent default="1" id="role" change={this.handleChangeRole} options={['Regular', 'Center Owner']} label="Account Type" />
+										</div>
                 </div>
                 <div className="row">
                   <div className="input-field col s6">
@@ -156,7 +178,14 @@ class Signup extends Component {
                       type="password"
                       className="validate"
         value={this.state.password}
-											onChange={e => this.setState({ password: e.target.value })} onBlur={e => this.validate('password', { password: e.target.value })}
+											onChange={e => this.setState({ password: e.target.value })}
+											onBlur={e => {
+												this.validate('password', { password: e.target.value });
+											/*
+											if (this.state.repassword !== '') {
+											  this.validate('repassword', { password:this.state.password, repassword: this.state.repassword });
+												}*/
+											}}
                     />
 											<label htmlFor="password">Password</label>
 											<Error message={this.state.errors.password} />

@@ -1,9 +1,6 @@
-import validate from 'validate.js';
+import { validate } from 'validate.js';
 
-export const STATES = ['Abia','Adamawa','Akwa Ibom','Anambra','Bauchi','Bayelsa','Benue','Borno','Cross River','Delta','Ebonyi','Edo','Ekiti','Enugu','Federal Capital Territory','Gombe',
-  'Imo','Jigawa','Kaduna','Kano','Katsina','Kebbi','Kogi','Kwara','Lagos','Nasarawa','Niger','Ogun','Ondo','Osun','Oyo','Plateau','Rivers','Sokoto','Taraba','Yobe','Zamfara'];
-
-export const SIGNUP_VALIDATION_RULES = {
+export const signupRules  = {
 	firstname: {
 		presence: {
 			allowEmpty: false,
@@ -51,7 +48,7 @@ export const SIGNUP_VALIDATION_RULES = {
 		length: {
 			minimum: 6,
 			maximum: 120,
-			tooShort: 'should be at least 6 chaaracters'
+			tooShort: 'should be at least 6 characters'
 		}
 	},
 	password: {
