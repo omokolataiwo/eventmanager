@@ -4,25 +4,27 @@ import { validate } from 'validate.js';
 import { NigerianStateComponent } from '../ui/NigerianStateComponent';
 import { SelectComponent } from '../ui/SelectComponent';
 import { Error } from '../ui/Error';
-import { signupGuestUser } from './../../store/action-creators';
-import { ACCOUNT_TYPE_GUEST } from '../../store/consts';
+import { signupGuestUser } from '../../store/action-creators';
+import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../store/consts';
 import { SIGNUP_VALIDATION_RULES } from '../ui/consts'
+
 import { log } from '../ui/log';
+import fakeUser from '../ui/faker/user';
 
 class Signup extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      firstname: 'TestFirstName',
-      lastname: 'TestLastName',
-      address: 'TestAddress',
-      state: '2',
-			phonenumber: '09032108214',
-      email: 'email@test.com',
-      username: 'TestUsername',
-      password: 'testpassword',
-      repassword: 'testpassword',
-			role: ACCOUNT_TYPE_GUEST,
+      firstname: null,
+      lastname: null,
+      address: null,
+      state: null,
+			phonenumber: null,
+      email: null,
+      username: null,
+      password: null,
+      repassword: null,
+			role: ACCOUNT_TYPE_MEMBER,
 			errors: {
 				firstname: null,
 				lastname: null,
@@ -33,8 +35,8 @@ class Signup extends Component {
 				username: null,
 				password: null,
 				repassword: null,
-			}
-	
+			},
+			events: {},
     };
     this.handleSelectState = this.handleSelectState.bind(this);
 		this.handleChangeRole = this.handleChangeRole.bind(this);
@@ -65,13 +67,22 @@ class Signup extends Component {
     this.setState({ state: value });
   }
 	handleChangeRole(value) {
-		this.setState({ state: value });
+		this.setState({ role: value });
 	}
-  handleUnique(field, value) {
-    console.log(this.state.firstname);
-  }
-  componentDidMount() {
-   //alert(log(this.props.user, 'user'));
+	
+	componentDidMount() {
+		this.setState({ ...fakeUser() });
+	}
+  componentWillReceiveProps(props) {
+		let { errors, events } =  props;
+
+		if (events.isSignedup) {
+			this.props.history.push('/signin');
+		}
+		
+		events = Object.assign({}, this.state.events, { ...events });
+		this.setState({ events });
+		this.setState({ errors });
   }
 	validate(field, value, objectMode) {
 		let errors = { ...this.state.errors };
@@ -88,7 +99,6 @@ class Signup extends Component {
           <div className="row card register">
             <div className="col s12 m12 l12">
               <h5>REGISTER</h5>
-              
 	      <form>
                 <div className="row">
             <div className="input-field col s6">
@@ -168,7 +178,7 @@ class Signup extends Component {
 											<Error message={this.state.errors.username} />
                   </div>
 									<div className="input-field col s6">
-										<SelectComponent default="1" id="role" change={this.handleChangeRole} options={['Regular', 'Center Owner']} label="Account Type" />
+										<SelectComponent default={ACCOUNT_TYPE_MEMBER} id="role" change={this.handleChangeRole} options={new Map([ [ACCOUNT_TYPE_MEMBER,'Regular'], [ACCOUNT_TYPE_ADMIN, 'Center Owner'] ])} label="Account Type" />
 										</div>
                 </div>
                 <div className="row">
@@ -204,7 +214,8 @@ class Signup extends Component {
                 </div>
                 <div className="row" />
                 <button onClick={(e) => this.registerUser(e)} className="btn btn-large blue">Register</button>
-              </form>
+        </form>
+				<p>{this.state.errors.global}</p>
             </div>
           </div>
         </div>
@@ -216,7 +227,9 @@ class Signup extends Component {
 function mapStateToProps(state) {
   const { user } = state;
   return {
-    user,
+    userdata: user.userdata,
+		events: user.events,
+		errors: user.errors
   };
 }
 

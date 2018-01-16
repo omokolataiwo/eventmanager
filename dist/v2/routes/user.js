@@ -32,7 +32,8 @@ var auth = function auth(req, res, next) {
 };
 
 var validateSignup = function validateSignup(req, res, next) {
-  var errors = (0, _validate.validate)(req.body, _signupRules.signupRules);;
+  var errors = (0, _validate.validate)(req.body, _signupRules.signupRules);
+
   if (errors === undefined) {
     return next();
   }

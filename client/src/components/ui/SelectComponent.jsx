@@ -17,19 +17,21 @@ export class SelectComponent extends Component {
   }
 
   render() {
-		if (!Array.isArray(this.props.options)) {
+		let options = [];
+		
+		if (!(this.props.options instanceof Map)) {
 		  return (<p>Invalid options</p>);
 		}
-	
+		for(const [key, value] of this.props.options) {
+			options.push(<option key={key} value={key}>{value}</option>);
+		}
     return (
 			<span>
       <select id={this.props.id}>
           <option value="" disabled selected>
             Choose your option
           </option>
-            {this.props.options.map((option, i) => {
-		 return(<option key={i} value={i+1}>{option}</option>)
-          })}
+					{options}
       </select>
 				<label htmlFor={this.props.id}>{this.props.label}</label>
 				</span>

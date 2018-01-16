@@ -22,7 +22,8 @@ const auth = (req, res, next) => {
 };
 
 const validateSignup = (req, res, next) => {
-	const errors = validate(req.body, signupRules);;
+	const errors = validate(req.body, signupRules);
+
 	if (errors === undefined) {
 		return next();
 	}

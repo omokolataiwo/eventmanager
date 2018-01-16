@@ -43,6 +43,19 @@ export const SIGNUP_VALIDATION_RULES = {
 			message: 'is not a valid email address',
 		}
 	},
+	phonenumber: {
+		presence: {
+			allowEmpty: false,
+			message: 'is required',
+		},
+		numericality: {
+			onlyInteger: true,
+			strict: true,
+		},
+		length: {
+			is: 11
+		}
+	},
 	username: {
 		presence: {
 			allowEmpty: false,

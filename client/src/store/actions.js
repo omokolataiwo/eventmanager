@@ -1,8 +1,10 @@
 import {
   REQUEST_SIGNUP_USER,
   SIGNUP_USER,
+	SIGNUP_ERROR,
+	SIGNIN_USER,
+	SIGNIN_ERROR,
   SIGNOUT_USER,
-	SIGNUP_ERROR
 } from './consts';
 
 export function requestSignupUser(user) {
@@ -14,17 +16,36 @@ export function requestSignupUser(user) {
 export function signupUser(user) {
   return {
     type: SIGNUP_USER,
-    user,
+		userdata: user.payload,
+		events: {
+			isSigningup: false,
+			isSignedup: true
+		}
   };
 }
 
-export function signupError(user) {
+export function signupError(errors) {
 	return {
 		type: SIGNUP_ERROR,
-		user,
+		errors,
 	};
 }
+export function signinUser(user) {
+	return {
+		type: SIGNIN_USER,
+		userdata: user.userdata,
+		events: { isSignedin: true },
+		signinToken: user.token,
+	}
+}
 
+export function signinError(errors) {
+	return {
+		type: SIGNIN_ERROR,
+		events: { isSigningin: false },
+		errors,
+	}
+}
 
 export function signoutUser(user) {
   return {
@@ -32,3 +53,4 @@ export function signoutUser(user) {
     user,
   };
 }
+

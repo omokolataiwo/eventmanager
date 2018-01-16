@@ -33,7 +33,7 @@ var User = function () {
     this.email = user.email || '';
     this.username = user.username || '';
     this.password = user.password || '';
-    this.role = user.role || '';
+    this.role = parseInt(user.role) || -1;
     this.repassword = user.repassword || '';
   }
 
@@ -49,7 +49,9 @@ var User = function () {
         this.errorMessages.state = 'state must be a valid state code';
         this.error = true;
       }
-      if (this.role < 1 || this.role > 2) {
+
+      if (this.role !== 2 && this.role !== 3) {
+        console.log(this.role, 'why');
         this.errorMessages.role = 'invalid role';
         this.error = true;
       }
