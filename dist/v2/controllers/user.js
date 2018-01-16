@@ -24,9 +24,8 @@ module.exports = {
   create: function create(req, res) {
     req.body.phonenumber += '';
     var user = new _user2.default(req.body);
-
     if (!user.safe()) {
-      return res.status(400).json({ error: true, message: user.getErrors() });
+      return res.status(400).json({ errors: user.getErrors() });
     }
     req.body.password = _bcryptjs2.default.hashSync(req.body.password, 8);
     return _models2.default.users.findOne({
@@ -35,10 +34,12 @@ module.exports = {
       }
     }).then(function (user) {
       if (user) {
-        return res.status(400).json({ error: true, message: 'username or phonenumber or email has already been used.' });
+        return res.status(400).json({ errors: { global: ['username or phonenumber or email has already been used.'] } });
       }
       return _models2.default.users.create(req.body).then(function (user) {
-        return res.status(200).json({ created: true, message: 'Account created' });
+        user = user.toJSON();
+        delete user.password;
+        return res.status(200).json({ payload: user, success: { global: ['Account created'] } });
       }).catch(function (error) {
         return res.status(500).json(error);
       });
@@ -48,22 +49,22 @@ module.exports = {
   },
   login: function login(req, res) {
     if (!req.body.username || !req.body.password) {
-      return res.status(401).json({ error: true, message: 'Invalid username or password' });
+      return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
     }
 
     return _models2.default.users.findOne({
       where: { username: req.body.username }
     }).then(function (user) {
       if (!user) {
-        return res.status(401).json({ error: true, message: 'Invalid username or password' });
+        return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
       }
 
       if (!_bcryptjs2.default.compareSync(req.body.password, user.password)) {
-        return res.status(401).json({ error: true, message: 'Invalid username or password' });
+        return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
       }
 
       var token = _jsonwebtoken2.default.sign({ id: user.id, role: user.role }, _config.tksecret, { expiresIn: 86400 });
-      res.status(200).send({ auth: true, token: token });
+      res.status(200).send({ auth: true, token: token, userdata: user });
     });
   },
   getEvents: function getEvents(req, res) {

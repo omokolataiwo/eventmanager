@@ -2,16 +2,20 @@ import { combineReducers } from 'redux';
 import {
   REQUEST_SIGNUP_USER,
   SIGNUP_USER,
+	SIGNUP_ERROR,
   ACCOUNT_TYPE_GUEST,
+	REQUEST_SIGNIN_USER,
+	SIGNIN_USER,
+	SIGNIN_ERROR,
   SIGNOUT_USER,
 } from './consts';
 
-import {log} from '../components/ui/log';
-
 const defaultUser = {
-    userdata: null,
-		accountType: ACCOUNT_TYPE_GUEST,
-    events: {
+	userdata: {
+		role: ACCOUNT_TYPE_GUEST
+	},
+	errors: {},
+	events: {
 			isSigningout: false,
 			isSignedout: false,
 			isSigningup: false,
@@ -28,19 +32,36 @@ function user(state = defaultUser,  action) {
 				...state,
 				events: { ...state.events, isSigningup: true }
 		});
-    case SIGNUP_USER:
+  case SIGNUP_USER:
     return Object.assign({}, state, {
 				userdata: action.userdata,
-				accountType: action.accountType,
 				events: {
 					...defaultUser.events,
-					isSignedup: true
+					...action.events
 				}
 		});
+	case REQUEST_SIGNIN_USER:
+		return Object.assign({}, state, {
+			events: action.events
+		});
+	case SIGNIN_USER:
+		return Object.assign({}, state, {
+			userdata: action.userdata,
+			events: action.events,
+			signinToken: action.token,
+		});
+	case SIGNIN_ERROR:
+		return Object.assign({}, state, {
+			errors: action.errors,
+			events: action.events,
+		});
 	case SIGNOUT_USER:
-		console.log('Something has raise signout user');
-		  return defaultUser;
-    default:
+		return defaultUser;
+	case SIGNUP_ERROR:
+		return Object.assign({}, state, {
+			...state, errors: action.errors, events: { ...state.events, isSigningup: false }
+		});
+  default:
       return state;
   }
 }

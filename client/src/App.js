@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { Home } from './components/pages/Home';
 import Signup from './components/pages/Signup';
-import { Signin } from './components/pages/Signin';
+import Signin from './components/pages/Signin';
 
 import logo from './images/logo.png';
 
