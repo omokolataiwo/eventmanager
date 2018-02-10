@@ -1,0 +1,149 @@
+
+/* ****************************************************** */
+/* _Page  */
+/* ****************************************************** */
+
+
+.container.feature {
+	width: 90%;
+}
+
+.row .list-item.card {
+	width: 31%;
+	margin: auto 1%;
+}
+
+.feature .events{
+	padding: 1% 4%;
+	margin: 6% auto 4% auto;
+}
+
+.list-center img, .list-event img {
+	width: 100%;
+	display: inline-block;
+	margin: 0 0 20px 0;
+	height: 340px;
+}
+
+.contact-us {
+	background: #000;
+	padding: 5%;
+}
+
+.contact-us h5 {
+	margin-bottom: 6%;
+}
+
+
+.searchEvent_panel {
+	color: #fff;
+	font-size: 34px;
+	position: absolute;
+	top: 10%;
+}
+
+
+.banner {
+	height: 340px;
+	background: #9a4a11;
+}
+
+.page-wrap {
+    position: relative;
+    float: left;
+    width: 100%;
+    overflow: hidden;
+}
+
+.main-wrapper {
+		margin-bottom: 50px;
+		position: relative;
+}
+
+
+.acc-wrap {
+    float: right;
+}
+
+.main_menu_continer {
+    float: right;
+}
+nav {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.container {
+	width: 85% !important;
+}
+
+.menu-section {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding: 10px 0 20px 0;
+}
+
+.top-head {
+    position: relative;
+    float: left;
+    width: 100%;
+    padding: 5px 15px;
+    color: #fff;
+    background: #426898;
+}
+
+.search_slider_panel {
+    position: relative;
+    float: left;
+    width: 100%;
+}
+
+.menu-section img {
+    padding: 5px 0 0;
+}
+
+
+#how_it_works h3 {
+    color: #426898;
+    font-size: 36px;
+    letter-spacing: -5px;
+    margin: 45px auto;
+}
+
+#how_it_works .col {
+    margin: 28px 0;
+}
+
+#how_it_works img {
+    display: inline-block;
+    margin: auto  auto 35px auto;
+}
+
+h2.intro_title {
+    margin: auto 45px;
+}
+
+.list-event {
+    background: #50392b;
+    padding: 5px;
+}
+
+.list-event h4 {
+    text-transform: uppercase;
+    color: #ffd27d !important;
+}
+
+.events h5, .event_center h5 {
+    margin-bottom: 5px !important;
+    font-size: 23px;
+    padding: 7px;
+    border-bottom: 3px solid;
+    width: 100%;
+    margin-left: 18%;
+    margin-top: 35px;
+    text-align: left;
+}
+
+
+

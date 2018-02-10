@@ -1,0 +1,27 @@
+.event-card {
+		margin: 3em;
+		padding-top: 2em !important;
+		
+		h4 {
+				font-family: 'Open Sans', arial;
+				-webkit-font-smoothing: antialiased;
+				color: #555;
+				font-weight: 600;
+				margin-top: 0;
+		}
+
+		.venue, .date {
+    margin: 0;
+		}
+
+		h5 {
+				color: red;
+				font-size: 1.8em;				
+		}
+
+		a {
+				display: inline-block;
+				margin: 0.3em;
+		}
+
+}

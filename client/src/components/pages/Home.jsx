@@ -21,10 +21,10 @@ export class Home extends Component {
         <div className="search_slider_panel">
           <div className="carousel carousel-slider banner">
             <Link className="carousel-item" to="#one!">
-              <img src={bannercenter} alt="Index Center Banner" />
+              <img src={bannercenter} alt="Center Banner" />
             </Link>
             <Link className="carousel-item" to="#two!">
-              <img src={bannercenter} alt="Index Center Banner" />
+              <img src={bannercenter} alt="Center Banner" />
             </Link>
             <Link className="carousel-item" to="#three!">
               <img src={bannercenter} alt="Index Center Banner" />
@@ -71,39 +71,46 @@ export class Home extends Component {
               </div>
             </div>
           </div>
-          <div className="row center event_center">
-            <h5>FEATURED CENTERS</h5>
-            <div className="col s12 m4 l4 card list-item">
-              <div className="card-panel list-center no-padding relative">
+          <div className="row center featured-centers">
+						<div className="col s12 m12 l12">
+							<hr />
+									 <h5>FEATURED CENTERS</h5>
+						</div>
+					
+            <div className="col s12 m4 l4 card">
+              <div className="event-center">
                 <img src={featuredCenterImg} alt="Featured Center" />
                 <div className="over-img">
-                  <h4 className="white-text">Royal Court</h4>
-                  <p className="white-text">Lagos</p>
-                  <p className="white-text">CCTV, Air Conditional, Projector</p>
+                  <h4>Royal Court</h4>
+                  <p>Lagos</p>
+                  
                 </div>
               </div>
             </div>
-            <div className="col s12 m4 l4 card list-item">
-              <div className="card-panel list-center no-padding relative">
+
+ <div className="col s12 m4 l4 card">
+              <div className="event-center">
                 <img src={featuredCenterImg} alt="Featured Center" />
                 <div className="over-img">
-                  <h4 className="white-text">Royal Court</h4>
-                  <p className="white-text">Lagos</p>
-                  <p className="white-text">CCTV, Air Conditional, Projector</p>
+                  <h4>Royal Court</h4>
+                  <p>Lagos</p>
+                  
                 </div>
               </div>
             </div>
-            <div className="col s12 m4 l4 card list-item">
-              <div className="card-panel list-center no-padding relative">
+
+ <div className="col s12 m4 l4 card">
+              <div className="event-center">
                 <img src={featuredCenterImg} alt="Featured Center" />
                 <div className="over-img">
-                  <h4 className="white-text">Royal Court</h4>
-                  <p className="white-text">Lagos</p>
-                  <p className="white-text">CCTV, Air Conditional, Projector</p>
+                  <h4>Royal Court</h4>
+                  <p>Lagos</p>
+                  
                 </div>
               </div>
             </div>
-          </div>
+
+ </div>
         </div>
       </div>
     );

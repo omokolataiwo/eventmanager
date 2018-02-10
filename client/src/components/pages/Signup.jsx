@@ -94,14 +94,13 @@ class Signup extends Component {
 	}
   render() {
     return (
-      <div className="main-wrapper">
         <div className="container small-container">
-          <div className="row card register">
+          <div className="row card">
             <div className="col s12 m12 l12">
               <h5>REGISTER</h5>
 	      <form>
                 <div className="row">
-            <div className="input-field col s6">
+            <div className="input-field col s12 m6 l6">
                     <input
                       id="firstname"
                       type="text"
@@ -113,7 +112,7 @@ class Signup extends Component {
 											<label htmlFor="firstname">First Name</label>
 											<Error message={this.state.errors.firstname} />
                   </div>
-                  <div className="input-field col s6">
+                  <div className="input-field col s12 m6 l6">
                     <input
                       id="lastname"
                       type="text"
@@ -127,7 +126,7 @@ class Signup extends Component {
                   </div>
                 </div>
                 <div className="row">
-                  <div className="input-field col s6">
+                  <div className="input-field col s12 m6 l6">
                     <input
                       id="address"
                       type="text"
@@ -141,7 +140,7 @@ class Signup extends Component {
                   <NigerianStateComponent errorMessage={this.state.errors.state} change={this.handleSelectState} />
                 </div>
 								<div className="row">
-									<div className="input-field col s6">
+									<div className="input-field col s12 m6 l6">
 										<input
 											id="phonenumber"
 											type="text"
@@ -152,7 +151,7 @@ class Signup extends Component {
 											<label htmlFor="phonenumber">Phone Number</label>
 											<Error message={this.state.errors.phonenumber} />
 									</div>
-									<div className="input-field col s6">
+									<div className="input-field col s12 m6 l6">
                     <input
                       id="email_address"
                       type="text"
@@ -165,7 +164,7 @@ class Signup extends Component {
                   </div>
 								</div>
                 <div className="row">
-                  <div className="input-field col s6">
+                  <div className="input-field col s12 m6 l6">
                     <input
                       id="username"
                       type="text"
@@ -177,12 +176,12 @@ class Signup extends Component {
 											<label htmlFor="username">username</label>
 											<Error message={this.state.errors.username} />
                   </div>
-									<div className="input-field col s6">
+									<div className="input-field col s12 m6 l6">
 										<SelectComponent default={ACCOUNT_TYPE_MEMBER} id="role" change={this.handleChangeRole} options={new Map([ [ACCOUNT_TYPE_MEMBER,'Regular'], [ACCOUNT_TYPE_ADMIN, 'Center Owner'] ])} label="Account Type" />
 										</div>
                 </div>
                 <div className="row">
-                  <div className="input-field col s6">
+                  <div className="input-field col s12 m6 l6">
                     <input
                       id="password"
                       type="password"
@@ -200,7 +199,7 @@ class Signup extends Component {
 											<label htmlFor="password">Password</label>
 											<Error message={this.state.errors.password} />
                   </div>
-                  <div className="input-field col s6">
+                  <div className="input-field col s12 m6 l6">
                     <input
                       id="repassword"
                       type="password"
@@ -219,7 +218,6 @@ class Signup extends Component {
             </div>
           </div>
         </div>
-      </div>
     );
   }
 }
