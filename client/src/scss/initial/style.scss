@@ -1,0 +1,100 @@
+
+/* ****************************************************** */
+/* Global */
+/* ****************************************************** */
+
+.gradient-blue {
+    background: -moz-linear-gradient(right, #1f98da 0%, #987ad9 100%);
+    background: -webkit-linear-gradient(right, #1f98da 0%, #987ad9 100%);
+    background: linear-gradient(to right, #1f98da 0%, #987ad9 100%);
+}
+h1,h2,h3,h4,h5{
+	margin: 0;
+}
+.margin_0 {
+		margin: 0 !important;
+}
+
+html {
+		font-size: 16px;
+		@media (max-width: 1000px) {
+				font-size: calc(12px + 0.4vw);
+		}
+}
+
+body {
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 24px;
+    color: #2f2f2f;
+    background-color: #FFF;
+		height: 100%;
+		min-height: 100%
+}
+
+header {
+    float: left;
+    width: 100%;
+    position: relative;
+    background: rgb(32, 141, 189);
+    border-bottom: 1px solid rgba(62, 62, 62, 0.8);
+    z-index: 800;
+}
+
+
+.relative {
+    position: relative;
+}
+
+.row.card, .container.card {
+    padding: 25px;
+}
+
+div.container.user-container, div.container.admin-container {
+    width: 75% !important;
+}
+
+a.btn.btn-large.m12.l12 {
+    width: 100%;
+}
+
+ul.pagination {
+    margin: 56px 0 0 0;
+}
+
+.paging {
+    border: 1px solid;
+}
+
+.search.full {
+    margin: 10px;
+}
+
+.search.full a.btn {
+    margin: 20px auto auto auto;
+}
+
+
+.label {
+    color: #b34a00;
+    font-size: 14px;
+    letter-spacing: -1px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.row.card .row {
+    margin: 30px 0 0 0;
+}
+
+
+
+@import 'page';
+@import 'user';
+@import 'admin';
+
+
+
+
+

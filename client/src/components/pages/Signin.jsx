@@ -40,11 +40,10 @@ class Signin extends Component {
 	
   render() {
     return (
-      <div className="main-wrapper">
-        <div className="container small-container">
-          <div className="row card login">
+        <div className="container container-small">
+          <div className="row card signin">
             <div className="col s12 m12 l12">
-              <h5>LOGIN</h5>
+              <h5>SIGN IN</h5>
 							<p>{this.state.errors.global}</p>
               <form>
                 <div className="row">
@@ -79,7 +78,6 @@ class Signin extends Component {
             </div>
           </div>
         </div>
-      </div>
     );
   }
 }

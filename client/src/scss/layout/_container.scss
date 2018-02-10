@@ -1,0 +1,20 @@
+.container {
+
+		&-small {
+						margin: 10% auto auto auto;
+		padding: 0;
+				width: 60vw !important;
+				@media screen and (max-width: 320px) {
+						width: 100% !important;
+				}
+		}
+		&-medium {
+						margin: 5% auto auto auto;
+		padding: 0;
+		width: 80vw !important;
+		@media screen and (max-width: 320px) {
+				width: 100% !important;
+		}
+				
+		}
+}
