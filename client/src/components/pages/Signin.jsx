@@ -18,6 +18,16 @@ class Signin extends Component {
 		}
 	}
 
+	componentWillMount() {
+		const { authenticated, userdata, history } = this.props;
+
+		alert(localStorage.getItem('auth_token'))
+		
+		if (authenticated) {
+			return route.push(route.getPath(userdata.role), history.push);
+		}
+	}
+
 	signin() {
 		const username = this.state.user.username || '';
 		const password = this.state.user.password || '';
@@ -29,9 +39,10 @@ class Signin extends Component {
 		return this.props.dispatch(signinUser(this.state.user));
 	}
 	componentWillReceiveProps(props) {
-		const { userdata, events, errors, history } = props;
+		const { userdata, access_token, events, errors, history } = props;
 
 		if (events.isSignedin) {
+			localStorage.setItem('auth_token', access_token);
 			return route.push(route.getPath(userdata.role), history.push);
 		}
 		this.setState({ errors });
@@ -86,8 +97,10 @@ function mapStateToProps(state) {
 	const { user } = state;
 	return {
 		userdata: user.userdata,
+		access_token: user.access_token,
 		events: user.events,
 		errors: user.errors,
+		authenticated: user.authenticated
 	}
 }
 

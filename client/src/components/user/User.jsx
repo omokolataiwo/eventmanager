@@ -1,12 +1,13 @@
 import React from 'react';
 import { Redirect, Switch, BrowserRouter, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Index } from './Index';
 import { Profile } from './Profile';
-
+import { Event } from './Event';
 
 import logo from '../../images/logo.png';
 
-export class User extends React.Component {
+class User extends React.Component {
 	render(){
 		return(
 		<div class="page-wrap"> 
@@ -47,6 +48,7 @@ export class User extends React.Component {
 				<Switch>
 					<Route path={`${this.props.match.path}`} exact component={Index} />
 					<Route path={`${this.props.match.path}/center`} component={Profile} />
+					<Route path={`${this.props.match.path}/event`} component={Event} />
 					<Redirect to={`${this.props.match.path}`} />
 				</Switch>
 			
@@ -62,3 +64,11 @@ export class User extends React.Component {
 		)
 	}
 }
+
+export default connect((state) => {
+	const { authenticated, userdata } = state;
+	return {
+		authenticated: authenticated,
+		userdata: userdata,
+	}
+})(User);

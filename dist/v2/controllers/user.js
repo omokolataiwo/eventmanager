@@ -55,16 +55,15 @@ module.exports = {
     return _models2.default.users.findOne({
       where: { username: req.body.username }
     }).then(function (user) {
-      if (!user) {
-        return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
-      }
-
-      if (!_bcryptjs2.default.compareSync(req.body.password, user.password)) {
+      if (!user || !_bcryptjs2.default.compareSync(req.body.password, user.password)) {
         return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
       }
 
       var token = _jsonwebtoken2.default.sign({ id: user.id, role: user.role }, _config.tksecret, { expiresIn: 86400 });
       res.status(200).send({ auth: true, token: token, userdata: user });
+    }).catch(function (e) {
+      console.log(e);
+      res.status(500).send('Server Error');
     });
   },
   getEvents: function getEvents(req, res) {

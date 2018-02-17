@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, Switch, BrowserRouter, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Index } from './Index';
 import { Center } from './Center';
 import { Bookings } from './Bookings';
@@ -7,7 +8,10 @@ import { Bookings } from './Bookings';
 
 import logo from '../../images/logo.png';
 
-export class Admin extends React.Component {
+class Admin extends React.Component {
+	componentWillMount() {
+		const { authenticated, userdata } = this.props;
+	}
 	render(){
 		return(
 		<div class="page-wrap"> 
@@ -66,3 +70,11 @@ export class Admin extends React.Component {
 		)
 	}
 }
+
+export default connect((state) => {
+	const { authenticated, userdata } = state;
+	return {
+		authenticated: authenticated,
+		userdata: userdata
+	}
+})(Admin);
