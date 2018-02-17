@@ -35,7 +35,7 @@ export function signinUser(user) {
 		type: SIGNIN_USER,
 		userdata: user.userdata,
 		events: { isSignedin: true },
-		signinToken: user.token,
+		token: user.token,
 	}
 }
 

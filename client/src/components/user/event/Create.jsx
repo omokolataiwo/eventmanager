@@ -1,63 +1,63 @@
-import React, { Component } from "react";
+import React from 'react';
+import featuredCenterImg from '../../../images/party-room.jpg'
 
-import featuredCenterImg from '../../images/party-room.jpg';
+export class Create extends React.Component {
+	render() {
+		return (
+			<div class="container container-medium card">
+				<h5>Create Event</h5>
+				<form>
+					<div className="row">
+						<div className="col input-field s12 m8 l8">
+							<input type="text" className="validate" id="event-title" />
+							<label htmlFor="event-title">Event Title</label>
+						</div>
+						<div className="row">
 
-export class Index extends Component {
-  render() {
-    return (
-      <div className="container container-medium card">
-                    <div className="row center">
-<div className="col s12 m12 l12">
-  <h4>BOOKED EVENTS</h4></div>
+<div className="input-field col s12 m6 l6"> 
+                                        <input id="start-date" type="text" className="validate" /> 
+                                        <label htmlFor="start-date">Start Date</label></div>
 
-<div className="col s12 m12 l12">
-	<div className="row">
-		<div class="col s12 m4 l4">
-                            <div class="card-panel event-card-user">
-                                <h4 class="white-text truncate">Graduation Party</h4> 
-                                <p class="white-text">Lagos</p>
-                                <p class="white-text">12th December 2017 | 12:00 PM</p>
-																<h5 className="truncate white-text">Haven Gate Garden Center</h5>
-																
-                            </div>
-                        </div>
-	<div class="col s12 m4 l4">
-                            <div class="card-panel event-card-user">
-                                <h4 class="white-text truncate">Graduation Party</h4> 
-                                <p class="white-text">Lagos</p>
-                                <p class="white-text">12th December 2017 | 12:00 PM</p>
-																<h5 className="truncate white-text">Haven Gate Garden Center</h5>
-                            </div>
-                        </div>
+<div className="input-field col s12 m6 l6"> 
+                                        <input id="end-date" type="text" className="validate" /> 
+                                        <label htmlFor="end-date">End Date</label></div>
 
-	<div class="col s12 m4 l4">
-                            <div class="card-panel event-card-user">
-                                <h4 class="white-text truncate">Graduation Party</h4> 
-                                <p class="white-text">Lagos</p>
-                                <p class="white-text">12th December 2017 | 12:00 PM</p>
-	<h5 className="truncate white-text">Haven Gate Garden Center</h5>
-                            </div>
-                        </div>
-	
-	</div>
 
-	<div className="row">
-		<div class="col s12 m4 l4">
-                            <div class="card-panel event-card-user">
-                                <h4 class="white-text truncate">Graduation Party</h4> 
-                                <p class="white-text">Lagos</p>
-                                <p class="white-text">12th December 2017 | 12:00 PM</p>
-	<h5 className="truncate white-text">Haven Gate Garden Center</h5>
-                            </div>
-                        </div>
-	
-	</div>
-</div>
- </div>
-                    <hr />
-                    <h5 class="center">AVAILABLE CENTERS</h5>
-                    <hr />
-                    <div class="row center event_center">
+						</div>
+					</div>
+
+					<div className="row event-center-detailed">
+					    <div className="col s12 m5 l5 card">
+              <div className="event-center">
+                <img src={featuredCenterImg} alt="Event Center" />
+                
+              </div>
+							</div>
+							<div className="col s12 m7 l7">
+                <h5>Royal Court
+								</h5>
+								<div><span className="location"><span>map</span>Lagos</span>
+									&nbsp;<span className="type">Outdoor</span></div>
+									<p className="amount">N70,000</p>
+									<p className="capacity"><span>users</span> 3000 Capacity</p>
+									<div>
+										<div className="chip">Parking Space</div>
+										<div className="chip">Security</div>
+																				<div className="chip">CCTV</div>
+									</div>
+
+							</div>
+					</div>
+					<button className="btn ">Book Center</button>
+				</form>
+
+				<hr />
+				<div className="row">
+					<div className="col s12 m12 l12">
+						<h5>Related Centers</h5>
+					</div>
+				</div>
+				<div className="row center event_center">
 											<div className="col s12 m12 l12">
 												<div className="row">
 													<div className="col s12 m4 l4 card">
@@ -148,7 +148,8 @@ export class Index extends Component {
                                 </li>                                 
                             </ul>                             
                         </div>
-      </div></div>
-    );
-  }
+      </div>
+			</div>
+		);
+	}
 }

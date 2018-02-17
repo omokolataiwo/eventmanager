@@ -14,10 +14,12 @@ function signinUser(user) {
 				dispatch(actions.signinUser(response.data));
 			})
 			.catch((e) => {
-				if (!e.response || (e.response.status < 400 && e.response.status >= 500)) {
+				if (!e.response || e.response.status >= 500) {
 					console.error('Internal server error.');
+					return;
 				}
 				dispatch(actions.signinError(e.response.data.errors));
+				return;
 			});
 	}
 }

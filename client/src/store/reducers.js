@@ -22,7 +22,8 @@ const defaultUser = {
 			isSignedup: false,
 			isSigningin: false,
 			isSignedin: false,
-		}
+	},
+	authenticated: false,
 };
 
 function user(state = defaultUser,  action) {
@@ -48,7 +49,8 @@ function user(state = defaultUser,  action) {
 		return Object.assign({}, state, {
 			userdata: action.userdata,
 			events: action.events,
-			signinToken: action.token,
+			access_token: action.token,
+			authenticated: true,
 		});
 	case SIGNIN_ERROR:
 		return Object.assign({}, state, {

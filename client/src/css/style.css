@@ -168,14 +168,6 @@ nav {
 h2.intro_title {
   margin: auto 45px; }
 
-.list-event {
-  background: #50392b;
-  padding: 5px; }
-
-.list-event h4 {
-  text-transform: uppercase;
-  color: #ffd27d !important; }
-
 .events h5, .event_center h5 {
   margin-bottom: 5px !important;
   font-size: 23px;
@@ -296,6 +288,12 @@ main {
   .event-card a {
     display: inline-block;
     margin: 0.3em; }
+  .event-card-user {
+    background: #50392b;
+    padding: 25px; }
+    .event-card-user h4 {
+      text-transform: uppercase;
+      color: #ffd27d !important; }
 
 .featured-centers {
   margin: auto auto 4em auto; }
@@ -315,7 +313,7 @@ main {
     display: inline-block; }
   .event-center .over-img {
     background-color: rgba(0, 0, 0, 0.77);
-    padding: 18px;
+    padding: 8px;
     width: 80%;
     height: 60%;
     position: absolute;
@@ -327,6 +325,8 @@ main {
     padding: 0; }
   .event-center h4 {
     font-size: 1.5em; }
+  .event-center p {
+    font-size: 0.9em; }
   .event-center-detailed {
     font-size: 1.1em;
     margin: 0; }

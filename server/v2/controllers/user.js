@@ -47,17 +47,16 @@ module.exports = {
         where: { username: req.body.username },
       })
       .then((user) => {
-        if (!user) {
-          return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
-        }
-
-        if (!bcrypt.compareSync(req.body.password, user.password)) {
+        if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
           return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
         }
 
         const token = jwt.sign({ id: user.id, role: user.role }, tksecret, { expiresIn: 86400 });
         res.status(200).send({ auth: true, token, userdata: user });
-      });
+      }).catch((e) => {
+				console.log(e);
+				res.status(500).send('Server Error');
+			});
   },
   getEvents(req, res) {
     return models.events.findAll({

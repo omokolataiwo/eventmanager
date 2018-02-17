@@ -5,8 +5,8 @@ import { Switch, BrowserRouter, Route } from 'react-router-dom';
 import 'materialize-css/dist/css/materialize.min.css';
 import configureStore from './store/init';
 import App from './App';
-import { Admin } from './components/admin/Admin';
-import { User } from './components/user/User';
+import Admin  from './components/admin/Admin';
+import User from './components/user/User';
 import registerServiceWorker from './registerServiceWorker';
 import './css/style.css';
 
