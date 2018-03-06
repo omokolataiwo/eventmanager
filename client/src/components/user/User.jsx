@@ -6,8 +6,18 @@ import { Profile } from './Profile';
 import { Event } from './Event';
 
 import logo from '../../images/logo.png';
+import { ACCOUNT_TYPE_MEMBER } from './../../store/consts';
+import * as route from './../../libs/route';
 
 class User extends React.Component {
+	componentWillMount() {
+		const { userdata, authenticated, history } = this.props;
+		
+		if (!authenticated || userdata.role !== ACCOUNT_TYPE_MEMBER) {
+			route.push('/signin', history.push);
+		}
+	}
+	
 	render(){
 		return(
 		<div class="page-wrap"> 
@@ -66,9 +76,9 @@ class User extends React.Component {
 }
 
 export default connect((state) => {
-	const { authenticated, userdata } = state;
+	const { authenticated, userdata } = state.user;
 	return {
-		authenticated: authenticated,
-		userdata: userdata,
+		 authenticated,
+		 userdata,
 	}
 })(User);
