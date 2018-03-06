@@ -47,10 +47,9 @@ export function signinError(errors) {
 	}
 }
 
-export function signoutUser(user) {
+export function signout() {
   return {
     type: SIGNOUT_USER,
-    user,
   };
 }
 

@@ -4,13 +4,20 @@ import { connect } from 'react-redux';
 import { Index } from './Index';
 import { Center } from './Center';
 import { Bookings } from './Bookings';
-
+import * as route from './../../libs/route';
+import { ACCOUNT_TYPE_ADMIN } from './../../store/consts';
+import { log } from './../ui/log';
 
 import logo from '../../images/logo.png';
 
 class Admin extends React.Component {
+	
 	componentWillMount() {
-		const { authenticated, userdata } = this.props;
+		const { authenticated, userdata, history } = this.props;
+	
+		if (!authenticated || userdata.role != ACCOUNT_TYPE_ADMIN) {
+			route.push('/signin', history.push);
+		}
 	}
 	render(){
 		return(
@@ -72,9 +79,9 @@ class Admin extends React.Component {
 }
 
 export default connect((state) => {
-	const { authenticated, userdata } = state;
+	const { authenticated, userdata } = state.user;
 	return {
-		authenticated: authenticated,
-		userdata: userdata
+		authenticated,
+		userdata
 	}
 })(Admin);

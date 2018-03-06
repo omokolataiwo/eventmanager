@@ -6,10 +6,11 @@ import { SelectComponent } from '../ui/SelectComponent';
 import { Error } from '../ui/Error';
 import { signupGuestUser } from '../../store/action-creators';
 import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../store/consts';
-import { SIGNUP_VALIDATION_RULES } from '../ui/consts'
-
+import { SIGNUP_VALIDATION_RULES } from '../ui/consts';
 import { log } from '../ui/log';
 import fakeUser from '../ui/faker/user';
+
+import * as route from '../../libs/route';
 
 class Signup extends Component {
   constructor(props) {
@@ -73,11 +74,17 @@ class Signup extends Component {
 	componentDidMount() {
 		this.setState({ ...fakeUser() });
 	}
+	componentWillMount() {
+		const { authenticated, history } = this.props;
+		if (authenticated) {
+			route.push('/signout', history.push);
+		}
+	}
   componentWillReceiveProps(props) {
-		let { errors, events } =  props;
+		let { errors, events, history } =  props;
 
 		if (events.isSignedup) {
-			this.props.history.push('/signin');
+			return route.push('/signin', history.push);
 		}
 		
 		events = Object.assign({}, this.state.events, { ...events });
@@ -227,7 +234,8 @@ function mapStateToProps(state) {
   return {
     userdata: user.userdata,
 		events: user.events,
-		errors: user.errors
+		errors: user.errors,
+		authenticated: user.authenticated
   };
 }
 

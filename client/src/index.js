@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Switch, BrowserRouter, Route } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
 import 'materialize-css/dist/css/materialize.min.css';
 import configureStore from './store/init';
 import App from './App';
@@ -10,10 +11,15 @@ import User from './components/user/User';
 import registerServiceWorker from './registerServiceWorker';
 import './css/style.css';
 
-const store = configureStore();
+import {log} from './components/ui/log'
+
+const { store, persistor } = configureStore();
+
+
 
 ReactDOM.render(
-  <Provider store={store}>
+		<Provider store={store}>
+		<PersistGate loading={null} persistor={persistor}>
     <BrowserRouter>
       <Switch>
         <Route path="/admin" component={Admin} />
@@ -21,6 +27,7 @@ ReactDOM.render(
         <Route path="/" component={App} />
       </Switch>
     </BrowserRouter>
+		</PersistGate>
   </Provider>,
   document.getElementById('root'),
 );

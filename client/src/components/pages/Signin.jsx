@@ -10,7 +10,7 @@ class Signin extends Component {
 		this.state = {
 			user: {
 				username: 'omokolataiwo',
-				password: '123',
+				password: '123'
 			},
 			errors: {
 				global: null,
@@ -20,9 +20,6 @@ class Signin extends Component {
 
 	componentWillMount() {
 		const { authenticated, userdata, history } = this.props;
-
-		alert(localStorage.getItem('auth_token'))
-		
 		if (authenticated) {
 			return route.push(route.getPath(userdata.role), history.push);
 		}
@@ -41,13 +38,15 @@ class Signin extends Component {
 	componentWillReceiveProps(props) {
 		const { userdata, access_token, events, errors, history } = props;
 
-		if (events.isSignedin) {
-			localStorage.setItem('auth_token', access_token);
+
+		if (events.isSignedin && access_token) {
+		
 			return route.push(route.getPath(userdata.role), history.push);
 		}
 		this.setState({ errors });
 		this.setState({ events });
 	}
+
 	
   render() {
     return (
@@ -56,7 +55,7 @@ class Signin extends Component {
             <div className="col s12 m12 l12">
               <h5>SIGN IN</h5>
 							<p>{this.state.errors.global}</p>
-              <form>
+              <form>						
                 <div className="row">
                   <div className="input-field col s12 m12 l12">
                     <input
