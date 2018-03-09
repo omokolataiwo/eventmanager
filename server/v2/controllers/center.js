@@ -5,6 +5,8 @@ import models from '../models';
 module.exports = {
   createCenter(req, res) {
     const center = new Center(req.body);
+    console.log(center);
+    console.log('SKDKSLLFSLSFLSF');
 
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());

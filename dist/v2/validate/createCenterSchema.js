@@ -12,7 +12,6 @@ module.exports = {
     address: _joi2.default.string().min(5).max(100).required(),
     state: _joi2.default.number().integer().min(1).max(37).required(),
     capacity: _joi2.default.number().integer().min(5).max(100000).required(),
-    ownerid: _joi2.default.number().integer().required(),
     facilities: _joi2.default.string().required(),
     amount: _joi2.default.number().integer().min(1).max(100000000).required()
   }

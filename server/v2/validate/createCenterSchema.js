@@ -20,9 +20,6 @@ module.exports = {
       .min(5)
       .max(100000)
       .required(),
-    ownerid: Joi.number()
-      .integer()
-      .required(),
     facilities: Joi.string().required(),
     amount: Joi.number()
       .integer()

@@ -13,9 +13,10 @@ const auth = (req, res, next) => {
   }
   return jwt.verify(token, tksecret, (error, decoded) => {
     if (error) {
-      return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+      return res.status(500).json({ auth: false, type: error.name });
     }
-    if (decoded.role > 1 || decoded.role < 0) {
+
+    if (decoded.role !== 2) {
       return res.status(401).json({ auth: false, message: 'Not authorized' });
     }
     req.user = decoded;
@@ -24,6 +25,7 @@ const auth = (req, res, next) => {
 };
 
 module.exports = (app) => {
+  app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true }));
   app.post('/centers', auth, expressJoi(createCenterSchema), center.createCenter);
   app.get('/centers', center.getCenters);
   app.get('/centers/:id', expressJoi(idroute), center.getCenter);

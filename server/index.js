@@ -9,6 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+// app.options('*', cors());
 
 // app.use('/api/v1', apiv1);
 app.use('/api/v2', apiv2);
