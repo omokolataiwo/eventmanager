@@ -19,6 +19,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 module.exports = {
   createCenter: function createCenter(req, res) {
     var center = new _center2.default(req.body);
+    console.log(center);
+    console.log('SKDKSLLFSLSFLSF');
 
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());

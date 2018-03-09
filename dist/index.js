@@ -25,6 +25,7 @@ var app = (0, _express2.default)();
 app.use(_bodyParser2.default.json());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 app.use((0, _cors2.default)());
+// app.options('*', cors());
 
 // app.use('/api/v1', apiv1);
 app.use('/api/v2', _api2.default);

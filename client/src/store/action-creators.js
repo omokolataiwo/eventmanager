@@ -15,13 +15,11 @@ export function signupGuestUser(user) {
 }
 
 export function signinUser(user) {
-	return (dispatch, getState) => {
-		dispatch(asyncSigninUser(user));
-	}
+  return (dispatch) => {
+    dispatch(asyncSigninUser(user));
+  };
 }
 
-export const signout = () => {
-	return (dispatch, getState) => {
-		dispatch(actions.signout());
-	}
-}
+export const signout = () => (dispatch) => {
+  dispatch(actions.signout());
+};
