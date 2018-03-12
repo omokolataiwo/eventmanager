@@ -26,7 +26,7 @@ const auth = (req, res, next) => {
 
 module.exports = (app) => {
   app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true }));
-  app.post('/centers', auth, expressJoi(createCenterSchema), center.createCenter);
+  app.post('/centers', auth, center.createCenter);
   app.get('/centers', center.getCenters);
   app.get('/centers/:id', expressJoi(idroute), center.getCenter);
   app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter);

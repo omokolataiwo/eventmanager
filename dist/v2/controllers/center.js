@@ -19,20 +19,24 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 module.exports = {
   createCenter: function createCenter(req, res) {
     var center = new _center2.default(req.body);
-    console.log(center);
-    console.log('SKDKSLLFSLSFLSF');
 
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());
     }
 
     req.body.ownerid = req.user.id;
+
     return _models2.default.users.findById(req.body.ownerid).then(function (user) {
       if (!user) {
         return res.status(400).send({ error: true, message: 'Center must have a valid owner' });
       }
-      return _models2.default.centers.create(req.body).then(function (center) {
-        return res.status(200).json(center);
+      return _models2.default.centers.create(req.body.center).then(function (center) {
+        req.body.center.contactDetails.center_id = center.id;
+        _models2.default.centers.create(req.body.center.contactDetails).then(function () {
+          return res.status(200).json(center);
+        }).catch(function (error) {
+          return res.status(501).send(error);
+        });
       }).catch(function (error) {
         return res.status(501).send(error);
       });

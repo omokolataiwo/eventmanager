@@ -19,13 +19,22 @@ class Create extends React.Component {
         state: 2,
         type: 2,
         additionalDetails: 'This for additional',
-        image: null,
-        useDefaultContact: true,
+        image: 'image.jpeg',
+				contactid: 0,
+        newContact: false,
         contact: {
-          first_name: 'Joe',
-          last_name: 'Mask',
-          phone_number: 803232322323,
-          email: 'joemask@mail.com',
+					newContact: {
+						first_name: 'Joe',
+						last_name: 'Task',
+						phone_number: 803232322323,
+						email: 'joemask@mail.com',
+					},
+					existingContacts: [
+						{
+							id: 1,
+							name: 'Taiwo Kolawole'
+						}
+					],
         },
       },
     };
@@ -204,27 +213,27 @@ class Create extends React.Component {
                 <h5>Contact Person</h5>
                 <div className="col s12 m12 l12">
                   <div className="switch">
-                    <label htmlFor="use-default-contact-info">
+                    <label htmlFor="new-contact">
                       <input
-                        id="use-default-contact-info"
+                        id="new-contact"
                         type="checkbox"
-                        checked={this.state.center.useDefaultContact}
+                        checked={this.state.center.newContact}
                         onChange={() => {
                           this.setState({
                             center: {
                               ...this.state.center,
-                              useDefaultContact: !this.state.center.useDefaultContact,
+                    newContact: !this.state.center.newContact,
                             },
                           });
                         }}
                       />
                       <span className="lever" />
-                      USE MY DETAILS
+                      CREATE NEW CONTACT
                     </label>
                   </div>
                 </div>
               </div>
-              {!this.state.center.useDefaultContact && (
+              {this.state.center.newContact && (
                 <span>
                   {' '}
                   <div className="row">

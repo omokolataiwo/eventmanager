@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'props-type';
 import { connect } from 'react-redux';
-import { signinUser } from '../../store/action-creators';
+import { signinRequest } from '../../store/actions/action_creators/signinRequest';
 import * as route from '../../libs/route';
 
 class Signin extends Component {
@@ -34,7 +35,7 @@ class Signin extends Component {
       });
       return;
     }
-    return this.props.dispatch(signinUser(this.state.user));
+    return this.props.signinUserRequest(this.state.user);
   }
   componentWillReceiveProps(props) {
     const {
@@ -106,6 +107,19 @@ class Signin extends Component {
   }
 }
 
+Signin.propTypes = {
+	signinRequest: PropTypes.func.isRequired,
+	userdata: PropTypes.object.isRequired,
+	access_token: PropTypes.required.isRequired,
+	events: PropTypes.object.isRequired,
+	errors: PropTypes.object.isRequired,
+	authenticated: PropTypes.bool.isRequired,
+}
+
+const mapDispatchToProps = dispatch => ({
+	signinRequest: user => dispatch(signinRequest(user)),
+})
+
 function mapStateToProps(state) {
   const { user } = state;
   return {
@@ -117,4 +131,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Signin);
+export default connect(mapStateToProps, mapDispatchToProps)(Signin);
