@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_PATH } from '../consts';
 import * as actions from '../actions';
 
-function signinUser(user) {
+function signinRequest(user) {
   return dispatch =>
     axios
       .post(`${API_PATH}/users/login`, user)
@@ -18,4 +18,4 @@ function signinUser(user) {
       });
 }
 
-export default signinUser;
+export signinRequest;

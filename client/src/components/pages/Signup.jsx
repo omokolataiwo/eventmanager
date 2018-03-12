@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { validate } from 'validate.js';
 import { NigerianStateComponent } from '../ui/NigerianStateComponent';
 import { SelectComponent } from '../ui/SelectComponent';
 import { Error } from '../ui/Error';
-import { signupGuestUser } from '../../store/action-creators';
+import createUserRequest from '../../store/actions/action_creators/createUserRequest';
 import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../store/consts';
 import { SIGNUP_VALIDATION_RULES } from '../ui/consts';
 import fakeUser from '../ui/faker/user';
@@ -62,7 +63,7 @@ class Signup extends Component {
         this.setState({ errors });
         return;
       }
-      this.props.dispatch(signupGuestUser(this.state));
+      this.props.createUser(this.state);
     });
   }
   handleSelectState(value) {
@@ -259,7 +260,18 @@ class Signup extends Component {
   }
 }
 
-function mapStateToProps(state) {
+
+Signup.propTypes = {
+	createUser: PropTypes.func.isRequired,
+	userdata: PropTypes.string.isRequired,
+	events: PropTypes.string.isRequired,
+	errors: PropTypes.string.isRequired,
+	authenticated: PropTypes.string.isRequired,
+	
+}
+
+
+const mapStateToProps = (state) => {
   const { user } = state;
   return {
     userdata: user.userdata,
@@ -269,4 +281,9 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Signup);
+const mapDispatchToProps = dispatch => ({
+	createUser: user => dispatch(createUserRequest(user)),
+});
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

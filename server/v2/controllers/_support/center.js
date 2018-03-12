@@ -5,7 +5,6 @@ class Center {
   constructor(center) {
     this.error = false;
     this.errorMessages = {};
-
     this.name = center.name;
     this.address = center.address;
     this.state = center.state;

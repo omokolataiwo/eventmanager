@@ -5,23 +5,28 @@ import models from '../models';
 module.exports = {
   createCenter(req, res) {
     const center = new Center(req.body);
-    console.log(center);
-    console.log('SKDKSLLFSLSFLSF');
 
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());
     }
 
     req.body.ownerid = req.user.id;
-    return models.users
+
+		return models.users
       .findById(req.body.ownerid)
       .then((user) => {
         if (!user) {
           return res.status(400).send({ error: true, message: 'Center must have a valid owner' });
         }
         return models.centers
-          .create(req.body)
-          .then(center => res.status(200).json(center))
+          .create(req.body.center)
+          .then((center) => {
+						req.body.center.contactDetails.center_id = center.id;
+						models.centers
+							.create(req.body.center.contactDetails)
+							.then(() => res.status(200).json(center))
+							.catch(error => res.status(501).send(error));
+					})
           .catch(error => res.status(501).send(error));
       })
       .catch(error => res.status(501).send(error));

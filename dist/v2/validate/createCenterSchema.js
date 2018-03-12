@@ -1,18 +1,75 @@
 'use strict';
 
-var _joi = require('joi');
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.createCenterValidationRule = undefined;
 
-var _joi2 = _interopRequireDefault(_joi);
+var _validate = require('validate.js');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-module.exports = {
-  body: {
-    name: _joi2.default.string().min(2).max(100).required(),
-    address: _joi2.default.string().min(5).max(100).required(),
-    state: _joi2.default.number().integer().min(1).max(37).required(),
-    capacity: _joi2.default.number().integer().min(5).max(100000).required(),
-    facilities: _joi2.default.string().required(),
-    amount: _joi2.default.number().integer().min(1).max(100000000).required()
-  }
+var createCenterValidationRule = exports.createCenterValidationRule = {
+	name: {
+		presence: {
+			allowEmpty: false,
+			message: 'is required'
+		},
+		length: {
+			minimum: 4,
+			maximum: 120,
+			tooShort: 'can not be less than 4 characters.',
+			tooLong: 'can not be more than 120 characters.'
+		}
+	},
+	address: {
+		presence: {
+			allowEmpty: false,
+			message: 'is required'
+		},
+		length: {
+			minimum: 4,
+			maximum: 120
+		}
+	},
+	state: {
+		presence: {
+			allowEmpty: false,
+			message: 'is required.'
+		},
+		integer: {
+			minimum: 4,
+			maximum: 37,
+			tooShort: 'can not be less than 4',
+			tooLong: 'can not be more than 37.'
+		}
+	},
+	capacity: {
+		presences: {
+			allowEmpty: false,
+			message: 'is required.'
+		},
+		integer: {
+			minimum: 1,
+			maximum: 10000000,
+			tooShort: 'can not be less than 1',
+			tooLong: 'capcity out of range'
+		}
+	},
+	facilities: {
+		presence: {
+			allowEmpty: false,
+			message: 'is required.'
+		}
+	},
+	amount: {
+		presence: {
+			allowEmpty: false,
+			message: 'is required'
+		},
+		integer: {
+			minimum: 100,
+			maximum: 1000000,
+			tooShort: 'too small',
+			tooLong: 'out of range'
+		}
+	}
 };

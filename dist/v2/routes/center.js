@@ -48,7 +48,7 @@ module.exports = function (app) {
   app.post('/vtoken', auth, function (req, res) {
     return res.status(200).json({ state: true });
   });
-  app.post('/centers', auth, (0, _expressJoiValidator2.default)(_createCenterSchema2.default), _controllers.center.createCenter);
+  app.post('/centers', auth, _controllers.center.createCenter);
   app.get('/centers', _controllers.center.getCenters);
   app.get('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), _controllers.center.getCenter);
   app.put('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.editCenter);
