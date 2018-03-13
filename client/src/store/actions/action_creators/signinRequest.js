@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { API_PATH } from '../consts';
-import * as actions from '../actions';
+import * as actions from '../../actions';
 
 function signinRequest(user) {
   return dispatch =>
@@ -18,4 +18,4 @@ function signinRequest(user) {
       });
 }
 
-export signinRequest;
+export default signinRequest;

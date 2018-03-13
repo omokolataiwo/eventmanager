@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import $ from 'jquery';
 import createCenterRequest from '../../../store/actions/action_creators/create_center';
 import { SelectComponent } from '../../ui/SelectComponent';
+import { CenterContactPerson } from '../../ui/CenterContactPerson';
 import { STATES, CENTER_TYPE } from '../../ui/consts';
 
 class Create extends React.Component {
@@ -20,26 +21,29 @@ class Create extends React.Component {
         type: 2,
         additionalDetails: 'This for additional',
         image: 'image.jpeg',
-				contactid: 0,
-        newContact: false,
+        contactid: 0,
+        newContact: true, // TODO: newContact has to be dynamic if existingContact ? false : true
         contact: {
-					newContact: {
-						first_name: 'Joe',
-						last_name: 'Task',
-						phone_number: 803232322323,
-						email: 'joemask@mail.com',
-					},
-					existingContacts: [
-						{
-							id: 1,
-							name: 'Taiwo Kolawole'
-						}
-					],
+          newContact: {
+            first_name: 'Joe',
+            last_name: 'Task',
+            phone_number: 803232322323,
+            email: 'joemask@mail.com',
+          },
+          existingContacts: [
+            {
+              id: 1,
+              name: 'Taiwo Kolawole',
+            },
+          ],
         },
       },
     };
     this.handleStateChanged = this.handleStateChanged.bind(this);
     this.handleCenterTypeChanged = this.handleCenterTypeChanged.bind(this);
+    this.handleContactPersonChanged = this.handleContactPersonChanged.bind(this);
+    this.handleNewContactChanged = this.handleNewContactChanged.bind(this);
+    this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
   }
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
@@ -52,7 +56,7 @@ class Create extends React.Component {
       facilities = Object.keys(facilities)
         .map(key => facilities[key].tag)
         .join(';');
-      this.setState({ facilities });
+      this.setState({ center: { ...this.state.center, facilities } });
     };
 
     facilitiesDOM.on('chip.add', chipChanged);
@@ -64,11 +68,33 @@ class Create extends React.Component {
     e.preventDefault();
   }
 
+  handleContactPersonChanged(contactid) {
+    this.setState({ center: { ...this.state.center, contactid } });
+  }
+  handleNewContactChanged() {
+    this.setState({
+      center: {
+        ...this.state.center,
+        newContact: !this.state.center.newContact,
+      },
+    });
+  }
   handleStateChanged(state) {
     this.setState({ center: Object.assign({}, this.state.center, { state }) });
   }
   handleCenterTypeChanged(type) {
     this.setState({ center: Object.assign({}, this.state.center, { type }) });
+  }
+  handleContactPersonsFieldChange(value, field) {
+    this.setState({
+      center: {
+        ...this.state.center,
+        contact: {
+          ...this.state.center.contact,
+          newContact: { ...this.state.center.contact.newContact, [field]: value },
+        },
+      },
+    });
   }
   render() {
     return (
@@ -209,120 +235,14 @@ class Create extends React.Component {
                   />
                 </div>
               </div>
-              <div className="row">
-                <h5>Contact Person</h5>
-                <div className="col s12 m12 l12">
-                  <div className="switch">
-                    <label htmlFor="new-contact">
-                      <input
-                        id="new-contact"
-                        type="checkbox"
-                        checked={this.state.center.newContact}
-                        onChange={() => {
-                          this.setState({
-                            center: {
-                              ...this.state.center,
-                    newContact: !this.state.center.newContact,
-                            },
-                          });
-                        }}
-                      />
-                      <span className="lever" />
-                      CREATE NEW CONTACT
-                    </label>
-                  </div>
-                </div>
-              </div>
-              {this.state.center.newContact && (
-                <span>
-                  {' '}
-                  <div className="row">
-                    <div className="input-field col s12 m6 l6">
-                      <input
-                        id="first_name"
-                        type="text"
-                        className="validate"
-                        defaultValue={this.state.center.contact.first_name}
-                        onChange={e =>
-                          this.setState({
-                            center: {
-                              ...this.state.center,
-                              contact: {
-                                ...this.state.center.contact,
-                                first_name: e.target.value,
-                              },
-                            },
-                          })
-                        }
-                      />
-                      <label htmlFor="first_name">First Name</label>
-                    </div>
-                    <div className="input-field col s12 m6 l6">
-                      <input
-                        id="last_name"
-                        type="text"
-                        className="validate"
-                        defaultValue={this.state.center.contact.last_name}
-                        onChange={e =>
-                          this.setState({
-                            center: {
-                              ...this.state.center,
-                              contact: {
-                                ...this.state.center.contact,
-                                last_name: e.target.value,
-                              },
-                            },
-                          })
-                        }
-                      />
-                      <label htmlFor="last_name">Last Name</label>
-                    </div>
-                  </div>
-                  <div className="row">
-                    <div className="input-field col s12 m6 l6">
-                      <input
-                        id="phone_number"
-                        type="text"
-                        className="validate"
-                        defaultValue={this.state.center.contact.phone_number}
-                        onChange={e =>
-                          this.setState({
-                            center: {
-                              ...this.state.center,
-                              contact: {
-                                ...this.state.center.contact,
-                                phone_number: e.target.value,
-                              },
-                            },
-                          })
-                        }
-                      />
-                      <label htmlFor="phone_number">Phone Number</label>
-                    </div>
-                    <div className="input-field col s12 m6 l6">
-                      <input
-                        id="email"
-                        type="text"
-                        className="validate"
-                        defaultValue={this.state.center.contact.email}
-                        onChange={e =>
-                          this.setState({
-                            center: {
-                              ...this.state.center,
-                              contact: {
-                                ...this.state.center.contact,
-                                email: e.target.value,
-                              },
-                            },
-                          })
-                        }
-                      />
-                      <label htmlFor="email">Email Address</label>
-                    </div>{' '}
-                  </div>
-                </span>
-              )}
-
+              <CenterContactPerson
+                newContact={this.state.center.newContact}
+                onNewContactChanged={this.handleNewContactChanged}
+                existingContacts={this.state.center.contact.existingContacts}
+                onSelectContactChanged={this.handleContactPersonChanged}
+                onFieldChange={this.handleContactPersonsFieldChange}
+                defaultContact={this.state.center.contactid}
+              />
               <input
                 type="submit"
                 className="btn btn-large blue right"

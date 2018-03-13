@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { PropTypes } from 'props-type';
+import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
-import { signinRequest } from '../../store/actions/action_creators/signinRequest';
+import signinRequest from '../../store/actions/action_creators/signinRequest';
 import * as route from '../../libs/route';
 
 class Signin extends Component {
@@ -86,7 +86,7 @@ class Signin extends Component {
                     type="password"
                     className="validate"
                   />
-                  <label className="password">Password</label>
+                  <label htmlFor="password">Password</label>
                 </div>
               </div>
               <div className="row" />
@@ -108,17 +108,17 @@ class Signin extends Component {
 }
 
 Signin.propTypes = {
-	signinRequest: PropTypes.func.isRequired,
-	userdata: PropTypes.object.isRequired,
-	access_token: PropTypes.required.isRequired,
-	events: PropTypes.object.isRequired,
-	errors: PropTypes.object.isRequired,
-	authenticated: PropTypes.bool.isRequired,
-}
+  signinRequest: PropTypes.func.isRequired,
+  userdata: PropTypes.object.isRequired,
+  access_token: PropTypes.string.isRequired,
+  events: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired,
+  authenticated: PropTypes.bool.isRequired,
+};
 
 const mapDispatchToProps = dispatch => ({
-	signinRequest: user => dispatch(signinRequest(user)),
-})
+  signinRequest: user => dispatch(signinRequest(user)),
+});
 
 function mapStateToProps(state) {
   const { user } = state;

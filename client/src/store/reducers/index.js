@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import user from './reducers/authentication';
+import user from './authentication';
 
 const combinedReducer = combineReducers({
   user,
