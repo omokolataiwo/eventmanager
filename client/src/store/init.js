@@ -1,24 +1,23 @@
-import { createStore,  applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
-import combinedReducer from './reducers';
+import combinedReducer from './reducers/index';
 
 const persistConfig = {
-	key: 'root',
-	storage,
-}
+  key: 'root',
+  storage,
+};
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
 
-
 export default function configureStore(preloadedState) {
-  let store = createStore(persistedReducer, preloadedState, applyMiddleware(thunkMiddleware));
-	let persistor = persistStore(store);
-	
-	return {
-		store,
-		persistor
-	}
+  const store = createStore(persistedReducer, preloadedState, applyMiddleware(thunkMiddleware));
+  const persistor = persistStore(store);
+
+  return {
+    store,
+    persistor,
+  };
 }
