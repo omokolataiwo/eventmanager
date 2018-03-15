@@ -25,6 +25,7 @@ const defaultUser = {
     isSignedin: false,
   },
   authenticated: false,
+  accessToken: '',
 };
 
 export default (state = defaultUser, action) => {
@@ -50,7 +51,7 @@ export default (state = defaultUser, action) => {
       return Object.assign({}, state, {
         userdata: action.userdata,
         events: action.events,
-        access_token: action.token,
+        accessToken: action.token,
         authenticated: true,
       });
     case SIGNIN_ERROR:

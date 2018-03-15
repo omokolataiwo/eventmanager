@@ -2,42 +2,29 @@
 
 module.exports = {
   up: function up(queryInterface, Sequelize) {
-    return queryInterface.createTable('centers', {
+    return queryInterface.createTable('contacts', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: {
+      first_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      address: {
+      last_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      state: {
-        type: Sequelize.INTEGER,
+      phone_number: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      capacity: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      email: {
+        type: Sequelize.STRING
       },
       ownerid: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      contactid: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      facilities: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      amount: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
@@ -52,6 +39,6 @@ module.exports = {
     });
   },
   down: function down(queryInterface, Sequelize) {
-    return queryInterface.dropTable('Centers');
+    return queryInterface.dropTable('contacts');
   }
 };

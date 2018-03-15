@@ -33,6 +33,7 @@ var auth = function auth(req, res, next) {
   }
   return _jsonwebtoken2.default.verify(token, _config.tksecret, function (error, decoded) {
     if (error) {
+      console.log(error);
       return res.status(500).json({ auth: false, type: error.name });
     }
 
@@ -45,11 +46,9 @@ var auth = function auth(req, res, next) {
 };
 
 module.exports = function (app) {
-  app.post('/vtoken', auth, function (req, res) {
-    return res.status(200).json({ state: true });
-  });
   app.post('/centers', auth, _controllers.center.createCenter);
   app.get('/centers', _controllers.center.getCenters);
+  app.get('/centers/contacts', auth, _controllers.center.getContacts);
   app.get('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), _controllers.center.getCenter);
   app.put('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.editCenter);
   app.get('/centers/:id/events', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.getEvents);

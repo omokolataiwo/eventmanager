@@ -7,6 +7,7 @@ module.exports = function (sequelize, DataTypes) {
     state: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
     ownerid: DataTypes.INTEGER,
+    contactid: DataTypes.INTEGER,
     facilities: DataTypes.STRING,
     amount: DataTypes.INTEGER
   });

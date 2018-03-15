@@ -1,35 +1,35 @@
 import sequelize from 'sequelize';
-import Center from './_support/center';
+import { Center, create } from './_support/center';
 import models from '../models';
 
 module.exports = {
   createCenter(req, res) {
     const center = new Center(req.body);
-
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());
     }
-
     req.body.ownerid = req.user.id;
+    req.body.contact.ownerid = req.body.ownerid;
 
-		return models.users
+    return models.users
       .findById(req.body.ownerid)
       .then((user) => {
         if (!user) {
           return res.status(400).send({ error: true, message: 'Center must have a valid owner' });
         }
-        return models.centers
-          .create(req.body.center)
-          .then((center) => {
-						req.body.center.contactDetails.center_id = center.id;
-						models.centers
-							.create(req.body.center.contactDetails)
-							.then(() => res.status(200).json(center))
-							.catch(error => res.status(501).send(error));
-					})
-          .catch(error => res.status(501).send(error));
+
+        if (req.body.newContact) {
+          return models.contacts.create(req.body.contact).then((contact) => {
+            req.body.contactid = contact.id;
+            return create(req, res, models);
+          });
+        }
+        return create(req, res, models);
       })
-      .catch(error => res.status(501).send(error));
+      .catch((error) => {
+        console.log(error);
+        res.status(501).send(error);
+      });
   },
 
   getCenters(req, res) {
@@ -52,6 +52,7 @@ module.exports = {
   },
 
   editCenter(req, res) {
+    // TODO: CHECK IF ITS THE OWNER OF THE CENTER THAT IS EDITING
     return models.centers
       .findById(req.params.id)
       .then((center) => {
@@ -121,5 +122,18 @@ module.exports = {
         return res.json(centersii);
       })
       .catch(error => res.status(500).json(error));
+  },
+  getContacts(req, res) {
+    return models.contacts
+      .findAll({
+        where: {
+          ownerid: req.user.id,
+        },
+      })
+      .then(contacts => res.status(200).json(contacts))
+      .catch((error) => {
+        console.log(error);
+        res.status(400).send(error);
+      });
   },
 };

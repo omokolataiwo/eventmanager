@@ -44,4 +44,7 @@ module.exports = function (app) {
   app.post('/users/login', _controllers.user.login);
   app.post('/users', validateSignup, _controllers.user.create);
   app.get('/users/events', auth, _controllers.user.getEvents);
+  app.post('/vtoken', auth, function (req, res) {
+    return res.status(200).json({ state: true });
+  });
 };

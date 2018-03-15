@@ -34,7 +34,9 @@ module.exports = {
       }
     }).then(function (user) {
       if (user) {
-        return res.status(400).json({ errors: { global: ['username or phonenumber or email has already been used.'] } });
+        return res.status(400).json({
+          errors: { global: ['username or phonenumber or email has already been used.'] }
+        });
       }
       return _models2.default.users.create(req.body).then(function (user) {
         user = user.toJSON();
