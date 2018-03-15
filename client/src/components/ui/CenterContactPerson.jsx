@@ -35,11 +35,15 @@ export const CenterContactPerson = props => (
         <SelectComponent
           default={props.defaultContact}
           id="existing-contact"
-          change={e => props.onSelectContactChanged}
+          change={e => props.onSelectContactChanged(e)}
           options={
-            new Map([...props.existingContacts.map(excontact => [excontact.id, excontact.name])])
+            new Map([
+              ...props.existingContacts.map(excontact => [
+                excontact.id,
+                `${excontact.first_name} ${excontact.last_name}`,
+              ]),
+            ])
           }
-          label="Center Type"
         />
       )}
     </div>

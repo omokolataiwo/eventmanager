@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = undefined;
+exports.create = exports.Center = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Center = function () {
+var Center = exports.Center = function () {
   function Center(center) {
     _classCallCheck(this, Center);
 
@@ -52,7 +52,10 @@ var Center = function () {
         this.error = true;
       }
 
-      var invalidName = _validate3.default.single(this.name, { presence: true, length: { minimum: 5, message: 'must be more than 4 characters.' } });
+      var invalidName = _validate3.default.single(this.name, {
+        presence: true,
+        length: { minimum: 5, message: 'must be more than 4 characters.' }
+      });
       if (invalidName) {
         this.errorMessages.name = invalidName[0];
         this.error = true;
@@ -68,7 +71,10 @@ var Center = function () {
         this.error = true;
       }
 
-      var invalidAddress = _validate3.default.single(this.address, { presence: true, length: { minimum: 5, message: 'must be more than 4 characters.' } });
+      var invalidAddress = _validate3.default.single(this.address, {
+        presence: true,
+        length: { minimum: 5, message: 'must be more than 4 characters.' }
+      });
       if (invalidAddress) {
         this.errorMessages.address = invalidAddress;
         this.error = true;
@@ -103,4 +109,11 @@ var Center = function () {
   return Center;
 }();
 
-exports.default = Center;
+var create = exports.create = function create(req, res, models) {
+  return models.centers.create(req.body).then(function (center) {
+    return res.status(200).json(center);
+  }).catch(function (e) {
+    console.log(e);
+    res.status(501).send(e);
+  });
+};

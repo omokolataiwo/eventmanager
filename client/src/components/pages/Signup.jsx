@@ -72,11 +72,9 @@ class Signup extends Component {
   handleChangeRole(value) {
     this.setState({ role: value });
   }
-
-  componentDidMount() {
-    this.setState({ ...fakeUser() });
-  }
   componentWillMount() {
+    this.setState({ ...fakeUser() });
+
     const { authenticated, history } = this.props;
     if (authenticated) {
       route.push('/signout', history.push);
@@ -260,16 +258,13 @@ class Signup extends Component {
   }
 }
 
-
 Signup.propTypes = {
-	createUser: PropTypes.func.isRequired,
-	userdata: PropTypes.string.isRequired,
-	events: PropTypes.string.isRequired,
-	errors: PropTypes.string.isRequired,
-	authenticated: PropTypes.string.isRequired,
-	
-}
-
+  createUser: PropTypes.func.isRequired,
+  userdata: PropTypes.string.isRequired,
+  events: PropTypes.string.isRequired,
+  errors: PropTypes.string.isRequired,
+  authenticated: PropTypes.string.isRequired,
+};
 
 const mapStateToProps = (state) => {
   const { user } = state;
@@ -279,11 +274,10 @@ const mapStateToProps = (state) => {
     errors: user.errors,
     authenticated: user.authenticated,
   };
-}
+};
 
 const mapDispatchToProps = dispatch => ({
-	createUser: user => dispatch(createUserRequest(user)),
+  createUser: user => dispatch(createUserRequest(user)),
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Signup);

@@ -1,13 +1,14 @@
-'use strict';
+
 module.exports = (sequelize, DataTypes) => {
-  let Center = sequelize.define('centers', {
+  const Center = sequelize.define('centers', {
     name: DataTypes.STRING,
     address: DataTypes.STRING,
     state: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
     ownerid: DataTypes.INTEGER,
+    contactid: DataTypes.INTEGER,
     facilities: DataTypes.STRING,
-    amount: DataTypes.INTEGER
+    amount: DataTypes.INTEGER,
   });
 
   Center.associate = (models) => {

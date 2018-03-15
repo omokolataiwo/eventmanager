@@ -13,6 +13,7 @@ const auth = (req, res, next) => {
   }
   return jwt.verify(token, tksecret, (error, decoded) => {
     if (error) {
+      console.log(error);
       return res.status(500).json({ auth: false, type: error.name });
     }
 
@@ -25,9 +26,9 @@ const auth = (req, res, next) => {
 };
 
 module.exports = (app) => {
-  app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true }));
   app.post('/centers', auth, center.createCenter);
   app.get('/centers', center.getCenters);
+  app.get('/centers/contacts', auth, center.getContacts);
   app.get('/centers/:id', expressJoi(idroute), center.getCenter);
   app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter);
   app.get('/centers/:id/events', expressJoi(idroute), auth, center.getEvents);

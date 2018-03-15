@@ -24,6 +24,17 @@ class Signin extends Component {
       return route.push(route.getPath(userdata.role), history.push);
     }
   }
+  componentWillReceiveProps(props) {
+    const {
+      userdata, accessToken, events, errors, history,
+    } = props;
+
+    if (events.isSignedin && accessToken) {
+      return route.push(route.getPath(userdata.role), history.push);
+    }
+    this.setState({ errors });
+    this.setState({ events });
+  }
 
   signin() {
     const username = this.state.user.username || '';
@@ -35,18 +46,7 @@ class Signin extends Component {
       });
       return;
     }
-    return this.props.signinUserRequest(this.state.user);
-  }
-  componentWillReceiveProps(props) {
-    const {
-      userdata, access_token, events, errors, history,
-    } = props;
-
-    if (events.isSignedin && access_token) {
-      return route.push(route.getPath(userdata.role), history.push);
-    }
-    this.setState({ errors });
-    this.setState({ events });
+    return this.props.signinRequest(this.state.user);
   }
 
   render() {
@@ -70,7 +70,7 @@ class Signin extends Component {
                     type="text"
                     className="validate"
                   />
-                  <label className="username">username</label>
+                  <label htmlFor="username">username</label>
                 </div>
               </div>
               <div className="row">
@@ -110,7 +110,7 @@ class Signin extends Component {
 Signin.propTypes = {
   signinRequest: PropTypes.func.isRequired,
   userdata: PropTypes.object.isRequired,
-  access_token: PropTypes.string.isRequired,
+  accessToken: PropTypes.string.isRequired,
   events: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   authenticated: PropTypes.bool.isRequired,
@@ -124,7 +124,7 @@ function mapStateToProps(state) {
   const { user } = state;
   return {
     userdata: user.userdata,
-    access_token: user.access_token,
+    accessToken: user.accessToken,
     events: user.events,
     errors: user.errors,
     authenticated: user.authenticated,

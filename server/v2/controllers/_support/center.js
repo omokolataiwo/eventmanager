@@ -1,7 +1,7 @@
-import { invalid } from "moment";
+import { invalid } from 'moment';
 import validate from 'validate.js';
 
-class Center {
+export class Center {
   constructor(center) {
     this.error = false;
     this.errorMessages = {};
@@ -30,7 +30,10 @@ class Center {
       this.error = true;
     }
 
-    const invalidName = validate.single(this.name, {presence: true, length: {minimum: 5, message: 'must be more than 4 characters.'}});
+    const invalidName = validate.single(this.name, {
+      presence: true,
+      length: { minimum: 5, message: 'must be more than 4 characters.' },
+    });
     if (invalidName) {
       this.errorMessages.name = invalidName[0];
       this.error = true;
@@ -46,7 +49,10 @@ class Center {
       this.error = true;
     }
 
-    const invalidAddress = validate.single(this.address, {presence: true, length: {minimum: 5, message: 'must be more than 4 characters.'}});
+    const invalidAddress = validate.single(this.address, {
+      presence: true,
+      length: { minimum: 5, message: 'must be more than 4 characters.' },
+    });
     if (invalidAddress) {
       this.errorMessages.address = invalidAddress;
       this.error = true;
@@ -62,7 +68,7 @@ class Center {
     this.validate();
     return !this.error;
   }
-  
+
   toJSON() {
     return {
       name: this.name,
@@ -70,8 +76,16 @@ class Center {
       state: this.state,
       capacity: this.capacity,
       facilites: this.facilities,
-      amount: this.amount
+      amount: this.amount,
     };
   }
 }
-export { Center as default };
+
+export const create = (req, res, models) =>
+  models.centers
+    .create(req.body)
+    .then(center => res.status(200).json(center))
+    .catch((e) => {
+      console.log(e);
+      res.status(501).send(e);
+    });

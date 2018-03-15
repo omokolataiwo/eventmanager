@@ -2,40 +2,37 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
-import createCenterRequest from '../../../store/actions/action_creators/create_center';
+import createCenterRequest from '../../../store/actions/action_creators/createCenter';
+import { getContactPersonRequest } from '../../../store/actions/action_creators/getContactPerson';
 import { SelectComponent } from '../../ui/SelectComponent';
 import { CenterContactPerson } from '../../ui/CenterContactPerson';
 import { STATES, CENTER_TYPE } from '../../ui/consts';
+import fakeCenter from '../../ui/faker/center';
+import { RECIEVED_CENTER_CONTACTS } from '../../../store/actions/types';
 
 class Create extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       center: {
-        name: 'Heaven Garden',
-        capacity: 7000,
-        address: 'Taiwo road, Lekki',
-        amount: 50000,
+        name: '',
+        capacity: null,
+        address: '',
+        amount: null,
         facilities: '',
-        state: 2,
-        type: 2,
-        additionalDetails: 'This for additional',
-        image: 'image.jpeg',
+        state: 0,
+        type: 0,
+        image: 'default_center_image.jpeg',
         contactid: 0,
-        newContact: true, // TODO: newContact has to be dynamic if existingContact ? false : true
+        newContact: false,
         contact: {
           newContact: {
-            first_name: 'Joe',
-            last_name: 'Task',
-            phone_number: 803232322323,
-            email: 'joemask@mail.com',
+            first_name: '',
+            last_name: '',
+            phone_number: null,
+            email: '',
           },
-          existingContacts: [
-            {
-              id: 1,
-              name: 'Taiwo Kolawole',
-            },
-          ],
+          existingContacts: [],
         },
       },
     };
@@ -44,6 +41,24 @@ class Create extends React.Component {
     this.handleContactPersonChanged = this.handleContactPersonChanged.bind(this);
     this.handleNewContactChanged = this.handleNewContactChanged.bind(this);
     this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
+  }
+  componentWillMount() {
+    this.setState({ center: { ...fakeCenter() } });
+    this.props.getContactPerson(this.props.accessToken);
+
+    const { _getCenterContact, contacts } = this.props;
+    if (_getCenterContact === RECIEVED_CENTER_CONTACTS) {
+      if (contacts.length === 0) {
+        this.setState({ center: { ...this.state.center, newContact: true } });
+      } else {
+        this.setState({
+          center: {
+            ...this.state.center,
+            contact: { ...this.state.center.contact, existingContacts: contacts },
+          },
+        });
+      }
+    }
   }
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
@@ -63,7 +78,7 @@ class Create extends React.Component {
     facilitiesDOM.on('chip.delete', chipChanged);
   }
   createCenter(e) {
-    this.state.access_token = this.props.access_token;
+    this.state.accessToken = this.props.accessToken;
     this.props.createCenter(this.state);
     e.preventDefault();
   }
@@ -200,41 +215,6 @@ class Create extends React.Component {
                   <label htmlFor="center_amount">Amount Center (N)</label>
                 </div>
               </div>
-              <div className="row">
-                <div className="input-field col s12 m12 l12">
-                  <textarea
-                    id="details"
-                    className="materialize-textarea"
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          additionalDetails: e.target.value,
-                        },
-                      })
-                    }
-                    defaultValue={this.state.center.additionalDetails}
-                  />
-                  <label htmlFor="event_summary">Additional Details</label>
-                </div>
-
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="validate"
-                    id="eventpic"
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          image: e.target.files[0],
-                        },
-                      })
-                    }
-                  />
-                </div>
-              </div>
               <CenterContactPerson
                 newContact={this.state.center.newContact}
                 onNewContactChanged={this.handleNewContactChanged}
@@ -259,16 +239,21 @@ class Create extends React.Component {
 
 Create.propTypes = {
   createCenter: PropTypes.func.isRequired,
-  access_token: PropTypes.string.isRequired,
+  getContactPerson: PropTypes.func.isRequired,
+  accessToken: PropTypes.string.isRequired,
+  _getCenterContact: PropTypes.string.isRequired,
+  contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = (state) => {
-  const { access_token } = state.user;
-  return { access_token };
+  const { accessToken } = state.user;
+  const { contacts, events: { getCenterContact } } = state.center;
+  return { accessToken, contacts, _getCenterContact: getCenterContact };
 };
 
 const mapDispatchToProps = dispatch => ({
   createCenter: centerDetails => dispatch(createCenterRequest(centerDetails)),
+  getContactPerson: accessToken => dispatch(getContactPersonRequest(accessToken)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Create);

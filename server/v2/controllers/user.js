@@ -24,14 +24,20 @@ module.exports = {
       })
       .then((user) => {
         if (user) {
-          return res.status(400).json({ errors: { global: ['username or phonenumber or email has already been used.'] } });
+          return res
+            .status(400)
+            .json({
+              errors: { global: ['username or phonenumber or email has already been used.'] },
+            });
         }
         return models.users
           .create(req.body)
           .then((user) => {
-						user = user.toJSON();
-						delete user.password;
-            return res.status(200).json({ payload: user, success: { global: ['Account created'] } });
+            user = user.toJSON();
+            delete user.password;
+            return res
+              .status(200)
+              .json({ payload: user, success: { global: ['Account created'] } });
           })
           .catch(error => res.status(500).json(error));
       })
@@ -53,18 +59,20 @@ module.exports = {
 
         const token = jwt.sign({ id: user.id, role: user.role }, tksecret, { expiresIn: 86400 });
         res.status(200).send({ auth: true, token, userdata: user });
-      }).catch((e) => {
-				console.log(e);
-				res.status(500).send('Server Error');
-			});
+      })
+      .catch((e) => {
+        console.log(e);
+        res.status(500).send('Server Error');
+      });
   },
   getEvents(req, res) {
-    return models.events.findAll({
-      where: {
-        userid: req.user.id,
-      }
-    })
-    .then(events => res.status(200).json(events))
-    .catch(error => res.status(500).json(error));
+    return models.events
+      .findAll({
+        where: {
+          userid: req.user.id,
+        },
+      })
+      .then(events => res.status(200).json(events))
+      .catch(error => res.status(500).json(error));
   },
 };

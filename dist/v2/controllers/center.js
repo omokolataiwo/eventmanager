@@ -6,8 +6,6 @@ var _sequelize2 = _interopRequireDefault(_sequelize);
 
 var _center = require('./_support/center');
 
-var _center2 = _interopRequireDefault(_center);
-
 var _models = require('../models');
 
 var _models2 = _interopRequireDefault(_models);
@@ -18,30 +16,28 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 module.exports = {
   createCenter: function createCenter(req, res) {
-    var center = new _center2.default(req.body);
-
+    var center = new _center.Center(req.body);
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());
     }
-
     req.body.ownerid = req.user.id;
+    req.body.contact.ownerid = req.body.ownerid;
 
     return _models2.default.users.findById(req.body.ownerid).then(function (user) {
       if (!user) {
         return res.status(400).send({ error: true, message: 'Center must have a valid owner' });
       }
-      return _models2.default.centers.create(req.body.center).then(function (center) {
-        req.body.center.contactDetails.center_id = center.id;
-        _models2.default.centers.create(req.body.center.contactDetails).then(function () {
-          return res.status(200).json(center);
-        }).catch(function (error) {
-          return res.status(501).send(error);
+
+      if (req.body.newContact) {
+        return _models2.default.contacts.create(req.body.contact).then(function (contact) {
+          req.body.contactid = contact.id;
+          return (0, _center.create)(req, res, _models2.default);
         });
-      }).catch(function (error) {
-        return res.status(501).send(error);
-      });
+      }
+      return (0, _center.create)(req, res, _models2.default);
     }).catch(function (error) {
-      return res.status(501).send(error);
+      console.log(error);
+      res.status(501).send(error);
     });
   },
   getCenters: function getCenters(req, res) {
@@ -62,12 +58,13 @@ module.exports = {
     });
   },
   editCenter: function editCenter(req, res) {
+    // TODO: CHECK IF ITS THE OWNER OF THE CENTER THAT IS EDITING
     return _models2.default.centers.findById(req.params.id).then(function (center) {
       if (!center) {
         return res.status(401).json({ error: true, message: 'Center does not exist' });
       }
 
-      var mCenter = new _center2.default(center);
+      var mCenter = new _center.Center(center);
       mCenter.load(req.body);
 
       if (!mCenter.safe()) {
@@ -116,6 +113,18 @@ module.exports = {
       return res.json(centersii);
     }).catch(function (error) {
       return res.status(500).json(error);
+    });
+  },
+  getContacts: function getContacts(req, res) {
+    return _models2.default.contacts.findAll({
+      where: {
+        ownerid: req.user.id
+      }
+    }).then(function (contacts) {
+      return res.status(200).json(contacts);
+    }).catch(function (error) {
+      console.log(error);
+      res.status(400).send(error);
     });
   }
 };
