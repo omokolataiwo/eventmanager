@@ -8,7 +8,7 @@ export const Center = props => (
   <Switch>
     <Route path={`${props.match.path}`} exact component={Index} />
     <Route path={`${props.match.path}/create`} component={Create} />
-    <Route path={`${props.match.path}/update`} component={Update} />
+    <Route path={`${props.match.path}/update/:index`} component={Update} />
     {/* <Route path={`${this.props.match.path}/centerid/events`} component={Events} /> */}
     <Redirect to="/admin/center" />
   </Switch>

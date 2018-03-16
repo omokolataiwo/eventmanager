@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { API_PATH } from '../../consts';
 import { setHeader, tokenExpired, isTokenActive } from './auth';
-import { RECIEVED_CENTER_CONTACTS } from '../types';
+import { RECEIVED_CENTER_CONTACTS } from '../types';
 
 const centerContacts = contacts => ({
-  type: RECIEVED_CENTER_CONTACTS,
+  type: RECEIVED_CENTER_CONTACTS,
   contacts,
 });
 
