@@ -25,6 +25,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
+      type: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       ownerid: {
         type: Sequelize.INTEGER,
         allowNull: false

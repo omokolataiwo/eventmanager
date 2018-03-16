@@ -10,7 +10,7 @@ const createCenter = (center, accessToken) => (dispatch) => {
         .then((response) => {
           console.log(response, 'ttttttttttttt');
         })
-        .catch(e => console.dir(e));
+        .catch(e => console.log(e));
     })
     .catch((e) => {
       // TODO Check if tokenExpires

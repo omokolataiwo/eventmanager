@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     address: DataTypes.STRING,
     state: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
+    type: DataTypes.INTEGER,
     ownerid: DataTypes.INTEGER,
     contactid: DataTypes.INTEGER,
     facilities: DataTypes.STRING,

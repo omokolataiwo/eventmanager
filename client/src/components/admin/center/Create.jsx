@@ -8,7 +8,7 @@ import { SelectComponent } from '../../ui/SelectComponent';
 import { CenterContactPerson } from '../../ui/CenterContactPerson';
 import { STATES, CENTER_TYPE } from '../../ui/consts';
 import fakeCenter from '../../ui/faker/center';
-import { RECIEVED_CENTER_CONTACTS } from '../../../store/actions/types';
+import { RECEIVED_CENTER_CONTACTS } from '../../../store/actions/types';
 
 class Create extends React.Component {
   constructor(props) {
@@ -47,7 +47,7 @@ class Create extends React.Component {
     this.props.getContactPerson(this.props.accessToken);
 
     const { _getCenterContact, contacts } = this.props;
-    if (_getCenterContact === RECIEVED_CENTER_CONTACTS) {
+    if (_getCenterContact === RECEIVED_CENTER_CONTACTS) {
       if (contacts.length === 0) {
         this.setState({ center: { ...this.state.center, newContact: true } });
       } else {
