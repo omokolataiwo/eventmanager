@@ -4,6 +4,7 @@ import expressJoi from 'express-joi-validator';
 import { event } from '../controllers';
 import { tksecret } from '../config/config.json';
 import idroute from '../validate/idroute';
+import { ACCOUNT_TYPE_USER } from './const';
 
 const auth = (req, res, next) => {
   const token = req.headers['x-access-token'];
@@ -14,7 +15,7 @@ const auth = (req, res, next) => {
     if (error) {
       return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
     }
-    if (decoded.role !== 2) {
+    if (decoded.role !== ACCOUNT_TYPE_USER) {
       return res.status(401).json({ auth: false, message: 'Not authorized' });
     }
     req.user = decoded;

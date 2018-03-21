@@ -1,8 +1,6 @@
-
-
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('events', {
-    name: DataTypes.STRING,
+    title: DataTypes.STRING,
     startdate: DataTypes.DATE,
     enddate: DataTypes.DATE,
     centerid: DataTypes.INTEGER,

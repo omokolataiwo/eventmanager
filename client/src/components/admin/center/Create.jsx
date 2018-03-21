@@ -78,9 +78,9 @@ class Create extends React.Component {
     facilitiesDOM.on('chip.delete', chipChanged);
   }
   createCenter(e) {
+    e.preventDefault();
     this.state.accessToken = this.props.accessToken;
     this.props.createCenter(this.state);
-    e.preventDefault();
   }
 
   handleContactPersonChanged(contactid) {

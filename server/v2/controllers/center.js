@@ -1,5 +1,5 @@
 import sequelize from 'sequelize';
-import { Center, create } from './_support/center';
+import { Center, create, update } from './_support/center';
 import models from '../models';
 
 module.exports = {
@@ -36,7 +36,18 @@ module.exports = {
     return models.centers
       .findAll()
       .then(centers => res.status(200).json(centers))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(501).send(error));
+  },
+
+  getAdminCenters(req, res) {
+    return models.centers
+      .findAll({
+        where: {
+          ownerid: req.user.id,
+        },
+      })
+      .then(centers => res.status(200).json(centers))
+      .catch(error => res.status(501).send(error));
   },
 
   getCenter(req, res) {
@@ -50,11 +61,15 @@ module.exports = {
       })
       .catch(error => res.status(500).send(error));
   },
-
   editCenter(req, res) {
     // TODO: CHECK IF ITS THE OWNER OF THE CENTER THAT IS EDITING
     return models.centers
-      .findById(req.params.id)
+      .find({
+        where: {
+          id: req.params.id,
+          ownerid: req.user.id,
+        },
+      })
       .then((center) => {
         if (!center) {
           return res.status(401).json({ error: true, message: 'Center does not exist' });
@@ -66,17 +81,16 @@ module.exports = {
         if (!mCenter.safe()) {
           return res.status(400).json({ error: true, message: mCenter.getErrors() });
         }
-        return models.centers
-          .update(mCenter.toJSON(), {
-            where: { id: req.params.id },
-          })
-          .then((center) => {
-            console.log(center);
-            console.log(req.params.id);
-            return res.status(200).json(center);
+        req.body.center = mCenter.toJSON();
+        if (req.body.newContact) {
+          return models.contacts.create(req.body.contact).then((contact) => {
+            req.body.contactid = contact.id;
+            return update(req, res, models);
           });
+        }
+        return update(req, res, models);
       })
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(501).send(error));
   },
   getEvents(req, res) {
     return models.centers

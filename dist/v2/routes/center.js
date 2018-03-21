@@ -24,6 +24,8 @@ var _idroute = require('../validate/idroute');
 
 var _idroute2 = _interopRequireDefault(_idroute);
 
+var _const = require('./const');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var auth = function auth(req, res, next) {
@@ -37,7 +39,7 @@ var auth = function auth(req, res, next) {
       return res.status(500).json({ auth: false, type: error.name });
     }
 
-    if (decoded.role !== 2) {
+    if (decoded.role !== _const.ACCOUNT_TYPE_ADMIN) {
       return res.status(401).json({ auth: false, message: 'Not authorized' });
     }
     req.user = decoded;

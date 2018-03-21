@@ -1,56 +1,56 @@
-import React from "react";
-import { Redirect, Switch, Route, Link } from "react-router-dom";
-import { connect } from "react-redux";
-import { Index } from "./Index";
-import { Profile } from "./Profile";
-import { Event } from "./Event";
+import React from 'react';
+import { Redirect, Switch, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Index from './Index';
+import { Profile } from './Profile';
+import { Event } from './Event';
 
-import logo from "../../images/logo.png";
-import { ACCOUNT_TYPE_MEMBER } from "./../../store/consts";
-import * as route from "./../../libs/route";
+import logo from '../../images/logo.png';
+import { ACCOUNT_TYPE_MEMBER } from './../../store/consts';
+import * as route from './../../libs/route';
 
 class User extends React.Component {
   componentWillMount() {
     const { userdata, authenticated, history } = this.props;
 
     if (!authenticated || userdata.role !== ACCOUNT_TYPE_MEMBER) {
-      route.push("/signin", history.push);
+      route.push('/signin', history.push);
     }
   }
 
   render() {
     return (
-      <div class="page-wrap">
-        <header class="gradient-blue">
-          <div class="top-head">
-            <div class="container">
-              <div class="acc-wrap">
-                <div class="login-container">
+      <div className="page-wrap">
+        <header className="gradient-blue">
+          <div className="top-head">
+            <div className="container">
+              <div className="acc-wrap">
+                <div className="login-container">
                   <Link to="/user">
-                    <span class="material-icons left">dashboard</span>DASH BOARD
+                    <span className="material-icons left">dashboard</span>DASH BOARD
                   </Link>
                 </div>
-                <div class="login-container">
+                <div className="login-container">
                   <Link to="/user/event/create">
-                    <span class="material-icons left">add</span>CREATE
+                    <span className="material-icons left">add</span>CREATE
                   </Link>
                 </div>
-                <div class="login-container">
+                <div className="login-container">
                   <Link to="/user/profile">
-                    <span class="material-icons left">face</span>PROFILE
+                    <span className="material-icons left">face</span>PROFILE
                   </Link>
                 </div>
 
-                <div class="login-container">
+                <div className="login-container">
                   <Link to="/logout">LOG OUT</Link>
                 </div>
               </div>
             </div>
           </div>
-          <div class="menu-section">
-            <div class="container">
-              <div class="row margin_0">
-                <div class="col s12 m4 l4">
+          <div className="menu-section">
+            <div className="container">
+              <div className="row margin_0">
+                <div className="col s12 m4 l4">
                   <h3>
                     <Link to="/">
                       <img src={logo} alt="Logo" />
@@ -61,21 +61,18 @@ class User extends React.Component {
             </div>
           </div>
         </header>
-        <main class="main-wrapper">
+        <main className="main-wrapper">
           <Switch>
             <Route path={`${this.props.match.path}`} exact component={Index} />
-            <Route
-              path={`${this.props.match.path}/center`}
-              component={Profile}
-            />
+            <Route path={`${this.props.match.path}/center`} component={Profile} />
             <Route path={`${this.props.match.path}/event`} component={Event} />
             <Redirect to={`${this.props.match.path}`} />
           </Switch>
         </main>
 
-        <footer class="page-footer blue">
-          <div class="footer-copyright">
-            <div class="container">© 2018 Copyright</div>
+        <footer className="page-footer blue">
+          <div className="footer-copyright">
+            <div className="container">© 2018 Copyright</div>
           </div>
         </footer>
       </div>
@@ -83,10 +80,10 @@ class User extends React.Component {
   }
 }
 
-export default connect(state => {
+export default connect((state) => {
   const { authenticated, userdata } = state.user;
   return {
     authenticated,
-    userdata
+    userdata,
   };
 })(User);

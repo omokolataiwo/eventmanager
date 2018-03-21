@@ -7,7 +7,6 @@ import { getContactPersonRequest } from '../../../store/actions/action_creators/
 import { SelectComponent } from '../../ui/SelectComponent';
 import { CenterContactPerson } from '../../ui/CenterContactPerson';
 import { STATES, CENTER_TYPE } from '../../ui/consts';
-import fakeCenter from '../../ui/faker/center';
 import { RECEIVED_CENTER_CONTACTS } from '../../../store/actions/types';
 
 class Update extends React.Component {
@@ -43,24 +42,26 @@ class Update extends React.Component {
     this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
   }
   componentWillMount() {
-    this.setState({ center: { ...this.props.centers } });
-    this.setState({ center: { ...this.props.centers[this.props.match.params.index] } });
-    // TODO: Validate this.props.match.params.index to check the size of centers and the value of index
-    this.props.getContactPerson(this.props.accessToken);
+    // TODO: Validate this.props.match.params.index
+    // to check the size of centers and the value of index
+    const center = this.props.centers[this.props.match.params.index];
+    this.setState({ center: { ...this.state.center, ...center } }, () => {
+      this.props.getContactPerson(this.props.accessToken);
+      const { _getCenterContact, contacts } = this.props;
 
-    const { _getCenterContact, contacts } = this.props;
-    if (_getCenterContact === RECEIVED_CENTER_CONTACTS) {
-      if (contacts.length === 0) {
-        this.setState({ center: { ...this.state.center, newContact: true } });
-      } else {
-        this.setState({
-          center: {
-            ...this.state.center,
-            contact: { ...this.state.center.contact, existingContacts: contacts },
-          },
-        });
+      if (_getCenterContact === RECEIVED_CENTER_CONTACTS) {
+        if (contacts.length === 0) {
+          this.setState({ center: { ...this.state.center, newContact: true } });
+        } else {
+          this.setState({
+            center: {
+              ...this.state.center,
+              contact: { ...this.state.center.contact, existingContacts: contacts },
+            },
+          });
+        }
       }
-    }
+    });
   }
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
@@ -80,9 +81,9 @@ class Update extends React.Component {
     facilitiesDOM.on('chip.delete', chipChanged);
   }
   updateCenter(e) {
+    e.preventDefault();
     this.state.accessToken = this.props.accessToken;
     this.props.updateCenter(this.state);
-    e.preventDefault();
   }
 
   handleContactPersonChanged(contactid) {
@@ -137,7 +138,9 @@ class Update extends React.Component {
                       })
                     }
                   />
-                  <label htmlFor="center_name">Center Name</label>
+                  <label htmlFor="center_name" className="active">
+                    Center Name
+                  </label>
                 </div>
               </div>
               <div className="row">
@@ -156,7 +159,9 @@ class Update extends React.Component {
                       })
                     }
                   />
-                  <label htmlFor="capacity">Capacity</label>
+                  <label htmlFor="capacity" className="active">
+                    Capacity
+                  </label>
                 </div>
                 <div className="input-field col  s12 m6 l6">
                   <SelectComponent
@@ -184,7 +189,9 @@ class Update extends React.Component {
                       })
                     }
                   />
-                  <label htmlFor="address">Address</label>
+                  <label htmlFor="address" className="active">
+                    Address
+                  </label>
                 </div>
                 <div className="input-field col s12 m6 l6">
                   <SelectComponent
@@ -214,7 +221,9 @@ class Update extends React.Component {
                       })
                     }
                   />
-                  <label htmlFor="center_amount">Amount Center (N)</label>
+                  <label htmlFor="center_amount" className="active">
+                    Amount Center (N)
+                  </label>
                 </div>
               </div>
               <CenterContactPerson
