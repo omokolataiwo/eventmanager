@@ -12,6 +12,8 @@ var _signupRules = require('../validate/signupRules');
 
 var _config = require('../config/config.json');
 
+var _const = require('./const');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var auth = function auth(req, res, next) {
@@ -19,11 +21,12 @@ var auth = function auth(req, res, next) {
   if (!token) {
     return res.status(401).json({ auth: false, message: 'No token provided' });
   }
+  console.log(req.headers);
   return _jsonwebtoken2.default.verify(token, _config.tksecret, function (error, decoded) {
     if (error) {
       return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
     }
-    if (decoded.role !== 2) {
+    if (decoded.role !== _const.ACCOUNT_TYPE_ADMIN && decoded.role !== _const.ACCOUNT_TYPE_USER) {
       return res.status(401).json({ auth: false, message: 'Not authorized' });
     }
     req.user = decoded;

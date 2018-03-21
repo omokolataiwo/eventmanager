@@ -3,7 +3,7 @@ import PropsType from 'prop-types';
 
 import { STATES, CENTER_TYPE } from '../../ui/consts';
 
-export const CenterDetails = props => (
+export const CenterDetailsSimple = props => (
   <div className="row event-center-detailed">
     <div className="col s12 m5 l5 card">
       <div className="event-center">
@@ -15,6 +15,7 @@ export const CenterDetails = props => (
     </div>
     <div className="col s12 m7 l7">
       <h5>{props.center.name}</h5>
+      <div>{props.center.address}</div>
       <div>
         <span className="location">
           <span>map </span>
@@ -32,32 +33,18 @@ export const CenterDetails = props => (
         <div className="chip">Security</div>
         <div className="chip">CCTV</div>
       </div>
-
-      <div>
-        <span className="highlight">Hosted</span> 300 events | 25 events{' '}
-        <span className="highlight">Pending</span>
-      </div>
-      <div
-        className="btn"
-        onClick={props.click}
-        role="button"
-        onKeyDown={props.click}
-        tabIndex="-1"
-      >
-        Edit Center
-      </div>
     </div>
   </div>
 );
 
-CenterDetails.propTypes = {
+CenterDetailsSimple.propTypes = {
   center: PropsType.shape({
     name: PropsType.string.isRequired,
     state: PropsType.number.isRequired,
+    address: PropsType.string.isRequired,
     type: PropsType.number.isRequired,
     amount: PropsType.number.isRequired,
     capacity: PropsType.number.isRequired,
   }).isRequired,
-  click: PropsType.func.isRequired,
 };
-export default CenterDetails;
+export default CenterDetailsSimple;

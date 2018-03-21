@@ -16,7 +16,7 @@ export const fetchAllCentersRequest = accessToken => (dispatch) => {
         .then(response => dispatch(fetchAllCenter(response.data)))
         .catch(e => console.log(e));
     })
-    .catch(e => dispatch(tokenExpired()));
+    .catch(() => dispatch(tokenExpired()));
 };
 
 export default fetchAllCentersRequest;

@@ -10,65 +10,55 @@ module.exports = {
     }
 
     // check if center exist
-    models.centers.findOne({ where: { id: req.body.centerid } }).then((center) => {
-      if (!center) {
-        return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
-      }
+    return models.centers
+      .findOne({ where: { id: req.body.centerid } })
+      .then((center) => {
+        if (!center) {
+          return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
+        }
+        return models.events
+          .findOne({
+            where: {
+              centerid: center.id,
+              $or: [
+                {
+                  $and: [
+                    { startdate: { [sequelize.Op.lte]: new Date(event.startdate) } },
+                    { enddate: { [sequelize.Op.gte]: new Date(event.startdate) } },
+                  ],
+                },
+                {
+                  $and: [
+                    { startdate: { [sequelize.Op.lte]: new Date(event.enddate) } },
+                    { enddate: { [sequelize.Op.gte]: new Date(event.enddate) } },
+                  ],
+                },
+              ],
+            },
+          })
+          .then((existingEvent) => {
+            if (existingEvent) {
+              return res
+                .status(400)
+                .json({ error: true, message: { event: 'Center is not available' } });
+            }
+            const validatedEvent = Object.assign(
+              {},
+              { userid: req.user.id, centerid: center.id },
+              event.toJSON(),
+            );
 
-      // check if there is center for event at start date
-      return models.events
-        .findOne({
-          where: {
-            centerid: center.id,
-            $or: [
-              {
-                $and: [
-                  { startdate: { [sequelize.Op.lte]: new Date(event.startdate) } },
-                  { enddate: { [sequelize.Op.gte]: new Date(event.startdate) } },
-                ],
-              },
-              {
-                $and: [
-                  { startdate: { [sequelize.Op.lte]: new Date(event.enddate) } },
-                  { enddate: { [sequelize.Op.gte]: new Date(event.enddate) } },
-                ],
-              },
-            ],
-          },
-        })
-        .then((existingEvent) => {
-          if (existingEvent) {
-            return res
-              .status(400)
-              .json({ error: true, message: { event: 'Center is not available' } });
-          }
-          // user must exist
-          return models.users
-            .findOne({
-              where: { id: req.user.id },
-            })
-            .then((existingUsers) => {
-              if (!existingUsers) {
-                return res.status(400).send('Invalid user');
-              }
-
-              // create event
-              const validatedEvent = Object.assign(
-                { userid: existingUsers.id, centerid: center.id },
-                event.toJSON(),
-              );
-
-              return models.events.create(validatedEvent).then((newEvent) => {
-                if (!newEvent) {
-                  return res.status(400).send('Can not create event');
-                }
-                return res.status(200).json(newEvent);
+            return models.events
+              .create(validatedEvent)
+              .then(newEvent => res.status(200).json(newEvent))
+              .catch((e) => {
+                res.status(501).send(e);
               });
-            });
-        });
-    });
+          })
+          .catch(e => res.status(501).send(e));
+      })
+      .catch(e => res.status(501).send(e));
   },
-
   deleteEvent(req, res) {
     return models.events
       .findOne({
@@ -93,6 +83,12 @@ module.exports = {
   getEvents(req, res) {
     return models.events
       .findAll({
+        include: [
+          {
+            model: models.centers,
+            as: 'center',
+          },
+        ],
         where: {
           userid: req.user.id,
         },

@@ -44,7 +44,18 @@ module.exports = {
     return _models2.default.centers.findAll().then(function (centers) {
       return res.status(200).json(centers);
     }).catch(function (error) {
-      return res.status(400).send(error);
+      return res.status(501).send(error);
+    });
+  },
+  getAdminCenters: function getAdminCenters(req, res) {
+    return _models2.default.centers.findAll({
+      where: {
+        ownerid: req.user.id
+      }
+    }).then(function (centers) {
+      return res.status(200).json(centers);
+    }).catch(function (error) {
+      return res.status(501).send(error);
     });
   },
   getCenter: function getCenter(req, res) {
@@ -59,7 +70,12 @@ module.exports = {
   },
   editCenter: function editCenter(req, res) {
     // TODO: CHECK IF ITS THE OWNER OF THE CENTER THAT IS EDITING
-    return _models2.default.centers.findById(req.params.id).then(function (center) {
+    return _models2.default.centers.find({
+      where: {
+        id: req.params.id,
+        ownerid: req.user.id
+      }
+    }).then(function (center) {
       if (!center) {
         return res.status(401).json({ error: true, message: 'Center does not exist' });
       }
@@ -70,15 +86,16 @@ module.exports = {
       if (!mCenter.safe()) {
         return res.status(400).json({ error: true, message: mCenter.getErrors() });
       }
-      return _models2.default.centers.update(mCenter.toJSON(), {
-        where: { id: req.params.id }
-      }).then(function (center) {
-        console.log(center);
-        console.log(req.params.id);
-        return res.status(200).json(center);
-      });
+      req.body.center = mCenter.toJSON();
+      if (req.body.newContact) {
+        return _models2.default.contacts.create(req.body.contact).then(function (contact) {
+          req.body.contactid = contact.id;
+          return (0, _center.update)(req, res, _models2.default);
+        });
+      }
+      return (0, _center.update)(req, res, _models2.default);
     }).catch(function (error) {
-      return res.status(400).send(error);
+      return res.status(501).send(error);
     });
   },
   getEvents: function getEvents(req, res) {

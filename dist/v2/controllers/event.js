@@ -24,12 +24,10 @@ module.exports = {
     }
 
     // check if center exist
-    _models2.default.centers.findOne({ where: { id: req.body.centerid } }).then(function (center) {
+    return _models2.default.centers.findOne({ where: { id: req.body.centerid } }).then(function (center) {
       if (!center) {
         return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
       }
-
-      // check if there is center for event at start date
       return _models2.default.events.findOne({
         where: {
           centerid: center.id,
@@ -43,25 +41,18 @@ module.exports = {
         if (existingEvent) {
           return res.status(400).json({ error: true, message: { event: 'Center is not available' } });
         }
-        // user must exist
-        return _models2.default.users.findOne({
-          where: { id: req.user.id }
-        }).then(function (existingUsers) {
-          if (!existingUsers) {
-            return res.status(400).send('Invalid user');
-          }
+        var validatedEvent = Object.assign({}, { userid: req.user.id, centerid: center.id }, event.toJSON());
 
-          // create event
-          var validatedEvent = Object.assign({ userid: existingUsers.id, centerid: center.id }, event.toJSON());
-
-          return _models2.default.events.create(validatedEvent).then(function (newEvent) {
-            if (!newEvent) {
-              return res.status(400).send('Can not create event');
-            }
-            return res.status(200).json(newEvent);
-          });
+        return _models2.default.events.create(validatedEvent).then(function (newEvent) {
+          return res.status(200).json(newEvent);
+        }).catch(function (e) {
+          res.status(501).send(e);
         });
+      }).catch(function (e) {
+        return res.status(501).send(e);
       });
+    }).catch(function (e) {
+      return res.status(501).send(e);
     });
   },
   deleteEvent: function deleteEvent(req, res) {
@@ -87,6 +78,10 @@ module.exports = {
   },
   getEvents: function getEvents(req, res) {
     return _models2.default.events.findAll({
+      include: [{
+        model: _models2.default.centers,
+        as: 'center'
+      }],
       where: {
         userid: req.user.id
       }

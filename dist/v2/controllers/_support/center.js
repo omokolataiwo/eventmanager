@@ -3,11 +3,9 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.create = exports.Center = undefined;
+exports.upate = exports.create = exports.Center = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _moment = require('moment');
 
 var _validate2 = require('validate.js');
 
@@ -113,7 +111,16 @@ var create = exports.create = function create(req, res, models) {
   return models.centers.create(req.body).then(function (center) {
     return res.status(200).json(center);
   }).catch(function (e) {
-    console.log(e);
     res.status(501).send(e);
+  });
+};
+
+var upate = exports.upate = function upate(req, res, models) {
+  return models.centers.update(req.body.center, {
+    where: { id: req.params.id }
+  }).then(function (center) {
+    return res.status(200).json(center);
+  }).then(function (error) {
+    return res.status(501).send(error);
   });
 };

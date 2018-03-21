@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import * as route from '../../../libs/route';
 import { fetchAllCentersRequest } from '../../../store/actions/action_creators/fetchAllCentersRequest';
 import { STATES } from '../../ui/consts';
-import { CenterDetails } from './CenterDetails';
+import { CenterDetailsEdit } from './CenterDetailsEdit';
 
 import CenterImg from '../../../images/party-room.jpg';
 
@@ -30,7 +30,7 @@ class Index extends React.Component {
   render() {
     return (
       <div className="container container-medium">
-        <CenterDetails
+        <CenterDetailsEdit
           center={this.state.centers[this.state.activeCenter]}
           click={this.handleEditCenter}
         />

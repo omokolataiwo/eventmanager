@@ -81,7 +81,8 @@ class Signup extends Component {
     }
   }
   componentWillReceiveProps(props) {
-    let { errors, events, history } = props;
+    const { errors, history } = props;
+    let { events } = props;
 
     if (events.isSignedup) {
       return route.push('/signin', history.push);
@@ -89,7 +90,7 @@ class Signup extends Component {
 
     events = Object.assign({}, this.state.events, { ...events });
     this.setState({ events });
-    this.setState({ errors });
+    return this.setState({ errors });
   }
   validate(field, value, objectMode) {
     const errors = { ...this.state.errors };
