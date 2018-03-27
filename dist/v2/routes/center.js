@@ -35,7 +35,6 @@ var auth = function auth(req, res, next) {
   }
   return _jsonwebtoken2.default.verify(token, _config.tksecret, function (error, decoded) {
     if (error) {
-      console.log(error);
       return res.status(500).json({ auth: false, type: error.name });
     }
 
@@ -48,12 +47,14 @@ var auth = function auth(req, res, next) {
 };
 
 module.exports = function (app) {
-  app.post('/centers', auth, _controllers.center.createCenter);
-  app.get('/centers', _controllers.center.getCenters);
-  app.get('/centers/contacts', auth, _controllers.center.getContacts);
-  app.get('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), _controllers.center.getCenter);
-  app.put('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.editCenter);
-  app.get('/centers/:id/events', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.getEvents);
+  app.post('/centers', auth, _controllers.center.createCenter); // Create Center
+  app.get('/centers', _controllers.center.getCenters); // Get all centers
+  app.get('/centers/own', auth, _controllers.center.getOwnCenter); // Get own centers
+  app.get('/centers/contacts', auth, _controllers.center.getContacts); // Get Own Center Contacts
+  app.get('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), _controllers.center.getCenter); // Get a Single Center, does not need authentication
+  app.get('/centers/:id/events', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.getCenterWithEvents); // Get Center with events, protected
+  app.get('/centers/search', _controllers.center.search);
+  app.put('/centers/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.center.editCenter); // Update a center
   app.get('/', function (req, res) {
     return res.status(200).send('Welcome to EventMan - The event manager');
   });

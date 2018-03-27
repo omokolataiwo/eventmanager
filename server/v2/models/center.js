@@ -1,8 +1,8 @@
-
 module.exports = (sequelize, DataTypes) => {
   const Center = sequelize.define('centers', {
     name: DataTypes.STRING,
     address: DataTypes.STRING,
+    area: DataTypes.STRING,
     state: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
     type: DataTypes.INTEGER,
@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     contactid: DataTypes.INTEGER,
     facilities: DataTypes.STRING,
     amount: DataTypes.INTEGER,
+    details: DataTypes.STRING,
   });
 
   Center.associate = (models) => {

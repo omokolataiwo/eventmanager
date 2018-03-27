@@ -66,6 +66,7 @@ class User extends React.Component {
             <Route path={`${this.props.match.path}`} exact component={Index} />
             <Route path={`${this.props.match.path}/center`} component={Profile} />
             <Route path={`${this.props.match.path}/event`} component={Event} />
+            <Route path={`${this.props.match.path}/profile`} component={Profile} />
             <Redirect to={`${this.props.match.path}`} />
           </Switch>
         </main>

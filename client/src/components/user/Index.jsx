@@ -17,7 +17,11 @@ class Index extends Component {
 
   componentWillMount() {
     this.props.fetchUserEvents(this.props.accessToken);
-    this.setState({ events: this.props.events }, () => console.log(this.state));
+  }
+
+  componentWillReceiveProps(props) {
+    console.log(props.events);
+    this.setState({ events: props.events });
   }
 
   render() {
@@ -47,7 +51,9 @@ class Index extends Component {
         <h5 className="center">AVAILABLE CENTERS</h5>
         <hr />
         <div className="row center event_center">
-          <div className="col s12 m12 l12">{/* <HorizontalFeaturedCenters /> */}</div>
+          <div className="col s12 m12 l12">
+            {<HorizontalFeaturedCenters history={this.props.history} />}
+          </div>
 
           <div className="col s12 m12 l12">
             <ul className="pagination">

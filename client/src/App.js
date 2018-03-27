@@ -1,9 +1,10 @@
 import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
-import { Home } from './components/pages/Home';
+import Home from './components/pages/Home';
 import Signup from './components/pages/Signup';
 import Signin from './components/pages/Signin';
 import Signout from './components/pages/Signout';
+import Center from './components/pages/Center';
 import logo from './images/logo.png';
 
 function App() {
@@ -59,8 +60,9 @@ function App() {
       <Switch>
         <Route path="/" exact component={Home} />
         <Route path="/signup" component={Signup} />
-      <Route path="/signin" component={Signin} />
-			<Route path="/signout" component={Signout} />
+        <Route path="/signin" component={Signin} />
+        <Route path="/signout" component={Signout} />
+        <Route path="/center/:id" component={Center} />
         <Redirect to="/" />
       </Switch>
       <footer className="page-footer blue">

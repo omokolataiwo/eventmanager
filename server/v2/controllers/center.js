@@ -31,14 +31,12 @@ module.exports = {
         res.status(501).send(error);
       });
   },
-
   getCenters(req, res) {
     return models.centers
       .findAll()
       .then(centers => res.status(200).json(centers))
       .catch(error => res.status(501).send(error));
   },
-
   getAdminCenters(req, res) {
     return models.centers
       .findAll({
@@ -49,7 +47,6 @@ module.exports = {
       .then(centers => res.status(200).json(centers))
       .catch(error => res.status(501).send(error));
   },
-
   getCenter(req, res) {
     return models.centers
       .findById(req.params.id)
@@ -92,7 +89,7 @@ module.exports = {
       })
       .catch(error => res.status(501).send(error));
   },
-  getEvents(req, res) {
+  getCenterWithEvents(req, res) {
     return models.centers
       .findOne({
         include: [
@@ -149,5 +146,11 @@ module.exports = {
         console.log(error);
         res.status(400).send(error);
       });
+  },
+  search(req, res) {
+    return res.status(500).send('Not Implemented Error');
+  },
+  getOwnCenter(req, res) {
+    return res.status(500).send('Not Implemented Error');
   },
 };

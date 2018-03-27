@@ -10,7 +10,7 @@ const auth = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ auth: false, message: 'No token provided' });
   }
-  console.log(req.headers);
+
   return jwt.verify(token, tksecret, (error, decoded) => {
     if (error) {
       return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
@@ -35,6 +35,7 @@ const validateSignup = (req, res, next) => {
 module.exports = (app) => {
   app.post('/users/login', user.login);
   app.post('/users', validateSignup, user.create);
-  app.get('/users/events', auth, user.getEvents);
-  app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true }));
+  app.get('/users', auth, user.getUser);
+  app.put('/users/update', auth, user.update);
+  app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true })); // TODO: Remove Set all token in axio.global after successful sign up
 };

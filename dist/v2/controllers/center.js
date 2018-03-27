@@ -98,7 +98,7 @@ module.exports = {
       return res.status(501).send(error);
     });
   },
-  getEvents: function getEvents(req, res) {
+  getCenterWithEvents: function getCenterWithEvents(req, res) {
     return _models2.default.centers.findOne({
       include: [{
         model: _models2.default.events,
@@ -143,5 +143,11 @@ module.exports = {
       console.log(error);
       res.status(400).send(error);
     });
+  },
+  search: function search(req, res) {
+    return res.status(500).send('Not Implemented Error');
+  },
+  getOwnCenter: function getOwnCenter(req, res) {
+    return res.status(500).send('Not Implemented Error');
   }
 };

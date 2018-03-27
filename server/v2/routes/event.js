@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import Joi from 'joi';
 import expressJoi from 'express-joi-validator';
 import { event } from '../controllers';
 import { tksecret } from '../config/config.json';
@@ -24,8 +23,8 @@ const auth = (req, res, next) => {
 };
 
 module.exports = (app) => {
-  app.post('/events', auth, event.createEvent);
-  app.delete('/events/:id', expressJoi(idroute), auth, event.deleteEvent);
-  app.put('/events/:id', expressJoi(idroute), auth, event.editEvent);
-  app.get('/events', auth, event.getEvents);
+  app.post('/events', auth, event.createEvent); // Create event
+  app.delete('/events/:id', expressJoi(idroute), auth, event.deleteEvent); // Delete event
+  app.put('/events/:id', expressJoi(idroute), auth, event.editEvent); // Update event
+  app.get('/events', auth, event.getEvents); // Get own events
 };
