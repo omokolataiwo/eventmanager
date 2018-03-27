@@ -15,6 +15,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      area: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       state: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -41,6 +45,10 @@ module.exports = {
       },
       amount: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      details: {
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       createdAt: {

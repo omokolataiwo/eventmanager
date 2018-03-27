@@ -4,10 +4,6 @@ var _jsonwebtoken = require('jsonwebtoken');
 
 var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
 
-var _joi = require('joi');
-
-var _joi2 = _interopRequireDefault(_joi);
-
 var _expressJoiValidator = require('express-joi-validator');
 
 var _expressJoiValidator2 = _interopRequireDefault(_expressJoiValidator);
@@ -42,8 +38,8 @@ var auth = function auth(req, res, next) {
 };
 
 module.exports = function (app) {
-  app.post('/events', auth, _controllers.event.createEvent);
-  app.delete('/events/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.event.deleteEvent);
-  app.put('/events/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.event.editEvent);
-  app.get('/events', auth, _controllers.event.getEvents);
+  app.post('/events', auth, _controllers.event.createEvent); // Create event
+  app.delete('/events/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.event.deleteEvent); // Delete event
+  app.put('/events/:id', (0, _expressJoiValidator2.default)(_idroute2.default), auth, _controllers.event.editEvent); // Update event
+  app.get('/events', auth, _controllers.event.getEvents); // Get own events
 };

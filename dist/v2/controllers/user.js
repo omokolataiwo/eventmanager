@@ -68,15 +68,10 @@ module.exports = {
       res.status(500).send('Server Error');
     });
   },
-  getEvents: function getEvents(req, res) {
-    return _models2.default.events.findAll({
-      where: {
-        userid: req.user.id
-      }
-    }).then(function (events) {
-      return res.status(200).json(events);
-    }).catch(function (error) {
-      return res.status(500).json(error);
-    });
+  getUser: function getUser(req, res) {
+    res.status(500).send('Not implemented error');
+  },
+  update: function update(req, res) {
+    return res.status(500).send('Not implemented error');
   }
 };

@@ -24,8 +24,10 @@ class Create extends React.Component {
   componentWillMount() {
     this.props.fetchCenters(this.props.accessToken);
     this.setState({ centers: this.props.centers }, () => {
+      const choicedCenter = localStorage.getItem('choice-center');
+      const centerid = choicedCenter || this.state.centers[this.state.activeCenter].id;
       this.setState({
-        event: { ...this.state.event, centerid: this.state.centers[this.state.activeCenter].id },
+        event: { ...this.state.event, centerid },
       });
     });
   }

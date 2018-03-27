@@ -14,7 +14,6 @@ const auth = (req, res, next) => {
   }
   return jwt.verify(token, tksecret, (error, decoded) => {
     if (error) {
-      console.log(error);
       return res.status(500).json({ auth: false, type: error.name });
     }
 
@@ -27,11 +26,13 @@ const auth = (req, res, next) => {
 };
 
 module.exports = (app) => {
-  app.post('/centers', auth, center.createCenter);
-  app.get('/centers', center.getCenters);
-  app.get('/centers/contacts', auth, center.getContacts);
-  app.get('/centers/:id', expressJoi(idroute), center.getCenter);
-  app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter);
-  app.get('/centers/:id/events', expressJoi(idroute), auth, center.getEvents);
+  app.post('/centers', auth, center.createCenter); // Create Center
+  app.get('/centers', center.getCenters); // Get all centers
+  app.get('/centers/own', auth, center.getOwnCenter); // Get own centers
+  app.get('/centers/contacts', auth, center.getContacts); // Get Own Center Contacts
+  app.get('/centers/:id', expressJoi(idroute), center.getCenter); // Get a Single Center, does not need authentication
+  app.get('/centers/:id/events', expressJoi(idroute), auth, center.getCenterWithEvents); // Get Center with events, protected
+  app.get('/centers/search', center.search);
+  app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter); // Update a center
   app.get('/', (req, res) => res.status(200).send('Welcome to EventMan - The event manager'));
 };

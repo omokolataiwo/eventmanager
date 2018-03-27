@@ -24,11 +24,9 @@ module.exports = {
       })
       .then((user) => {
         if (user) {
-          return res
-            .status(400)
-            .json({
-              errors: { global: ['username or phonenumber or email has already been used.'] },
-            });
+          return res.status(400).json({
+            errors: { global: ['username or phonenumber or email has already been used.'] },
+          });
         }
         return models.users
           .create(req.body)
@@ -65,14 +63,10 @@ module.exports = {
         res.status(500).send('Server Error');
       });
   },
-  getEvents(req, res) {
-    return models.events
-      .findAll({
-        where: {
-          userid: req.user.id,
-        },
-      })
-      .then(events => res.status(200).json(events))
-      .catch(error => res.status(500).json(error));
+  getUser(req, res) {
+    res.status(500).send('Not implemented error');
+  },
+  update(req, res) {
+    return res.status(500).send('Not implemented error');
   },
 };
