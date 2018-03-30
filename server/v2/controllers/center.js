@@ -1,4 +1,5 @@
 import sequelize from 'sequelize';
+import moment from 'moment';
 import { Center, create, update } from './_support/center';
 import models from '../models';
 
@@ -40,12 +41,18 @@ module.exports = {
   getAdminCenters(req, res) {
     return models.centers
       .findAll({
+        include: [
+          {
+            model: models.events,
+            as: 'events',
+          },
+        ],
         where: {
           ownerid: req.user.id,
         },
       })
-      .then(centers => res.status(200).json(centers))
-      .catch(error => res.status(501).send(error));
+      .then(center => res.status(200).json(center))
+      .catch(error => res.status(500).json(error));
   },
   getCenter(req, res) {
     return models.centers
@@ -150,7 +157,32 @@ module.exports = {
   search(req, res) {
     return res.status(500).send('Not Implemented Error');
   },
-  getOwnCenter(req, res) {
-    return res.status(500).send('Not Implemented Error');
+  getOwnCenters(req, res) {
+    return models.centers
+      .findAll({
+        where: {
+          ownerid: req.user.id,
+        },
+      })
+      .then(centers => res.status(200).json(centers))
+      .catch(error => res.status(501).send(error));
+  },
+  getOwnEvents(req, res) {
+    return models.sequelize
+      .query(
+        'SELECT *, events.id as eid FROM events, centers WHERE events.centerid = centers.id AND centers.ownerid = :ownerid',
+        { replacements: { ownerid: req.user.id }, type: sequelize.QueryTypes.SELECT },
+      )
+      .then((events) => {
+        console.log(events);
+        events = events.map((event) => {
+          const enddate = moment(event.enddate);
+          const now = moment();
+          event.isConcluded = now.diff(enddate, 'days') > 0;
+          return event;
+        });
+        res.status(200).json(events);
+      })
+      .catch(e => console.log(e));
   },
 };

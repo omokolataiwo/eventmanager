@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Index } from './Index';
+import Index from './Index';
 import { Center } from './Center';
-import { Bookings } from './Bookings';
+import Bookings from './Bookings';
 import * as route from './../../libs/route';
 import { ACCOUNT_TYPE_ADMIN } from './../../store/consts';
 

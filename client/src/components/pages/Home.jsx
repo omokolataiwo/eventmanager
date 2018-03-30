@@ -19,7 +19,9 @@ class Home extends Component {
   }
   componentWillMount() {
     this.props.getCenters();
-    this.setState({ centers: this.props.centers });
+  }
+  componentWillReceiveProps(props) {
+    this.setState({ centers: props.centers });
   }
   componentDidMount() {
     $('.carousel.carousel-slider').carousel({ fullWidth: true });
