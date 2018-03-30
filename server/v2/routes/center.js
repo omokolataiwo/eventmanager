@@ -28,7 +28,8 @@ const auth = (req, res, next) => {
 module.exports = (app) => {
   app.post('/centers', auth, center.createCenter); // Create Center
   app.get('/centers', center.getCenters); // Get all centers
-  app.get('/centers/own', auth, center.getOwnCenter); // Get own centers
+  app.get('/centers/admin', auth, center.getAdminCenters); // Get own centers
+  app.get('/centers/events', auth, center.getOwnEvents); // Get own events
   app.get('/centers/contacts', auth, center.getContacts); // Get Own Center Contacts
   app.get('/centers/:id', expressJoi(idroute), center.getCenter); // Get a Single Center, does not need authentication
   app.get('/centers/:id/events', expressJoi(idroute), auth, center.getCenterWithEvents); // Get Center with events, protected

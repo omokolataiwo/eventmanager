@@ -9,7 +9,7 @@ import {
   SIGNOUT_USER,
 } from './../consts';
 
-import { TOKEN_EXPIRED } from './../actions/types';
+import { TOKEN_EXPIRED, UPDATING_USER, UPDATED_USER } from './../actions/types';
 
 const defaultUser = {
   userdata: {
@@ -23,6 +23,7 @@ const defaultUser = {
     isSignedup: false,
     isSigningin: false,
     isSignedin: false,
+    updateUser: null,
   },
   authenticated: false,
   accessToken: '',
@@ -67,6 +68,14 @@ export default (state = defaultUser, action) => {
         errors: action.errors,
         events: { ...state.events, isSigningup: false },
       });
+    case UPDATING_USER:
+      return { ...state, events: { ...state.events, updateUser: state.type } };
+    case UPDATED_USER:
+      return {
+        ...state,
+        userdata: state.user,
+        events: { ...state.events, updateUser: state.type },
+      };
     case TOKEN_EXPIRED:
       return defaultUser;
     default:

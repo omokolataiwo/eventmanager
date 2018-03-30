@@ -4,6 +4,10 @@ var _sequelize = require('sequelize');
 
 var _sequelize2 = _interopRequireDefault(_sequelize);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 var _center = require('./_support/center');
 
 var _models = require('../models');
@@ -49,13 +53,17 @@ module.exports = {
   },
   getAdminCenters: function getAdminCenters(req, res) {
     return _models2.default.centers.findAll({
+      include: [{
+        model: _models2.default.events,
+        as: 'events'
+      }],
       where: {
         ownerid: req.user.id
       }
-    }).then(function (centers) {
-      return res.status(200).json(centers);
+    }).then(function (center) {
+      return res.status(200).json(center);
     }).catch(function (error) {
-      return res.status(501).send(error);
+      return res.status(500).json(error);
     });
   },
   getCenter: function getCenter(req, res) {
@@ -147,7 +155,29 @@ module.exports = {
   search: function search(req, res) {
     return res.status(500).send('Not Implemented Error');
   },
-  getOwnCenter: function getOwnCenter(req, res) {
-    return res.status(500).send('Not Implemented Error');
+  getOwnCenters: function getOwnCenters(req, res) {
+    return _models2.default.centers.findAll({
+      where: {
+        ownerid: req.user.id
+      }
+    }).then(function (centers) {
+      return res.status(200).json(centers);
+    }).catch(function (error) {
+      return res.status(501).send(error);
+    });
+  },
+  getOwnEvents: function getOwnEvents(req, res) {
+    return _models2.default.sequelize.query('SELECT *, events.id as eid FROM events, centers WHERE events.centerid = centers.id AND centers.ownerid = :ownerid', { replacements: { ownerid: req.user.id }, type: _sequelize2.default.QueryTypes.SELECT }).then(function (events) {
+      console.log(events);
+      events = events.map(function (event) {
+        var enddate = (0, _moment2.default)(event.enddate);
+        var now = (0, _moment2.default)();
+        event.isConcluded = now.diff(enddate, 'days') > 0;
+        return event;
+      });
+      res.status(200).json(events);
+    }).catch(function (e) {
+      return console.log(e);
+    });
   }
 };

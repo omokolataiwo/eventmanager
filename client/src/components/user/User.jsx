@@ -2,7 +2,7 @@ import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Index from './Index';
-import { Profile } from './Profile';
+import Profile from './Profile';
 import { Event } from './Event';
 
 import logo from '../../images/logo.png';
