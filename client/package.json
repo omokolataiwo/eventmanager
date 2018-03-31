@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "chart.js": "^2.7.2",
+    "google-maps-react": "^1.1.11",
     "jquery": "^3.2.1",
     "materialize-css": "^0.100.2",
     "moment": "^2.21.0",
