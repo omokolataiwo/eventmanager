@@ -2,6 +2,7 @@ import sequelize from 'sequelize';
 import moment from 'moment';
 import { Center, create, update } from './_support/center';
 import models from '../models';
+import { parse } from 'url';
 
 module.exports = {
   createCenter(req, res) {
@@ -155,7 +156,52 @@ module.exports = {
       });
   },
   search(req, res) {
-    return res.status(500).send('Not Implemented Error');
+    const {
+      name, area, state, capacity, type, facilities, amount,
+    } = req.query;
+
+    let searchCondition = '';
+
+    if (name && name.length > 1) {
+      searchCondition += ` AND lower(name) LIKE '%${name.toLowerCase()}%'`;
+    }
+    if (area && area.length > 1) {
+      searchCondition += ` AND lower(area) LIKE '%${area.toLowerCase()}%'`;
+    }
+
+    const stateInt = parseInt(state);
+    if (state && stateInt >= 0 && stateInt < 36) searchCondition += ` AND state='${state}'`;
+    if (capacity && parseInt(capacity) > 0) searchCondition += ` AND capacity='${capacity}'`;
+
+    const typeInt = parseInt(type);
+    if (type && typeInt >= 0) searchCondition += ` AND type='${type}'`;
+
+    const amountInt = parseInt(amount);
+    if (amount && amountInt >= 1) searchCondition += ` AND amount='${amountInt}'`;
+
+    if (facilities) {
+      const facilitiesBuilt = `(${facilities
+        .split(',')
+        .map((facility, i) => {
+          facility = facility.toLowerCase();
+          i === 0
+            ? `lower(facilities) LIKE '%${facility}%'`
+            : ` OR lower(facilities) LIKE '%${facility}'`;
+        })
+        .join()})`;
+      searchCondition += ` AND ${facilitiesBuilt}`;
+    }
+    const END_OF_FIRST_AND = 3;
+    searchCondition = `WHERE${searchCondition
+      .trim()
+      .substr(END_OF_FIRST_AND, searchCondition.length)}`;
+
+    return models.sequelize
+      .query(`SELECT * FROM centers ${searchCondition}`, {
+        type: sequelize.QueryTypes.SELECT,
+      })
+      .then(centers => res.status(200).json(centers))
+      .catch(e => console.log(e));
   },
   getOwnCenters(req, res) {
     return models.centers
@@ -174,7 +220,6 @@ module.exports = {
         { replacements: { ownerid: req.user.id }, type: sequelize.QueryTypes.SELECT },
       )
       .then((events) => {
-        console.log(events);
         events = events.map((event) => {
           const enddate = moment(event.enddate);
           const now = moment();

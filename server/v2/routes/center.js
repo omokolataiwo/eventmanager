@@ -31,9 +31,10 @@ module.exports = (app) => {
   app.get('/centers/admin', auth, center.getAdminCenters); // Get own centers
   app.get('/centers/events', auth, center.getOwnEvents); // Get own events
   app.get('/centers/contacts', auth, center.getContacts); // Get Own Center Contacts
+  app.get('/centers/search', center.search);
+
   app.get('/centers/:id', expressJoi(idroute), center.getCenter); // Get a Single Center, does not need authentication
   app.get('/centers/:id/events', expressJoi(idroute), auth, center.getCenterWithEvents); // Get Center with events, protected
-  app.get('/centers/search', center.search);
   app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter); // Update a center
   app.get('/', (req, res) => res.status(200).send('Welcome to EventMan - The event manager'));
 };

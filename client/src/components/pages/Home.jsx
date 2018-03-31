@@ -9,6 +9,7 @@ import checkAvailabilityImg from '../../images/icons/calendar-check.png';
 import searchForCenterImg from '../../images/icons/searching-for-a-house.png';
 import bookVenueImge from '../../images/icons/calendar-book1.png';
 import featuredCenterImg from '../../images/party-room.jpg';
+import OverlaySearch from '../ui/OverlaySearch';
 
 class Home extends Component {
   constructor(props) {
@@ -41,11 +42,18 @@ class Home extends Component {
               <img src={bannercenter} alt="Index Center Banner" />
             </Link>
           </div>
-          {/*
-            <div className="searchEvent_panel">
-                <h2 className="intro_title">FIND AND BOOK EVENT CENTERS IN NIGERIA</h2>
-            </div>
-            */}
+          <div
+            className="searchEvent_panel"
+            style={{
+              width: '80%',
+              marginLeft: '10%',
+              maxHeight: '90%',
+              overflow: 'auto',
+              paddingBottom: '2%',
+            }}
+          >
+            <OverlaySearch />
+          </div>
         </div>
         <div className="container feature">
           <div className="row center" id="how_it_works">
