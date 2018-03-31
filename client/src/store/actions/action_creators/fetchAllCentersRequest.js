@@ -17,7 +17,7 @@ export const fetchAllCentersRequest = accessToken => (dispatch) => {
   axios
     .get(`${API_PATH}/centers`, setHeader(accessToken))
     .then(response => dispatch(fetchAllCenter(response.data)))
-    .catch(e => console.log(e));
+    .catch(e => console.dir(e));
 };
 
 export default fetchAllCentersRequest;
