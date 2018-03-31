@@ -6,6 +6,7 @@ import $ from 'jquery';
 import { fetchAdminCentersRequest } from '../../store/actions/action_creators/fetchAdminCentersRequest';
 import { fetchCenterEventRequest } from '../../store/actions/action_creators/fetchCenterEventRequest';
 import CenterReports from '../ui/CenterReports';
+import Map from '../ui/Map';
 
 class Bookings extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class Bookings extends React.Component {
     this.setState({ concludedEvents: concluded });
     this.setState({ activeEvents: active });
   }
-  componentWillReceiveProps(props) {}
+
   componentDidMount() {
     const ctx = $('#chart');
     const chart = new Chart(ctx, {
@@ -74,28 +75,6 @@ class Bookings extends React.Component {
           ],
         },
       },
-    });
-
-    //-------------------------------------------------------
-    const geocoder = new google.maps.Geocoder();
-    const latlng = new google.maps.LatLng(-34.397, 150.644);
-    const mapOptions = {
-      zoom: 8,
-      center: latlng,
-    };
-    const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    //-------------------------------------------------------
-    const address = this.state.center[0].address;
-    geocoder.geocode({ address }, (results, status) => {
-      if (status == 'OK') {
-        map.setCenter(results[0].geometry.location);
-        const marker = new google.maps.Marker({
-          map,
-          position: results[0].geometry.location,
-        });
-      } else {
-        alert(`Geocode was not successful for the following reason: ${status}`);
-      }
     });
   }
   render() {
