@@ -7,12 +7,11 @@ import { SelectComponent } from '../ui/SelectComponent';
 import { Error } from '../ui/Error';
 import createUserRequest from '../../store/actions/action_creators/createUserRequest';
 import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../store/consts';
+import { SIGNUP_USER } from '../../store/actions/types';
 import { SIGNUP_VALIDATION_RULES } from '../ui/consts';
 import fakeUser from '../ui/faker/user';
 
 import * as route from '../../libs/route';
-
-// FIXME: Register btn has to be clicked twices for it to register new user.
 
 class Signup extends Component {
   constructor(props) {
@@ -56,6 +55,7 @@ class Signup extends Component {
 
   registerUser(e) {
     e.preventDefault();
+
     this.resetErrors(() => {
       const errorMsg = validate(this.state, SIGNUP_VALIDATION_RULES);
       if (errorMsg !== undefined) {
@@ -84,7 +84,8 @@ class Signup extends Component {
     const { errors, history } = props;
     let { events } = props;
 
-    if (events.isSignedup) {
+    if (events.signup === SIGNUP_USER) {
+      localStorage.setItem('newSignup', true);
       return route.push('/signin', history.push);
     }
 
@@ -105,8 +106,9 @@ class Signup extends Component {
       <div className="container small-container">
         <div className="row card">
           <div className="col s12 m12 l12">
-            <h5>REGISTER</h5>
+            <h5>CREATE ACCOUNT</h5>
             <form>
+              <Error message={this.state.errors.global}/>
               <div className="row">
                 <div className="input-field col s12 m6 l6">
                   <input
@@ -251,7 +253,6 @@ class Signup extends Component {
                 Register
               </button>
             </form>
-            <p>{this.state.errors.global}</p>
           </div>
         </div>
       </div>
@@ -261,10 +262,10 @@ class Signup extends Component {
 
 Signup.propTypes = {
   createUser: PropTypes.func.isRequired,
-  userdata: PropTypes.string.isRequired,
-  events: PropTypes.string.isRequired,
-  errors: PropTypes.string.isRequired,
-  authenticated: PropTypes.string.isRequired,
+  userdata: PropTypes.shape({}).isRequired,
+  events: PropTypes.shape({}).isRequired,
+  errors: PropTypes.shape({}).isRequired,
+  authenticated: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => {

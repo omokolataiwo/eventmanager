@@ -3,7 +3,7 @@
     "username": "pyfprcyk",
     "password": "B_lRRAdhmgeY12J9-37GCb1RtgtcH3DK",
     "database": "pyfprcyk",
-    "host": "127.0.0.1",
+    "host": "baasu.db.elephantsql.com",
     "port": 5432,
     "dialect": "postgres"
   },

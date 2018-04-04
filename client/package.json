@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "chart.js": "^2.7.2",
+    "format-num": "^1.0.0",
     "google-maps-react": "^1.1.11",
     "jquery": "^3.2.1",
     "materialize-css": "^0.100.2",
@@ -18,6 +19,7 @@
     "redux": "^3.7.2",
     "redux-persist": "^5.9.0",
     "redux-thunk": "^2.2.0",
+    "toastr": "^2.1.4",
     "validate.js": "^0.12.0"
   },
   "scripts": {

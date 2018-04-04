@@ -1,8 +1,10 @@
 import sequelize from 'sequelize';
 import moment from 'moment';
+import validate from 'validate.js';
 import { Center, create, update } from './_support/center';
 import models from '../models';
 import { parse } from 'url';
+import { contactValidationRules } from '../validate/contactValidationRules';
 
 module.exports = {
   createCenter(req, res) {
@@ -10,9 +12,8 @@ module.exports = {
     if (!center.safe()) {
       return res.status(400).json(center.getErrors());
     }
-    req.body.ownerid = req.user.id;
-    req.body.contact.ownerid = req.body.ownerid;
 
+    req.body.ownerid = req.user.id;
     return models.users
       .findById(req.body.ownerid)
       .then((user) => {
@@ -20,7 +21,12 @@ module.exports = {
           return res.status(400).send({ error: true, message: 'Center must have a valid owner' });
         }
 
-        if (req.body.newContact) {
+        if (req.body.newContact && req.body.contact) {
+          req.body.contact.ownerid = req.body.ownerid;
+          const contactErrors = validate(req.body.contact, contactValidationRules);
+          if (contactErrors !== undefined) {
+            return res.status(400).json(contactErrors);
+          }
           return models.contacts.create(req.body.contact).then((contact) => {
             req.body.contactid = contact.id;
             return create(req, res, models);
@@ -67,7 +73,6 @@ module.exports = {
       .catch(error => res.status(500).send(error));
   },
   editCenter(req, res) {
-    // TODO: CHECK IF ITS THE OWNER OF THE CENTER THAT IS EDITING
     return models.centers
       .find({
         where: {
@@ -137,8 +142,7 @@ module.exports = {
         },
       })
       .then((centersid) => {
-        console.log(centersid);
-        return res.json(centersii);
+        return res.status(200).json(centersid);
       })
       .catch(error => res.status(500).json(error));
   },
@@ -151,7 +155,6 @@ module.exports = {
       })
       .then(contacts => res.status(200).json(contacts))
       .catch((error) => {
-        console.log(error);
         res.status(400).send(error);
       });
   },

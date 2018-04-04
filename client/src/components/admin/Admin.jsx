@@ -64,7 +64,7 @@ class Admin extends React.Component {
             </div>
           </div>
         </header>
-        <main className="main-wrapper">
+        <main className="main-wrapper admin">
           <Switch>
             <Route path={`${this.props.match.path}`} exact component={Index} />
             <Route path={`${this.props.match.path}/center`} component={Center} />

@@ -101,9 +101,9 @@ export const SIGNUP_VALIDATION_RULES = {
       message: 'is required.',
     },
     length: {
-      minimum: 6,
+      minimum: 4,
       maximum: 120,
-      tooShort: 'should be at least 6 chaaracters',
+      tooShort: 'should be at least 4 characters',
     },
   },
   password: {

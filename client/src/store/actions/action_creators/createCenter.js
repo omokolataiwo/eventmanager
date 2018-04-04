@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { API_PATH } from '../../consts';
 import { setHeader, tokenExpired, isTokenActive } from './auth';
+import { CREATED_NEW_CENTER, CREATING_NEW_CENTER_ERROR, CREATING_NEW_CENTER } from '../types';
+
+const creatingNewCenter = () => ({ type: CREATING_NEW_CENTER });
+const createdNewCenter = center => ({ type: CREATED_NEW_CENTER, center });
+const creatingNewCenterError = error => ({ type: CREATING_NEW_CENTER_ERROR, error });
 
 const createCenter = (center, accessToken) => (dispatch) => {
   isTokenActive(accessToken)
@@ -8,9 +13,9 @@ const createCenter = (center, accessToken) => (dispatch) => {
       axios
         .post(`${API_PATH}/centers`, center, setHeader(accessToken))
         .then((response) => {
-          console.log(response, 'ttttttttttttt');
+          dispatch(createdNewCenter(response.data));
         })
-        .catch(e => console.log(e));
+        .catch(e => dispatch(creatingNewCenterError(e.response.data)));
     })
     .catch((e) => {
       // TODO Check if tokenExpires
@@ -20,6 +25,7 @@ const createCenter = (center, accessToken) => (dispatch) => {
 
 export default function createCenterRequest(centerDetails) {
   return (dispatch) => {
+    dispatch(creatingNewCenter());
     // TODO: FOR DEVELOPMENT PURPOSE
     let center = Object.assign({}, centerDetails.center);
     center = { ...center, contact: { ...center.contact.newContact } };

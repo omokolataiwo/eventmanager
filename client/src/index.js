@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { Switch, BrowserRouter, Route } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 import 'materialize-css/dist/css/materialize.min.css';
+import 'toastr/build/toastr.min.css';
 import configureStore from './store/init';
 import App from './App';
 import Admin from './components/admin/Admin';

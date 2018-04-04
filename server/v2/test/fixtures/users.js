@@ -1,3 +1,5 @@
+import { ACCOUNT_TYPE_ADMIN, ACCOUNT_TYPE_USER } from '../../controllers/_support/const';
+
 module.exports = {
   register: {
     validAdminUser: {
@@ -9,7 +11,7 @@ module.exports = {
       username: 'benmark',
       password: 'klsldskds',
       repassword: 'klsldskds',
-      role: 1,
+      role: ACCOUNT_TYPE_ADMIN,
       email: 'benmark@yahoo.com',
     },
     validOrdinaryUser: {
@@ -21,7 +23,7 @@ module.exports = {
       username: 'johndoe',
       password: 'klssdsfsds',
       repassword: 'klssdsfsds',
-      role: 2,
+      role: ACCOUNT_TYPE_USER,
       email: 'johndoe@yahoo.com',
     },
     invalidPasswordCombination: {

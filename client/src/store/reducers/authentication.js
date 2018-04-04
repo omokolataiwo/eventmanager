@@ -17,12 +17,9 @@ const defaultUser = {
   },
   errors: {},
   events: {
-    isSigningout: false,
-    isSignedout: false,
-    isSigningup: false,
-    isSignedup: false,
-    isSigningin: false,
-    isSignedin: false,
+    signout: null,
+    signup: null,
+    signin: null,
     updateUser: null,
   },
   authenticated: false,
@@ -32,18 +29,19 @@ const defaultUser = {
 export default (state = defaultUser, action) => {
   switch (action.type) {
     case REQUEST_SIGNUP_USER:
-      return Object.assign({}, state, {
-        ...state,
-        events: { ...state.events, isSigningup: true },
-      });
+      return { ...state, events: { ...state.events, signup: action.type } };
     case SIGNUP_USER:
-      return Object.assign({}, state, {
+      return {
+        ...state,
         userdata: action.userdata,
-        events: {
-          ...defaultUser.events,
-          ...action.events,
-        },
-      });
+        events: { ...state.events, signup: action.type },
+      };
+    case SIGNUP_ERROR:
+      return {
+        ...state,
+        errors: action.errors,
+        events: { ...state.events, signup: action.type},
+      };
     case REQUEST_SIGNIN_USER:
       return Object.assign({}, state, {
         events: action.events,
@@ -62,12 +60,6 @@ export default (state = defaultUser, action) => {
       });
     case SIGNOUT_USER:
       return defaultUser;
-    case SIGNUP_ERROR:
-      return Object.assign({}, state, {
-        ...state,
-        errors: action.errors,
-        events: { ...state.events, isSigningup: false },
-      });
     case UPDATING_USER:
       return { ...state, events: { ...state.events, updateUser: state.type } };
     case UPDATED_USER:

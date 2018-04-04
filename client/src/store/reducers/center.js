@@ -1,4 +1,3 @@
-import { REHYDRATE } from 'redux-persist';
 import {
   FETCHING_CENTER_CONTACTS,
   RECEIVED_CENTER_CONTACTS,
@@ -11,6 +10,10 @@ import {
   FETCHING_ADMIN_CENTERS,
   RECEIVED_ADMIN_CENTERS,
   FETCHING_ADMIN_CENTERS_ERROR,
+  CREATING_NEW_CENTER,
+  CREATING_NEW_CENTER_ERROR,
+  CREATED_NEW_CENTER,
+  RESET_CREATE_NEW_CENTER,
 } from '../actions/types';
 
 const defaultCenter = {
@@ -19,15 +22,21 @@ const defaultCenter = {
   eventCenter: [],
   center: {},
   events: {
-    getCenterContact: FETCHING_CENTER_CONTACTS,
+    getCenterContact: null,
     getCenters: null,
-    getCenter: FETCHING_CENTER,
+    getCenter: null,
     getEvents: null,
+    createCenter: null,
   },
 };
 
 export default (state = defaultCenter, action) => {
   switch (action.type) {
+    case RESET_CREATE_NEW_CENTER:
+    case CREATING_NEW_CENTER:
+    case CREATING_NEW_CENTER_ERROR:
+    case CREATED_NEW_CENTER:
+      return { ...state, events: { ...state.events, createCenter: action.type } };
     case FETCHING_CENTERS:
       return { ...state, events: { ...state.events, getCenters: action.type } };
     case RECEIVED_CENTER_CONTACTS:

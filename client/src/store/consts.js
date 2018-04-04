@@ -12,9 +12,6 @@ export const SIGNIN_USER = 'SIGNIN_USER';
 export const SIGNIN_ERROR = 'SIGNIN_ERROR';
 export const SIGNOUT_USER = 'SIGNOUT_USER';
 
-export const REQUEST_CREATE_CENTER = 'REQUEST_CREATE_CENTER';
-export const CREATE_CENTER = 'CREATE_CENTER';
-
 export const ACCOUNT_TYPE_GUEST = 0;
 export const ACCOUNT_TYPE_SUPER_ADMIN = 1;
 export const ACCOUNT_TYPE_ADMIN = 2;

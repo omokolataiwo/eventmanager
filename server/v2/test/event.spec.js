@@ -9,6 +9,8 @@ import models from '../models';
 
 const expect = chai.expect;
 chai.use(chaiHttp);
+const request = chai.request(server);
+const API_PATH = '/api/v2';
 
 let adminToken = null;
 let userToken = null;
@@ -16,14 +18,15 @@ let centerid = null;
 let eventid = null;
 
 describe('Base setup', () => {
-  it('should set up database', (done) => {
+  before(() => {
     models.users.destroy({ truncate: true });
     models.centers.destroy({ truncate: true });
     models.events.destroy({ truncate: true });
+  });
 
-    chai
-      .request(server)
-      .post('/v2/users')
+  it('Register admin user', (done) => {
+    request
+      .post(`${API_PATH}/users`)
       .send(userFixture.register.validAdminUser)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -31,10 +34,9 @@ describe('Base setup', () => {
       });
   });
 
-  it('register ordinary user', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users')
+  it('Register regular user', (done) => {
+    request
+      .post(`${API_PATH}/users`)
       .send(userFixture.register.validOrdinaryUser)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -43,9 +45,8 @@ describe('Base setup', () => {
   });
 
   it('should login admin user', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users/login')
+    request
+      .post(`${API_PATH}/users/login`)
       .send(userFixture.login.validAdminUser)
       .end((err, res) => {
         adminToken = res.body.token;
@@ -55,9 +56,8 @@ describe('Base setup', () => {
   });
 
   it('should login user', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users/login')
+    request
+      .post(`${API_PATH}/users/login`)
       .send(userFixture.login.validOrdinaryUser)
       .end((err, res) => {
         userToken = res.body.token;
@@ -67,9 +67,8 @@ describe('Base setup', () => {
   });
 
   it('should create center', (done) => {
-    chai
-      .request(server)
-      .post('/v2/centers')
+    request
+      .post(`${API_PATH}/centers`)
       .set('x-access-token', adminToken)
       .send(centerFixture.create.validCenter)
       .end((err, res) => {
@@ -85,9 +84,8 @@ describe('Base setup', () => {
 describe('post /events', () => {
   it('should create event', (done) => {
     eventFixture.create.validEvent.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEvent)
       .end((err, res) => {
@@ -101,9 +99,8 @@ describe('post /events', () => {
 
   it('should create event for both outside', (done) => {
     eventFixture.create.validEventBothOutLeft.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventBothOutLeft)
       .end((err, res) => {
@@ -116,54 +113,56 @@ describe('post /events', () => {
 
   it('should not create event for end inside', (done) => {
     eventFixture.create.validEventStartOut.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventStartOut)
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res.body).to.deep.have.property('message').that.have.property('event');
+        expect(res.body)
+          .to.deep.have.property('message')
+          .that.have.property('event');
         done();
       });
   });
 
   it('should not create event for  both date inside', (done) => {
     eventFixture.create.validEventBothIn.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventBothIn)
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res.body).to.deep.have.property('message').that.have.property('event');
+        expect(res.body)
+          .to.deep.have.property('message')
+          .that.have.property('event');
         done();
       });
   });
 
   it('should not create event for  both date inside', (done) => {
     eventFixture.create.validEventEndOut.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventEndOut)
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res.body).to.deep.have.property('message').that.have.property('event');
+        expect(res.body)
+          .to.deep.have.property('message')
+          .that.have.property('event');
         done();
       });
   });
 
   it('should create event for both outside right', (done) => {
     eventFixture.create.validEventBothOutRight.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventBothOutRight)
       .end((err, res) => {
@@ -174,10 +173,9 @@ describe('post /events', () => {
       });
   });
 
-  it('should not create event for non user', (done) => {
-    chai
-      .request(server)
-      .post('/v2/events')
+  it('should not create event for non regular user', (done) => {
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', adminToken)
       .send(eventFixture.create.validEvent)
       .end((err, res) => {
@@ -189,12 +187,11 @@ describe('post /events', () => {
         done();
       });
   });
-  
+
   it('should not create event if startDate is before now', (done) => {
     eventFixture.create.validEventWithPassStartDate.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventWithPassStartDate)
       .end((err, res) => {
@@ -207,9 +204,8 @@ describe('post /events', () => {
 
   it('should not create event for end date less than start date', (done) => {
     eventFixture.create.validEventWithInvalidStartDate.centerid = centerid;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEventWithInvalidStartDate)
       .end((err, res) => {
@@ -222,28 +218,29 @@ describe('post /events', () => {
 
   it('should not create event if center does not exist', (done) => {
     eventFixture.create.validEvent.centerid = centerid + 1;
-    chai
-      .request(server)
-      .post('/v2/events')
+    request
+      .post(`${API_PATH}/events`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEvent)
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res.body).to.deep.have.property('error').that.equal(true);
-        expect(res.body).to.deep.have.property('message').that.have.property('center');
+        expect(res.body)
+          .to.deep.have.property('error')
+          .that.equal(true);
+        expect(res.body)
+          .to.deep.have.property('message')
+          .that.have.property('center');
         done();
       });
   });
 });
 
-
 describe('put /events', () => {
   it('should update event', (done) => {
     eventFixture.update.validEventModified.centerid = centerid;
-    chai
-      .request(server)
-      .put('/v2/events/' + eventid)
+    request
+      .put(`${API_PATH}/events/${eventid}`)
       .set('x-access-token', userToken)
       .send(eventFixture.update.validEventModified)
       .end((err, res) => {
@@ -254,9 +251,8 @@ describe('put /events', () => {
   });
 
   it('should not update event for non user', (done) => {
-    chai
-      .request(server)
-      .put('/v2/events/' + eventid)
+    request
+      .put(`${API_PATH}/events/${eventid}`)
       .set('x-access-token', adminToken)
       .send(eventFixture.create.validEvent)
       .end((err, res) => {
@@ -268,20 +264,22 @@ describe('put /events', () => {
         done();
       });
   });
-  
 
   it('should not update event if center does not exist', (done) => {
     eventFixture.create.validEvent.centerid = centerid + 1;
-    chai
-      .request(server)
-      .put('/v2/events/' + eventid)
+    request
+      .put(`${API_PATH}/events/${eventid}`)
       .set('x-access-token', userToken)
       .send(eventFixture.create.validEvent)
       .end((err, res) => {
         expect(res).to.have.status(400);
         expect(res).to.be.json;
-        expect(res.body).to.deep.have.property('error').that.equal(true);
-        expect(res.body).to.deep.have.property('message').that.have.property('center');
+        expect(res.body)
+          .to.deep.have.property('error')
+          .that.equal(true);
+        expect(res.body)
+          .to.deep.have.property('message')
+          .that.have.property('center');
         done();
       });
   });
@@ -290,9 +288,8 @@ describe('put /events', () => {
 describe('delete /events', () => {
   it('should delete event', (done) => {
     eventFixture.update.validEventModified.centerid = centerid;
-    chai
-      .request(server)
-      .delete('/v2/events/' + eventid)
+    request
+      .delete(`${API_PATH}/events/${eventid}`)
       .set('x-access-token', userToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -301,4 +298,3 @@ describe('delete /events', () => {
       });
   });
 });
-

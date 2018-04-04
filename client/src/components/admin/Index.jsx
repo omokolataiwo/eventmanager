@@ -19,9 +19,15 @@ class Index extends React.Component {
   }
   render() {
     return (
-      <div className="container container-medium card center">
-        <h5>MOST RECENT EVENTS</h5>
-        <div className="row center">
+      <div className="container container-medium card index">
+        <h5 className="center">MOST RECENT EVENTS</h5>
+        <div className="row">
+          {this.state.events.length === 0 && (
+            <div className="empty-resources">
+              <i className="material-icons left">info_outline</i>No event created for your centers
+              yet.
+            </div>
+          )}
           {this.state.events.map(event => (
             <div className="col s12 m5 l5 center event event-card card">
               <h4>{event.title}</h4>

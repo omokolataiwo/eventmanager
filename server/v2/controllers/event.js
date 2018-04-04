@@ -9,6 +9,8 @@ module.exports = {
       return res.status(400).json(event.getErrors());
     }
 
+    console.log(event.toJSON());
+
     // check if center exist
     return models.centers
       .findOne({ where: { id: req.body.centerid } })
@@ -110,9 +112,6 @@ module.exports = {
         }
         req.body.centerid = req.body.centerid ? req.body.centerid : event.centerid;
 
-        if (parseInt(req.body.centerid) != req.body.centerid || req.body.centerid > 100000) {
-          return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
-        }
         models.centers.findOne({ where: { id: req.body.centerid } }).then((center) => {
           if (!center) {
             return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
