@@ -8,7 +8,8 @@ import { SelectComponent } from '../../ui/SelectComponent';
 import { CenterContactPerson } from '../../ui/CenterContactPerson';
 import { STATES, CENTER_TYPE } from '../../ui/consts';
 import fakeCenter from '../../ui/faker/center';
-import { RECEIVED_CENTER_CONTACTS } from '../../../store/actions/types';
+import { RECEIVED_CENTER_CONTACTS, CREATED_NEW_CENTER } from '../../../store/actions/types';
+import * as route from '../../../libs/route';
 
 class Create extends React.Component {
   constructor(props) {
@@ -19,12 +20,14 @@ class Create extends React.Component {
         capacity: null,
         address: '',
         amount: null,
+        area: null,
         facilities: '',
-        state: 0,
-        type: 0,
+        state: -1,
+        type: -1,
         image: 'default_center_image.jpeg',
-        contactid: 0,
+        contactid: -1,
         newContact: false,
+        details: '',
         contact: {
           newContact: {
             first_name: '',
@@ -45,20 +48,6 @@ class Create extends React.Component {
   componentWillMount() {
     this.setState({ center: { ...fakeCenter() } });
     this.props.getContactPerson(this.props.accessToken);
-
-    const { _getCenterContact, contacts } = this.props;
-    if (_getCenterContact === RECEIVED_CENTER_CONTACTS) {
-      if (contacts.length === 0) {
-        this.setState({ center: { ...this.state.center, newContact: true } });
-      } else {
-        this.setState({
-          center: {
-            ...this.state.center,
-            contact: { ...this.state.center.contact, existingContacts: contacts },
-          },
-        });
-      }
-    }
   }
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
@@ -70,7 +59,7 @@ class Create extends React.Component {
       let facilities = facilitiesDOM.material_chip('data');
       facilities = Object.keys(facilities)
         .map(key => facilities[key].tag)
-        .join(';');
+        .join(',');
       this.setState({ center: { ...this.state.center, facilities } });
     };
 
@@ -81,6 +70,28 @@ class Create extends React.Component {
     e.preventDefault();
     this.state.accessToken = this.props.accessToken;
     this.props.createCenter(this.state);
+  }
+
+  componentWillReceiveProps(props) {
+    const { events, history, contacts } = props;
+
+    if (events.getCenterContact === RECEIVED_CENTER_CONTACTS) {
+      if (contacts.length === 0) {
+        this.setState({ center: { ...this.state.center, newContact: true } });
+      } else {
+        this.setState({
+          center: {
+            ...this.state.center,
+            contact: { ...this.state.center.contact, existingContacts: contacts },
+          },
+        });
+      }
+    }
+
+    if (events.createCenter === CREATED_NEW_CENTER) {
+      localStorage.setItem('newCenterCreated', true);
+      return route.push('/admin/center', history.push);
+    }
   }
 
   handleContactPersonChanged(contactid) {
@@ -137,25 +148,7 @@ class Create extends React.Component {
                   />
                   <label htmlFor="center_name">Center Name</label>
                 </div>
-              </div>
-              <div className="row">
-                <div className="input-field col  s12 m6 l6">
-                  <input
-                    id="capacity"
-                    type="text"
-                    className="validate"
-                    defaultValue={this.state.center.capacity}
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          capacity: e.target.value,
-                        },
-                      })
-                    }
-                  />
-                  <label htmlFor="capacity">Capacity</label>
-                </div>
+
                 <div className="input-field col  s12 m6 l6">
                   <SelectComponent
                     default={this.state.center.type}
@@ -184,6 +177,26 @@ class Create extends React.Component {
                   />
                   <label htmlFor="address">Address</label>
                 </div>
+
+                <div className="input-field col  s12 m6 l6">
+                  <input
+                    id="area"
+                    type="text"
+                    className="validate"
+                    defaultValue={this.state.center.area}
+                    onChange={e =>
+                      this.setState({
+                        center: {
+                          ...this.state.center,
+                          area: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                  <label htmlFor="area">Area</label>
+                </div>
+              </div>
+              <div className="row">
                 <div className="input-field col s12 m6 l6">
                   <SelectComponent
                     default={this.state.center.state}
@@ -193,7 +206,26 @@ class Create extends React.Component {
                     label="State"
                   />
                 </div>
+
+                <div className="input-field col  s12 m6 l6">
+                  <input
+                    id="capacity"
+                    type="text"
+                    className="validate"
+                    defaultValue={this.state.center.capacity}
+                    onChange={e =>
+                      this.setState({
+                        center: {
+                          ...this.state.center,
+                          capacity: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                  <label htmlFor="capacity">Capacity</label>
+                </div>
               </div>
+
               <div className="row">
                 <div className="input-field col s12 m12 l12">
                   <div className="chips facilities" />
@@ -215,6 +247,43 @@ class Create extends React.Component {
                   <label htmlFor="center_amount">Amount Center (N)</label>
                 </div>
               </div>
+
+              <div className="row">
+                <div className="input-field col s12 m12 l12">
+                  <textarea
+                    id="details"
+                    className="materialize-textarea"
+                    onChange={e =>
+                      this.setState({
+                        center: {
+                          ...this.state.center,
+                          details: e.target.value,
+                        },
+                      })
+                    }
+                    defaultValue={this.state.center.details}
+                  />
+                  <label htmlFor="event_summary">Additional Details</label>
+                </div>
+
+                <div className="input-field col s12 m6 l6">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="validate"
+                    id="eventpic"
+                    onChange={e =>
+                      this.setState({
+                        center: {
+                          ...this.state.center,
+                          image: e.target.files[0],
+                        },
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
               <CenterContactPerson
                 newContact={this.state.center.newContact}
                 onNewContactChanged={this.handleNewContactChanged}
@@ -241,14 +310,14 @@ Create.propTypes = {
   createCenter: PropTypes.func.isRequired,
   getContactPerson: PropTypes.func.isRequired,
   accessToken: PropTypes.string.isRequired,
-  _getCenterContact: PropTypes.string.isRequired,
+  events: PropTypes.shape().isRequired,
   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = (state) => {
   const { accessToken } = state.user;
-  const { contacts, events: { getCenterContact } } = state.center;
-  return { accessToken, contacts, _getCenterContact: getCenterContact };
+  const { contacts, events } = state.center;
+  return { accessToken, contacts, events };
 };
 
 const mapDispatchToProps = dispatch => ({

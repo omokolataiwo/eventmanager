@@ -1,6 +1,6 @@
 import React from 'react';
 import PropsType from 'prop-types';
-
+import formatNumber from 'format-num';
 import { STATES, CENTER_TYPE } from '../../ui/consts';
 
 export const CenterDetailsEdit = props => (
@@ -17,26 +17,24 @@ export const CenterDetailsEdit = props => (
       <h5>{props.center.name}</h5>
       <div>
         <span className="location">
-          <span>map </span>
+          <i className="material-icons left">location_on</i>
           {STATES[props.center.state]}
         </span>
         &nbsp;
         <span className="type">{CENTER_TYPE[props.center.type]}</span>
       </div>
-      <p className="amount">N{props.center.amount}</p>
+      <p className="amount">&#8358;{formatNumber(props.center.amount)}</p>
       <p className="capacity">
-        <span>users</span> {props.center.capacity} Capacity
+        <i className="material-icons left">people</i> {formatNumber(props.center.capacity)} Capacity
       </p>
       <div>
-        <div className="chip">Parking Space</div>
-        <div className="chip">Security</div>
-        <div className="chip">CCTV</div>
+        {props.center.facilities.split(',').map((facility, i) => (
+          <div className="chip" key={i}>
+            {facility}
+          </div>
+        ))}
       </div>
-
-      <div>
-        <span className="highlight">Hosted</span> 300 events | 25 events{' '}
-        <span className="highlight">Pending</span>
-      </div>
+      <p>{props.center.details}</p>
       <div
         className="btn"
         onClick={props.click}

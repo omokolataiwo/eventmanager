@@ -1,12 +1,29 @@
 /* ****************************************************** */
 /* Global */
 /* ****************************************************** */
+.error {
+  color: #f00;
+  font-weight: 600; }
+
+.login-container {
+  float: left;
+  padding-left: 10px; }
+
+.login-container a {
+  color: #fff;
+  font-size: 13px;
+  margin-left: 5px; }
+
 .gradient-blue {
   background: -moz-linear-gradient(right, #1f98da 0%, #987ad9 100%);
   background: -webkit-linear-gradient(right, #1f98da 0%, #987ad9 100%);
   background: linear-gradient(to right, #1f98da 0%, #987ad9 100%); }
 
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   margin: 0; }
 
 .margin_0 {
@@ -24,7 +41,7 @@ body {
   font-size: 1rem;
   line-height: 24px;
   color: #2f2f2f;
-  background-color: #FFF;
+  background-color: #fff;
   height: 100%;
   min-height: 100%; }
 
@@ -39,10 +56,12 @@ header {
 .relative {
   position: relative; }
 
-.row.card, .container.card {
+.row.card,
+.container.card {
   padding: 25px; }
 
-div.container.user-container, div.container.admin-container {
+div.container.user-container,
+div.container.admin-container {
   width: 75% !important; }
 
 a.btn.btn-large.m12.l12 {

@@ -1,5 +1,6 @@
 import validator from 'validator';
 import moment from 'moment';
+import { ACCOUNT_TYPE_ADMIN, ACCOUNT_TYPE_USER } from './const';
 
 class User {
   constructor(user) {
@@ -17,6 +18,17 @@ class User {
     this.repassword = user.repassword || '';
   }
 
+  load(user) {
+    this.firstname = user.firstname || this.firstname;
+    this.lastname = user.lastname || this.lastname;
+    this.address = user.address || this.address;
+    this.state = user.state || this.state;
+    this.phonenumber = user.phonenumber || this.phonenumber;
+    this.email = user.email || this.email;
+    this.password = user.password || this.password;
+    this.repassword = user.repassword || '';
+  }
+
   validate() {
     if (this.password.length < 2 || this.password.length > 100) {
       this.errorMessages.password = 'password must be provided or too short';
@@ -27,42 +39,16 @@ class User {
       this.errorMessages.state = 'state must be a valid state code';
       this.error = true;
     }
-		
-    if (this.role !== 2 && this.role !== 3) {
-			console.log(this.role, 'why')
+
+    if (this.role !== ACCOUNT_TYPE_ADMIN && this.role !== ACCOUNT_TYPE_USER) {
       this.errorMessages.role = 'invalid role';
       this.error = true;
     }
-    if (this.phonenumber.length !== 11) {
-      this.errorMessages.phonenumber = 'phone number must be 11 digits';
-      this.error = true;
-    }
+
     if (this.password !== this.repassword) {
       this.errorMessages.password = 'Password and repassword does not match';
       this.error = true;
     }
-  }
-
-
-  isValidDate(dateString) {
-    // https://stackoverflow.com/questions/6177975/how-to-validate-date-with-format-mm-dd-yyyy-in-javascript
-    if (!/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateString)) {
-      return false;
-    }
-    const parts = dateString.split('-');
-    const day = parseInt(parts[2], 10);
-    const month = parseInt(parts[1], 10);
-    const year = parseInt(parts[0], 10);
-
-    if (year < 1000 || year > 3000 || month === 0 || month > 12) {
-      return false;
-    }
-    const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-    if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
-      monthLength[1] = 29;
-    }
-    return day > 0 && day <= monthLength[month - 1];
   }
 
   getErrors() {
@@ -73,6 +59,17 @@ class User {
   safe() {
     this.validate();
     return !this.error;
+  }
+  toJSON() {
+    return {
+      firstname: this.firstname,
+      lastname: this.lastname,
+      address: this.address,
+      state: this.state,
+      phonenumber: this.phonenumber,
+      email: this.email,
+      username: this.username,
+    };
   }
 }
 

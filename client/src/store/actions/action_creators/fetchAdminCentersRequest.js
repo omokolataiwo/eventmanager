@@ -24,8 +24,12 @@ export const fetchAdminCentersRequest = () => (dispatch, getState) => {
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
   axios
     .get(`${API_PATH}/centers/admin`)
-    .then(response => dispatch(receivedAdminCenter(response.data)))
-    .catch(e => console.dir(e));
+    .then((response) => {
+      dispatch(receivedAdminCenter(response.data));
+    })
+    .catch((e) => {
+      console.dir(e);
+    });
 };
 
 export default fetchAdminCentersRequest;

@@ -24,9 +24,9 @@ module.exports = {
       })
       .then((user) => {
         if (user) {
-          return res.status(400).json({
-            errors: { global: ['username or phonenumber or email has already been used.'] },
-          });
+          return res
+            .status(400)
+            .json({ global: ['username or phonenumber or email has already been used.'] });
         }
         return models.users
           .create(req.body)
@@ -64,9 +64,32 @@ module.exports = {
       });
   },
   getUser(req, res) {
-    res.status(500).send('Not implemented error');
+    return models.users
+      .findOne({ where: { id: req.user.id } })
+      .then(user => res.status(200).json(user))
+      .catch(e => res.status(501).json({ message: 'Internal Server Error' }));
   },
   update(req, res) {
-    return res.status(500).send('Not implemented error');
+    return models.users.findOne({ where: { id: req.user.id } }).then((user) => {
+      let userModel = new User(user);
+      userModel.load(req.body);
+
+      userModel = userModel.toJSON();
+      return models.users
+        .findOne({
+          where: { $or: [{ phonenumber: userModel.phonenumber }, { email: userModel.email }] },
+        })
+        .then((user) => {
+          if (user && user.username != userModel.username) {
+            return res.status(400).json({
+              message: 'Phone Number or Email Address has already been used by another user.',
+            });
+          }
+          return models.users
+            .update(userModel, { where: { id: req.user.id } })
+            .then(user => res.status(200).json(user))
+            .catch(e => res.status(501).json({ errorMessage: 'Internal Server Error' }));
+        });
+    });
   },
 };

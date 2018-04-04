@@ -32,10 +32,29 @@ const validateSignup = (req, res, next) => {
   return res.status(400).json(errors);
 };
 
+const validateUpdate = (req, res, next) => {
+  const {
+    firstname, lastname, address, state, email, phonenumber,
+  } = signupRules;
+  const errors = validate(req.body, {
+    firstname,
+    lastname,
+    address,
+    state,
+    email,
+    phonenumber,
+  });
+
+  if (errors === undefined) {
+    return next();
+  }
+  return res.status(400).json(errors);
+};
+
 module.exports = (app) => {
   app.post('/users/login', user.login);
   app.post('/users', validateSignup, user.create);
   app.get('/users', auth, user.getUser);
-  app.put('/users/update', auth, user.update);
-  app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true })); // TODO: Remove Set all token in axio.global after successful sign up
+  app.put('/users/', auth, validateUpdate, user.update);
+  app.post('/vtoken', auth, (req, res) => res.status(200).json({ state: true })); // TODO: Remove /vtoken path. Set all token in axio.global after successful sign up
 };

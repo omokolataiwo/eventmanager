@@ -20,16 +20,18 @@ class Bookings extends React.Component {
   componentWillMount() {
     this.props.getCenters();
     this.props.getEvents();
+  }
 
+  componentWillReceiveProps(props) {
     let active = 0;
     let concluded = 0;
 
-    this.props.eventCenter.forEach((event) => {
+    props.eventCenter.forEach((event) => {
       event.concluded ? concluded++ : active++;
     });
 
-    this.setState({ events: this.props.eventCenter });
-    this.setState({ centers: this.props.centers });
+    this.setState({ events: props.eventCenter });
+    this.setState({ centers: props.centers });
     this.setState({ concludedEvents: concluded });
     this.setState({ activeEvents: active });
   }
@@ -120,8 +122,12 @@ class Bookings extends React.Component {
             </table>
           </div>
         </div>
-
-        <CenterReports centers={this.state.centers} activeCenter={this.state.activeCenterDetails} />
+        {this.state.events.length && (
+          <CenterReports
+            centers={this.state.centers}
+            activeCenter={this.state.activeCenterDetails}
+          />
+        )}
         <canvas id="chart" width="400" height="400" />
       </div>
     );
@@ -134,6 +140,7 @@ const mapDispatchToProps = dispatch => ({
 });
 const mapStateToProps = (state) => {
   const { centers, eventCenter } = state.center;
+  console.log(centers);
   return { centers, eventCenter };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Bookings);

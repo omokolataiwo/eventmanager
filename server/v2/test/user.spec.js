@@ -7,19 +7,17 @@ import models from '../models';
 
 const expect = chai.expect;
 chai.use(chaiHttp);
-
-describe('Base setup', () => {
-  it('should set up database', (done) => {
-    models.users.destroy({ truncate: true });
-    done()
-  });
-});
+const request = chai.request(server);
+const API_PATH = '/api/v2';
 
 describe('post /users', () => {
+  before(() => {
+    models.users.destroy({ truncate: true });
+  });
+
   it('should create a new user', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users')
+    request
+      .post(`${API_PATH}/users`)
       .send(userFixture.register.validAdminUser)
       .end((err, res) => {
         expect(res).to.have.status(200);
@@ -28,9 +26,8 @@ describe('post /users', () => {
   });
 
   it('should not create user with same credientials', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users')
+    request
+      .post(`${API_PATH}/users`)
       .send(userFixture.register.validAdminUser)
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -46,9 +43,8 @@ describe('post /users', () => {
   });
 
   it('should not create user with different password', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users')
+    request
+      .post(`${API_PATH}/users`)
       .send(userFixture.register.invalidPasswordCombination)
       .end((err, res) => {
         expect(res).to.have.status(400);
@@ -68,9 +64,8 @@ describe('post /users', () => {
 
 describe('post /users/login', () => {
   it('should not login with wrong credential', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users/login')
+    request
+      .post(`${API_PATH}/users/login`)
       .send(userFixture.login.WrongPassword)
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -86,9 +81,8 @@ describe('post /users/login', () => {
   });
 
   it('should not login with no username', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users/login')
+    request
+      .post(`${API_PATH}/users/login`)
       .send(userFixture.login.NOUsername)
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -104,9 +98,8 @@ describe('post /users/login', () => {
   });
 
   it('should not login with no password', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users/login')
+    request
+      .post(`${API_PATH}/users/login`)
       .send(userFixture.login.NOPassword)
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -122,9 +115,8 @@ describe('post /users/login', () => {
   });
 
   it('should login', (done) => {
-    chai
-      .request(server)
-      .post('/v2/users/login')
+    request
+      .post(`${API_PATH}/users/login`)
       .send(userFixture.login.validAdminUser)
       .end((err, res) => {
         expect(res).to.have.status(200);
