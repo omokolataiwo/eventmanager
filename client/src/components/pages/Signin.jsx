@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { PropTypes } from 'prop-types';
 import { connect } from 'react-redux';
+import toastr from 'toastr';
+import { Error } from '../ui/Error';
 import signinRequest from '../../store/actions/action_creators/signinRequest';
 import * as route from '../../libs/route';
 
@@ -9,13 +11,29 @@ class Signin extends Component {
     super(props);
     this.state = {
       user: {
-        username: 'omokolataiwo',
+        username: 'admin',
         password: '123',
       },
       errors: {
         global: null,
       },
     };
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('newSignup')) {
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut',
+      };
+      toastr.success('Account Created Successfully.');
+      localStorage.removeItem('newSignup');
+    }
   }
 
   componentWillMount() {
@@ -54,8 +72,10 @@ class Signin extends Component {
       <div className="container container-small">
         <div className="row card signin">
           <div className="col s12 m12 l12">
-            <h5>SIGN IN</h5>
-            <p>{this.state.errors.global}</p>
+            <h5>
+              <i className="material-icons">person_pin</i> SIGN IN
+            </h5>
+            <Error message={this.state.errors.global} />
             <form>
               <div className="row">
                 <div className="input-field col s12 m12 l12">

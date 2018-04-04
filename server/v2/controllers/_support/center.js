@@ -80,13 +80,17 @@ export class Center {
   }
 }
 
-export const create = (req, res, models) =>
+export const create = (req, res, models) => {
+  if (!req.body.contactid) {
+    return res.status(400).json({ contactid: 'Contact is required.' });
+  }
   models.centers
     .create(req.body)
     .then(center => res.status(200).json(center))
     .catch((e) => {
       res.status(501).send(e);
     });
+};
 
 export const upate = (req, res, models) =>
   models.centers
