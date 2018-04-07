@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     contactid: DataTypes.INTEGER,
     facilities: DataTypes.STRING,
     amount: DataTypes.INTEGER,
-    details: DataTypes.STRING,
+    details: DataTypes.TEXT,
   });
 
   Center.associate = (models) => {

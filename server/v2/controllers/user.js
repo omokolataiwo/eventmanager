@@ -2,94 +2,89 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { tksecret } from '../config/config.json';
 import models from '../models';
-import User from './_support/user';
+import User from './_support/User';
 
 module.exports = {
-  create(req, res) {
-    req.body.phonenumber += '';
-    const user = new User(req.body);
-    if (!user.safe()) {
-      return res.status(400).json({ errors: user.getErrors() });
-    }
-    req.body.password = bcrypt.hashSync(req.body.password, 8);
-    return models.users
-      .findOne({
-        where: {
-          $or: [
-            { username: req.body.username },
-            { phonenumber: req.body.phonenumber },
-            { email: req.body.email },
-          ],
-        },
-      })
-      .then((user) => {
-        if (user) {
-          return res
-            .status(400)
-            .json({ global: ['username or phonenumber or email has already been used.'] });
-        }
-        return models.users
-          .create(req.body)
-          .then((user) => {
-            user = user.toJSON();
-            delete user.password;
-            return res
-              .status(200)
-              .json({ payload: user, success: { global: ['Account created'] } });
-          })
-          .catch(error => res.status(500).json(error));
-      })
-      .catch(error => res.status(500).json(error));
-  },
-  login(req, res) {
-    if (!req.body.username || !req.body.password) {
-      return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
-    }
+  async create(req, res) {
+    try {
+      const user = new User(req.body);
+      if (!user.safe()) {
+        return res.status(422).json({ errors: user.getErrors() });
+      }
+      req.body.password = bcrypt.hashSync(req.body.password, 8);
+      let userExist = await models.users.findOne({ where: { username: req.body.username } });
 
-    return models.users
-      .findOne({
-        where: { username: req.body.username },
-      })
-      .then((user) => {
-        if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
-          return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
-        }
+      if (userExist) {
+        return res.status(422).json({ username: ['username has already been taken.'] });
+      }
 
-        const token = jwt.sign({ id: user.id, role: user.role }, tksecret, { expiresIn: 86400 });
-        res.status(200).send({ auth: true, token, userdata: user });
-      })
-      .catch((e) => {
-        console.log(e);
-        res.status(500).send('Server Error');
+      userExist = await models.users.findOne({ where: { email: req.body.email } });
+      if (userExist) {
+        return res.status(422).json({ email: ['email has already been used.'] });
+      }
+
+      userExist = await models.users.findOne({ where: { phoneNumber: req.body.phoneNumber } });
+      if (userExist) {
+        return res.status(422).json({ phoneNumber: ['phone number has already been used.'] });
+      }
+
+      return models.users.create(req.body).then((newUser) => {
+        const userJSON = newUser.toJSON();
+        delete userJSON.password;
+        return res.status(200).json({ userJSON });
       });
+    } catch (e) {
+      return res.status(500).send('Internal Server Error.');
+    }
+  },
+  async login(req, res) {
+    try {
+      const user = await models.users.findOne({ where: { username: req.body.username } });
+
+      if (
+        !req.body.username ||
+        !req.body.password ||
+        !user ||
+        !bcrypt.compareSync(req.body.password, user.password)
+      ) {
+        return res.status(401).json({ errors: { global: ['Invalid username or password'] } });
+      }
+
+      const token = jwt.sign({ id: user.id, role: user.role }, tksecret, { expiresIn: 86400 });
+      return res.status(200).send({ auth: true, token, userdata: user });
+    } catch (e) {
+      return res.status(500).send('Internal Server Error');
+    }
   },
   getUser(req, res) {
     return models.users
       .findOne({ where: { id: req.user.id } })
       .then(user => res.status(200).json(user))
-      .catch(e => res.status(501).json({ message: 'Internal Server Error' }));
+      .catch(() => res.status(500).json('Internal Server Error'));
   },
-  update(req, res) {
-    return models.users.findOne({ where: { id: req.user.id } }).then((user) => {
-      let userModel = new User(user);
-      userModel.load(req.body);
+  async update(req, res) {
+    try {
+      const user = await models.users.findOne({ where: { id: req.user.id } });
+      const userModel = new User(user).load(req.body).toJSON();
 
-      userModel = userModel.toJSON();
+      const phoneNumberExist = await models.users.findOne({
+        where: { phoneNumber: userModel.phoneNumber },
+      });
+
+      if (phoneNumberExist && phoneNumberExist.username !== userModel.username) {
+        return res.status(422).json({ phoneNumber: 'Phone number has already been used.' });
+      }
+
+      const emailAddressExist = await models.users.findOne({ where: { email: userModel.email } });
+
+      if (emailAddressExist && emailAddressExist.username !== userModel.username) {
+        return res.status(422).json({ email: 'Email address has already been used.' });
+      }
       return models.users
-        .findOne({
-          where: { $or: [{ phonenumber: userModel.phonenumber }, { email: userModel.email }] },
-        })
-        .then((user) => {
-          if (user && user.username != userModel.username) {
-            return res.status(400).json({
-              message: 'Phone Number or Email Address has already been used by another user.',
-            });
-          }
-          return models.users
-            .update(userModel, { where: { id: req.user.id } })
-            .then(user => res.status(200).json(user))
-            .catch(e => res.status(501).json({ errorMessage: 'Internal Server Error' }));
-        });
-    });
+        .update(userModel, { where: { id: req.user.id } })
+        .then(() => res.status(200).json(userModel));
+    } catch (e) {
+      return res.status(500).send('Internal Server Error');
+    }
   },
 };

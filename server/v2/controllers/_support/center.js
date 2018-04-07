@@ -7,23 +7,23 @@ export class Center {
     this.name = center.name;
     this.address = center.address;
     this.state = center.state;
-    this.capacity = parseInt(center.capacity);
+    this.capacity = parseInt(center.capacity, 10);
     this.ownerid = center.ownerid;
     this.facilities = center.facilities || 'No facilities';
-    this.amount = parseInt(center.amount);
+    this.amount = parseInt(center.amount, 10);
   }
   load(center) {
     this.name = center.name || this.name;
     this.address = center.address || this.address;
     this.state = center.state || this.state;
-    this.capacity = parseInt(center.capacity) || this.capacity;
-    this.ownerid = center.ownerid || this.ownerid;
+    this.capacity = parseInt(center.capacity, 10) || this.capacity;
     this.facilities = center.facilities || this.facilities;
-    this.amount = parseInt(center.amount) || this.amount;
+    this.amount = parseInt(center.amount, 10) || this.amount;
+    return this;
   }
 
   validate() {
-    const stateCode = Math.floor(parseInt(this.state));
+    const stateCode = Math.floor(parseInt(this.state, 10));
     if (stateCode < 1 || stateCode > 37) {
       this.errorMessages.state = 'state must be a valid state code';
       this.error = true;
@@ -34,7 +34,7 @@ export class Center {
       length: { minimum: 5, message: 'must be more than 4 characters.' },
     });
     if (invalidName) {
-      this.errorMessages.name = invalidName[0];
+      [this.errorMessages.name] = invalidName;
       this.error = true;
     }
 
@@ -74,7 +74,7 @@ export class Center {
       address: this.address,
       state: this.state,
       capacity: this.capacity,
-      facilites: this.facilities,
+      facilities: this.facilities,
       amount: this.amount,
     };
   }
@@ -84,18 +84,21 @@ export const create = (req, res, models) => {
   if (!req.body.contactid) {
     return res.status(400).json({ contactid: 'Contact is required.' });
   }
-  models.centers
+  return models.centers
     .create(req.body)
     .then(center => res.status(200).json(center))
-    .catch((e) => {
-      res.status(501).send(e);
-    });
+    .catch(() => res.status(500).send('Internal Server Error'));
 };
 
-export const upate = (req, res, models) =>
-  models.centers
-    .update(req.body.center, {
+export const updateCenter = (req, res, models) => {
+  if (!req.body.contactid) {
+    return res.status(400).json({ contactid: 'Contact is required.' });
+  }
+
+  return models.centers
+    .update(req.body, {
       where: { id: req.params.id },
     })
-    .then(center => res.status(200).json(center))
-    .then(error => res.status(501).send(error));
+    .then(() => res.status(200).json(req.body))
+    .catch(() => res.status(500).send('Internal Server Error'));
+};

@@ -1,7 +1,7 @@
 import { validate } from 'validate.js';
 
 export const contactValidationRules = {
-  first_name: {
+  firstName: {
     presence: {
       allowEmpty: false,
       message: 'is required',
@@ -13,7 +13,7 @@ export const contactValidationRules = {
       tooLong: 'can not be more than 120 characters.',
     },
   },
-  last_name: {
+  lastName: {
     presence: {
       allowEmpty: false,
       message: 'is required',
@@ -25,7 +25,7 @@ export const contactValidationRules = {
       tooLong: 'can not be more than 120 characters.',
     },
   },
-  phone_number: {
+  phoneNumber: {
     presence: {
       allowEmpty: false,
       message: 'is required',
@@ -46,3 +46,5 @@ export const contactValidationRules = {
     },
   },
 };
+
+export default contactValidationRules;

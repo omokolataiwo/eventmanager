@@ -8,15 +8,15 @@ import { ACCOUNT_TYPE_ADMIN, ACCOUNT_TYPE_USER } from './const';
 const auth = (req, res, next) => {
   const token = req.headers['x-access-token'];
   if (!token) {
-    return res.status(401).json({ auth: false, message: 'No token provided' });
+    return res.status(422).json({ auth: false, message: 'No token provided' });
   }
 
   return jwt.verify(token, tksecret, (error, decoded) => {
     if (error) {
-      return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+      return res.status(401).json({ auth: false, message: 'Failed to authenticate token.' });
     }
     if (decoded.role !== ACCOUNT_TYPE_ADMIN && decoded.role !== ACCOUNT_TYPE_USER) {
-      return res.status(401).json({ auth: false, message: 'Not authorized' });
+      return res.status(403).json({ auth: false, message: 'Not authorized' });
     }
     req.user = decoded;
     return next();
@@ -29,26 +29,26 @@ const validateSignup = (req, res, next) => {
   if (errors === undefined) {
     return next();
   }
-  return res.status(400).json(errors);
+  return res.status(422).json(errors);
 };
 
 const validateUpdate = (req, res, next) => {
   const {
-    firstname, lastname, address, state, email, phonenumber,
+    firstName, lastName, address, state, email, phoneNumber,
   } = signupRules;
   const errors = validate(req.body, {
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     address,
     state,
     email,
-    phonenumber,
+    phoneNumber,
   });
 
   if (errors === undefined) {
     return next();
   }
-  return res.status(400).json(errors);
+  return res.status(422).json(errors);
 };
 
 module.exports = (app) => {
