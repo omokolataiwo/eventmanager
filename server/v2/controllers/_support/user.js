@@ -6,27 +6,28 @@ class User {
   constructor(user) {
     this.error = false;
     this.errorMessages = {};
-    this.firstname = user.firstname || '';
-    this.lastname = user.lastname || '';
+    this.firstName = user.firstName || '';
+    this.lastName = user.lastName || '';
     this.address = user.address || '';
     this.state = user.state || '';
-    this.phonenumber = user.phonenumber || '';
+    this.phoneNumber = user.phoneNumber || '';
     this.email = user.email || '';
     this.username = user.username || '';
     this.password = user.password || '';
     this.role = parseInt(user.role) || -1;
-    this.repassword = user.repassword || '';
+    this.matchPassword = user.matchPassword || '';
   }
 
   load(user) {
-    this.firstname = user.firstname || this.firstname;
-    this.lastname = user.lastname || this.lastname;
+    this.firstName = user.firstName || this.firstName;
+    this.lastName = user.lastName || this.lastName;
     this.address = user.address || this.address;
     this.state = user.state || this.state;
-    this.phonenumber = user.phonenumber || this.phonenumber;
+    this.phoneNumber = user.phoneNumber || this.phoneNumber;
     this.email = user.email || this.email;
     this.password = user.password || this.password;
-    this.repassword = user.repassword || '';
+    this.matchPassword = user.matchPassword || '';
+    return this;
   }
 
   validate() {
@@ -45,8 +46,8 @@ class User {
       this.error = true;
     }
 
-    if (this.password !== this.repassword) {
-      this.errorMessages.password = 'Password and repassword does not match';
+    if (this.password !== this.matchPassword) {
+      this.errorMessages.password = 'Password and matchPassword does not match';
       this.error = true;
     }
   }
@@ -62,11 +63,11 @@ class User {
   }
   toJSON() {
     return {
-      firstname: this.firstname,
-      lastname: this.lastname,
+      firstName: this.firstName,
+      lastName: this.lastName,
       address: this.address,
       state: this.state,
-      phonenumber: this.phonenumber,
+      phoneNumber: this.phoneNumber,
       email: this.email,
       username: this.username,
     };

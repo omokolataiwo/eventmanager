@@ -1,13 +1,13 @@
 import { validate } from 'validate.js';
 
 export const signupRules = {
-  firstname: {
+  firstName: {
     presence: {
       allowEmpty: false,
       message: 'is required.',
     },
   },
-  lastname: {
+  lastName: {
     presence: {
       allowEmpty: false,
       message: 'is required.',
@@ -25,7 +25,7 @@ export const signupRules = {
       tooLong: 'can not be more than 120 characters.',
     },
   },
-  phonenumber: {
+  phoneNumber: {
     presence: {
       allowEmpty: false,
       message: 'is required',
