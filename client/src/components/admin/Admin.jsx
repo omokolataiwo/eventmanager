@@ -4,8 +4,7 @@ import { connect } from 'react-redux';
 import Index from './Index';
 import { Center } from './Center';
 import Bookings from './Bookings';
-import * as route from './../../libs/route';
-import { ACCOUNT_TYPE_ADMIN } from './../../store/consts';
+import { ACCOUNT_TYPE_ADMIN } from '../../consts';
 
 import logo from '../../images/logo.png';
 
@@ -14,7 +13,7 @@ class Admin extends React.Component {
     const { authenticated, userdata, history } = this.props;
 
     if (!authenticated || userdata.role !== ACCOUNT_TYPE_ADMIN) {
-      route.push('/signin', history.push);
+      history.push('/signin');
     }
   }
   render() {
@@ -26,7 +25,8 @@ class Admin extends React.Component {
               <div className="acc-wrap">
                 <div className="login-container">
                   <Link to="/admin">
-                    <span className="material-icons left">dashboard</span>DASH BOARD
+                    <span className="material-icons left">dashboard</span>DASH
+                    BOARD
                   </Link>
                 </div>
                 <div className="login-container">
@@ -67,8 +67,14 @@ class Admin extends React.Component {
         <main className="main-wrapper admin">
           <Switch>
             <Route path={`${this.props.match.path}`} exact component={Index} />
-            <Route path={`${this.props.match.path}/center`} component={Center} />
-            <Route path={`${this.props.match.path}/bookings`} component={Bookings} />
+            <Route
+              path={`${this.props.match.path}/center`}
+              component={Center}
+            />
+            <Route
+              path={`${this.props.match.path}/bookings`}
+              component={Bookings}
+            />
             <Redirect to={`${this.props.match.path}`} />
           </Switch>
         </main>
@@ -83,10 +89,10 @@ class Admin extends React.Component {
   }
 }
 
-export default connect((state) => {
+export default connect(state => {
   const { authenticated, userdata } = state.user;
   return {
     authenticated,
-    userdata,
+    userdata
   };
 })(Admin);

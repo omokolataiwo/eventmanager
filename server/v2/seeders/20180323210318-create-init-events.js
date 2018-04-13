@@ -13,8 +13,8 @@ module.exports = {
       [
         {
           title: 'Wedding Party',
-          startdate: '12-02-2018',
-          enddate: '12-02-2018',
+          startDate: '12-02-2018',
+          endDate: '12-02-2018',
           centerid: 1,
           userid: 1,
           createdAt: '12-12-2018',
@@ -22,8 +22,8 @@ module.exports = {
         },
         {
           title: 'Wedding Anniversary',
-          startdate: '12-03-2018',
-          enddate: '12-03-2018',
+          startDate: '12-03-2018',
+          endDate: '12-03-2018',
           centerid: 6,
           userid,
           createdAt: '12-12-2018',
@@ -31,8 +31,8 @@ module.exports = {
         },
         {
           title: 'House warming',
-          startdate: '12-04-2018',
-          enddate: '12-05-2018',
+          startDate: '12-04-2018',
+          endDate: '12-05-2018',
           centerid: 5,
           userid,
           createdAt: '12-12-2018',
@@ -40,8 +40,8 @@ module.exports = {
         },
         {
           title: 'Birthday Party',
-          startdate: '12-06-2018',
-          enddate: '12-06-2018',
+          startDate: '12-06-2018',
+          endDate: '12-06-2018',
           centerid: 1,
           userid,
           createdAt: '12-12-2018',
@@ -49,8 +49,8 @@ module.exports = {
         },
         {
           title: 'Comendy Show',
-          startdate: '12-07-2018',
-          enddate: '12-07-2018',
+          startDate: '12-07-2018',
+          endDate: '12-07-2018',
           centerid: 4,
           userid,
           createdAt: '12-12-2018',
@@ -58,8 +58,8 @@ module.exports = {
         },
         {
           title: 'Music Concert',
-          startdate: '12-08-2018',
-          enddate: '12-08-2018',
+          startDate: '12-08-2018',
+          endDate: '12-08-2018',
           centerid: 3,
           userid,
           createdAt: '12-12-2018',
@@ -67,8 +67,8 @@ module.exports = {
         },
         {
           title: 'Graduation Party',
-          startdate: '12-09-2018',
-          enddate: '12-09-2018',
+          startDate: '12-09-2018',
+          endDate: '12-09-2018',
           centerid: 2,
           userid,
           createdAt: '12-12-2018',
@@ -76,8 +76,8 @@ module.exports = {
         },
         {
           title: 'Naming Ceremony',
-          startdate: '12-10-2018',
-          enddate: '12-10-2018',
+          startDate: '12-10-2018',
+          endDate: '12-10-2018',
           centerid: 1,
           userid,
           createdAt: '12-12-2018',

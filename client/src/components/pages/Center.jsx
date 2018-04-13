@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchCenterRequest } from '../../store/actions/action_creators/fetchCenterRequest';
+import { fetchCenterRequest } from '../../actions/fetchCenterRequest';
 
 class Center extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      center: {},
+      center: {}
     };
   }
   componentWillMount() {
@@ -29,9 +29,9 @@ class Center extends React.Component {
   }
 }
 const mapDispatchToProps = dispatch => ({
-  getCenter: id => dispatch(fetchCenterRequest(id)),
+  getCenter: id => dispatch(fetchCenterRequest(id))
 });
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { center } = state.center;
   return { center };
 };

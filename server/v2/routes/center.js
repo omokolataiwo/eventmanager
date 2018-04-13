@@ -1,24 +1,22 @@
 import jwt from 'jsonwebtoken';
-import Joi from 'joi';
 import expressJoi from 'express-joi-validator';
 import { center } from '../controllers';
 import { tksecret } from '../config/config.json';
-import createCenterSchema from '../validate/createCenterSchema';
 import idroute from '../validate/idroute';
 import { ACCOUNT_TYPE_ADMIN } from './const';
 
 const auth = (req, res, next) => {
   const token = req.headers['x-access-token'];
   if (!token) {
-    return res.status(401).json({ auth: false, message: 'No token provided' });
+    return res.status(422).json({ auth: false, message: 'No token provided' });
   }
   return jwt.verify(token, tksecret, (error, decoded) => {
     if (error) {
-      return res.status(500).json({ auth: false, type: error.name });
+      return res.status(401).json({ auth: false, message: 'Failed to authenticate token.' });
     }
 
     if (decoded.role !== ACCOUNT_TYPE_ADMIN) {
-      return res.status(401).json({ auth: false, message: 'Not authorized' });
+      return res.status(403).json({ auth: false, message: 'Not authorized' });
     }
     req.user = decoded;
     return next();

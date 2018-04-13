@@ -1,14 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
-import updateCenterRequest from '../../../store/actions/action_creators/updateCenter';
-import { getContactPersonRequest } from '../../../store/actions/action_creators/getContactPerson';
-import { SelectComponent } from '../../ui/SelectComponent';
-import { CenterContactPerson } from '../../ui/CenterContactPerson';
-import { STATES, CENTER_TYPE } from '../../ui/consts';
-import { RECEIVED_CENTER_CONTACTS, CREATED_NEW_CENTER } from '../../../store/actions/types';
-import * as route from '../../../libs/route';
+import updateCenterRequest from '../../../actions/updateCenterRequest';
+import { getContactPersonRequest } from '../../../actions/fetchContactPersonRequest';
+import { SelectComponent } from '../../containers/forms/SelectComponent';
+import { CenterContactPerson } from '../../containers/CenterContactPerson';
+import { STATES, CENTER_TYPE } from '../../..//consts';
+import { RECEIVED_CENTER_CONTACTS, CREATED_NEW_CENTER } from '../../../types';
 
 class Create extends React.Component {
   constructor(props) {
@@ -32,11 +30,11 @@ class Create extends React.Component {
             first_name: '',
             last_name: '',
             phone_number: null,
-            email: '',
+            email: ''
           },
-          existingContacts: [],
-        },
-      },
+          existingContacts: []
+        }
+      }
     };
     this.handleStateChanged = this.handleStateChanged.bind(this);
     this.handleCenterTypeChanged = this.handleCenterTypeChanged.bind(this);
@@ -45,38 +43,18 @@ class Create extends React.Component {
     this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
   }
   componentWillMount() {
-    const center = this.props.centers.find(center => center.id == this.props.match.params.index);
+    const center = this.props.centers.find(center => center.id === this.props.match.params.index);
 
     this.setState({ center: { ...this.state.center, ...center } });
     this.props.getContactPerson(this.props.accessToken);
   }
-
-  componentWillReceiveProps(props) {
-    const { events, history, contacts } = props;
-    if (events.getCenterContact === RECEIVED_CENTER_CONTACTS) {
-      if (contacts.length === 0) {
-        this.setState({ center: { ...this.state.center, newContact: true } });
-      } else {
-        this.setState({
-          center: {
-            ...this.state.center,
-            contact: { ...this.state.center.contact, existingContacts: contacts },
-          },
-        });
-      }
-    }
-
-    if (events.createCenter === CREATED_NEW_CENTER) {
-      localStorage.setItem('newCenterCreated', true);
-      return route.push('/admin/center', history.push);
-    }
-  }
-
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
     facilitiesDOM.material_chip({
       placeholder: 'Center Facilities',
-      data: this.state.center.facilities.split(',').map(facility => ({ tag: facility })),
+      data: this.state.center.facilities
+        .split(',')
+        .map(facility => ({ tag: facility }))
     });
 
     const chipChanged = () => {
@@ -90,9 +68,32 @@ class Create extends React.Component {
     facilitiesDOM.on('chip.add', chipChanged);
     facilitiesDOM.on('chip.delete', chipChanged);
   }
+  componentWillReceiveProps(props) {
+    const { events, history, contacts } = props;
+    if (events.getCenterContact === RECEIVED_CENTER_CONTACTS) {
+      if (contacts.length === 0) {
+        this.setState({ center: { ...this.state.center, newContact: true } });
+      } else {
+        this.setState({
+          center: {
+            ...this.state.center,
+            contact: {
+              ...this.state.center.contact,
+              existingContacts: contacts
+            }
+          }
+        });
+      }
+    }
+
+    if (events.createCenter === CREATED_NEW_CENTER) {
+      localStorage.setItem('newCenterCreated', true);
+      return history.push('/admin/center');
+    }
+  }
+
   updateCenter(e) {
     e.preventDefault();
-    this.state.accessToken = this.props.accessToken;
     this.props.updateCenter(this.state);
   }
 
@@ -103,8 +104,8 @@ class Create extends React.Component {
     this.setState({
       center: {
         ...this.state.center,
-        newContact: !this.state.center.newContact,
-      },
+        newContact: !this.state.center.newContact
+      }
     });
   }
   handleStateChanged(state) {
@@ -119,9 +120,12 @@ class Create extends React.Component {
         ...this.state.center,
         contact: {
           ...this.state.center.contact,
-          newContact: { ...this.state.center.contact.newContact, [field]: value },
-        },
-      },
+          newContact: {
+            ...this.state.center.contact.newContact,
+            [field]: value
+          }
+        }
+      }
     });
   }
   render() {
@@ -144,7 +148,7 @@ class Create extends React.Component {
                     defaultValue={this.state.center.name}
                     onChange={e =>
                       this.setState({
-                        center: { ...this.state.center, name: e.target.value },
+                        center: { ...this.state.center, name: e.target.value }
                       })
                     }
                   />
@@ -156,7 +160,9 @@ class Create extends React.Component {
                     default={this.state.center.type}
                     id="type"
                     change={this.handleCenterTypeChanged}
-                    options={new Map([...CENTER_TYPE.map((ctype, i) => [i, ctype])])}
+                    options={
+                      new Map([...CENTER_TYPE.map((ctype, i) => [i, ctype])])
+                    }
                     label="Center Type"
                   />
                 </div>
@@ -172,8 +178,8 @@ class Create extends React.Component {
                       this.setState({
                         center: {
                           ...this.state.center,
-                          address: e.target.value,
-                        },
+                          address: e.target.value
+                        }
                       })
                     }
                   />
@@ -190,8 +196,8 @@ class Create extends React.Component {
                       this.setState({
                         center: {
                           ...this.state.center,
-                          area: e.target.value,
-                        },
+                          area: e.target.value
+                        }
                       })
                     }
                   />
@@ -219,8 +225,8 @@ class Create extends React.Component {
                       this.setState({
                         center: {
                           ...this.state.center,
-                          capacity: e.target.value,
-                        },
+                          capacity: e.target.value
+                        }
                       })
                     }
                   />
@@ -242,7 +248,7 @@ class Create extends React.Component {
                     defaultValue={this.state.center.amount}
                     onChange={e =>
                       this.setState({
-                        center: { ...this.state.center, amount: e.target.value },
+                        center: { ...this.state.center, amount: e.target.value }
                       })
                     }
                   />
@@ -259,8 +265,8 @@ class Create extends React.Component {
                       this.setState({
                         center: {
                           ...this.state.center,
-                          details: e.target.value,
-                        },
+                          details: e.target.value
+                        }
                       })
                     }
                     defaultValue={this.state.center.details}
@@ -278,8 +284,8 @@ class Create extends React.Component {
                       this.setState({
                         center: {
                           ...this.state.center,
-                          image: e.target.files[0],
-                        },
+                          image: e.target.files[0]
+                        }
                       })
                     }
                   />
@@ -308,20 +314,21 @@ class Create extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { accessToken } = state.user;
   const { contacts, events, centers } = state.center;
   return {
     accessToken,
     contacts,
     events,
-    centers,
+    centers
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   updateCenter: centerDetails => dispatch(updateCenterRequest(centerDetails)),
-  getContactPerson: accessToken => dispatch(getContactPersonRequest(accessToken)),
+  getContactPerson: accessToken =>
+    dispatch(getContactPersonRequest(accessToken))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Create);

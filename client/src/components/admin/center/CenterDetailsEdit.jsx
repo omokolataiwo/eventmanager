@@ -1,7 +1,7 @@
 import React from 'react';
 import PropsType from 'prop-types';
 import formatNumber from 'format-num';
-import { STATES, CENTER_TYPE } from '../../ui/consts';
+import { STATES, CENTER_TYPE } from '../../../consts';
 
 export const CenterDetailsEdit = props => (
   <div className="row event-center-detailed">
@@ -25,7 +25,8 @@ export const CenterDetailsEdit = props => (
       </div>
       <p className="amount">&#8358;{formatNumber(props.center.amount)}</p>
       <p className="capacity">
-        <i className="material-icons left">people</i> {formatNumber(props.center.capacity)} Capacity
+        <i className="material-icons left">people</i>{' '}
+        {formatNumber(props.center.capacity)} Capacity
       </p>
       <div>
         {props.center.facilities.split(',').map((facility, i) => (
@@ -54,8 +55,8 @@ CenterDetailsEdit.propTypes = {
     state: PropsType.number.isRequired,
     type: PropsType.number.isRequired,
     amount: PropsType.number.isRequired,
-    capacity: PropsType.number.isRequired,
+    capacity: PropsType.number.isRequired
   }).isRequired,
-  click: PropsType.func.isRequired,
+  click: PropsType.func.isRequired
 };
 export default CenterDetailsEdit;

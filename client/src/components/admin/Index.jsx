@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchCenterEventRequest } from '../../store/actions/action_creators/fetchCenterEventRequest';
+import { fetchCenterEventRequest } from '../../actions/fetchCenterEventRequest';
 
 import featuredCenterImg from '../../images/party-room.jpg';
 
@@ -8,7 +8,7 @@ class Index extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: [],
+      events: []
     };
   }
   componentWillMount() {
@@ -24,8 +24,8 @@ class Index extends React.Component {
         <div className="row">
           {this.state.events.length === 0 && (
             <div className="empty-resources">
-              <i className="material-icons left">info_outline</i>No event created for your centers
-              yet.
+              <i className="material-icons left">info_outline</i>No event
+              created for your centers yet.
             </div>
           )}
           {this.state.events.map(event => (
@@ -58,10 +58,10 @@ class Index extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  getEvents: () => dispatch(fetchCenterEventRequest()),
+  getEvents: () => dispatch(fetchCenterEventRequest())
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { eventCenter } = state.center;
   return { events: eventCenter };
 };

@@ -28,13 +28,13 @@ module.exports = {
         return res.status(422).json({ phoneNumber: ['phone number has already been used.'] });
       }
 
-      return models.users.create(req.body).then((user) => {
-        user = user.toJSON();
-        delete user.password;
-        return res.status(200).json({ user });
+      return models.users.create(req.body).then((newUser) => {
+        const userJSON = newUser.toJSON();
+        delete userJSON.password;
+        return res.status(200).json(userJSON);
       });
     } catch (e) {
-      res.status(500).send('Internal Server Error.');
+      return res.status(500).send('Internal Server Error.');
     }
   },
   async login(req, res) {
@@ -51,7 +51,11 @@ module.exports = {
       }
 
       const token = jwt.sign({ id: user.id, role: user.role }, tksecret, { expiresIn: 86400 });
+<<<<<<< HEAD
+      return res.status(200).send({ auth: true, token, userdata: user });
+=======
       res.status(200).send({ auth: true, token, userdata: user });
+>>>>>>> 69999044b68f9938fe1cba7c3f09ec2cacbaed78
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
@@ -60,7 +64,7 @@ module.exports = {
     return models.users
       .findOne({ where: { id: req.user.id } })
       .then(user => res.status(200).json(user))
-      .catch(e => res.status(501).json({ message: 'Internal Server Error' }));
+      .catch(() => res.status(500).json('Internal Server Error'));
   },
   async update(req, res) {
     try {
@@ -71,20 +75,34 @@ module.exports = {
         where: { phoneNumber: userModel.phoneNumber },
       });
 
+<<<<<<< HEAD
+      if (phoneNumberExist && phoneNumberExist.username !== userModel.username) {
+=======
       if (phoneNumberExist && phoneNumberExist.username != userModel.username) {
+>>>>>>> 69999044b68f9938fe1cba7c3f09ec2cacbaed78
         return res.status(422).json({ phoneNumber: 'Phone number has already been used.' });
       }
 
       const emailAddressExist = await models.users.findOne({ where: { email: userModel.email } });
 
+<<<<<<< HEAD
+      if (emailAddressExist && emailAddressExist.username !== userModel.username) {
+=======
       if (emailAddressExist && emailAddressExist.username != userModel.username) {
+>>>>>>> 69999044b68f9938fe1cba7c3f09ec2cacbaed78
         return res.status(422).json({ email: 'Email address has already been used.' });
       }
       return models.users
         .update(userModel, { where: { id: req.user.id } })
+<<<<<<< HEAD
+        .then(() => res.status(200).json(userModel));
+    } catch (e) {
+      return res.status(500).send('Internal Server Error');
+=======
         .then(user => res.status(200).json(userModel));
     } catch (e) {
       res.status(500).send('Internal Server Error');
+>>>>>>> 69999044b68f9938fe1cba7c3f09ec2cacbaed78
     }
   },
 };

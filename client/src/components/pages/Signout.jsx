@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
-import { signoutRequest } from '../../store/actions/action_creators/signoutRequest';
+import { signoutRequest } from '../../actions/signoutRequest';
 
 class Signout extends React.Component {
   componentWillMount() {
@@ -20,11 +20,11 @@ class Signout extends React.Component {
 }
 
 Signout.propTypes = {
-  signout: PropTypes.func.isRequired,
+  signout: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = dispatch => ({
-  signout: () => dispatch(signoutRequest()),
+  signout: () => dispatch(signoutRequest())
 });
 
 const mapStateToProps = state => ({ state });
