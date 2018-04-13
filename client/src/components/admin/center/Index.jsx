@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import * as route from '../../../libs/route';
-import { fetchAdminCentersRequest } from '../../../store/actions/action_creators/fetchAdminCentersRequest';
-import { STATES } from '../../ui/consts';
-import { RESET_CREATE_NEW_CENTER } from '../../../store/actions/types';
-import { CenterDetailsEdit } from './CenterDetailsEdit';
 import toastr from 'toastr';
+import { fetchAdminCentersRequest } from '../../../actions/fetchAdminCentersRequest';
+import { STATES } from '../../../consts';
+import { RESET_CREATE_NEW_CENTER } from '../../../types';
+import { CenterDetailsEdit } from './CenterDetailsEdit';
 
 import CenterImg from '../../../images/party-room.jpg';
 
@@ -15,12 +14,12 @@ class Index extends React.Component {
     super(props);
     this.state = {
       centers: [],
-      activeCenter: 0,
+      activeCenter: 0
     };
     this.handleEditCenter = this.handleEditCenter.bind(this);
   }
   componentWillMount() {
-    this.props.fetchAllCenters(this.props.accessToken);
+    this.props.fetchAllCenters();
 
     if (localStorage.getItem('newCenterCreated')) {
       this.props.clearCreatedState();
@@ -35,10 +34,7 @@ class Index extends React.Component {
     return this.setState({ activeCenter: centerIndex });
   }
   handleEditCenter() {
-    return route.push(
-      `/admin/center/update/${this.state.centers[this.state.activeCenter].id}`,
-      this.props.history.push,
-    );
+    return this.props.history.push(`/admin/center/update/${this.state.centers[this.state.activeCenter].id}`);
   }
   render() {
     return (
@@ -71,8 +67,12 @@ class Index extends React.Component {
                   >
                     <img src={CenterImg} alt="Event Center" />
                     <div className="over-img">
-                      <h4 className="truncate">{this.state.centers[index].name}</h4>
-                      <p className="truncate">{STATES[this.state.centers[index].state]}</p>
+                      <h4 className="truncate">
+                        {this.state.centers[index].name}
+                      </h4>
+                      <p className="truncate">
+                        {STATES[this.state.centers[index].state]}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -89,16 +89,16 @@ Index.propTypes = {
   accessToken: PropTypes.string.isRequired,
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
   history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 const mapDispatchToProps = dispatch => ({
-  fetchAllCenters: accessToken => dispatch(fetchAdminCentersRequest(accessToken)),
-  clearCreatedState: () => dispatch({ type: RESET_CREATE_NEW_CENTER }),
+  fetchAllCenters: () => dispatch(fetchAdminCentersRequest()),
+  clearCreatedState: () => dispatch({ type: RESET_CREATE_NEW_CENTER })
 });
 
-const mapStateToProps = (state) => {
-  const { user: { accessToken }, center: { centers } } = state;
-  return { accessToken, centers };
+const mapStateToProps = state => {
+  const { adminCenters } = state.center;
+  return { centers: adminCenters };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Index);

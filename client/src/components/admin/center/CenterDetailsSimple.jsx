@@ -1,7 +1,7 @@
 import React from 'react';
 import PropsType from 'prop-types';
 
-import { STATES, CENTER_TYPE } from '../../ui/consts';
+import { STATES, CENTER_TYPE } from '../../../consts';
 
 export const CenterDetailsSimple = props => (
   <div className="row event-center-detailed">
@@ -44,7 +44,7 @@ CenterDetailsSimple.propTypes = {
     address: PropsType.string.isRequired,
     type: PropsType.number.isRequired,
     amount: PropsType.number.isRequired,
-    capacity: PropsType.number.isRequired,
-  }).isRequired,
+    capacity: PropsType.number.isRequired
+  }).isRequired
 };
 export default CenterDetailsSimple;

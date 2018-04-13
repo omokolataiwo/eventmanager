@@ -14,7 +14,7 @@ class User {
     this.email = user.email || '';
     this.username = user.username || '';
     this.password = user.password || '';
-    this.role = parseInt(user.role) || -1;
+    this.role = parseInt(user.role, 10) || -1;
     this.matchPassword = user.matchPassword || '';
   }
 

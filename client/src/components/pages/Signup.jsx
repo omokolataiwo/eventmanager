@@ -1,106 +1,182 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { validate } from 'validate.js';
-import { NigerianStateComponent } from '../ui/NigerianStateComponent';
-import { SelectComponent } from '../ui/SelectComponent';
-import { Error } from '../ui/Error';
-import createUserRequest from '../../store/actions/action_creators/createUserRequest';
-import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../store/consts';
-import { SIGNUP_USER } from '../../store/actions/types';
-import { SIGNUP_VALIDATION_RULES } from '../ui/consts';
-import fakeUser from '../ui/faker/user';
 
-import * as route from '../../libs/route';
+import { ACCOUNT_TYPE_MEMBER, STATES, ACCOUNT_TYPE_ADMIN } from '../../consts';
+import SIGNUP_VALIDATION_RULES from '../../validators/signup';
+import { SIGNUP_USER } from '../../types';
 
-class Signup extends Component {
+import createUserRequest from '../../actions/createUserRequest';
+import Error from '../containers/Error';
+import InputField from '../containers/forms/InputField';
+import SelectComponent from '../containers/forms/SelectComponent';
+
+const propTypes = {
+  authenticated: PropTypes.bool.isRequired,
+  history: PropTypes.shape().isRequired,
+  errors: PropTypes.shape().isRequired,
+  events: PropTypes.shape().isRequired,
+  createUserRequest: PropTypes.func.isRequired
+};
+/**
+ * Sign up component
+ *
+ * @class Signup
+ * @extends {React.Component}
+ */
+class Signup extends React.Component {
+  /**
+   * Sign up component
+   *
+   * @param {object} props - React/Redux props
+   * @class Signup
+   * @extends {React.Component}
+   */
   constructor(props) {
     super(props);
     this.state = {
-      firstname: null,
-      lastname: null,
-      address: null,
-      state: null,
-      phonenumber: null,
-      email: null,
-      username: null,
-      password: null,
-      repassword: null,
-      role: ACCOUNT_TYPE_MEMBER,
-      errors: {
-        firstname: null,
-        lastname: null,
+      userdata: {
+        firstName: null,
+        lastName: null,
         address: null,
         state: null,
-        phonenumber: null,
+        phoneNumber: null,
         email: null,
         username: null,
         password: null,
-        repassword: null,
+        matchPassword: null,
+        role: ACCOUNT_TYPE_MEMBER
       },
-      events: {},
+      errors: {
+        firstName: [],
+        lastName: [],
+        address: [],
+        state: [],
+        role: [],
+        phoneNumber: [],
+        email: [],
+        username: [],
+        password: [],
+        matchPassword: [],
+        global: []
+      },
+      events: {}
     };
-    this.handleSelectState = this.handleSelectState.bind(this);
-    this.handleChangeRole = this.handleChangeRole.bind(this);
-  }
-  resetErrors(callback) {
-    const err = {};
 
-    for (const error in this.state.errors) {
-      err[error] = null;
-    }
-    const errors = Object.assign({}, { ...this.state.errors }, err);
-    this.setState({ errors }, callback);
+    this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
   }
 
-  registerUser(e) {
-    e.preventDefault();
-
-    this.resetErrors(() => {
-      const errorMsg = validate(this.state, SIGNUP_VALIDATION_RULES);
-      if (errorMsg !== undefined) {
-        const errors = Object.assign({}, { ...this.state.errors }, errorMsg);
-        this.setState({ errors });
-        return;
-      }
-      this.props.createUser(this.state);
-    });
-  }
-  handleSelectState(value) {
-    this.setState({ state: value });
-  }
-  handleChangeRole(value) {
-    this.setState({ role: value });
-  }
+  /**
+   * Check if user has already signed in
+   *
+   * @return {void}
+   */
   componentWillMount() {
-    this.setState({ ...fakeUser() });
-
     const { authenticated, history } = this.props;
     if (authenticated) {
-      route.push('/signout', history.push);
+      history.push('/signout');
     }
   }
+  /**
+   * Update application state
+   *
+   * @param {object} props - Redux state
+   * @returns {void}
+   */
   componentWillReceiveProps(props) {
     const { errors, history } = props;
     let { events } = props;
 
     if (events.signup === SIGNUP_USER) {
       localStorage.setItem('newSignup', true);
-      return route.push('/signin', history.push);
+      return history.push('/signin');
+    }
+    this.setState({ events: { ...this.state.events, ...events }, errors });
+  }
+
+  /**
+   * Clear form fields error message before making request to backend
+   *
+   * @param {object} callback - action to be taken when form error is cleared
+   * @return {void}
+   */
+  resetErrors(callback) {
+    const err = {};
+
+    Object.keys(this.state.errors).map(field => {
+      err[field] = [];
+      return field;
+    });
+
+    const errors = Object.assign({}, { ...this.state.errors }, err);
+    this.setState({ errors }, callback);
+  }
+
+  /**
+   * Signup new user
+   *
+   * @param {object} event -form event
+   * @return {void}
+   */
+  registerUser(event) {
+    event.preventDefault();
+
+    // Clear error in case a field had error before and it is corrected
+    this.resetErrors(() => {
+      const errorMsg = validate(this.state.userdata, SIGNUP_VALIDATION_RULES);
+      if (errorMsg !== undefined) {
+        const errors = Object.assign({}, { ...this.state.errors }, errorMsg);
+        this.setState({ errors });
+        return;
+      }
+      this.props.createUserRequest(this.state.userdata);
+    });
+  }
+
+  /**
+   * Method changes the property of user object in state
+   *
+   * @param {object} e - DOM object of changed element
+   *
+   * @returns {void}
+   */
+  handleFormFieldChanged(e) {
+    const { value, id } = e.target;
+    this.setState({ userdata: { ...this.state.userdata, [id]: value } });
+
+    // match password and password, it is a special case validation
+    // it requires to fields
+    if (id === 'matchPassword') {
+      return this.validate(id, {
+        password: this.state.userdata.password,
+        [id]: value
+      });
     }
 
-    events = Object.assign({}, this.state.events, { ...events });
-    this.setState({ events });
-    return this.setState({ errors });
+    this.validate(id, { [id]: value });
   }
-  validate(field, value, objectMode) {
-    const errors = { ...this.state.errors };
+  /**
+   * Validate form input
+   *
+   * @param {string} field - field name in state
+   * @param {string} value - input value
+   * @return {void}
+   */
+  validate(field, value) {
     let errorMsg = validate(value, { [field]: SIGNUP_VALIDATION_RULES[field] });
+    let error = [];
+    if (errorMsg !== undefined) error = errorMsg[field];
 
-    errorMsg = !errorMsg || errorMsg[field];
-    errors[field] = Array.isArray(errorMsg) ? errorMsg[0] : errorMsg;
-    this.setState({ errors });
+    this.setState({
+      errors: { ...this.state.errors, [field]: error }
+    });
   }
+
+  /**
+   * Renders signup page
+   * @return {object} - JSX object
+   */
   render() {
     return (
       <div className="container small-container">
@@ -108,149 +184,115 @@ class Signup extends Component {
           <div className="col s12 m12 l12">
             <h5>CREATE ACCOUNT</h5>
             <form>
-              <Error message={this.state.errors.global}/>
+              <Error messages={this.state.errors.global} />
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="firstname"
-                    type="text"
-                    className="validate"
-                    value={this.state.firstname}
-                    onChange={e => this.setState({ firstname: e.target.value })}
-                    onBlur={e => this.validate('firstname', { firstname: e.target.value })}
-                  />
-                  <label htmlFor="firstname">First Name</label>
-                  <Error message={this.state.errors.firstname} />
-                </div>
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="lastname"
-                    type="text"
-                    className="validate"
-                    value={this.state.lastname}
-                    onBlur={e => this.validate('lastname', { lastname: e.target.value })}
-                    onChange={e => this.setState({ lastname: e.target.value })}
-                  />
-                  <label htmlFor="lastname">Last Name</label>
-                  <Error message={this.state.errors.lastname} />
-                </div>
-              </div>
-              <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="address"
-                    type="text"
-                    className="validate"
-                    value={this.state.address}
-                    onChange={e => this.setState({ address: e.target.value })}
-                    onBlur={e => this.validate('address', { address: e.target.value })}
-                  />
-                  <label htmlFor="address">Address</label>
-                  <Error message={this.state.errors.address} />
-                </div>
-                <NigerianStateComponent
-                  errorMessage={this.state.errors.state}
-                  change={this.handleSelectState}
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="firstName"
+                  type="text"
+                  title="First Name"
+                  width="6"
                 />
+                <Error messages={this.state.errors.firstName} />
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="lastName"
+                  type="text"
+                  title="Last Name"
+                  width="6"
+                />
+                <Error messages={this.state.errors.lastName} />
               </div>
+
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="phonenumber"
-                    type="text"
-                    className="validate"
-                    value={this.state.phonenumber}
-                    onChange={e => this.setState({ phonenumber: e.target.value })}
-                    onBlur={e =>
-                      this.validate('phonenumber', {
-                        phonenumber: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="phonenumber">Phone Number</label>
-                  <Error message={this.state.errors.phonenumber} />
-                </div>
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="email_address"
-                    type="text"
-                    className="validate"
-                    value={this.state.email}
-                    onChange={e => this.setState({ email: e.target.value })}
-                    onBlur={e => this.validate('email', { email: e.target.value })}
-                  />
-                  <label htmlFor="email_address">Email Address</label>
-                  <Error message={this.state.errors.email} />
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="address"
+                  type="text"
+                  title="Address"
+                  width="6"
+                />
+                <Error messages={this.state.errors.address} />
+
+                <SelectComponent
+                  default={this.state.userdata.state}
+                  id="state"
+                  change={this.handleFormFieldChanged}
+                  options={[...STATES.map((ctype, i) => [i + 1, ctype])]}
+                  label="Select State"
+                  width="6"
+                />
+                <Error messages={this.state.errors.state} />
               </div>
+
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="username"
-                    type="text"
-                    className="validate"
-                    value={this.state.username}
-                    onChange={e => this.setState({ username: e.target.value })}
-                    onBlur={e => this.validate('username', { username: e.target.value })}
-                  />
-                  <label htmlFor="username">username</label>
-                  <Error message={this.state.errors.username} />
-                </div>
-                <div className="input-field col s12 m6 l6">
-                  <SelectComponent
-                    default={ACCOUNT_TYPE_MEMBER}
-                    id="role"
-                    change={this.handleChangeRole}
-                    options={
-                      new Map([
-                        [ACCOUNT_TYPE_MEMBER, 'Regular'],
-                        [ACCOUNT_TYPE_ADMIN, 'Center Owner'],
-                      ])
-                    }
-                    label="Account Type"
-                  />
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="phoneNumber"
+                  type="text"
+                  title="Phone Number"
+                  width="6"
+                />
+                <Error messages={this.state.errors.phoneNumber} />
+
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="email"
+                  type="text"
+                  title="Email Address"
+                  width="6"
+                />
+                <Error messages={this.state.errors.email} />
               </div>
+
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="password"
-                    type="password"
-                    className="validate"
-                    value={this.state.password}
-                    onChange={e => this.setState({ password: e.target.value })}
-                    onBlur={(e) => {
-                      this.validate('password', { password: e.target.value });
-                      /*
-											if (this.state.repassword !== '') {
-											  this.validate('repassword', { password:this.state.password, repassword: this.state.repassword });
-												} */
-                    }}
-                  />
-                  <label htmlFor="password">Password</label>
-                  <Error message={this.state.errors.password} />
-                </div>
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="repassword"
-                    type="password"
-                    className="validate"
-                    value={this.state.repassword}
-                    onChange={e => this.setState({ repassword: e.target.value })}
-                    onBlur={e =>
-                      this.validate('repassword', {
-                        password: this.state.password,
-                        repassword: e.target.value,
-                      })
-                    }
-                  />
-                  <label htmlFor="repassword">Retype Password</label>
-                  <Error message={this.state.errors.repassword} />
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="username"
+                  type="text"
+                  title="Username"
+                  width="6"
+                />
+                <Error messages={this.state.errors.username} />
+
+                <SelectComponent
+                  default={this.state.userdata.role}
+                  id="role"
+                  change={this.handleFormFieldChanged}
+                  options={[
+                    [ACCOUNT_TYPE_MEMBER, 'Regular'],
+                    [ACCOUNT_TYPE_ADMIN, 'Center Owner']
+                  ]}
+                  label="Membership Type"
+                  width="6"
+                />
+                <Error messages={this.state.errors.role} />
               </div>
-              <div className="row" />
-              <button onClick={e => this.registerUser(e)} className="btn btn-large blue">
-                Register
+
+              <div className="row">
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="password"
+                  type="password"
+                  title="Password"
+                  width="6"
+                />
+                <Error messages={this.state.errors.password} />
+
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="matchPassword"
+                  type="password"
+                  title="Retype Password"
+                  width="6"
+                />
+                <Error messages={this.state.errors.matchPassword} />
+              </div>
+              <button
+                onClick={e => this.registerUser(e)}
+                className="btn btn-large blue"
+              >
+                Create Account
               </button>
             </form>
           </div>
@@ -260,26 +302,22 @@ class Signup extends Component {
   }
 }
 
-Signup.propTypes = {
-  createUser: PropTypes.func.isRequired,
-  userdata: PropTypes.shape({}).isRequired,
-  events: PropTypes.shape({}).isRequired,
-  errors: PropTypes.shape({}).isRequired,
-  authenticated: PropTypes.bool.isRequired,
-};
+Signup.propTypes = propTypes;
 
-const mapStateToProps = (state) => {
+/**
+ * Map to properties of component
+ *
+ * @param {object} state - The redux state
+ * @returns {object} - Extracted properties
+ */
+const mapStateToProps = state => {
   const { user } = state;
   return {
     userdata: user.userdata,
     events: user.events,
     errors: user.errors,
-    authenticated: user.authenticated,
+    authenticated: user.authenticated
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  createUser: user => dispatch(createUserRequest(user)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default connect(mapStateToProps, { createUserRequest })(Signup);

@@ -2,10 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import featuredCenterImg from '../../../images/party-room.jpg';
-import { fetchAllCentersRequest } from '../../../store/actions/action_creators/fetchAllCentersRequest';
-import { createEventRequest } from '../../../store/actions/action_creators/createEventRequest';
+import { fetchAllCentersRequest } from '../../../actions/fetchAllCentersRequest';
+import { createEventRequest } from '../../../actions/createEventRequest';
 import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
-import { STATES } from '../../ui/consts';
+import { STATES } from '../../../consts';
 
 class Create extends React.Component {
   constructor(props) {
@@ -15,26 +15,30 @@ class Create extends React.Component {
         title: 'Happy Party',
         start: '2018-03-21',
         end: '2018-03-22',
-        centerid: '',
+        centerid: ''
       },
       centers: [],
-      activeCenter: 0,
+      activeCenter: 0
     };
   }
   componentWillMount() {
     this.props.fetchCenters(this.props.accessToken);
     this.setState({ centers: this.props.centers }, () => {
       const choicedCenter = localStorage.getItem('choice-center');
-      const centerid = choicedCenter || this.state.centers[this.state.activeCenter].id;
+      const centerid =
+        choicedCenter || this.state.centers[this.state.activeCenter].id;
       this.setState({
-        event: { ...this.state.event, centerid },
+        event: { ...this.state.event, centerid }
       });
     });
   }
   changeActiveCenter(activeCenter) {
     this.setState({ activeCenter });
     this.setState({
-      event: { ...this.state.event, centerid: this.state.centers[activeCenter].id },
+      event: {
+        ...this.state.event,
+        centerid: this.state.centers[activeCenter].id
+      }
     });
   }
   createEvent(e) {
@@ -53,7 +57,9 @@ class Create extends React.Component {
                 className="validate"
                 id="event-title"
                 onChange={e =>
-                  this.setState({ event: { ...this.state.event, title: e.target.value } })
+                  this.setState({
+                    event: { ...this.state.event, title: e.target.value }
+                  })
                 }
                 defaultValue={this.state.event.title}
               />
@@ -66,7 +72,9 @@ class Create extends React.Component {
                   type="text"
                   className="validate"
                   onChange={e =>
-                    this.setState({ event: { ...this.state.event, start: e.target.value } })
+                    this.setState({
+                      event: { ...this.state.event, start: e.target.value }
+                    })
                   }
                   defaultValue={this.state.event.start}
                 />
@@ -79,7 +87,9 @@ class Create extends React.Component {
                   type="text"
                   className="validate"
                   onChange={e =>
-                    this.setState({ event: { ...this.state.event, end: e.target.value } })
+                    this.setState({
+                      event: { ...this.state.event, end: e.target.value }
+                    })
                   }
                   defaultValue={this.state.event.end}
                 />
@@ -88,7 +98,9 @@ class Create extends React.Component {
             </div>
           </div>
 
-          <CenterDetailsSimple center={this.state.centers[this.state.activeCenter]} />
+          <CenterDetailsSimple
+            center={this.state.centers[this.state.activeCenter]}
+          />
           <button className="btn" onClick={e => this.createEvent(e)}>
             Book Center
           </button>
@@ -163,15 +175,16 @@ Create.propTypes = {
   fetchCenters: PropTypes.func.isRequired,
   accessToken: PropTypes.string.isRequired,
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  createEvent: PropTypes.func.isRequired,
+  createEvent: PropTypes.func.isRequired
 };
 
 const mapDispatchToProps = dispatch => ({
   fetchCenters: accessToken => dispatch(fetchAllCentersRequest(accessToken)),
-  createEvent: (event, accessToken) => dispatch(createEventRequest(event, accessToken)),
+  createEvent: (event, accessToken) =>
+    dispatch(createEventRequest(event, accessToken))
 });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { accessToken } = state.user;
   const { centers } = state.center;
   return { accessToken, centers };

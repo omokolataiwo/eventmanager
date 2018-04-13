@@ -3,30 +3,55 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import 'materialize-css';
-import { fetchAllCentersRequest } from '../../store/actions/action_creators/fetchAllCentersRequest';
+import { fetchAllCentersRequest } from '../../actions/fetchAllCentersRequest';
 import bannercenter from '../../images/banner-center2.png';
 import checkAvailabilityImg from '../../images/icons/calendar-check.png';
 import searchForCenterImg from '../../images/icons/searching-for-a-house.png';
 import bookVenueImge from '../../images/icons/calendar-book1.png';
 import featuredCenterImg from '../../images/party-room.jpg';
-import OverlaySearch from '../ui/OverlaySearch';
+import OverlaySearch from '../containers/OverlaySearch';
 
+/**
+ * Home page component
+ *
+ * @class Home
+ * @extends {Component}
+ */
 class Home extends Component {
+  /**
+   * Home page component
+   *
+   * @param {object} props - The application properties
+   */
   constructor(props) {
     super(props);
     this.state = {
-      centers: [],
+      centers: []
     };
   }
-  componentWillMount() {
-    this.props.getCenters();
+  /**
+   * Fetch all centers when component mounts
+   *
+   * @return {void}
+   */
+  componentDidMount() {
+    this.props.fetchAllCentersRequest();
+    $('.carousel.carousel-slider').carousel({ fullWidth: true });
   }
+  /**
+   * Update centers when property received
+   *
+   * @param {props} props - The properties received
+   * @return {void}
+   */
   componentWillReceiveProps(props) {
     this.setState({ centers: props.centers });
   }
-  componentDidMount() {
-    $('.carousel.carousel-slider').carousel({ fullWidth: true });
-  }
+  /**
+   * Renders the component
+   *
+   * @returns {object} - JSX object
+   */
   render() {
     return (
       <div>
@@ -49,7 +74,7 @@ class Home extends Component {
               marginLeft: '10%',
               maxHeight: '90%',
               overflow: 'auto',
-              paddingBottom: '2%',
+              paddingBottom: '2%'
             }}
           >
             <OverlaySearch />
@@ -66,26 +91,26 @@ class Home extends Component {
                 <img src={searchForCenterImg} alt="Search for Center" />
                 <h5>SEARCH VENUE</h5>
                 <p>
-                  Find your best suited Events Venues across Nigeria, including pricing, special
-                  offers, reviews.
+                  Find your best suited Events Venues across Nigeria, including
+                  pricing, special offers, reviews.
                 </p>
               </div>
               <div className="col s12 m4 l4">
                 <img src={checkAvailabilityImg} alt="Check Availability" />
                 <h5>CHECK AVAILABILITY</h5>
                 <p>
-                  Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
-                  porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-                  elit.
+                  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+                  Donec id elit non mi porta gravida at eget metus. Nullam id
+                  dolor id nibh ultricies vehicula ut id elit.
                 </p>
               </div>
               <div className="col s12 m4 l4">
                 <img src={bookVenueImge} alt="Book Venue" />;
                 <h5>BOOK VENUE</h5>
                 <p>
-                  Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi
-                  porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id
-                  elit.
+                  Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+                  Donec id elit non mi porta gravida at eget metus. Nullam id
+                  dolor id nibh ultricies vehicula ut id elit.
                 </p>
               </div>
             </div>
@@ -114,8 +139,12 @@ class Home extends Component {
     );
   }
 }
-const mapDispatchToProps = dispatch => ({
-  getCenters: () => dispatch(fetchAllCentersRequest()),
-});
+
+/**
+ * Map redux state to component property
+ *
+ * @param {state} state - state to map to property
+ * @return {object} - extracted properties from state
+ */
 const mapStateToProps = state => ({ centers: state.center.centers });
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, { fetchAllCentersRequest })(Home);

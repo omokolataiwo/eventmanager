@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
-import { fetchAllCentersRequest } from '../../store/actions/action_creators/fetchAllCentersRequest';
-import { fetchUserEventsRequest } from '../../store/actions/action_creators/fetchUserEventsRequest';
-import HorizontalFeaturedCenters from '../ui/HorizontalFeaturedCenters';
-import { STATES } from '../ui/consts';
+import { fetchAllCentersRequest } from '../../actions/fetchAllCentersRequest';
+import { fetchUserEventsRequest } from '../../actions/fetchUserEventsRequest';
+import HorizontalFeaturedCenters from '../containers/HorizontalFeaturedCenters';
+import { STATES } from '../../consts';
 
 class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: [],
+      events: []
     };
   }
 
@@ -39,7 +39,9 @@ class Index extends Component {
                   <div className="card-panel event-card-user">
                     <h4 className="white-text truncate">{event.title}</h4>
                     <p className="white-text">{STATES[event.center.state]}</p>
-                    <p className="white-text">{moment(this.startdate).format('Do MMMM YYYY')}</p>
+                    <p className="white-text">
+                      {moment(this.startdate).format('Do MMMM YYYY')}
+                    </p>
                     <h5 className="truncate white-text">{event.center.name}</h5>
                   </div>
                 </div>
@@ -92,17 +94,17 @@ class Index extends Component {
 
 Index.propTypes = {
   fetchUserEvents: PropTypes.func.isRequired,
-  accessToken: PropTypes.string.isRequired,
+  accessToken: PropTypes.string.isRequired
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { accessToken } = state.user;
   const { events } = state.event;
   return { accessToken, events };
 };
 const mapDispatchToProps = dispatch => ({
   fetchCenters: accessToken => dispatch(fetchAllCentersRequest(accessToken)),
-  fetchUserEvents: accessToken => dispatch(fetchUserEventsRequest(accessToken)),
+  fetchUserEvents: accessToken => dispatch(fetchUserEventsRequest(accessToken))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Index);

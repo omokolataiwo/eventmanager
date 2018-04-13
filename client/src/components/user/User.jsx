@@ -6,15 +6,14 @@ import Profile from './Profile';
 import { Event } from './Event';
 
 import logo from '../../images/logo.png';
-import { ACCOUNT_TYPE_MEMBER } from './../../store/consts';
-import * as route from './../../libs/route';
+import { ACCOUNT_TYPE_MEMBER } from '../../consts';
 
 class User extends React.Component {
   componentWillMount() {
     const { userdata, authenticated, history } = this.props;
 
     if (!authenticated || userdata.role !== ACCOUNT_TYPE_MEMBER) {
-      route.push('/signin', history.push);
+      history.push('/signin');
     }
   }
 
@@ -27,7 +26,8 @@ class User extends React.Component {
               <div className="acc-wrap">
                 <div className="login-container">
                   <Link to="/user">
-                    <span className="material-icons left">dashboard</span>DASH BOARD
+                    <span className="material-icons left">dashboard</span>DASH
+                    BOARD
                   </Link>
                 </div>
                 <div className="login-container">
@@ -64,9 +64,15 @@ class User extends React.Component {
         <main className="main-wrapper">
           <Switch>
             <Route path={`${this.props.match.path}`} exact component={Index} />
-            <Route path={`${this.props.match.path}/center`} component={Profile} />
+            <Route
+              path={`${this.props.match.path}/center`}
+              component={Profile}
+            />
             <Route path={`${this.props.match.path}/event`} component={Event} />
-            <Route path={`${this.props.match.path}/profile`} component={Profile} />
+            <Route
+              path={`${this.props.match.path}/profile`}
+              component={Profile}
+            />
             <Redirect to={`${this.props.match.path}`} />
           </Switch>
         </main>
@@ -81,10 +87,10 @@ class User extends React.Component {
   }
 }
 
-export default connect((state) => {
+export default connect(state => {
   const { authenticated, userdata } = state.user;
   return {
     authenticated,
-    userdata,
+    userdata
   };
 })(User);

@@ -86,7 +86,7 @@ export const create = (req, res, models) => {
   }
   return models.centers
     .create(req.body)
-    .then(center => res.status(200).json(center))
+    .then(center => res.status(201).json(center))
     .catch(() => res.status(500).send('Internal Server Error'));
 };
 
@@ -99,6 +99,6 @@ export const updateCenter = (req, res, models) => {
     .update(req.body, {
       where: { id: req.params.id },
     })
-    .then(() => res.status(200).json(req.body))
+    .then(() => res.status(201).json(req.body))
     .catch(() => res.status(500).send('Internal Server Error'));
 };

@@ -1,25 +1,65 @@
-import React, { Component } from 'react';
-import { PropTypes } from 'prop-types';
+import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import toastr from 'toastr';
-import { Error } from '../ui/Error';
-import signinRequest from '../../store/actions/action_creators/signinRequest';
-import * as route from '../../libs/route';
+import Error from '../containers/Error';
+import InputField from '../containers/forms/InputField';
+import getPath from '../../utils/getPath';
+import { SIGNIN_USER } from '../../types';
+import signinRequest from '../../actions/signinRequest';
 
-class Signin extends Component {
+const propTypes = {
+  userdata: PropTypes.shape().isRequired,
+  authenticated: PropTypes.bool.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  events: PropTypes.shape().isRequired,
+  errors: PropTypes.shape().isRequired,
+  signinRequest: PropTypes.func.isRequired
+};
+
+/**
+ * Sign in component
+ *
+ * @class Signin
+ * @extends {React.Component}
+ */
+class Signin extends React.Component {
+  /**
+   * Sign in constructor
+   * @param {string} props -The application state
+   * @extends {React.Component}
+   */
   constructor(props) {
     super(props);
     this.state = {
       user: {
-        username: 'admin',
-        password: '123',
+        username: '',
+        password: ''
       },
       errors: {
-        global: null,
-      },
+        global: []
+      }
     };
+    this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
   }
 
+  /**
+   * Check if user is authenticated and redirect appropriately
+   *
+   * @returns {void}
+   */
+  componentWillMount() {
+    const { userdata, authenticated, history } = this.props;
+    if (authenticated) {
+      return history.push(getPath(userdata.role));
+    }
+  }
+
+  /**
+   * Display toaster when user just signed up
+   *
+   * @returns {void}
+   */
   componentDidMount() {
     if (localStorage.getItem('newSignup')) {
       toastr.options = {
@@ -29,44 +69,67 @@ class Signin extends Component {
         showEasing: 'swing',
         hideEasing: 'linear',
         showMethod: 'fadeIn',
-        hideMethod: 'fadeOut',
+        hideMethod: 'fadeOut'
       };
       toastr.success('Account Created Successfully.');
       localStorage.removeItem('newSignup');
     }
   }
 
-  componentWillMount() {
-    const { authenticated, userdata, history } = this.props;
-    if (authenticated) {
-      return route.push(route.getPath(userdata.role), history.push);
-    }
-  }
+  /**
+   * Prevent signed in user
+   *
+   * @param {object} props - state of the object
+   * @returns {void}
+   */
   componentWillReceiveProps(props) {
     const {
-      userdata, accessToken, events, errors, history,
+      userdata, events, errors, history
     } = props;
 
-    if (events.isSignedin && accessToken) {
-      return route.push(route.getPath(userdata.role), history.push);
+    if (events.signin === SIGNIN_USER) {
+      return history.push(getPath(userdata.role));
     }
-    this.setState({ errors });
-    this.setState({ events });
+    this.setState({ errors, events });
   }
-
-  signin() {
+  /**
+   * Sign in user
+   *@param {object} event - DOM event
+   * @returns {void}
+   */
+  signin(event) {
     const username = this.state.user.username || '';
     const password = this.state.user.password || '';
 
     if (username.trim() === '' || password.trim() === '') {
       this.setState({
-        errors: { ...this.state.errors, global: 'Invalid username or password' },
+        errors: {
+          ...this.state.errors,
+          global: ['Invalid username or password']
+        }
       });
       return;
     }
-    return this.props.signinRequest(this.state.user);
+    this.props.signinRequest(this.state.user);
   }
-
+  /**
+   * Method changes the property of user object in state
+   *
+   * @param {object} e - DOM object of changed element
+   *
+   * @returns {void}
+   */
+  handleFormFieldChanged(e) {
+    const { value, id } = e.target;
+    this.setState({ user: { ...this.state.user, [id]: value } });
+  }
+  /**
+   * Rendered the Sign in form
+   *
+   * @returns {object} - JSX object
+   *
+   * @memberof Signin
+   */
   render() {
     return (
       <div className="container container-small">
@@ -74,47 +137,33 @@ class Signin extends Component {
           <div className="col s12 m12 l12">
             <h5>
               <i className="material-icons">person_pin</i> SIGN IN
+              <Error messages={this.state.errors.global} />
             </h5>
-            <Error message={this.state.errors.global} />
             <form>
               <div className="row">
-                <div className="input-field col s12 m12 l12">
-                  <input
-                    onChange={e =>
-                      this.setState({
-                        user: { ...this.state.user, username: e.target.value },
-                      })
-                    }
-                    value={this.state.user.username}
-                    id="username"
-                    type="text"
-                    className="validate"
-                  />
-                  <label htmlFor="username">username</label>
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="username"
+                  type="text"
+                  title="Username"
+                  width="12"
+                />
               </div>
               <div className="row">
-                <div className="input-field col m12 s12 l12">
-                  <input
-                    onChange={e =>
-                      this.setState({
-                        user: { ...this.state.user, password: e.target.value },
-                      })
-                    }
-                    value={this.state.user.password}
-                    id="password"
-                    type="password"
-                    className="validate"
-                  />
-                  <label htmlFor="password">Password</label>
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="password"
+                  type="password"
+                  title="Password"
+                  width="12"
+                />
               </div>
               <div className="row" />
               <input
                 type="submit"
                 className="btn btn-large blue right"
                 value="Sign In"
-                onClick={(e) => {
+                onClick={e => {
                   e.preventDefault();
                   this.signin();
                 }}
@@ -127,28 +176,20 @@ class Signin extends Component {
   }
 }
 
-Signin.propTypes = {
-  signinRequest: PropTypes.func.isRequired,
-  userdata: PropTypes.object.isRequired,
-  accessToken: PropTypes.string.isRequired,
-  events: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired,
-  authenticated: PropTypes.bool.isRequired,
-};
-
-const mapDispatchToProps = dispatch => ({
-  signinRequest: user => dispatch(signinRequest(user)),
-});
-
-function mapStateToProps(state) {
+Signin.propTypes = propTypes;
+/**
+ * Map to properties of component
+ *
+ * @param {object} state - The redux state
+ * @returns {object} - Extracted properties
+ */
+const mapStateToProps = state => {
   const { user } = state;
   return {
     userdata: user.userdata,
-    accessToken: user.accessToken,
     events: user.events,
     errors: user.errors,
-    authenticated: user.authenticated,
+    authenticated: user.authenticated
   };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signin);
+};
+export default connect(mapStateToProps, { signinRequest })(Signin);
