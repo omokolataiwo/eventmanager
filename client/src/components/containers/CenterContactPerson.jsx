@@ -1,11 +1,50 @@
 import React from 'react';
-import { SelectComponent } from '../containers/forms/SelectComponent';
-import { ContactPersonForm } from '../containers/ContactPersonForm';
+import PropTypes from 'prop-types';
+import SelectComponent from '../containers/forms/SelectComponent';
+import ContactPersonForm from '../containers/ContactPersonForm';
 
-export const CenterContactPerson = props => {
+const propTypes = {
+  newContact: PropTypes.bool.isRequired,
+  onNewContactChanged: PropTypes.func.isRequired,
+  existingContacts: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  onSelectContactChanged: PropTypes.func.isRequired,
+  onFieldChange: PropTypes.func.isRequired,
+  defaultContact: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired
+};
+/**
+ * Renders contact form base on existing contact details
+ *
+ * @param {object} props - The properties of the compoent
+ * @returns {object} - JSX DOM
+ */
+const CenterContactPerson = ({
+  existingContacts,
+  newContact,
+  onNewContactChanged,
+  onFieldChange,
+  onSelectContactChanged,
+  defaultContact
+}) => {
   let contactFormHeader = <span />;
+  let contactPersonForm = (
+    <SelectComponent
+      default={defaultContact}
+      id="contactid"
+      change={e => onSelectContactChanged(e)}
+      options={[
+        ...existingContacts.map(existingContact => [
+          existingContact.id,
+          `${existingContact.firstName} ${existingContact.lastName}`
+        ])
+      ]}
+      label="Select Contact Person"
+      width="6"
+    />
+  );
 
-  if (props.existingContacts.length !== 0) {
+  // We dont need the switch if there are no existing contacts
+  if (existingContacts.length !== 0) {
     contactFormHeader = (
       <div className="col s12 m12 l12">
         <div className="switch">
@@ -13,9 +52,9 @@ export const CenterContactPerson = props => {
             <input
               id="new-contact"
               type="checkbox"
-              checked={props.newContact}
+              checked={newContact}
               onChange={() => {
-                props.onNewContactChanged();
+                onNewContactChanged();
               }}
             />
             <span className="lever" />
@@ -25,6 +64,11 @@ export const CenterContactPerson = props => {
       </div>
     );
   }
+
+  if (existingContacts.length === 0 || newContact) {
+    contactPersonForm = <ContactPersonForm onFieldChange={onFieldChange} />;
+  }
+
   return (
     <div>
       <div className="row">
@@ -33,28 +77,11 @@ export const CenterContactPerson = props => {
       </div>
       <div className="row">
         <div className="col s12 l12 m12" />
-        {!props.existingContacts.length ? (
-          <ContactPersonForm onFieldChange={props.onFieldChange} />
-        ) : props.newContact ? (
-          <ContactPersonForm onFieldChange={props.onFieldChange} />
-        ) : (
-          <SelectComponent
-            default={props.defaultContact}
-            id="existing-contact"
-            change={e => props.onSelectContactChanged(e)}
-            options={
-              new Map([
-                ...props.existingContacts.map(excontact => [
-                  excontact.id,
-                  `${excontact.first_name} ${excontact.last_name}`
-                ])
-              ])
-            }
-          />
-        )}
+        {contactPersonForm}
       </div>
     </div>
   );
 };
 
+CenterContactPerson.propTypes = propTypes;
 export default CenterContactPerson;

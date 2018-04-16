@@ -1,5 +1,3 @@
-import validator from 'validator';
-import moment from 'moment';
 import { ACCOUNT_TYPE_ADMIN, ACCOUNT_TYPE_USER } from './const';
 
 class User {
@@ -74,4 +72,4 @@ class User {
   }
 }
 
-export { User as default };
+export default User;

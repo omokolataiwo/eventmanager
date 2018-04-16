@@ -3,6 +3,7 @@ import {
   RECEIVED_CENTERS,
   FETCHING_CENTERS,
   FETCHING_CENTER,
+  FETCHING_CENTER_ERROR,
   RECEIVED_CENTER,
   FETCHING_CENTERS_EVENTS,
   RECEIVED_CENTERS_EVENTS,
@@ -11,8 +12,7 @@ import {
   FETCHING_ADMIN_CENTERS_ERROR,
   CREATING_NEW_CENTER,
   CREATING_NEW_CENTER_ERROR,
-  CREATED_NEW_CENTER,
-  RESET_CREATE_NEW_CENTER
+  CREATED_NEW_CENTER
 } from '../types';
 
 const defaultCenter = {
@@ -20,6 +20,7 @@ const defaultCenter = {
   centers: [],
   eventCenter: [],
   center: {},
+  errors: {},
   events: {
     getCenterContact: null,
     getCenters: null,
@@ -31,29 +32,44 @@ const defaultCenter = {
 
 export default (state = defaultCenter, action) => {
   switch (action.type) {
-  case RESET_CREATE_NEW_CENTER:
-  case CREATING_NEW_CENTER:
-  case CREATING_NEW_CENTER_ERROR:
-  case CREATED_NEW_CENTER:
-    return {
-      ...state,
-      events: { ...state.events, createCenter: action.type }
-    };
-  case FETCHING_CENTERS:
-    return { ...state, events: { ...state.events, getCenters: action.type } };
   case RECEIVED_CENTER_CONTACTS:
     return Object.assign({}, state, {
       ...state,
       contacts: action.contacts,
       events: { ...state.events, getCenterContact: action.type }
     });
+  case CREATING_NEW_CENTER:
+    return {
+      ...state,
+      events: { ...state.events, createCenter: action.type }
+    };
+
+  case CREATING_NEW_CENTER_ERROR:
+    return {
+      ...state,
+      events: { ...state.events, createCenter: action.type },
+      errors: action.errors
+    };
+  case CREATED_NEW_CENTER:
+    return {
+      ...state,
+      events: { ...state.events, createCenter: action.type },
+      center: action.center
+    };
+  case FETCHING_CENTERS:
+    return { ...state, events: { ...state.events, getCenters: action.type } };
   case RECEIVED_CENTERS:
     return Object.assign({}, state, { ...state, centers: action.centers });
   case FETCHING_CENTER:
     return {
       ...state,
-      center: {},
       events: { ...state.events, getCenter: action.type }
+    };
+  case FETCHING_CENTER_ERROR:
+    return {
+      ...state,
+      events: { ...state.events, getCenter: action.type },
+      errors: action.errors
     };
   case RECEIVED_CENTER:
     return {

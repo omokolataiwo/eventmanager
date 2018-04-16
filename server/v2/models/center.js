@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     facilities: DataTypes.STRING,
     amount: DataTypes.INTEGER,
     details: DataTypes.TEXT,
+    image: DataTypes.TEXT,
   });
 
   Center.associate = (models) => {

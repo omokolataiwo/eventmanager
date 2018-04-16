@@ -1,7 +1,7 @@
 import sequelize from 'sequelize';
 import moment from 'moment';
 import validate from 'validate.js';
-import { Center, create, updateCenter } from './_support/Center';
+import Center, { create, updateCenter } from './_support/Center';
 import models from '../models';
 import { contactValidationRules } from '../validate/contactValidationRules';
 
@@ -10,14 +10,14 @@ module.exports = {
     try {
       const center = new Center(req.body);
       if (!center.safe()) {
-        return res.status(422).json({ validation: center.getErrors() });
+        return res.status(422).json(center.getErrors());
       }
 
       req.body.ownerid = req.user.id;
       const centerOwner = await models.users.findById(req.body.ownerid);
 
       if (!centerOwner) {
-        return res.status(422).send({ error: true, message: 'Center must have a valid owner' });
+        return res.status(422).send({ global: 'Center must have a valid owner' });
       }
 
       // Check if this center has newContact and there is contact body
@@ -27,7 +27,7 @@ module.exports = {
       if (req.body.newContact && req.body.contact) {
         req.body.contact.ownerid = req.body.ownerid;
         const contactErrors = validate(req.body.contact, contactValidationRules);
-        if (contactErrors !== undefined) return res.status(422).json(contactErrors);
+        if (contactErrors !== undefined) return res.status(422).json({ contact: contactErrors });
 
         const newContact = await models.contacts.create(req.body.contact);
         req.body.contactid = newContact.id;
@@ -41,6 +41,7 @@ module.exports = {
       }
       return create(req, res, models);
     } catch (e) {
+      console.log(e);
       return res.status(500).send('Internal Server Error');
     }
   },
@@ -105,7 +106,6 @@ module.exports = {
       }
       return updateCenter(req, res, models);
     } catch (e) {
-      console.log(e);
       return res.status(500).send('Internal Server Error');
     }
   },

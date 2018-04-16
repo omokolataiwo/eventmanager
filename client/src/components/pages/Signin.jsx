@@ -90,7 +90,7 @@ class Signin extends React.Component {
     if (events.signin === SIGNIN_USER) {
       return history.push(getPath(userdata.role));
     }
-    this.setState({ errors, events });
+    this.setState({ errors });
   }
   /**
    * Sign in user
@@ -115,12 +115,12 @@ class Signin extends React.Component {
   /**
    * Method changes the property of user object in state
    *
-   * @param {object} e - DOM object of changed element
+   * @param {object} event - DOM object of changed element
    *
    * @returns {void}
    */
-  handleFormFieldChanged(e) {
-    const { value, id } = e.target;
+  handleFormFieldChanged(event) {
+    const { value, id } = event.target;
     this.setState({ user: { ...this.state.user, [id]: value } });
   }
   /**
@@ -178,7 +178,7 @@ class Signin extends React.Component {
 
 Signin.propTypes = propTypes;
 /**
- * Map to properties of component
+ * Map state to properties of component
  *
  * @param {object} state - The redux state
  * @returns {object} - Extracted properties

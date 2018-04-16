@@ -1,8 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
-const BookingTable = (props) => {
-  if (!props.events) return <div>No events for your center yet.</div>;
+const propTypes = {
+  events: PropTypes.arrayOf(PropTypes.object).isRequired
+};
+
+/**
+ * Table component for centers booking
+ *
+ * @param {props} props - Component properties
+ * @returns {object} - JSX DOM
+ */
+const BookingTable = ({ events }) => {
+  if (!events) return <div>No events for your center yet.</div>;
   return (
     <table className="bordered responsive-table">
       <thead>
@@ -16,8 +27,9 @@ const BookingTable = (props) => {
         </tr>
       </thead>
       <tbody>
-        {props.events.map((event) => {
-          const duration = moment(event.enddate).diff(moment(event.startdate), 'days') + 1;
+        {events.map(event => {
+          const duration =
+            moment(event.enddate).diff(moment(event.startdate), 'days') + 1;
           return (
             <tr key={event.eid}>
               <td>{event.title}</td>
@@ -35,5 +47,7 @@ const BookingTable = (props) => {
     </table>
   );
 };
+
+BookingTable.propTypes = propTypes;
 
 export default BookingTable;

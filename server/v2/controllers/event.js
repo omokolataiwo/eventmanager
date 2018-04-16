@@ -1,6 +1,6 @@
 import sequelize from 'sequelize';
 import models from '../models';
-import Event from './_support/event';
+import Event from './_support/Event';
 
 module.exports = {
   createEvent(req, res) {

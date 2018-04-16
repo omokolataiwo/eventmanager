@@ -1,14 +1,40 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import updateCenterRequest from '../../../actions/updateCenterRequest';
-import { getContactPersonRequest } from '../../../actions/fetchContactPersonRequest';
-import { SelectComponent } from '../../containers/forms/SelectComponent';
-import { CenterContactPerson } from '../../containers/CenterContactPerson';
-import { STATES, CENTER_TYPE } from '../../..//consts';
-import { RECEIVED_CENTER_CONTACTS, CREATED_NEW_CENTER } from '../../../types';
+import getContactPersonRequest from '../../../actions/fetchContactPersonRequest'; // eslint-disable-line
+import fetchCenterRequest from '../../../actions/fetchCenterRequest';
+import SelectComponent from '../../containers/forms/SelectComponent';
+import CenterContactPerson from '../../containers/CenterContactPerson';
+import InvalidCenter from '../../containers/InvalidCenter';
+import InputField from '../../containers/forms/InputField';
+import TextArea from '../../containers/forms/TextArea';
+import FileField from '../../containers/forms/FileField';
+import { STATES, CENTER_TYPE } from '../../../consts';
+import { UPDATED_CENTER, UPDATING_CENTER_ERROR } from '../../../types';
 
-class Create extends React.Component {
+const propTypes = {
+  updateCenterRequest: PropTypes.func.isRequired,
+  events: PropTypes.shape().isRequired,
+  contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  errors: PropTypes.shape().isRequired,
+  match: PropTypes.shape().isRequired,
+  centers: PropTypes.arrayOf(PropTypes.shape()).isRequired
+};
+/**
+ * Update center component
+ *
+ * @class Update
+ * @extends {React.Component}
+ */
+class Update extends React.Component {
+  /**
+   * Updates an instance of Update.
+   *
+   * @param {object} props - React properties
+   * @memberof Create
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -19,35 +45,81 @@ class Create extends React.Component {
         amount: null,
         area: null,
         facilities: '',
-        state: -1,
-        type: -1,
+        state: 0,
+        type: 0,
         image: 'default_center_image.jpeg',
-        contactid: -1,
+        contactid: 0,
         newContact: false,
         details: '',
         contact: {
           newContact: {
-            first_name: '',
-            last_name: '',
-            phone_number: null,
+            firstName: '',
+            lastName: '',
+            phoneNumber: null,
             email: ''
           },
           existingContacts: []
         }
+      },
+      errors: {
+        invalidCenterID: false
       }
     };
-    this.handleStateChanged = this.handleStateChanged.bind(this);
-    this.handleCenterTypeChanged = this.handleCenterTypeChanged.bind(this);
-    this.handleContactPersonChanged = this.handleContactPersonChanged.bind(this);
+    this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
     this.handleNewContactChanged = this.handleNewContactChanged.bind(this);
     this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
+    this.handleImageFieldChanged = this.handleImageFieldChanged.bind(this);
   }
-  componentWillMount() {
-    const center = this.props.centers.find(center => center.id === this.props.match.params.index);
 
-    this.setState({ center: { ...this.state.center, ...center } });
-    this.props.getContactPerson(this.props.accessToken);
+  /**
+   * Get all the contacts the center owner has created.
+   *
+   * @return {void}
+   * @memberof Update
+   */
+  componentWillMount() {
+    const {
+      events, errors, contacts, centers, match
+    } = this.props;
+
+    if (events.createCenter === UPDATED_CENTER) {
+      // toastr
+    }
+
+    if (events.createCenter === UPDATING_CENTER_ERROR) {
+      this.setState({ errors });
+    }
+
+    const centerid = match.params.index;
+    const center = centers.find(center => center.id === parseInt(centerid, 10));
+
+    if (!center) {
+      this.setState({ errors: { invalidCenterID: true } });
+      return;
+    }
+
+    if (contacts.length === 0) {
+      this.setState({ center: { ...this.state.center, ...center, newContact: true } });
+    } else {
+      this.setState({
+        center: {
+          ...this.state.center,
+          ...center,
+          contact: {
+            ...this.state.center.contact,
+            existingContacts: contacts
+          }
+        }
+      });
+    }
   }
+
+  /**
+   * Initialize materialize components
+   *
+   * @return {void}
+   * @memberof Update
+   */
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
     facilitiesDOM.material_chip({
@@ -57,6 +129,11 @@ class Create extends React.Component {
         .map(facility => ({ tag: facility }))
     });
 
+    /**
+     * Initialize materialize chip component
+     *
+     * @return {void}
+     */
     const chipChanged = () => {
       let facilities = facilitiesDOM.material_chip('data');
       facilities = Object.keys(facilities)
@@ -68,38 +145,13 @@ class Create extends React.Component {
     facilitiesDOM.on('chip.add', chipChanged);
     facilitiesDOM.on('chip.delete', chipChanged);
   }
-  componentWillReceiveProps(props) {
-    const { events, history, contacts } = props;
-    if (events.getCenterContact === RECEIVED_CENTER_CONTACTS) {
-      if (contacts.length === 0) {
-        this.setState({ center: { ...this.state.center, newContact: true } });
-      } else {
-        this.setState({
-          center: {
-            ...this.state.center,
-            contact: {
-              ...this.state.center.contact,
-              existingContacts: contacts
-            }
-          }
-        });
-      }
-    }
 
-    if (events.createCenter === CREATED_NEW_CENTER) {
-      localStorage.setItem('newCenterCreated', true);
-      return history.push('/admin/center');
-    }
-  }
-
-  updateCenter(e) {
-    e.preventDefault();
-    this.props.updateCenter(this.state);
-  }
-
-  handleContactPersonChanged(contactid) {
-    this.setState({ center: { ...this.state.center, contactid } });
-  }
+  /**
+   * Toggle the newContact state of the conponent
+   *
+   * @returns {void}
+   * @memberof Update
+   */
   handleNewContactChanged() {
     this.setState({
       center: {
@@ -108,13 +160,16 @@ class Create extends React.Component {
       }
     });
   }
-  handleStateChanged(state) {
-    this.setState({ center: Object.assign({}, this.state.center, { state }) });
-  }
-  handleCenterTypeChanged(type) {
-    this.setState({ center: Object.assign({}, this.state.center, { type }) });
-  }
-  handleContactPersonsFieldChange(value, field) {
+
+  /**
+   * Change contact person form fields details, works for each element in form contact person form field
+   *
+   * @param {string} event - title of the field
+   * @return {void}
+   * @memberof Update
+   */
+  handleContactPersonsFieldChange(event) {
+    const { value, id } = event.target;
     this.setState({
       center: {
         ...this.state.center,
@@ -122,13 +177,56 @@ class Create extends React.Component {
           ...this.state.center.contact,
           newContact: {
             ...this.state.center.contact.newContact,
-            [field]: value
+            [id]: value
           }
         }
       }
     });
   }
+
+  /**
+   * Method changes the property of center object in state
+   *
+   * @param {object} event - DOM object of changed element
+   *
+   * @returns {void}
+   */
+  handleFormFieldChanged(event) {
+    const { value, id } = event.target;
+    this.setState({ center: { ...this.state.center, [id]: value } });
+  }
+
+  /**
+   * Method changes the property of center image in state
+   *
+   * @param {object} event - DOM object of changed element
+   *
+   * @returns {void}
+   */
+  handleImageFieldChanged(event) {
+    const { files, id } = event.target;
+    this.setState({ center: { ...this.state.center, [id]: files[0] } });
+  }
+  /**
+   * Update center, make request to api endpoint
+   *
+   * @param {any} event - DOM event
+   * @returns {void}
+   * @memberof Create
+   */
+  updateCenter(event) {
+    event.preventDefault();
+    this.props.updateCenterRequest(this.state.center);
+  }
+
+  /**
+   * Renders the components DOM
+   *
+   * @returns {object} - JSX DOM
+   * @memberof Create
+   */
   render() {
+    if (this.state.errors.invalidCenterID) return <InvalidCenter />;
     return (
       <div className="container container-medium card">
         <div className="row">
@@ -140,98 +238,63 @@ class Create extends React.Component {
           <div className="col s12 m11 l11">
             <form>
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="center_name"
-                    type="text"
-                    className="validate"
-                    defaultValue={this.state.center.name}
-                    onChange={e =>
-                      this.setState({
-                        center: { ...this.state.center, name: e.target.value }
-                      })
-                    }
-                  />
-                  <label htmlFor="center_name">Center Name</label>
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="name"
+                  type="text"
+                  title="Center Name"
+                  width="6"
+                  errorMessage={this.state.errors.name}
+                  defaultValue={this.state.center.name}
+                />
 
-                <div className="input-field col  s12 m6 l6">
-                  <SelectComponent
-                    default={this.state.center.type}
-                    id="type"
-                    change={this.handleCenterTypeChanged}
-                    options={
-                      new Map([...CENTER_TYPE.map((ctype, i) => [i, ctype])])
-                    }
-                    label="Center Type"
-                  />
-                </div>
+                <SelectComponent
+                  default={this.state.center.type}
+                  id="type"
+                  change={this.handleFormFieldChanged}
+                  options={[...CENTER_TYPE.map((ctype, i) => [i + 1, ctype])]}
+                  label="Center Type"
+                  width="6"
+                />
               </div>
               <div className="row">
-                <div className="input-field col  s12 m6 l6">
-                  <input
-                    id="address"
-                    type="text"
-                    className="validate"
-                    defaultValue={this.state.center.address}
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          address: e.target.value
-                        }
-                      })
-                    }
-                  />
-                  <label htmlFor="address">Address</label>
-                </div>
-
-                <div className="input-field col  s12 m6 l6">
-                  <input
-                    id="area"
-                    type="text"
-                    className="validate"
-                    defaultValue={this.state.center.area}
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          area: e.target.value
-                        }
-                      })
-                    }
-                  />
-                  <label htmlFor="area">Area</label>
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="address"
+                  type="text"
+                  title="Address"
+                  width="6"
+                  errorMessage={this.state.errors.address}
+                  defaultValue={this.state.center.address}
+                />
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="area"
+                  type="text"
+                  title="Area"
+                  width="6"
+                  errorMessage={this.state.errors.area}
+                  defaultValue={this.state.center.area}
+                />
               </div>
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <SelectComponent
-                    default={this.state.center.state}
-                    id="state"
-                    change={this.handleStateChanged}
-                    options={new Map([...STATES.map((state, i) => [i, state])])}
-                    label="State"
-                  />
-                </div>
-
-                <div className="input-field col  s12 m6 l6">
-                  <input
-                    id="capacity"
-                    type="text"
-                    className="validate"
-                    defaultValue={this.state.center.capacity}
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          capacity: e.target.value
-                        }
-                      })
-                    }
-                  />
-                  <label htmlFor="capacity">Capacity</label>
-                </div>
+                <SelectComponent
+                  default={this.state.center.state}
+                  id="state"
+                  change={this.handleFormFieldChanged}
+                  options={[...STATES.map((ctype, i) => [i + 1, ctype])]}
+                  label="Select State"
+                  width="6"
+                />
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="capacity"
+                  type="text"
+                  title="Center Capacity"
+                  width="6"
+                  errorMessage={this.state.errors.capacity}
+                  defaultValue={this.state.center.capacity}
+                />
               </div>
 
               <div className="row">
@@ -240,71 +303,47 @@ class Create extends React.Component {
                 </div>
               </div>
               <div className="row">
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    id="center_amount"
-                    type="text"
-                    className="validate"
-                    defaultValue={this.state.center.amount}
-                    onChange={e =>
-                      this.setState({
-                        center: { ...this.state.center, amount: e.target.value }
-                      })
-                    }
-                  />
-                  <label htmlFor="center_amount">Amount Center (N)</label>
-                </div>
+                <InputField
+                  onChange={this.handleFormFieldChanged}
+                  id="amount"
+                  type="text"
+                  title="Amount"
+                  width="6"
+                  errorMessage={this.state.errors.amount}
+                  defaultValue={this.state.center.amount}
+                />
               </div>
 
               <div className="row">
-                <div className="input-field col s12 m12 l12">
-                  <textarea
-                    id="details"
-                    className="materialize-textarea"
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          details: e.target.value
-                        }
-                      })
-                    }
-                    defaultValue={this.state.center.details}
-                  />
-                  <label htmlFor="event_summary">Additional Details</label>
-                </div>
+                <TextArea
+                  id="details"
+                  width="12"
+                  title="Center Description"
+                  onChange={this.handleFormFieldChanged}
+                  defaultValue={this.state.center.details}
+                />
 
-                <div className="input-field col s12 m6 l6">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="validate"
-                    id="eventpic"
-                    onChange={e =>
-                      this.setState({
-                        center: {
-                          ...this.state.center,
-                          image: e.target.files[0]
-                        }
-                      })
-                    }
-                  />
-                </div>
+                <FileField
+                  width="12"
+                  accept="image/*"
+                  id="image"
+                  onChange={this.handleImageFieldChanged}
+                />
               </div>
 
               <CenterContactPerson
                 newContact={this.state.center.newContact}
                 onNewContactChanged={this.handleNewContactChanged}
                 existingContacts={this.state.center.contact.existingContacts}
-                onSelectContactChanged={this.handleContactPersonChanged}
+                onSelectContactChanged={this.handleFormFieldChanged}
                 onFieldChange={this.handleContactPersonsFieldChange}
                 defaultContact={this.state.center.contactid}
               />
               <input
                 type="submit"
                 className="btn btn-large blue right"
-                value="UPDATE CENTER"
-                onClick={e => this.updateCenter(e)}
+                value="UPDATE NOW"
+                onClick={event => this.updateCenter(event)}
               />
             </form>
           </div>
@@ -314,21 +353,28 @@ class Create extends React.Component {
   }
 }
 
+Update.propTypes = propTypes;
+
+/**
+ * Map state to properties of component
+ *
+ * @param {object} state - The redux state
+ * @returns {object} - Extracted properties
+ */
 const mapStateToProps = state => {
-  const { accessToken } = state.user;
-  const { contacts, events, centers } = state.center;
+  const {
+    contacts, events, errors, adminCenters
+  } = state.center;
   return {
-    accessToken,
     contacts,
     events,
-    centers
+    errors,
+    centers: adminCenters
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  updateCenter: centerDetails => dispatch(updateCenterRequest(centerDetails)),
-  getContactPerson: accessToken =>
-    dispatch(getContactPersonRequest(accessToken))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Create);
+export default connect(mapStateToProps, {
+  updateCenterRequest,
+  getContactPersonRequest,
+  fetchCenterRequest
+})(Update);

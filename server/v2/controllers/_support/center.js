@@ -1,6 +1,6 @@
 import validate from 'validate.js';
 
-export class Center {
+class Center {
   constructor(center) {
     this.error = false;
     this.errorMessages = {};
@@ -25,32 +25,32 @@ export class Center {
   validate() {
     const stateCode = Math.floor(parseInt(this.state, 10));
     if (stateCode < 1 || stateCode > 37) {
-      this.errorMessages.state = 'state must be a valid state code';
+      this.errorMessages.state = ['state must be a valid state code'];
       this.error = true;
     }
 
     const invalidName = validate.single(this.name, {
       presence: true,
-      length: { minimum: 5, message: 'must be more than 4 characters.' },
+      length: { minimum: 5 },
     });
     if (invalidName) {
-      [this.errorMessages.name] = invalidName;
+      this.errorMessages.name = ['Center name must be more than 4 characters.'];
       this.error = true;
     }
 
     if (!validate.isInteger(this.amount) || this.amount < 0 || this.amount > 2000000000) {
-      this.errorMessages.amount = 'Amount is not a valid value';
+      this.errorMessages.amount = ['Amount is not a valid value'];
       this.error = true;
     }
 
     if (!validate.isInteger(this.capacity) || this.capacity < 1 || this.capacity > 2000000000) {
-      this.errorMessages.amount = 'Capacity is not a valid value';
+      this.errorMessages.capacity = ['Capacity is not a valid value'];
       this.error = true;
     }
 
     const invalidAddress = validate.single(this.address, {
       presence: true,
-      length: { minimum: 5, message: 'must be more than 4 characters.' },
+      length: { minimum: 5, message: ['must be more than 4 characters.'] },
     });
     if (invalidAddress) {
       this.errorMessages.address = invalidAddress;
@@ -79,6 +79,7 @@ export class Center {
     };
   }
 }
+export default Center;
 
 export const create = (req, res, models) => {
   if (!req.body.contactid) {

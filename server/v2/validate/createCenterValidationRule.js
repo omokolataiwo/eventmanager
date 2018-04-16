@@ -1,6 +1,6 @@
 import { validate } from 'validate.js';
 
-export const createCenterValidationRule = {
+const createCenterValidationRule = {
   name: {
     presence: {
       allowEmpty: false,
@@ -66,3 +66,5 @@ export const createCenterValidationRule = {
     },
   },
 };
+
+export default createCenterValidationRule;
