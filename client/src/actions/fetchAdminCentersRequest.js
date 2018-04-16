@@ -6,20 +6,43 @@ import {
   FETCHING_ADMIN_CENTERS_ERROR
 } from '../types';
 
+/**
+ * Action for received admin center
+ *
+ * @param {object} centers - admin center(s)
+ * @return {object} - Action:  RECEIVED_ADMIN_CENTERS
+ */
 const receivedAdminCenter = centers => ({
   type: RECEIVED_ADMIN_CENTERS,
   centers
 });
 
+/**
+ * Action for getting admin center
+ *
+ * @return {object} - Action:  FETCHING_ADMIN_CENTERS
+ */
 const fetchingAdminCenters = () => ({
   type: FETCHING_ADMIN_CENTERS
 });
 
-const fetchingAdminCentersError = () => ({
-  type: FETCHING_ADMIN_CENTERS_ERROR
+/**
+ * Action for getting admin center
+ *
+ * @param {object} errors - error messages
+ * @return {object} - Action:  RECEIVED_ADMIN_CENTERS
+ */
+const fetchingAdminCentersError = errors => ({
+  type: FETCHING_ADMIN_CENTERS_ERROR,
+  errors
 });
 
-export const fetchAdminCentersRequest = () => (dispatch, getState) => {
+/**
+ * Actions creator for fetching admin centers
+ *
+ * @returns {void}
+ */
+const fetchAdminCentersRequest = () => (dispatch, getState) => {
   dispatch(fetchingAdminCenters());
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
   axios

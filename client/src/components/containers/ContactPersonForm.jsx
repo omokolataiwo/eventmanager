@@ -1,47 +1,52 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import InputField from './forms/InputField';
 
-export const ContactPersonForm = props => (
+const propTypes = {
+  onFieldChange: PropTypes.func.isRequired
+};
+/**
+ * Create contact form component
+ *
+ * @param {object} props - React properties
+ * @returns {object} - JSX DOM
+ */
+const ContactPersonForm = ({ onFieldChange }) => (
   <span>
     <div className="row">
-      <div className="input-field col s12 m6 l6">
-        <input
-          id="first_name"
-          type="text"
-          className="validate"
-          onChange={e => props.onFieldChange(e.target.value, 'first_name')}
-        />
-        <label htmlFor="first_name">First Name</label>
-      </div>
-      <div className="input-field col s12 m6 l6">
-        <input
-          id="last_name"
-          type="text"
-          className="validate"
-          onChange={e => props.onFieldChange(e.target.value, 'last_name')}
-        />
-        <label htmlFor="last_name">Last Name</label>
-      </div>
+      <InputField
+        onChange={onFieldChange}
+        id="firstName"
+        type="text"
+        title="First Name"
+        width="6"
+      />
+      <InputField
+        onChange={onFieldChange}
+        id="lastName"
+        type="text"
+        title="Last Name"
+        width="6"
+      />
     </div>
     <div className="row">
-      <div className="input-field col s12 m6 l6">
-        <input
-          id="phone_number"
-          type="text"
-          className="validate"
-          onChange={e => props.onFieldChange(e.target.value, 'phone_number')}
-        />
-        <label htmlFor="phone_number">Phone Number</label>
-      </div>
-      <div className="input-field col s12 m6 l6">
-        <input
-          id="email"
-          type="text"
-          className="validate"
-          onChange={e => props.onFieldChange(e.target.value, 'email')}
-        />
-        <label htmlFor="email">Email Address</label>
-      </div>
+      <InputField
+        onChange={onFieldChange}
+        id="phoneNumber"
+        type="text"
+        title="Phone Number"
+        width="6"
+      />
+      <InputField
+        onChange={onFieldChange}
+        id="email"
+        type="text"
+        title="Email Address"
+        width="6"
+      />
     </div>
   </span>
 );
+
+ContactPersonForm.propTypes = propTypes;
 export default ContactPersonForm;

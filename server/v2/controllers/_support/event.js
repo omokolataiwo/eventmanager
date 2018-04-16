@@ -74,7 +74,7 @@ class Event {
   }
 }
 
-export { Event as default };
+export default Event;
 
 const isValidDate = (dateString) => {
   if (!/^\d{4}-\d{1,2}-\d{1,2}$/.test(dateString)) {

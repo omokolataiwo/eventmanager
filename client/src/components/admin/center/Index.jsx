@@ -1,15 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import toastr from 'toastr';
-import { fetchAdminCentersRequest } from '../../../actions/fetchAdminCentersRequest';
 import { STATES } from '../../../consts';
-import { RESET_CREATE_NEW_CENTER } from '../../../types';
 import { CenterDetailsEdit } from './CenterDetailsEdit';
 
-import CenterImg from '../../../images/party-room.jpg';
+const propTypes = {
+  centers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
+};
 
+/**
+ * Index Component for all centers
+ *
+ * @class Index
+ * @extends {React.Component}
+ */
 class Index extends React.Component {
+  /**
+   * Constructor for Index Component
+   *
+   * @param {object} props - React properties
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -18,24 +31,44 @@ class Index extends React.Component {
     };
     this.handleEditCenter = this.handleEditCenter.bind(this);
   }
+  /**
+   * Fetch all centers
+   *
+   * @returns {void}
+   * @memberof Index
+   */
   componentWillMount() {
-    this.props.fetchAllCenters();
+    const { centers } = this.props;
+    return this.setState({ centers });
+  }
 
-    if (localStorage.getItem('newCenterCreated')) {
-      this.props.clearCreatedState();
-      localStorage.removeItem('newCenterCreated');
-      toastr.success('New Center Created.');
-    }
-  }
-  componentWillReceiveProps(props) {
-    this.setState({ centers: props.centers });
-  }
+  /**
+   * Toggle active center
+   *
+   * @param {int} centerIndex - The index of the center
+   * @returns {void}
+   * @memberof Index
+   */
   changeActiveCenter(centerIndex) {
     return this.setState({ activeCenter: centerIndex });
   }
+  /**
+   * Redirects to edit center page
+   *
+   * @returns {void}
+   * @memberof Index
+   */
   handleEditCenter() {
-    return this.props.history.push(`/admin/center/update/${this.state.centers[this.state.activeCenter].id}`);
+    const { id } = this.state.centers[this.state.activeCenter];
+    return this.props.history.push(`/admin/center/update/${id}`);
   }
+
+  /**
+   * Render the component
+   *
+   * @returns {object} - JSX DOM
+   * @memberof Index
+   */
   render() {
     return (
       <div className="container container-medium">
@@ -46,12 +79,6 @@ class Index extends React.Component {
           />
         )}
         <div className="row">
-          <div className="col s12 m12 l12">
-            <div className="filters right">
-              <i className="material-icons left">settings</i>
-            </div>
-          </div>
-
           <div className="col s12 m12 l12">
             <div className="row">
               <h5>My Centers</h5>
@@ -65,14 +92,10 @@ class Index extends React.Component {
                     tabIndex={index}
                     onKeyPress={() => this.changeActiveCenter(index)}
                   >
-                    <img src={CenterImg} alt="Event Center" />
+                    <img src={center.image} alt="Event Center" />
                     <div className="over-img">
-                      <h4 className="truncate">
-                        {this.state.centers[index].name}
-                      </h4>
-                      <p className="truncate">
-                        {STATES[this.state.centers[index].state]}
-                      </p>
+                      <h4 className="truncate">{center.name}</h4>
+                      <p className="truncate">{STATES[center.state]}</p>
                     </div>
                   </div>
                 </div>
@@ -84,21 +107,17 @@ class Index extends React.Component {
     );
   }
 }
-Index.propTypes = {
-  fetchAllCenters: PropTypes.func.isRequired,
-  accessToken: PropTypes.string.isRequired,
-  centers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired
-  }).isRequired
-};
-const mapDispatchToProps = dispatch => ({
-  fetchAllCenters: () => dispatch(fetchAdminCentersRequest()),
-  clearCreatedState: () => dispatch({ type: RESET_CREATE_NEW_CENTER })
-});
 
+Index.propTypes = propTypes;
+
+/**
+ * Extract relevant state properties for component
+ *
+ * @param {object} state - Redux state
+ * @return {object} extracted states
+ */
 const mapStateToProps = state => {
   const { adminCenters } = state.center;
   return { centers: adminCenters };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Index);
+export default connect(mapStateToProps)(Index);

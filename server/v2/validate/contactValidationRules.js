@@ -1,6 +1,6 @@
 import { validate } from 'validate.js';
 
-export const contactValidationRules = {
+const contactValidationRules = {
   firstName: {
     presence: {
       allowEmpty: false,

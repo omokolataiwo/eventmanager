@@ -1,22 +1,65 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchCenterEventRequest } from '../../actions/fetchCenterEventRequest';
+import PropTypes from 'prop-types';
+import fetchCenterEventRequest from '../../actions/fetchCenterEventRequest';
+import fetchAdminCentersRequest from '../../actions/fetchAdminCentersRequest';
+import fetchContactPersonRequest from '../../actions/fetchContactPersonRequest';
 
 import featuredCenterImg from '../../images/party-room.jpg';
 
+const propTypes = {
+  fetchCenterEventRequest: PropTypes.func.isRequired,
+  fetchAdminCentersRequest: PropTypes.func.isRequired,
+  fetchContactPersonRequest: PropTypes.func.isRequired,
+  events: PropTypes.arrayOf(PropTypes.shape()).isRequired
+};
+
+/**
+ * Admin dashboard
+ *
+ * @class Index
+ * @extends {React.Component}
+ */
 class Index extends React.Component {
+  /**
+   * Creates an instance of Index.
+   * @param {object} props - React properties
+   * @memberof Index
+   */
   constructor(props) {
     super(props);
     this.state = {
       events: []
     };
   }
+  /**
+   * Fetch relevant data
+   *
+   * @returns {void}
+   * @memberof Index
+   */
   componentWillMount() {
-    this.props.getEvents();
+    this.props.fetchCenterEventRequest();
+    this.props.fetchAdminCentersRequest();
+    this.props.fetchContactPersonRequest();
   }
+
+  /**
+   * Set component state
+   *
+   * @param {object} props - Redux state
+   * @return {void}
+   * @memberof Index
+   */
   componentWillReceiveProps(props) {
     this.setState({ events: props.events });
   }
+  /**
+   * Renders the component
+   *
+   * @returns {object} - JSX DOM
+   * @memberof Index
+   */
   render() {
     return (
       <div className="container container-medium card index">
@@ -57,13 +100,21 @@ class Index extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  getEvents: () => dispatch(fetchCenterEventRequest())
-});
+Index.propTypes = propTypes;
 
+/**
+ * Extract state from store
+ *
+ * @param {object} state - Redux state
+ * @return {object} extracted state
+ */
 const mapStateToProps = state => {
   const { eventCenter } = state.center;
   return { events: eventCenter };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index);
+export default connect(mapStateToProps, {
+  fetchCenterEventRequest,
+  fetchAdminCentersRequest,
+  fetchContactPersonRequest
+})(Index);

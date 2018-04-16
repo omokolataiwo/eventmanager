@@ -2,15 +2,24 @@ import axios from 'axios';
 import { API_PATH } from '../consts';
 import { FETCHING_CENTERS_EVENTS, RECEIVED_CENTERS_EVENTS } from '../types';
 
-const fetchingEvents = () => ({ type: FETCHING_CENTERS_EVENTS });
-
+/**
+ * Action for received events
+ *
+ * @param {object} events - events booked for admin centers
+ * @return {object} Action: RECEIVED_CENTERS_EVENTS
+ */
 const recievedEvents = events => ({
   type: RECEIVED_CENTERS_EVENTS,
   events
 });
 
-export const fetchCenterEventRequest = () => (dispatch, getState) => {
-  dispatch(fetchingEvents());
+/**
+ * Actions creator for fetching admin events
+ *
+ * @returns {void}
+ */
+const fetchCenterEventRequest = () => (dispatch, getState) => {
+  dispatch({ type: FETCHING_CENTERS_EVENTS });
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
   axios
     .get(`${API_PATH}/centers/events`)

@@ -7,37 +7,72 @@ import {
   CREATING_NEW_CENTER
 } from '../types';
 
+/**
+ * Action for  pre center creation state
+ *
+ * @return {object} - action
+ */
 const creatingNewCenter = () => ({ type: CREATING_NEW_CENTER });
+/**
+ * Action for creating center
+ *
+ * @param {object} center - created center details
+ * @return {object} - action
+ */
 const createdNewCenter = center => ({ type: CREATED_NEW_CENTER, center });
-const creatingNewCenterError = error => ({
+
+/**
+ * create center error state
+ *
+ * @param {object} error - center creation error
+ * @return {object} - action
+ */
+const creatingNewCenterError = errors => ({
   type: CREATING_NEW_CENTER_ERROR,
-  error
+  errors
 });
 
-const createCenter = (center, accessToken) => dispatch => {
+/**
+ * Make http request to backend to create center
+ *
+ * @param {object} center - center details
+ * @returns {void}
+ */
+const createCenter = center => (dispatch, getState) => {
+  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+
+  // Reduce data sent to endpoint
+  if (center.newContact) {
+    center.contact = center.contact.newContact;
+  }
+
   axios
     .post(`${API_PATH}/centers`, center)
     .then(response => {
       dispatch(createdNewCenter(response.data));
     })
-    .catch(e => dispatch(creatingNewCenterError(e.response.data)));
+    .catch(e => {
+      console.dir(e);
+      dispatch(creatingNewCenterError(e.response.data));
+    });
 };
 
+/**
+ * Make http request to cloudinary to upload image
+ *
+ * @param {object} centerDetails - center details
+ * @returns {void}
+ */
 export default function createCenterRequest(centerDetails) {
   return dispatch => {
     dispatch(creatingNewCenter());
-    // TODO: FOR DEVELOPMENT PURPOSE
-    let center = Object.assign({}, centerDetails.center);
-    center = { ...center, contact: { ...center.contact.newContact } };
-    center.image = 'SAMPLE_IMAGE.JPG';
-    dispatch(createCenter(center, centerDetails.accessToken));
-    return;
-
-    // REMOVE: FOR DEVELOPMENT PURPOSE, move merge modification
+    delete axios.defaults.headers.common['x-access-token'];
     const url = 'https://api.cloudinary.com/v1_1/omokolataiwo/image/upload';
-    const { center: { image } } = centerDetails;
-    if (!image || image.type !== 'image/jpeg') {
-      console.log('Please upload a jpeg format image.');
+    const { image } = centerDetails;
+    if (!image || (image.type !== 'image/jpeg' && image.type !== 'image/png')) {
+      return dispatch(creatingNewCenterError({
+        image: ['Please upload a jpeg format image.']
+      }));
     }
     const formData = new FormData();
     formData.append('upload_preset', 'hgbxt9tc');
@@ -52,12 +87,15 @@ export default function createCenterRequest(centerDetails) {
     axios
       .post(url, formData, config)
       .then(res => {
-        const state = centerDetails;
-        state.center.image = res.data.url;
-        dispatch(createCenter(state));
+        centerDetails.image = res.data.url;
+        dispatch(createCenter(centerDetails));
       })
-      .catch(e => {
-        console.log(e); // TODO: VALIDATION FOR CREATE CENTER
+      .catch(event => {
+        dispatch(creatingNewCenterError({
+          image: [
+            'Can not upload image to cloudinary at the moment. Please try again'
+          ]
+        }));
       });
   };
 }

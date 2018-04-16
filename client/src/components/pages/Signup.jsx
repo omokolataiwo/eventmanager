@@ -192,16 +192,16 @@ class Signup extends React.Component {
                   type="text"
                   title="First Name"
                   width="6"
+                  errorMessage={this.state.errors.firstName}
                 />
-                <Error messages={this.state.errors.firstName} />
                 <InputField
                   onChange={this.handleFormFieldChanged}
                   id="lastName"
                   type="text"
                   title="Last Name"
                   width="6"
+                  errorMessage={this.state.errors.lastName}
                 />
-                <Error messages={this.state.errors.lastName} />
               </div>
 
               <div className="row">
@@ -211,8 +211,8 @@ class Signup extends React.Component {
                   type="text"
                   title="Address"
                   width="6"
+                  errorMessage={this.state.errors.address}
                 />
-                <Error messages={this.state.errors.address} />
 
                 <SelectComponent
                   default={this.state.userdata.state}
@@ -232,8 +232,8 @@ class Signup extends React.Component {
                   type="text"
                   title="Phone Number"
                   width="6"
+                  errorMessage={this.state.errors.phoneNumber}
                 />
-                <Error messages={this.state.errors.phoneNumber} />
 
                 <InputField
                   onChange={this.handleFormFieldChanged}
@@ -241,8 +241,8 @@ class Signup extends React.Component {
                   type="text"
                   title="Email Address"
                   width="6"
+                  errorMessage={this.state.errors.email}
                 />
-                <Error messages={this.state.errors.email} />
               </div>
 
               <div className="row">
@@ -252,8 +252,8 @@ class Signup extends React.Component {
                   type="text"
                   title="Username"
                   width="6"
+                  errorMessage={this.state.errors.username}
                 />
-                <Error messages={this.state.errors.username} />
 
                 <SelectComponent
                   default={this.state.userdata.role}
@@ -276,8 +276,8 @@ class Signup extends React.Component {
                   type="password"
                   title="Password"
                   width="6"
+                  errorMessage={this.state.errors.password}
                 />
-                <Error messages={this.state.errors.password} />
 
                 <InputField
                   onChange={this.handleFormFieldChanged}
@@ -285,8 +285,8 @@ class Signup extends React.Component {
                   type="password"
                   title="Retype Password"
                   width="6"
+                  errorMessage={this.state.errors.matchPassword}
                 />
-                <Error messages={this.state.errors.matchPassword} />
               </div>
               <button
                 onClick={e => this.registerUser(e)}

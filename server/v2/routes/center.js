@@ -33,6 +33,7 @@ module.exports = (app) => {
 
   app.get('/centers/:id', expressJoi(idroute), center.getCenter); // Get a Single Center, does not need authentication
   app.get('/centers/:id/events', expressJoi(idroute), auth, center.getCenterWithEvents); // Get Center with events, protected
+  app.get('/centers/:id/admin', expressJoi(idroute), auth, center.getCenterWithEvents); // Get Center with events, protected
   app.put('/centers/:id', expressJoi(idroute), auth, center.editCenter); // Update a center
   app.get('/', (req, res) => res.status(200).send('Welcome to EventMan - The event manager'));
 };

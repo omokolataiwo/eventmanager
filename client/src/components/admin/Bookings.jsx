@@ -1,11 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchAdminCentersRequest } from '../../actions/fetchAdminCentersRequest';
-import { fetchCenterEventRequest } from '../../actions/fetchCenterEventRequest';
+import PropTypes from 'prop-types';
 import CenterReports from '../containers/CenterReports';
 import BookingTable from '../containers/BookingTable';
 
+const propTypes = {
+  eventCenter: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  adminCenters: PropTypes.arrayOf(PropTypes.shape()).isRequired
+};
+
+/**
+ * Center Booking Page
+ *
+ * @class Bookings
+ * @extends {React.Component}
+ */
 class Bookings extends React.Component {
+  /**
+   * Constructor for Center Booking Page
+   *
+   * @param {object} props - React properties
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -14,16 +29,18 @@ class Bookings extends React.Component {
       activeCenterDetails: 0
     };
   }
+  /**
+   * Get all Eenters and Events
+   *
+   * @return {void}
+   * @memberof Bookings
+   */
   componentWillMount() {
-    this.props.getCenters();
-    this.props.getEvents();
-  }
-
-  componentWillReceiveProps(props) {
+    const { eventCenter, adminCenters } = this.props;
     let active = 0;
     let concluded = 0;
 
-    props.eventCenter.forEach(event => {
+    eventCenter.forEach(event => {
       if (event.concluded) {
         concluded += 1;
       } else {
@@ -31,18 +48,27 @@ class Bookings extends React.Component {
       }
     });
 
-    this.setState({ events: props.eventCenter });
-    this.setState({ centers: props.adminCenters });
-    this.setState({ concludedEvents: concluded });
-    this.setState({ activeEvents: active });
+    this.setState({
+      events: eventCenter,
+      centers: adminCenters,
+      concludedEvents: concluded,
+      activeEvents: active
+    });
   }
+
+  /**
+   * Renders the page
+   *
+   * @returns {object} - JSX DOM
+   * @memberof Bookings
+   */
   render() {
     return (
       <div className="container container-medium">
         <h5>Bookings</h5>
         <hr />
         <div>
-          <div className="chip">{this.state.activeEvents} Active Events</div>{' '}
+          <div className="chip">{this.state.activeEvents} Active Events</div>
           <div className="chip">
             {this.state.concludedEvents} Concluded Events
           </div>{' '}
@@ -62,15 +88,19 @@ class Bookings extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  getCenters: () => dispatch(fetchAdminCentersRequest()),
-  getEvents: () => dispatch(fetchCenterEventRequest())
-});
+Bookings.propTypes = propTypes;
+
+/**
+ * Map the properties of redux to component properties
+ *
+ * @param {object} state - Redux state
+ * @returns {object} - Extracted object
+ */
 const mapStateToProps = state => {
-  const { eventCenter } = state.center;
-  let { adminCenters } = state.center;
+  let { adminCenters, eventCenter } = state.center;
   adminCenters = adminCenters || [];
+  eventCenter = eventCenter || [];
 
   return { adminCenters, eventCenter };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Bookings);
+export default connect(mapStateToProps)(Bookings);
