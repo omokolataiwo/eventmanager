@@ -27,20 +27,25 @@ const InputField = ({
   width,
   errorMessage,
   defaultValue
-}) => (
-  <div className={`input-field col s12 m${width} l${width}`}>
-    <input
-      onChange={event => onChange(event)}
-      id={id}
-      type={type}
-      defaultValue={defaultValue}
-    />
-    <label className="active" htmlFor={id}>
-      {title}
-    </label>
-    {errorMessage && <Error messages={errorMessage} />}
-  </div>
-);
+}) => {
+  if (!id) return null;
+  //console.log(id);
+  //console.log(defaultValue);
+  return (
+    <div className={`input-field col s12 m${width} l${width}`}>
+      <input
+        onChange={event => onChange(event)}
+        id={id}
+        type={type}
+        defaultValue={defaultValue}
+      />
+      <label className="active" htmlFor={id}>
+        {title}
+      </label>
+      {errorMessage && <Error messages={errorMessage} />}
+    </div>
+  );
+};
 
 InputField.propTypes = propTypes;
 InputField.defaultProps = {

@@ -31,7 +31,7 @@ module.exports = {
       return models.users.create(req.body).then((newUser) => {
         const userJSON = newUser.toJSON();
         delete userJSON.password;
-        return res.status(200).json(userJSON);
+        return res.status(201).json(userJSON);
       });
     } catch (e) {
       return res.status(500).send('Internal Server Error.');
@@ -82,7 +82,7 @@ module.exports = {
       }
       return models.users
         .update(userModel, { where: { id: req.user.id } })
-        .then(() => res.status(200).json(userModel));
+        .then(() => res.status(201).json(userModel));
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }

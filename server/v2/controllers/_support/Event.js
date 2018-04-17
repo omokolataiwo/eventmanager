@@ -9,7 +9,7 @@ const CREATE_EVENT_VALIDATION_RULES = {
       message: 'is required.',
     },
   },
-  startdate: {
+  startDate: {
     presence: {
       allowEmpty: false,
       message: 'is required.',
@@ -18,7 +18,7 @@ const CREATE_EVENT_VALIDATION_RULES = {
     isElapsedDate: true,
   },
 
-  enddate: {
+  endDate: {
     presence: {
       allowEmpty: false,
       message: 'is required',
@@ -26,7 +26,7 @@ const CREATE_EVENT_VALIDATION_RULES = {
     isValidDate: true,
     isElapsedDate: true,
     beforeStartDate: {
-      attribute: 'startdate',
+      attribute: 'startDate',
     },
   },
 };
@@ -35,17 +35,17 @@ class Event {
   constructor(event) {
     this.error = false;
     this.title = event.title || '';
-    this.startdate = moment(event.start).format('YYYY-MM-DD') || '';
-    this.enddate = moment(event.end).format('YYYY-MM-DD') || '';
+    this.startDate = moment(event.startDate || 'InvalidDate').format('YYYY-MM-DD');
+    this.endDate = moment(event.endDate || 'InvalidDate').format('YYYY-MM-DD');
     this.errorMessages = {};
   }
 
   load(event) {
     this.title = event.title ? event.title : this.title;
-    this.startdate = event.startdate
-      ? event.startdate
-      : moment(this.startdate).format('YYYY-MM-DD');
-    this.enddate = event.enddate ? event.enddate : moment(this.enddate).format('YYYY-MM-DD');
+    this.startDate = event.startDate
+      ? event.startDate
+      : moment(this.startDate).format('YYYY-MM-DD');
+    this.endDate = event.endDate ? event.endDate : moment(this.endDate).format('YYYY-MM-DD');
   }
 
   validate() {
@@ -68,8 +68,8 @@ class Event {
   toJSON() {
     return {
       title: this.title,
-      startdate: this.startdate,
-      enddate: this.enddate,
+      startDate: this.startDate,
+      endDate: this.endDate,
     };
   }
 }
@@ -101,16 +101,16 @@ validate.validators.isElapsedDate = (value) => {
 };
 
 validate.validators.beforeStartDate = (value, options, key, attributes) => {
-  let enddate = attributes[key];
-  let startdate = attributes[options.attribute];
+  let endDate = attributes[key];
+  let startDate = attributes[options.attribute];
 
-  enddate = moment(enddate, 'YYYY-MM-DD');
-  startdate = moment(startdate, 'YYYY-MM-DD');
+  endDate = moment(endDate, 'YYYY-MM-DD');
+  startDate = moment(startDate, 'YYYY-MM-DD');
 
-  if (!startdate.isValid() || !enddate.isValid()) {
+  if (!startDate.isValid() || !endDate.isValid()) {
     return null;
   }
-  return enddate.diff(startdate, 'days') < 0
+  return endDate.diff(startDate, 'days') < 0
     ? '^Start date can not be greater than end date'
     : null;
 };

@@ -83,7 +83,7 @@ export default Center;
 
 export const create = (req, res, models) => {
   if (!req.body.contactid) {
-    return res.status(400).json({ contactid: 'Contact is required.' });
+    return res.status(422).json({ contactid: 'Contact is required.' });
   }
   return models.centers
     .create(req.body)
@@ -93,7 +93,7 @@ export const create = (req, res, models) => {
 
 export const updateCenter = (req, res, models) => {
   if (!req.body.contactid) {
-    return res.status(400).json({ contactid: 'Contact is required.' });
+    return res.status(422).json({ contactid: 'Contact is required.' });
   }
 
   return models.centers

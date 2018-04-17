@@ -11,8 +11,9 @@ const defaultEvent = {
   events: [],
   actions: {
     getEvents: FETCHING_EVENTS,
-    createEvents: REQUEST_CREATE_EVENT
-  }
+    createEvents: null
+  },
+  errors: {}
 };
 
 export default (state = defaultEvent, action) => {
@@ -47,6 +48,7 @@ export default (state = defaultEvent, action) => {
   case CREATE_EVENT_ERROR:
     return {
       ...state,
+      errors: action.errors,
       actions: { ...state.actions, createEvents: action.type }
     };
   default:

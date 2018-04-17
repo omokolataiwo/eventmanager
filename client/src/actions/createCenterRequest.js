@@ -52,7 +52,6 @@ const createCenter = center => (dispatch, getState) => {
       dispatch(createdNewCenter(response.data));
     })
     .catch(e => {
-      console.dir(e);
       dispatch(creatingNewCenterError(e.response.data));
     });
 };

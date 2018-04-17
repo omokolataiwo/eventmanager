@@ -1,14 +1,11 @@
 {
   "name": "event-management",
   "version": "1.0.0",
-  "description":
-    "An Event Manager, for listing your event center and booking center for your events.",
+  "description": "An Event Manager, for listing your event center and booking center for your events.",
   "main": "index.js",
   "scripts": {
-    "start:dev":
-      "cross-env NODE_ENV=development webpack-dev-server --open webpack.config.js",
-    "production":
-      "cross-env rimraf dist && webpack --config webpack.prod.config.js --progress --profile --colors",
+    "start:dev": "cross-env NODE_ENV=development webpack-dev-server --open webpack.config.js",
+    "production": "cross-env rimraf dist && webpack --config webpack.prod.config.js --progress --profile --colors",
     "lint": "eslint ./src/**/**.js",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -19,14 +16,19 @@
   "author": "Taiwo Kolawole",
   "license": "MIT",
   "jest": {
-    "setupFiles": ["<rootDir>/config/jest/shim.js"],
-    "collectCoverageFrom": ["src/**/*.{js,jsx}"],
+    "setupFiles": [
+      "<rootDir>/config/jest/shim.js"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}"
+    ],
     "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-        "<rootDir>/config/jest/assetsTransformer.js",
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/config/jest/assetsTransformer.js",
       "\\.(css|less)$": "<rootDir>/config/jest/assetsTransformer.js"
     },
-    "testMatch": ["**/?(*.)(spec|test).js?(x)"],
+    "testMatch": [
+      "**/?(*.)(spec|test).js?(x)"
+    ],
     "transform": {
       "\\.js$": "babel-jest"
     }
@@ -45,6 +47,7 @@
     "react": "16.3.1",
     "react-dom": "16.3.1",
     "react-hot-loader": "4.0.1",
+    "react-key-index": "^0.1.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "4.2.2",
     "redux": "^3.7.2",
