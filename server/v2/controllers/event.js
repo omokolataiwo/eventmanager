@@ -6,15 +6,17 @@ module.exports = {
   createEvent(req, res) {
     const event = new Event(req.body);
     if (!event.safe()) {
-      return res.status(400).json(event.getErrors());
+      return res.status(422).json(event.getErrors());
     }
+
+    const centerID = parseInt(req.body.centerid, 10) || 0;
 
     // check if center exist
     return models.centers
-      .findOne({ where: { id: req.body.centerid } })
+      .findOne({ where: { id: centerID } })
       .then((center) => {
         if (!center) {
-          return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
+          return res.status(422).json({ centerid: ['Invalid center'] });
         }
         return models.events
           .findOne({
@@ -23,14 +25,14 @@ module.exports = {
               $or: [
                 {
                   $and: [
-                    { startdate: { [sequelize.Op.lte]: new Date(event.startdate) } },
-                    { enddate: { [sequelize.Op.gte]: new Date(event.startdate) } },
+                    { startDate: { [sequelize.Op.lte]: new Date(event.startDate) } },
+                    { endDate: { [sequelize.Op.gte]: new Date(event.startDate) } },
                   ],
                 },
                 {
                   $and: [
-                    { startdate: { [sequelize.Op.lte]: new Date(event.enddate) } },
-                    { enddate: { [sequelize.Op.gte]: new Date(event.enddate) } },
+                    { startDate: { [sequelize.Op.lte]: new Date(event.endDate) } },
+                    { endDate: { [sequelize.Op.gte]: new Date(event.endDate) } },
                   ],
                 },
               ],
@@ -38,9 +40,7 @@ module.exports = {
           })
           .then((existingEvent) => {
             if (existingEvent) {
-              return res
-                .status(400)
-                .json({ error: true, message: { event: 'Center is not available' } });
+              return res.status(422).json({ global: ['Center has already been booked.'] });
             }
             const validatedEvent = Object.assign(
               {},
@@ -50,7 +50,7 @@ module.exports = {
 
             return models.events
               .create(validatedEvent)
-              .then(newEvent => res.status(200).json(newEvent))
+              .then(newEvent => res.status(201).json(newEvent))
               .catch((e) => {
                 res.status(501).send(e);
               });
@@ -110,7 +110,7 @@ module.exports = {
         }
         req.body.centerid = req.body.centerid ? req.body.centerid : event.centerid;
 
-        models.centers.findOne({ where: { id: req.body.centerid } }).then((center) => {
+        return models.centers.findOne({ where: { id: req.body.centerid } }).then((center) => {
           if (!center) {
             return res.status(400).json({ error: true, message: { center: 'Invalid center' } });
           }
@@ -129,7 +129,7 @@ module.exports = {
               where: { id: req.params.id },
             })
             .then((event) => {
-              res.status(200).json(event);
+              res.status(201).json(event);
             });
         });
       });

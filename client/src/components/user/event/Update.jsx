@@ -8,7 +8,7 @@ import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
 import { STATES } from '../../../consts';
-import { CREATED_EVENT, CREATE_EVENT_ERROR } from '../../../types';
+import { CREATE_EVENT_ERROR } from '../../../types';
 
 /**
  * Create event for center
@@ -16,7 +16,7 @@ import { CREATED_EVENT, CREATE_EVENT_ERROR } from '../../../types';
  * @class Create
  * @extends {React.Component}
  */
-class Create extends React.Component {
+class Update extends React.Component {
   /**
    * Creates an instance of Create.
    *
@@ -30,7 +30,8 @@ class Create extends React.Component {
         title: '',
         startDate: '',
         endDate: '',
-        centerid: ''
+        centerid: '',
+        defaultValue: ''
       },
       centers: [],
       activeCenter: {},
@@ -45,16 +46,12 @@ class Create extends React.Component {
    * @memberof Create
    */
   componentWillMount() {
-    this.setState({ centers: this.props.centers }, () => {
-      const choiceCenter = localStorage.getItem('choice-center');
-      const centerid = choiceCenter || this.state.centers[0].id;
-      const activeCenter = this.state.centers.find(center => center.id === parseInt(centerid, 10));
+    const { match, events, centers } = this.props;
+    const eventID = match.params.index;
 
-      this.setState({
-        event: { ...this.state.event },
-        activeCenter
-      });
-    });
+    const event = events.find(event => event.id === parseInt(eventID, 10));
+    const activeCenter = centers.find(center => center.id === parseInt(event.centerid, 10));
+    this.setState({ centers, event, activeCenter });
   }
 
   /**
@@ -140,6 +137,7 @@ class Create extends React.Component {
           <div className="row">
             <InputField
               onChange={this.handleFormFieldChanged}
+              defaultValue={this.state.event.title}
               id="title"
               type="text"
               title="Event Title"
@@ -155,6 +153,7 @@ class Create extends React.Component {
                 title="Start Date"
                 width="6"
                 errorMessage={this.state.errors.startDate}
+                defaultValue={this.state.event.startDate}
               />
 
               <DatePicker
@@ -164,6 +163,7 @@ class Create extends React.Component {
                 title="End Date"
                 width="6"
                 errorMessage={this.state.errors.endDate}
+                defaultValue={this.state.event.endDate}
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ class Create extends React.Component {
   }
 }
 
-Create.propTypes = {
+Update.propTypes = {
   createEventRequest: PropTypes.func.isRequired,
   centers: PropTypes.arrayOf(PropTypes.object).isRequired
 };
@@ -218,14 +218,20 @@ Create.propTypes = {
  * Extract properties from redux and map it to component properties
  *
  * @param {object} state - Redux state
+ *
  * @returns {object} - Extracted state
  */
 const mapStateToProps = state => {
   const { centers } = state.center;
-  const { errors, actions } = state.event;
-  return { centers, errors, actions };
+  const { errors, actions, events } = state.event;
+  return {
+    centers,
+    errors,
+    actions,
+    events
+  };
 };
 
 export default connect(mapStateToProps, {
   createEventRequest
-})(Create);
+})(Update);

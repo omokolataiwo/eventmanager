@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import 'materialize-css';
-import { fetchAllCentersRequest } from '../../actions/fetchAllCentersRequest';
+import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
 import bannercenter from '../../images/banner-center2.png';
 import checkAvailabilityImg from '../../images/icons/calendar-check.png';
 import searchForCenterImg from '../../images/icons/searching-for-a-house.png';

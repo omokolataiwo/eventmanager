@@ -3,10 +3,27 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import featuredCenterImg from '../../images/party-room.jpg';
-import { fetchAllCentersRequest } from '../../actions/fetchAllCentersRequest';
+import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
 import { STATES } from '../../consts';
 
+const propTypes = {
+  centers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchAllCentersRequest: PropTypes.func.isRequired,
+  history: PropTypes.shape().isRequired
+};
+/**
+ * Featured centers component
+ *
+ * @class HorizontalFeaturedCenters
+ * @extends {React.Component}
+ */
 class HorizontalFeaturedCenters extends React.Component {
+  /**
+   * Creates an instance of HorizontalFeaturedCenters.
+   *
+   * @param {object} props - React properties
+   * @memberof HorizontalFeaturedCenters
+   */
   constructor(props) {
     super(props);
     this.state = {
@@ -14,25 +31,56 @@ class HorizontalFeaturedCenters extends React.Component {
       poppedCenter: {}
     };
   }
+  /**
+   * Fetch all centers
+   *
+   * @returns {void}
+   * @memberof HorizontalFeaturedCenters
+   */
   componentWillMount() {
-    this.props.fetchCenters(this.props.accessToken);
+    this.props.fetchAllCentersRequest();
     this.setState({ centers: this.props.centers });
   }
+  /**
+   * Initialize materialize modal
+   *
+   * @returns {void}
+   * @memberof HorizontalFeaturedCenters
+   */
   componentDidMount() {
     $('.modal').modal();
   }
+  /**
+   * Handle pop up and populate modal with center data
+   *
+   * @param {int} id - Center id
+   * @returns {void}
+   * @memberof HorizontalFeaturedCenters
+   */
   handleModal(id) {
     this.setState({
       poppedCenter: this.state.centers.find(center => center.id === id)
     });
     $('#modal1').modal('open');
-    return this;
   }
+  /**
+   * Redirect to create event page
+   *
+   * @returns{void}
+   * @memberof HorizontalFeaturedCenters
+   */
   bookCenter() {
     const { history } = this.props;
     localStorage.setItem('choice-center', this.state.poppedCenter.id);
     history.push('/user/event');
   }
+
+  /**
+   * Renders the component DOM
+   *
+   * @returns {object} - JSX DOM
+   * @memberof HorizontalFeaturedCenters
+   */
   render() {
     return (
       <div className="row">
@@ -64,7 +112,7 @@ class HorizontalFeaturedCenters extends React.Component {
               onKeyUp={() => this.handleModal(center.id)}
               role="button"
             >
-              <img src={featuredCenterImg} alt="Event Center" />
+              <img src={center.image} alt="Event Center" />
               <div className="over-img">
                 <h4 className="truncate">{center.name}</h4>
                 <p>
@@ -81,18 +129,17 @@ class HorizontalFeaturedCenters extends React.Component {
   }
 }
 
-HorizontalFeaturedCenters.propTypes = {
-  accessToken: PropTypes.string.isRequired,
-  centers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  fetchCenters: PropTypes.func.isRequired
+HorizontalFeaturedCenters.propTypes = propTypes;
+
+/**
+ * Extract redux state to component
+ *
+ * @param {object} state - Redux state
+ * @return {object} - Extracted properties
+ */
+const mapStateToProps = state => {
+  const { centers } = state.center;
+  return { centers };
 };
 
-const mapDispatchToProps = dispatch => ({
-  fetchCenters: accessToken => dispatch(fetchAllCentersRequest(accessToken))
-});
-const mapStateToProps = state => {
-  const { accessToken } = state.user;
-  const { centers } = state.center;
-  return { centers, accessToken };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(HorizontalFeaturedCenters);
+export default connect(mapStateToProps, { fetchAllCentersRequest })(HorizontalFeaturedCenters);
