@@ -5,65 +5,72 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: ['./app/src/index.jsx'],
+  entry: ['./src/index.jsx'],
   target: 'web',
   output: {
     filename: 'bundle.js',
-    path: path.resolve('./app/public'),
-    publicPath: 'https://eventmanagerapp.herokuapp.com/'
+    path: path.resolve('./dist'),
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json']
   },
   module: {
     rules: [
+      // {
+      //   enforce: 'pre',
+      //   test: /\.jsx?$/,
+      //   exclude: /node_modules/,
+      //   loader: 'eslint-loader'
+      // },
       {
-        test: /\.js|.jsx?$/,
-        exclude: /(node_modules)/,
+        test: /\.jsx?$/,
         use: {
           loader: 'babel-loader',
           options: {
             presets: ['es2015', 'react', 'stage-0']
           }
-        }
+        },
+        exclude: /node_modules/
       },
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
+        exclude: /node_modules/,
+        use: ['css-hot-loader'].concat(ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
             'css-loader',
-            'sass-loader',
-            'resolve-url-loader',
-            'sass-loader?sourceMap'
+            {
+              loader: 'sass-loader',
+              query: {
+                sourceMap: false
+              }
+            }
           ]
-        })
+        }))
       },
       {
         test: /\.css$/,
-        use: ['css-loader', 'style-loader', 'resolve-url-loader']
-      },
-
-      {
-        test: /\.(woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader?limit=1000000&mimetype=application/font-woff'
+        use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.(svg|png|jpeg|jpg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'file-loader'
-      },
-      { test: /\.json$/, loader: 'json-loader' }
+        test: /\.(png|jpg|gif|woff|woff2|eot|ttf|otf)$/,
+        use: [
+          {
+            loader: 'file-loader'
+          }
+        ]
+      }
     ]
   },
 
   plugins: [
-    new ExtractTextPlugin('./style.css'),
-    new UglifyJSPlugin({
-      parallel: 4,
-      sourceMap: true
+    new ExtractTextPlugin({
+      filename: 'style.css'
     }),
+    new UglifyJSPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve('./app/index.html')
+      template: path.resolve('./public/index.html')
     })
   ]
 };

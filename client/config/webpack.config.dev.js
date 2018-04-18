@@ -1,8 +1,6 @@
 const { resolve } = require('path');
-
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 const config = {
@@ -12,23 +10,19 @@ const config = {
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
-    './index.jsx',
-    './scss/style.scss'
+    './src/index.jsx'
   ],
 
   output: {
     filename: 'bundle.js',
-    path: resolve(__dirname, 'dist'),
-    publicPath: ''
+    path: resolve(__dirname, '../public'),
+    publicPath: '/'
   },
-
-  context: resolve(__dirname, 'src'),
 
   devServer: {
     hot: true,
-    contentBase: resolve(__dirname, 'build'),
-    historyApiFallback: true,
-    publicPath: '/'
+    contentBase: resolve(__dirname, '../public'),
+    historyApiFallback: true
   },
 
   resolve: {
@@ -37,15 +31,20 @@ const config = {
 
   module: {
     rules: [
+      // {
+      //   enforce: 'pre',
+      //   test: /\.jsx?$/,
+      //   exclude: /node_modules/,
+      //   loader: 'eslint-loader'
+      // },
       {
-        enforce: 'pre',
         test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader'
-      },
-      {
-        test: /\.jsx?$/,
-        loaders: ['babel-loader'],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015', 'react', 'stage-0']
+          }
+        },
         exclude: /node_modules/
       },
       {
@@ -61,70 +60,18 @@ const config = {
                 sourceMap: false
               }
             }
-          ],
-          publicPath: '../'
+          ]
         }))
       },
       {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'image/png',
-              name: 'images/[name].[ext]'
-            }
-          }
-        ]
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
       },
       {
-        test: /\.eot(\?v=\d+.\d+.\d+)?$/,
+        test: /\.(png|jpg|gif|woff|woff2|eot|ttf|otf)$/,
         use: [
           {
-            loader: 'file-loader',
-            options: {
-              name: 'fonts/[name].[ext]'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'application/font-woff',
-              name: 'fonts/[name].[ext]'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.[ot]tf(\?v=\d+.\d+.\d+)?$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'application/octet-stream',
-              name: 'fonts/[name].[ext]'
-            }
-          }
-        ]
-      },
-      {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 8192,
-              mimetype: 'image/svg+xml',
-              name: 'images/[name].[ext]'
-            }
+            loader: 'file-loader'
           }
         ]
       }
@@ -136,19 +83,16 @@ const config = {
       test: /\.jsx?$/,
       options: {
         eslint: {
-          configFile: resolve(__dirname, '.eslintrc'),
+          configFile: resolve(`${__dirname}/`, '.eslintrc.json'),
           cache: false
         }
       }
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new ExtractTextPlugin({
-      filename: './styles/style.css',
-      disable: false,
-      allChunks: true
+      filename: 'style.css'
     }),
-    new CopyWebpackPlugin([{ from: 'vendors', to: 'vendors' }]),
-    new OpenBrowserPlugin({ url: 'http://localhost:3000' }),
+    new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
     new webpack.HotModuleReplacementPlugin()
   ]
 };

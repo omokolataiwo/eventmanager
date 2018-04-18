@@ -1,6 +1,7 @@
 node_modules
 coverage
 .nyc*
+.env
 .DS_store
 dist
 client/package-lock.json

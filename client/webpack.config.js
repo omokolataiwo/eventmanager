@@ -1,101 +1,23 @@
-const { resolve } = require('path');
-const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
+const dotEnv = require('dotenv');
+const webpackProd = require('./config/webpack.config.prod');
+const webpackDev = require('./config/webpack.config.dev');
 
-const config = {
-  devtool: 'cheap-module-eval-source-map',
+dotEnv.config();
 
-  entry: [
-    'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
-    './src/index.jsx'
-  ],
+const { NODE_ENV } = process.env;
 
-  output: {
-    filename: 'bundle.js',
-    path: resolve(__dirname, './public'),
-    publicPath: '/'
-  },
+let config;
 
-  devServer: {
-    hot: true,
-    contentBase: resolve(__dirname, './public'),
-    historyApiFallback: true
-  },
+switch (NODE_ENV) {
+case 'development':
+  config = webpackDev;
+  break;
 
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
+case 'production':
+  config = webpackProd;
+  break;
 
-  module: {
-    rules: [
-      // {
-      //   enforce: 'pre',
-      //   test: /\.jsx?$/,
-      //   exclude: /node_modules/,
-      //   loader: 'eslint-loader'
-      // },
-      {
-        test: /\.jsx?$/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['es2015', 'react', 'stage-0']
-          }
-        },
-        exclude: /node_modules/
-      },
-      {
-        test: /\.scss$/,
-        exclude: /node_modules/,
-        use: ['css-hot-loader'].concat(ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            'css-loader',
-            {
-              loader: 'sass-loader',
-              query: {
-                sourceMap: false
-              }
-            }
-          ]
-          // publicPath: './public'
-        }))
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      },
-      {
-        test: /\.(png|jpg|gif|woff|woff2|eot|ttf|otf)$/,
-        use: [
-          {
-            loader: 'file-loader'
-          }
-        ]
-      }
-    ]
-  },
-
-  plugins: [
-    new webpack.LoaderOptionsPlugin({
-      test: /\.jsx?$/,
-      options: {
-        eslint: {
-          configFile: resolve(`${__dirname}/`, '.eslintrc.json'),
-          cache: false
-        }
-      }
-    }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
-    new ExtractTextPlugin({
-      filename: 'style.css'
-    }),
-    new OpenBrowserPlugin({ url: 'http://localhost:8080' }),
-    new webpack.HotModuleReplacementPlugin()
-  ]
-};
-
+default:
+  config = {};
+}
 module.exports = config;
