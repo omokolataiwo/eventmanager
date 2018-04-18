@@ -1,6 +1,6 @@
 import validate from 'validate.js';
 
-const SIGNUP_VALIDATION_RULES = {
+export default {
   firstName: {
     presence: {
       allowEmpty: false,
@@ -83,10 +83,7 @@ const SIGNUP_VALIDATION_RULES = {
   matchPassword: {
     equality: {
       attribute: 'password',
-      message: (v, a, va, g) =>
-        validate.format('is not the same as Password', { v })
+      message: v => validate.format('is not the same as Password', { v })
     }
   }
 };
-
-export default SIGNUP_VALIDATION_RULES;

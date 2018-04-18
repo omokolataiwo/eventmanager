@@ -1,4 +1,4 @@
-import { validate } from 'validate.js';
+import { validate } from 'validate.js'; // eslint-disable-line
 
 const contactValidationRules = {
   firstName: {

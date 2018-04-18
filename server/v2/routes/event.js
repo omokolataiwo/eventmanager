@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import expressJoi from 'express-joi-validator';
 import { event } from '../controllers';
-import { tksecret } from '../config/config.json';
 import idroute from '../validate/idroute';
 import { ACCOUNT_TYPE_USER } from './const';
 
@@ -10,9 +9,11 @@ const auth = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ auth: false, message: 'No token provided' });
   }
-  return jwt.verify(token, tksecret, (error, decoded) => {
+  return jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
     if (error) {
-      return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+      return res
+        .status(500)
+        .json({ auth: false, message: 'Failed to authenticate token.' });
     }
     if (decoded.role !== ACCOUNT_TYPE_USER) {
       return res.status(401).json({ auth: false, message: 'Not authorized' });

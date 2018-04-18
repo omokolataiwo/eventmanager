@@ -3,9 +3,11 @@ module.exports = (req, res, next) => {
   if (!token) {
     return res.status(401).json({ auth: false, message: 'No token provided' });
   }
-  return jwt.verify(token, tksecret, (error, decoded) => {
+  return jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
     if (error) {
-      return res.status(500).json({ auth: false, message: 'Failed to authenticate token.' });
+      return res
+        .status(500)
+        .json({ auth: false, message: 'Failed to authenticate token.' });
     }
     if (decoded.role !== 2) {
       return res.status(401).json({ auth: false, message: 'Not authorized' });
