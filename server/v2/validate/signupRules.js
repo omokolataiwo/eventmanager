@@ -60,7 +60,7 @@ export default {
       strict: true
     },
     length: {
-      is: 11
+      is: 10
     }
   },
   username: {

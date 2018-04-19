@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { ACCOUNT_TYPE_USER, ACCOUNT_TYPE_ADMIN } from '../routes/const';
+import { ACCOUNT_TYPE_USER, ACCOUNT_TYPE_ADMIN } from './const';
 
 /**
  * Authenticate all account types

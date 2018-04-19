@@ -46,7 +46,7 @@ module.exports = {
           .json({ phoneNumber: ['phone number has already been used.'] });
       }
 
-      return models.users.create(req.body).then((newUser) => {
+      return models.users.create(req.body).then(newUser => {
         const userJSON = newUser.toJSON();
         delete userJSON.password;
         return res.status(201).json(userJSON);
@@ -86,7 +86,7 @@ module.exports = {
           expiresIn: 86400
         }
       );
-      return res.status(200).send({ auth: true, token, userdata: user });
+      return res.status(200).send({ token, userdata: user });
     } catch (e) {
       console.log(e);
       return res.status(500).send('Internal Server Error');
