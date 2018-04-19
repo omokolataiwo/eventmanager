@@ -104,7 +104,7 @@ module.exports = {
   getCenter(req, res) {
     return models.centers
       .findById(req.params.id)
-      .then((center) => {
+      .then(center => {
         if (!center) {
           return res.status(404).json({ center: 'Center not found' });
         }
@@ -156,30 +156,6 @@ module.exports = {
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
-  },
-  /**
-   * Get center with bookings
-   *
-   * @param {object} req - Server request
-   * @param {object} res - Server response
-   * @returns {*} - Server response
-   */
-  getCenterWithEvents(req, res) {
-    return models.centers
-      .findOne({
-        include: [
-          {
-            model: models.events,
-            as: 'events'
-          }
-        ],
-        where: {
-          id: req.params.id,
-          ownerid: req.user.id
-        }
-      })
-      .then(center => res.status(200).json(center))
-      .catch(error => res.status(500).json(error));
   },
   /**
    * Get center by date
@@ -240,9 +216,7 @@ module.exports = {
    * @returns {*} - Server response
    */
   search(req, res) {
-    const {
-      name, area, state, capacity, type, facilities, amount
-    } = req.query;
+    const { name, area, state, capacity, type, facilities, amount } = req.query;
 
     let searchCondition = '';
 
@@ -278,10 +252,13 @@ module.exports = {
             ? `lower(facilities) LIKE '%${facilityLowerCase}%'`
             : ` OR lower(facilities) LIKE '%${facilityLowerCase}'`;
         })
-        .join()})`;
+        .join('')})`;
+
       searchCondition += ` AND ${facilitiesBuilt}`;
     }
     const END_OF_FIRST_AND = 3;
+    if (!searchCondition) return res.status(404).send('Center not found');
+
     searchCondition = `WHERE${searchCondition
       .trim()
       .substr(END_OF_FIRST_AND, searchCondition.length)}`;
@@ -291,7 +268,7 @@ module.exports = {
         type: sequelize.QueryTypes.SELECT
       })
       .then(centers => res.status(200).json(centers))
-      .catch(() => res.status(500).send('Internal Server Error'));
+      .catch(e => res.status(500).send(e));
   },
   /**
    * Get all events
@@ -309,8 +286,8 @@ module.exports = {
           type: sequelize.QueryTypes.SELECT
         }
       )
-      .then((events) => {
-        const eventsWithActiveStatus = events.map((e) => {
+      .then(events => {
+        const eventsWithActiveStatus = events.map(e => {
           const event = e;
           const endDate = moment(event.endDate);
           const now = moment();

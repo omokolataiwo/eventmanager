@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
-import { ACCOUNT_TYPE_ADMIN } from './const';
+import { ACCOUNT_TYPE_USER } from './const';
 
 /**
- * Admin authentication middleware
+ * User authentication middleware
  *
  * @param {object} req - Request object
  * @param {object} res - Response object
@@ -18,8 +18,7 @@ export default (req, res, next) => {
     if (error) {
       return res.status(401).json({ message: 'Failed to authenticate token.' });
     }
-
-    if (decoded.role !== ACCOUNT_TYPE_ADMIN) {
+    if (decoded.role !== ACCOUNT_TYPE_USER) {
       return res.status(403).json({ message: 'Not authorized' });
     }
     req.user = decoded;

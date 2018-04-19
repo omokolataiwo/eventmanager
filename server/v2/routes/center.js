@@ -3,7 +3,7 @@ import { center } from '../controllers';
 import adminAuthentication from '../middleware/adminAuthentication';
 import validateParamID from '../middleware/validateParamID';
 
-module.exports = (app) => {
+module.exports = app => {
   app.post('/centers', adminAuthentication, center.createCenter); // Create Center
   app.get('/centers', center.getCenters); // Get all centers
   app.get('/centers/admin', adminAuthentication, center.getAdminCenters); // Get own centers
@@ -12,13 +12,6 @@ module.exports = (app) => {
   app.get('/centers/search', center.search);
 
   app.get('/centers/:id', validateParamID, center.getCenter); // Get a Single Center, does not need authentication
-
-  app.get(
-    '/centers/:id/events',
-    validateParamID,
-    adminAuthentication,
-    center.getCenterWithEvents
-  ); // Get Center with events, protected
 
   app.put(
     '/centers/:id',
