@@ -30,9 +30,9 @@ class User {
   /**
    * Load existing object with new parameters
    *
-   * @param {object} center - New parameters
+   * @param {object} user - New parameters
    * @returns {object} this object
-   * @memberof Center
+   * @memberof User
    */
   load(user) {
     this.firstName = user.firstName || this.firstName;
@@ -50,7 +50,7 @@ class User {
    * Validates object parameters
    *
    * @returns {void}
-   * @memberof Center
+   * @memberof User
    */
   validate() {
     if (this.password.length < 2 || this.password.length > 100) {
@@ -80,7 +80,7 @@ class User {
    * Get generated error message
    *
    * @returns {object} - Error messages
-   * @memberof Center
+   * @memberof User
    */
   getErrors() {
     if (!this.error) return {};
@@ -91,7 +91,7 @@ class User {
    * Check if there are no errors
    *
    * @returns {bool} - true/false
-   * @memberof Center
+   * @memberof User
    */
   safe() {
     this.validate();
@@ -102,7 +102,7 @@ class User {
    * Convert object to JSON-like object
    *
    * @returns {object} - JSON-like object
-   * @memberof Center
+   * @memberof User
    */
   toJSON() {
     return {
