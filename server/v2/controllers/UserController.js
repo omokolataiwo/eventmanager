@@ -1,9 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import models from '../models';
-import User from './_support/User';
 
-module.exports = {
+export default class UserController {
   /**
    * Create new user
    *
@@ -11,42 +10,40 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async create(req, res) {
+  static async create(req, res) {
     try {
-      const user = new User(req.body);
-      if (!user.safe()) {
-        return res.status(422).json({ errors: user.getErrors() });
-      }
-      req.body.password = bcrypt.hashSync(req.body.password, 8);
-      let userExist = await models.users.findOne({
-        where: { username: req.body.username }
-      });
+      let user = req.body;
+      user.password = bcrypt.hashSync(user.password, 8);
 
-      if (userExist) {
-        return res
-          .status(422)
-          .json({ username: ['username has already been taken.'] });
+      let errors = [];
+
+      if (
+        await models.users.findOne({
+          where: { username: user.username }
+        })
+      ) {
+        errors.push({ username: ['username has already been taken.'] });
       }
 
-      userExist = await models.users.findOne({
-        where: { email: req.body.email }
-      });
-      if (userExist) {
-        return res
-          .status(422)
-          .json({ email: ['email has already been used.'] });
+      if (
+        await models.users.findOne({
+          where: { email: user.email }
+        })
+      ) {
+        errors.push({ email: ['email has already been used.'] });
       }
 
-      userExist = await models.users.findOne({
-        where: { phoneNumber: req.body.phoneNumber }
-      });
-      if (userExist) {
-        return res
-          .status(422)
-          .json({ phoneNumber: ['phone number has already been used.'] });
+      if (
+        await models.users.findOne({
+          where: { phoneNumber: user.phoneNumber }
+        })
+      ) {
+        errors.push({ phoneNumber: ['phone number has already been used.'] });
       }
 
-      return models.users.create(req.body).then(newUser => {
+      if (errors.length) return res.status(422).send(errors);
+
+      return models.users.create(user).then(newUser => {
         const userJSON = newUser.toJSON();
         delete userJSON.password;
         return res.status(201).json(userJSON);
@@ -54,7 +51,7 @@ module.exports = {
     } catch (e) {
       return res.status(500).send('Internal Server Error.');
     }
-  },
+  }
   /**
    * Sign in user
    *
@@ -62,18 +59,13 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async login(req, res) {
+  static async signin(req, res) {
     try {
       const user = await models.users.findOne({
         where: { username: req.body.username }
       });
 
-      if (
-        !req.body.username ||
-        !req.body.password ||
-        !user ||
-        !bcrypt.compareSync(req.body.password, user.password)
-      ) {
+      if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
         return res
           .status(401)
           .json({ errors: { global: ['Invalid username or password'] } });
@@ -83,15 +75,15 @@ module.exports = {
         { id: user.id, role: user.role },
         process.env.TOKEN_SECRET,
         {
-          expiresIn: 86400
+          expiresIn: 864000
         }
       );
       return res.status(200).send({ token, userdata: user });
     } catch (e) {
-      console.log(e);
       return res.status(500).send('Internal Server Error');
     }
-  },
+  }
+
   /**
    * Get authenticated user data
    *
@@ -99,12 +91,13 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  getUser(req, res) {
+  static getUser(req, res) {
     return models.users
       .findOne({ where: { id: req.user.id } })
       .then(user => res.status(200).json(user))
       .catch(() => res.status(500).json('Internal Server Error'));
-  },
+  }
+
   /**
    * Update authenticated user
    *
@@ -112,41 +105,36 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async update(req, res) {
+  static async update(req, res) {
     try {
-      const user = await models.users.findOne({ where: { id: req.user.id } });
-      const userModel = new User(user).load(req.body).toJSON();
+      let user = await models.users.findOne({ where: { id: req.user.id } });
+
+      user = Object.assign({}, user.toJSON(), req.body);
 
       const phoneNumberExist = await models.users.findOne({
-        where: { phoneNumber: userModel.phoneNumber }
+        where: { phoneNumber: user.phoneNumber }
       });
 
-      if (
-        phoneNumberExist &&
-        phoneNumberExist.username !== userModel.username
-      ) {
+      if (phoneNumberExist && phoneNumberExist.username !== user.username) {
         return res
           .status(422)
           .json({ phoneNumber: 'Phone number has already been used.' });
       }
 
       const emailAddressExist = await models.users.findOne({
-        where: { email: userModel.email }
+        where: { email: user.email }
       });
 
-      if (
-        emailAddressExist &&
-        emailAddressExist.username !== userModel.username
-      ) {
+      if (emailAddressExist && emailAddressExist.username !== user.username) {
         return res
           .status(422)
           .json({ email: 'Email address has already been used.' });
       }
       return models.users
-        .update(userModel, { where: { id: req.user.id } })
-        .then(() => res.status(201).json(userModel));
+        .update(user, { where: { id: req.user.id } })
+        .then(() => res.status(201).json(user));
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
   }
-};
+}

@@ -2,9 +2,15 @@ import { center } from '../controllers';
 
 import adminAuthentication from '../middleware/adminAuthentication';
 import validateParamID from '../middleware/validateParamID';
+import createCenterValidation from '../middleware/createCenterValidation';
 
 module.exports = app => {
-  app.post('/centers', adminAuthentication, center.createCenter); // Create Center
+  app.post(
+    '/centers',
+    adminAuthentication,
+    createCenterValidation,
+    center.createCenter
+  ); // Create Center
   app.get('/centers', center.getCenters); // Get all centers
   app.get('/centers/admin', adminAuthentication, center.getAdminCenters); // Get own centers
   app.get('/centers/events', adminAuthentication, center.getOwnEvents); // Get own events

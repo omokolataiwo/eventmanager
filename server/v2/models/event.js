@@ -1,21 +1,21 @@
 module.exports = (sequelize, DataTypes) => {
   const Event = sequelize.define('events', {
     title: DataTypes.STRING,
-    startDate: DataTypes.DATE,
-    endDate: DataTypes.DATE,
-    centerid: DataTypes.INTEGER,
-    userid: DataTypes.INTEGER,
+    startDate: DataTypes.DATEONLY,
+    endDate: DataTypes.DATEONLY,
+    centerId: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER
   });
 
-  Event.associate = (models) => {
+  Event.associate = models => {
     Event.belongsTo(models.users, {
-      foreignKey: 'userid',
-      onDelete: 'CASCADE',
+      foreignKey: 'userId',
+      onDelete: 'CASCADE'
     });
 
     Event.belongsTo(models.centers, {
-      foreignKey: 'centerid',
-      onDelete: 'CASCADE',
+      foreignKey: 'centerId',
+      onDelete: 'CASCADE'
     });
   };
 

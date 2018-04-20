@@ -6,23 +6,23 @@ module.exports = (sequelize, DataTypes) => {
     state: DataTypes.INTEGER,
     capacity: DataTypes.INTEGER,
     type: DataTypes.INTEGER,
-    ownerid: DataTypes.INTEGER,
-    contactid: DataTypes.INTEGER,
+    ownerId: DataTypes.INTEGER,
+    contactId: DataTypes.INTEGER,
     facilities: DataTypes.STRING,
     amount: DataTypes.INTEGER,
     details: DataTypes.TEXT,
-    image: DataTypes.TEXT,
+    image: DataTypes.TEXT
   });
 
-  Center.associate = (models) => {
+  Center.associate = models => {
     Center.hasMany(models.events, {
-      foreignKey: 'centerid',
-      as: 'events',
+      foreignKey: 'centerId',
+      as: 'events'
     });
 
     Center.belongsTo(models.users, {
-      foreignKey: 'ownerid',
-      as: 'evnts',
+      foreignKey: 'ownerId',
+      as: 'evnts'
     });
   };
 

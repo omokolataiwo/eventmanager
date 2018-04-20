@@ -1,11 +1,8 @@
 import sequelize from 'sequelize';
 import moment from 'moment';
-import validate from 'validate.js';
-import Center, { create, updateCenter } from './_support/Center';
 import models from '../models';
-import { contactValidationRules } from '../validate/contactValidationRules';
 
-module.exports = {
+export default class CenterController {
   /**
    * Create a new center
    *
@@ -13,51 +10,32 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async createCenter(req, res) {
+  static async createCenter(req, res) {
     try {
-      const center = new Center(req.body);
-      if (!center.safe()) {
-        return res.status(422).json(center.getErrors());
-      }
+      const center = req.body;
+      center.ownerId = req.user.id;
 
-      req.body.ownerid = req.user.id;
-      const centerOwner = await models.users.findById(req.body.ownerid);
-
-      if (!centerOwner) {
-        return res
-          .status(422)
-          .send({ global: 'Center must have a valid owner' });
-      }
-
-      // Check if this center has newContact and there is contact body
-      // Contact must be linked to user account
-
-      if (req.body.newContact && req.body.contact) {
-        req.body.contact.ownerid = req.body.ownerid;
-
-        const contactErrors = validate(
-          req.body.contact,
-          contactValidationRules
-        );
-        if (contactErrors !== undefined) {
-          return res.status(422).json({ contact: contactErrors });
-        }
-
-        const newContact = await models.contacts.create(req.body.contact);
-        req.body.contactid = newContact.id;
+      if (center.newContact && center.contact) {
+        center.contact.ownerId = center.ownerId;
+        const newContact = await models.contacts.create(center.contact);
+        center.contactId = newContact.id;
       } else {
         const contactExist = await models.contacts.findOne({
-          where: { id: req.body.contactid, ownerid: req.user.id }
+          where: { id: center.contactId, ownerId: req.user.id }
         });
+
         if (!contactExist) {
-          return res.status(422).json({ contactid: 'Contact does not exist' });
+          return res.status(422).json({ contactId: 'Contact does not exist' });
         }
       }
-      return create(req, res, models);
+
+      return models.centers
+        .create(center)
+        .then(center => res.status(201).json(center));
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
-  },
+  }
   /**
    * Get all registered center
    *
@@ -65,12 +43,12 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  getCenters(req, res) {
+  static getCenters(req, res) {
     return models.centers
       .findAll()
       .then(centers => res.status(200).json(centers))
       .catch(() => res.status(500).send('Internal Server Error'));
-  },
+  }
   /**
    * Get all centers with events registered by authenticated user
    *
@@ -78,7 +56,7 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  getAdminCenters(req, res) {
+  static getAdminCenters(req, res) {
     return models.centers
       .findAll({
         include: [
@@ -88,12 +66,12 @@ module.exports = {
           }
         ],
         where: {
-          ownerid: req.user.id
+          ownerId: req.user.id
         }
       })
       .then(center => res.status(200).json(center))
       .catch(() => res.status(500).send('Internal Server Error'));
-  },
+  }
   /**
    * Get a single center
    *
@@ -101,7 +79,7 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  getCenter(req, res) {
+  static getCenter(req, res) {
     return models.centers
       .findById(req.params.id)
       .then(center => {
@@ -111,7 +89,7 @@ module.exports = {
         return res.status(200).json(center);
       })
       .catch(() => res.status(500).send('Internal Server Error'));
-  },
+  }
   /**
    * Update Center
    *
@@ -119,76 +97,43 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  async editCenter(req, res) {
+  static async editCenter(req, res) {
     try {
-      const center = await models.centers.find({
-        where: { id: req.params.id, ownerid: req.user.id }
+      const existingCenter = await models.centers.find({
+        where: { id: req.params.id, ownerId: req.user.id }
       });
 
-      if (!center) {
+      if (!existingCenter) {
         return res.status(422).json({ center: 'Center does not exist' });
       }
 
-      const mCenter = new Center(center.toJSON()).load(req.body);
+      let modifiedCenter = req.body;
+      modifiedCenter.ownerid = req.user.id;
 
-      if (!mCenter.safe()) {
-        return res.status(422).json({ validation: mCenter.getErrors() });
-      }
+      if (modifiedCenter.newContact && modifiedCenter.contact) {
+        modifiedCenter.contact.ownerid = modifiedCenter.ownerid;
 
-      req.body = Object.assign({}, req.body, mCenter.toJSON());
+        const contact = await models.contacts.create(modifiedCenter.contact);
+        modifiedCenter.contactid = contact.id;
+      } else {
+        const contactExist = await models.contacts.findOne({
+          where: { id: modifiedCenter.contactid, ownerid: req.user.id }
+        });
 
-      if (req.body.newContact && req.body.contact) {
-        req.body.contact.ownerid = req.body.ownerid;
-
-        const contactErrors = validate(
-          req.body.contact,
-          contactValidationRules
-        );
-
-        if (contactErrors !== undefined) {
-          return res.status(422).json(contactErrors);
+        if (!contactExist) {
+          return res.status(422).json({ contactid: 'Contact does not exist' });
         }
-
-        const contact = await models.contacts.create(req.body.contact);
-        req.body.contactid = contact.id;
       }
-      return updateCenter(req, res, models);
+
+      return models.centers
+        .update(modifiedCenter, {
+          where: { id: req.params.id }
+        })
+        .then(() => res.status(201).json(modifiedCenter));
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
-  },
-  /**
-   * Get center by date
-   *
-   * @param {object} req - Server request
-   * @param {object} res - Server response
-   * @returns {*} - Server response
-   */
-  getCenterByDate(req, res) {
-    const startDate = new Date(req.body.startDate);
-    const endDate = new Date(req.body.endDate);
-    return models.events
-      .findAll({
-        where: {
-          $or: [
-            {
-              $and: [
-                { startDate: { [sequelize.Op.lte]: startDate } },
-                { endDate: { [sequelize.Op.gte]: startDate } }
-              ]
-            },
-            {
-              $and: [
-                { startDate: { [sequelize.Op.lte]: endDate } },
-                { endDate: { [sequelize.Op.gte]: endDate } }
-              ]
-            }
-          ]
-        }
-      })
-      .then(centers => res.status(200).json(centers))
-      .catch(error => res.status(500).json(error));
-  },
+  }
   /**
    * Get all registered contact
    *
@@ -196,18 +141,18 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  getContacts(req, res) {
+  static getContacts(req, res) {
     return models.contacts
       .findAll({
         where: {
-          ownerid: req.user.id
+          ownerId: req.user.id
         }
       })
       .then(contacts => res.status(200).json(contacts))
       .catch(() => {
         res.status(500).send('Internal Server Error');
       });
-  },
+  }
   /**
    * Search for center base on centers parameters
    *
@@ -215,7 +160,7 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  search(req, res) {
+  static search(req, res) {
     const { name, area, state, capacity, type, facilities, amount } = req.query;
 
     let searchCondition = '';
@@ -269,7 +214,7 @@ module.exports = {
       })
       .then(centers => res.status(200).json(centers))
       .catch(e => res.status(500).send(e));
-  },
+  }
   /**
    * Get all events
    *
@@ -277,10 +222,10 @@ module.exports = {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  getOwnEvents(req, res) {
+  static getOwnEvents(req, res) {
     return models.sequelize
       .query(
-        'SELECT *, events.id as eid FROM events, centers WHERE events.centerid = centers.id AND centers.ownerid = :ownerid',
+        'SELECT *, events.id as eid FROM events, centers WHERE events.centerId = centers.id AND centers.ownerId = :ownerid',
         {
           replacements: { ownerid: req.user.id },
           type: sequelize.QueryTypes.SELECT
@@ -298,4 +243,4 @@ module.exports = {
       })
       .catch(() => res.status(500).send('Internal Server Error'));
   }
-};
+}
