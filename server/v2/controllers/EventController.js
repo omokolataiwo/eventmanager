@@ -1,6 +1,5 @@
 import sequelize from 'sequelize';
 import models from '../models';
-import Event from './_support/Event';
 
 /**
  * Build find event booked by date
@@ -32,7 +31,7 @@ const bookedQueryParams = (startDate, endDate) => [
   }
 ];
 
-module.exports = {
+export default class EventController {
   /**
    * Create new event
    *
@@ -40,24 +39,21 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async createEvent(req, res) {
+  static async createEvent(req, res) {
     try {
-      const event = new Event(req.body);
-      if (!event.safe()) {
-        return res.status(422).json(event.getErrors());
-      }
+      const event = req.body;
 
-      const centerID = parseInt(req.body.centerid, 10) || 0;
-
-      const center = await models.centers.findOne({ where: { id: centerID } });
+      const center = await models.centers.findOne({
+        where: { id: event.centerId }
+      });
 
       if (!center) {
-        return res.status(422).json({ centerID: ['Invalid center'] });
+        return res.status(422).json({ centerId: ['Invalid center'] });
       }
 
       const bookedEvent = await models.events.findOne({
         where: {
-          centerid: center.id,
+          centerId: center.id,
           $or: bookedQueryParams(event.startDate, event.endDate)
         }
       });
@@ -68,19 +64,16 @@ module.exports = {
           .json({ global: ['Center has already been booked.'] });
       }
 
-      const validatedEvent = Object.assign(
-        {},
-        { userid: req.user.id, centerid: center.id },
-        event.toJSON()
-      );
+      event.userId = req.user.id;
 
       return models.events
-        .create(validatedEvent)
+        .create(event)
         .then(newEvent => res.status(201).json(newEvent));
     } catch (e) {
+      console.log(e);
       return res.status(501).send('Internal Server Error');
     }
-  },
+  }
   /**
    * Delete a particular event
    *
@@ -88,27 +81,25 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async deleteEvent(req, res) {
+  static async deleteEvent(req, res) {
     try {
       const event = await models.events.findOne({
         where: {
-          $and: [{ id: req.params.id }, { userid: req.user.id }]
+          $and: [{ id: req.params.id }, { userId: req.user.id }]
         }
       });
 
       if (!event) {
-        return res
-          .status(400)
-          .json({ error: true, message: { event: 'Event does not exist.' } });
+        return res.status(400).json({ event: 'Event does not exist.' });
       }
 
       return models.events
         .destroy({ where: { id: req.params.id } })
-        .then(deletedEvent => res.status(200).json(deletedEvent));
+        .then(deletedEvent => res.status(200).json(event));
     } catch (error) {
       return res.status(501).send('Internal server error.');
     }
-  },
+  }
   /**
    * Get all user's event
    *
@@ -116,7 +107,7 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  getEvents(req, res) {
+  static getEvents(req, res) {
     return models.events
       .findAll({
         include: [
@@ -126,13 +117,12 @@ module.exports = {
           }
         ],
         where: {
-          userid: req.user.id
+          userId: req.user.id
         }
       })
       .then(centers => res.status(200).json(centers))
       .catch(error => res.status(501).send(error));
-  },
-
+  }
   /**
    * Edit event
    *
@@ -140,11 +130,11 @@ module.exports = {
    * @param {object} res - Server response
    * @return {*} - Server response
    */
-  async editEvent(req, res) {
+  static async editEvent(req, res) {
     try {
       const event = await models.events.findOne({
         where: {
-          $and: [{ id: req.params.id }, { userid: req.user.id }]
+          $and: [{ id: req.params.id }, { userId: req.user.id }]
         }
       });
 
@@ -152,10 +142,10 @@ module.exports = {
         return res.status(422).send('Event does not exist');
       }
 
-      req.body.centerid = req.body.centerid || event.centerid;
+      req.body.centerId = req.body.centerId || event.centerId;
 
       const center = await models.centers.findOne({
-        where: { id: req.body.centerid }
+        where: { id: req.body.centerId }
       });
 
       if (!center) {
@@ -164,26 +154,18 @@ module.exports = {
           .json({ error: true, message: { center: 'Invalid center' } });
       }
 
-      const mEvent = new Event(event);
-      mEvent.load(req.body);
-
-      if (!mEvent.safe()) {
-        return res.status(422).json(mEvent.getErrors());
-      }
-
-      const validatedEvent = Object.assign(mEvent.toJSON(), {
-        centerid: center.id
-      });
+      req.body.userId = event.userId;
 
       return models.events
-        .update(validatedEvent, {
+        .update(req.body, {
           where: { id: req.params.id }
         })
-        .then((updatedEvent) => {
-          res.status(201).json(updatedEvent);
+        .then(updatedEvent => {
+          res.status(201).json(req.body);
         });
     } catch (e) {
+      return res.json(e);
       res.status(501).send('Internal server error.');
     }
   }
-};
+}

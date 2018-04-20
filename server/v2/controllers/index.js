@@ -1,9 +1,9 @@
-import center from './center';
-import event from './event';
-import user from './user';
+import CenterController from './CenterController';
+import UserController from './UserController';
+import EventController from './EventController';
 
 module.exports = {
-  center,
-  event,
-  user,
+  center: CenterController,
+  event: EventController,
+  user: UserController
 };

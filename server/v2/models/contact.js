@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
       lastName: DataTypes.STRING,
       phoneNumber: DataTypes.STRING,
       email: DataTypes.STRING,
-      ownerid: DataTypes.INTEGER,
+      ownerId: DataTypes.INTEGER
     },
-    {},
+    {}
   );
-  Contact.associate = function (models) {
+  Contact.associate = function(models) {
     // associations can be defined here
   };
   return Contact;

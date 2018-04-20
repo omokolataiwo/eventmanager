@@ -1,5 +1,5 @@
 import { validate } from 'validate.js';
-import signupRules from '../validate/signupRules';
+import { rules } from './validateSignup';
 
 /**
  * Validator for updating user
@@ -11,19 +11,11 @@ import signupRules from '../validate/signupRules';
  */
 export default (req, res, next) => {
   const {
-    firstName,
-    lastName,
-    address,
-    state,
-    email,
-    phoneNumber
-  } = signupRules;
-
+    firstName, lastName, email, phoneNumber
+  } = rules;
   const errors = validate(req.body, {
     firstName,
     lastName,
-    address,
-    state,
     email,
     phoneNumber
   });
