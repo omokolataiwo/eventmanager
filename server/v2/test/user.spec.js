@@ -12,11 +12,6 @@ const API_PATH = '/api/v2';
 
 let lucyToken;
 
-function log(what) {
-  console.log(what);
-  console.log('==============================================');
-}
-
 describe('post /users', () => {
   before(() => {
     models.users.destroy({ truncate: true });
