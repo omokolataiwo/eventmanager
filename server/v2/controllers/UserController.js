@@ -2,6 +2,12 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import models from '../models';
 
+/**
+ * UserController
+ *
+ * @export
+ * @class UserController
+ */
 export default class UserController {
   /**
    * Create new user
@@ -12,10 +18,10 @@ export default class UserController {
    */
   static async create(req, res) {
     try {
-      let user = req.body;
+      const user = req.body;
       user.password = bcrypt.hashSync(user.password, 8);
 
-      let errors = [];
+      const errors = [];
 
       if (
         await models.users.findOne({
@@ -43,7 +49,7 @@ export default class UserController {
 
       if (errors.length) return res.status(422).send(errors);
 
-      return models.users.create(user).then(newUser => {
+      return models.users.create(user).then((newUser) => {
         const userJSON = newUser.toJSON();
         delete userJSON.password;
         return res.status(201).json(userJSON);
@@ -68,7 +74,7 @@ export default class UserController {
       if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
         return res
           .status(401)
-          .json({ errors: { global: ['Invalid username or password'] } });
+          .json({ global: ['Invalid username or password'] });
       }
 
       const token = jwt.sign(
@@ -109,7 +115,16 @@ export default class UserController {
     try {
       let user = await models.users.findOne({ where: { id: req.user.id } });
 
-      user = Object.assign({}, user.toJSON(), req.body);
+      const {
+        firstName, lastName, email, phoneNumber
+      } = req.body;
+
+      user = Object.assign({}, user.toJSON(), {
+        firstName,
+        lastName,
+        email,
+        phoneNumber
+      });
 
       const phoneNumberExist = await models.users.findOne({
         where: { phoneNumber: user.phoneNumber }

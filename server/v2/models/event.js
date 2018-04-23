@@ -4,10 +4,11 @@ module.exports = (sequelize, DataTypes) => {
     startDate: DataTypes.DATEONLY,
     endDate: DataTypes.DATEONLY,
     centerId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
+    active: DataTypes.INTEGER
   });
 
-  Event.associate = models => {
+  Event.associate = (models) => {
     Event.belongsTo(models.users, {
       foreignKey: 'userId',
       onDelete: 'CASCADE'

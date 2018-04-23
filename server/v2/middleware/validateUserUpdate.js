@@ -13,6 +13,7 @@ export default (req, res, next) => {
   const {
     firstName, lastName, email, phoneNumber
   } = rules;
+
   const errors = validate(req.body, {
     firstName,
     lastName,

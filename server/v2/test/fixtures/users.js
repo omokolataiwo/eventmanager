@@ -1,63 +1,67 @@
-import { ACCOUNT_TYPE_ADMIN, ACCOUNT_TYPE_USER } from '../../controllers/_support/const';
+import {
+  ACCOUNT_TYPE_ADMIN,
+  ACCOUNT_TYPE_USER,
+  ACCOUNT_TYPE_SUPER_ADMIN
+} from '../../middleware/const';
 
 module.exports = {
   register: {
-    validAdminUser: {
-      firstname: 'Mark',
-      lastname: 'Ben',
-      address: '9 Cole Road',
-      state: 8,
-      phonenumber: 12345678901,
-      username: 'benmark',
-      password: 'klsldskds',
-      repassword: 'klsldskds',
+    lucy: {
+      firstName: 'Lucy',
+      lastName: 'Ben',
+      phoneNumber: '2345678903',
+      username: 'lucy',
+      password: 'one_password',
+      matchPassword: 'one_password',
       role: ACCOUNT_TYPE_ADMIN,
-      email: 'benmark@yahoo.com',
+      email: 'lucy@yahoo.com'
     },
-    validOrdinaryUser: {
-      firstname: 'John',
-      lastname: 'Doe',
-      address: '9 Cole Road',
-      state: 9,
-      phonenumber: 12945678901,
+    blaze: {
+      firstName: 'Blaze',
+      lastName: 'Ben',
+      phoneNumber: '2345674903',
+      username: 'blaze',
+      password: 'one_password',
+      matchPassword: 'one_password',
+      role: ACCOUNT_TYPE_ADMIN,
+      email: 'blaze@yahoo.com'
+    },
+    johndoe: {
+      firstName: 'John',
+      lastName: 'Doe',
+      phoneNumber: '1294567891',
       username: 'johndoe',
-      password: 'klssdsfsds',
-      repassword: 'klssdsfsds',
+      password: 'one_password',
+      matchPassword: 'one_password',
       role: ACCOUNT_TYPE_USER,
-      email: 'johndoe@yahoo.com',
+      email: 'johndoe@yahoo.com'
     },
-    invalidPasswordCombination: {
-      firstname: 'Mark',
-      lastname: 'Ben',
-      address: '9 Cole Road',
-      state: 8,
-      phonenumber: 12345678901,
-      username: 'benmark',
-      password: 'klsldskds',
-      repassword: 'klsldss',
-      role: 2,
-      email: 'benmark@yahoo.com',
-    },
+    superAdmin: {
+      firstName: 'Super',
+      lastName: 'Admin',
+      phoneNumber: '1293567891',
+      username: 'super',
+      password: '$2a$08$W9kjkcQcNXAKFHGMB6rnOuxXZvLbeBtl607FEtH7gVXAH/COPGQCm',
+      role: ACCOUNT_TYPE_SUPER_ADMIN,
+      email: 'super@yahoo.com'
+    }
   },
   login: {
-    WrongPassword: {
-      username: 'benmark',
-      password: 'klsdsdsfaafsfsssfldskds',
+    lucy: {
+      username: 'lucy',
+      password: 'one_password'
     },
-    NOUsername: {
-      username: null,
-      password: 'klsldskds',
+    blaze: {
+      username: 'blaze',
+      password: 'one_password'
     },
-    NOPassword: {
-      username: 'benmark',
-    },
-    validAdminUser: {
-      username: 'benmark',
-      password: 'klsldskds',
-    },
-    validOrdinaryUser: {
+    johndoe: {
       username: 'johndoe',
-      password: 'klssdsfsds',
+      password: 'one_password'
     },
-  },
+    superAdmin: {
+      username: 'super',
+      password: 'one_password'
+    }
+  }
 };

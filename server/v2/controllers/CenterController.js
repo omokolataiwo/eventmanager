@@ -1,7 +1,21 @@
 import sequelize from 'sequelize';
 import moment from 'moment';
 import models from '../models';
+import {
+  PENDING_CENTER,
+  ACTIVE_CENTER,
+  APPROVED_CENTER,
+  DECLINED_CENTER,
+  LOCK_CENTER,
+  CANCEL_EVENT
+} from '../middleware/const';
 
+/**
+ * CenterController
+ *
+ * @export
+ * @class CenterController
+ */
 export default class CenterController {
   /**
    * Create a new center
@@ -29,9 +43,12 @@ export default class CenterController {
         }
       }
 
+      center.approve = PENDING_CENTER;
+      center.active = ACTIVE_CENTER;
+
       return models.centers
         .create(center)
-        .then(center => res.status(201).json(center));
+        .then(newCenter => res.status(201).json(newCenter));
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
@@ -45,7 +62,11 @@ export default class CenterController {
    */
   static getCenters(req, res) {
     return models.centers
-      .findAll()
+      .findAll({
+        where: {
+          $and: [{ approve: APPROVED_CENTER }, { active: ACTIVE_CENTER }]
+        }
+      })
       .then(centers => res.status(200).json(centers))
       .catch(() => res.status(500).send('Internal Server Error'));
   }
@@ -81,8 +102,16 @@ export default class CenterController {
    */
   static getCenter(req, res) {
     return models.centers
-      .findById(req.params.id)
-      .then(center => {
+      .find({
+        where: {
+          $and: [
+            { id: req.params.id },
+            { approve: APPROVED_CENTER },
+            { active: ACTIVE_CENTER }
+          ]
+        }
+      })
+      .then((center) => {
         if (!center) {
           return res.status(404).json({ center: 'Center not found' });
         }
@@ -107,21 +136,50 @@ export default class CenterController {
         return res.status(422).json({ center: 'Center does not exist' });
       }
 
-      let modifiedCenter = req.body;
-      modifiedCenter.ownerid = req.user.id;
+      const {
+        name,
+        capacity,
+        address,
+        amount,
+        state,
+        facilities,
+        area,
+        type,
+        image,
+        contactId,
+        details,
+        newContact,
+        contact
+      } = req.body;
+
+      const modifiedCenter = Object.assign({}, existingCenter.toJSON(), {
+        name,
+        capacity,
+        address,
+        amount,
+        state,
+        facilities,
+        area,
+        type,
+        image,
+        contactId,
+        details,
+        newContact,
+        contact
+      });
 
       if (modifiedCenter.newContact && modifiedCenter.contact) {
-        modifiedCenter.contact.ownerid = modifiedCenter.ownerid;
+        modifiedCenter.contact.ownerId = modifiedCenter.ownerId;
 
         const contact = await models.contacts.create(modifiedCenter.contact);
-        modifiedCenter.contactid = contact.id;
+        modifiedCenter.contactId = contact.id;
       } else {
         const contactExist = await models.contacts.findOne({
-          where: { id: modifiedCenter.contactid, ownerid: req.user.id }
+          where: { id: modifiedCenter.contactId, ownerId: req.user.id }
         });
 
         if (!contactExist) {
-          return res.status(422).json({ contactid: 'Contact does not exist' });
+          return res.status(422).json({ contactId: 'Contact does not exist' });
         }
       }
 
@@ -161,7 +219,9 @@ export default class CenterController {
    * @returns {*} - Server response
    */
   static search(req, res) {
-    const { name, area, state, capacity, type, facilities, amount } = req.query;
+    const {
+      name, area, state, capacity, type, facilities, amount
+    } = req.query;
 
     let searchCondition = '';
 
@@ -202,18 +262,23 @@ export default class CenterController {
       searchCondition += ` AND ${facilitiesBuilt}`;
     }
     const END_OF_FIRST_AND = 3;
-    if (!searchCondition) return res.status(404).send('Center not found');
 
+    if (!searchCondition) {
+      return res.status(404).send('Center not found.');
+    }
     searchCondition = `WHERE${searchCondition
       .trim()
       .substr(END_OF_FIRST_AND, searchCondition.length)}`;
 
     return models.sequelize
-      .query(`SELECT * FROM centers ${searchCondition}`, {
-        type: sequelize.QueryTypes.SELECT
-      })
+      .query(
+        `SELECT * FROM centers ${searchCondition} AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER}`,
+        {
+          type: sequelize.QueryTypes.SELECT
+        }
+      )
       .then(centers => res.status(200).json(centers))
-      .catch(e => res.status(500).send(e));
+      .catch(() => res.status(500).send('Internal server error'));
   }
   /**
    * Get all events
@@ -225,14 +290,14 @@ export default class CenterController {
   static getOwnEvents(req, res) {
     return models.sequelize
       .query(
-        'SELECT *, events.id as eid FROM events, centers WHERE events.centerId = centers.id AND centers.ownerId = :ownerid',
+        'SELECT *, events.id as eid FROM events, centers WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId',
         {
-          replacements: { ownerid: req.user.id },
+          replacements: { ownerId: req.user.id },
           type: sequelize.QueryTypes.SELECT
         }
       )
-      .then(events => {
-        const eventsWithActiveStatus = events.map(e => {
+      .then((events) => {
+        const eventsWithActiveStatus = events.map((e) => {
           const event = e;
           const endDate = moment(event.endDate);
           const now = moment();
@@ -241,6 +306,110 @@ export default class CenterController {
         });
         res.status(200).json(eventsWithActiveStatus);
       })
-      .catch(() => res.status(500).send('Internal Server Error'));
+      .catch(() => {
+        res.status(500).send('Internal Server Error');
+      });
+  }
+  /**
+   * Activate center
+   *
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @returns {*} - Server response
+   * @memberof CenterController
+   */
+  static async approveCenter(req, res) {
+    const centerId = req.params.id;
+    const center = await models.centers.findById(centerId);
+
+    if (!center) {
+      return res.status(404).json({ centerId: 'Can not find center' });
+    }
+
+    return models.centers
+      .update({ approve: APPROVED_CENTER }, { where: { id: centerId } })
+      .then(() => res.status(201).json(center));
+  }
+
+  /**
+   * Cancel Center Creation Application
+   *
+   * @static
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @returns {*} - Server response
+   * @memberof CenterController
+   */
+  static async declineCenter(req, res) {
+    const centerId = req.params.id;
+    const center = await models.centers.findById(centerId);
+
+    if (!center) {
+      return res.status(404).json({ centerId: 'Can not find center' });
+    }
+
+    return models.centers
+      .update({ approve: DECLINED_CENTER }, { where: { centerId } })
+      .then(() => res.status(201).json(center));
+  }
+
+  /**
+   * Toggle the availability of a center
+   *
+   * @static
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @returns {*} - Server response
+   * @memberof CenterController
+   */
+  static async toggleCenterActiveness(req, res) {
+    const centerId = req.params.id;
+    const center = await models.centers.find({
+      where: {
+        $and: [{ id: centerId }, { ownerId: req.user.id }]
+      }
+    });
+
+    if (!center) {
+      return res.status(404).json({ centerId: 'Can not find center' });
+    }
+
+    const active =
+      center.active === ACTIVE_CENTER ? LOCK_CENTER : ACTIVE_CENTER;
+
+    return models.centers
+      .update({ active: DECLINED_CENTER }, { where: { active } })
+      .then(() => res.status(201).json(active));
+  }
+
+  /**
+   * Cancel Event
+   *
+   * @static
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @returns {*} - Server response
+   * @memberof CenterController
+   */
+  static cancelEvent(req, res) {
+    return models.sequelize
+      .query(
+        'SELECT * FROM events, centers WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."id" = :eventId',
+        {
+          replacements: { ownerId: req.user.id, eventId: req.params.id },
+          type: sequelize.QueryTypes.SELECT
+        }
+      )
+      .then((events) => {
+        if (!events.length) {
+          return res.status(404).json({ eventId: 'Event not found!' });
+        }
+        return models.events
+          .update({ active: CANCEL_EVENT }, { where: { id: req.params.id } })
+          .then(() => res.status(201).json(events));
+      })
+      .catch(() => {
+        res.status(500).send('Internal Server Error');
+      });
   }
 }
