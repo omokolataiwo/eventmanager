@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
     facilities: DataTypes.STRING,
     amount: DataTypes.INTEGER,
     details: DataTypes.TEXT,
-    image: DataTypes.TEXT
+    image: DataTypes.TEXT,
+    approve: DataTypes.INTEGER,
+    active: DataTypes.INTEGER
   });
 
-  Center.associate = models => {
+  Center.associate = (models) => {
     Center.hasMany(models.events, {
       foreignKey: 'centerId',
       as: 'events'

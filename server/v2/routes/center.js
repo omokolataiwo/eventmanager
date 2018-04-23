@@ -3,8 +3,9 @@ import { center } from '../controllers';
 import adminAuthentication from '../middleware/adminAuthentication';
 import validateParamID from '../middleware/validateParamID';
 import createCenterValidation from '../middleware/createCenterValidation';
+import superAdminAuthentication from '../middleware/superAdminAuthentication';
 
-module.exports = app => {
+module.exports = (app) => {
   app.post(
     '/centers',
     adminAuthentication,
@@ -20,9 +21,35 @@ module.exports = app => {
   app.get('/centers/:id', validateParamID, center.getCenter); // Get a Single Center, does not need authentication
 
   app.put(
+    '/centers/approve/:id',
+    superAdminAuthentication,
+    center.approveCenter
+  );
+  app.put(
+    '/centers/event/cancel/:id',
+    validateParamID,
+    adminAuthentication,
+    center.cancelEvent
+  ); // Cancel Event
+
+  app.put(
+    '/centers/toggle-active/:id',
+    validateParamID,
+    adminAuthentication,
+    center.toggleCenterActiveness
+  ); // Toggle Center Activeness
+
+  app.put(
+    '/centers/cancel/:id',
+    superAdminAuthentication,
+    center.declineCenter
+  );
+
+  app.put(
     '/centers/:id',
     validateParamID,
     adminAuthentication,
+    createCenterValidation,
     center.editCenter
   ); // Update a center
 };

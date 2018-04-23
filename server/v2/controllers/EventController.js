@@ -1,5 +1,6 @@
 import sequelize from 'sequelize';
 import models from '../models';
+import { APPROVED_CENTER, ACTIVE_CENTER } from '../middleware/const';
 
 /**
  * Build find event booked by date
@@ -30,7 +31,12 @@ const bookedQueryParams = (startDate, endDate) => [
     ]
   }
 ];
-
+/**
+ * EventController
+ *
+ * @export
+ * @class EventController
+ */
 export default class EventController {
   /**
    * Create new event
@@ -44,7 +50,13 @@ export default class EventController {
       const event = req.body;
 
       const center = await models.centers.findOne({
-        where: { id: event.centerId }
+        where: {
+          $and: [
+            { id: event.centerId },
+            { approve: APPROVED_CENTER },
+            { active: ACTIVE_CENTER }
+          ]
+        }
       });
 
       if (!center) {
@@ -65,12 +77,12 @@ export default class EventController {
       }
 
       event.userId = req.user.id;
+      event.active = 1;
 
       return models.events
         .create(event)
         .then(newEvent => res.status(201).json(newEvent));
     } catch (e) {
-      console.log(e);
       return res.status(501).send('Internal Server Error');
     }
   }
@@ -90,12 +102,12 @@ export default class EventController {
       });
 
       if (!event) {
-        return res.status(400).json({ event: 'Event does not exist.' });
+        return res.status(404).json({ event: 'Event does not exist.' });
       }
 
       return models.events
         .destroy({ where: { id: req.params.id } })
-        .then(deletedEvent => res.status(200).json(event));
+        .then(() => res.status(200).json(event));
     } catch (error) {
       return res.status(501).send('Internal server error.');
     }
@@ -141,31 +153,53 @@ export default class EventController {
       if (!event) {
         return res.status(422).send('Event does not exist');
       }
+      const {
+        title, startDate, endDate, centerId
+      } = req.body;
 
-      req.body.centerId = req.body.centerId || event.centerId;
+      const modifiedEvent = Object.assign({}, event.toJSON(), {
+        title,
+        startDate,
+        endDate,
+        centerId
+      });
 
       const center = await models.centers.findOne({
-        where: { id: req.body.centerId }
+        where: {
+          $and: [
+            { id: modifiedEvent.centerId },
+            { approve: APPROVED_CENTER },
+            { active: ACTIVE_CENTER }
+          ]
+        }
       });
 
       if (!center) {
-        return res
-          .status(422)
-          .json({ error: true, message: { center: 'Invalid center' } });
+        return res.status(422).json({ centerId: 'Invalid center' });
       }
 
-      req.body.userId = event.userId;
+      const bookedCenter = await models.events.findOne({
+        where: {
+          centerId: modifiedEvent.centerId,
+          $or: bookedQueryParams(modifiedEvent.startDate, modifiedEvent.endDate)
+        }
+      });
+
+      if (bookedCenter && bookedCenter.id !== event.id) {
+        return res
+          .status(422)
+          .json({ global: ['Center has already been booked.'] });
+      }
 
       return models.events
-        .update(req.body, {
+        .update(modifiedEvent, {
           where: { id: req.params.id }
         })
-        .then(updatedEvent => {
-          res.status(201).json(req.body);
+        .then(() => {
+          res.status(201).json(modifiedEvent);
         });
     } catch (e) {
-      return res.json(e);
-      res.status(501).send('Internal server error.');
+      return res.status(501).send('Internal server error.');
     }
   }
 }
