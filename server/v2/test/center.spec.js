@@ -18,11 +18,6 @@ let centerId = null;
 let contactId = null;
 let blazeContactId = null;
 
-function log(what) {
-  console.log(what);
-  console.log('==============================================');
-}
-
 describe('Base setup', () => {
   before(() => {
     models.users.destroy({ truncate: true });

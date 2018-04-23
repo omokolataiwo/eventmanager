@@ -18,11 +18,6 @@ let johndoeToken = null;
 let centerId = null;
 let eventId = null;
 
-function log(what) {
-  console.log(what);
-  console.log('==============================================');
-}
-
 describe('Event Base setup', () => {
   before(async () => {
     models.users.destroy({ truncate: true });
