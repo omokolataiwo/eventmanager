@@ -1,6 +1,5 @@
 import React from 'react';
 import PropsType from 'prop-types';
-import keyIndex from 'react-key-index';
 
 import { STATES, CENTER_TYPE } from '../../../consts';
 
@@ -40,11 +39,9 @@ export const CenterDetailsSimple = ({
           <span>users</span> {capacity} Capacity
         </p>
         <div>
-          {keyIndex(facilities.split(','), 1).map(facility => (
-            <div key={facility.id} className="chip">
-              {facility.value}
-            </div>
-          ))}
+          {facilities
+            .split(',')
+            .map(facility => <div className="chip">{facility.value}</div>)}
         </div>
       </div>
     </div>

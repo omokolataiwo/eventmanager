@@ -16,31 +16,6 @@ export default {
       message: 'is required.'
     }
   },
-  address: {
-    presence: {
-      allowEmpty: false,
-      message: 'is required.'
-    },
-    length: {
-      minimum: 4,
-      maximum: 120,
-      tooShort: 'can not be less than 4 characters.',
-      tooLong: 'can not be more than 120 characters.'
-    }
-  },
-  state: {
-    presence: {
-      allowEmpty: false,
-      message: '^Please select a state'
-    }
-  },
-
-  role: {
-    presence: {
-      allowEmpty: false,
-      message: '^Please select account type'
-    }
-  },
   email: {
     presence: {
       allowEmpty: false,
@@ -60,7 +35,7 @@ export default {
       strict: true
     },
     length: {
-      is: 11
+      is: 10
     }
   },
   username: {
@@ -74,10 +49,26 @@ export default {
       tooShort: 'should be at least 4 characters'
     }
   },
+  role: {
+    presence: {
+      allowEmpty: false,
+      message: 'is required.'
+    },
+    inclusion: {
+      within: { 2: 'Admin', 3: 'User' },
+      message: '^Invalid role'
+    }
+  },
   password: {
     presence: {
       allowEmpty: false,
       message: 'is required.'
+    },
+    length: {
+      minimum: 2,
+      maximum: 100,
+      tooShort: 'is too short',
+      tooLong: 'is too long'
     }
   },
   matchPassword: {

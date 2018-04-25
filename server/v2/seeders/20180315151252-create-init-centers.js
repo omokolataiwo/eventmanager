@@ -1,12 +1,12 @@
-const bcrypt = require('bcryptjs');
-const details = require('./../seedSupport/centerDetails');
+const details = require('../seedSupport/centerDetails');
 let facilities = require('../seedSupport/facilities');
 const address = require('../seedSupport/address');
-// const type = require('../seedSupport/types');
+const images = require('../seedSupport/images');
+
 facilities = facilities.join(',');
 
 module.exports = {
-  up: (queryInterface, Sequelize) =>
+  up: queryInterface =>
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -23,13 +23,16 @@ module.exports = {
           state: 25,
           capacity: 4000,
           type: 1,
-          ownerid: 1,
-          contactid: 1,
+          ownerId: 1,
+          contactId: 1,
           facilities,
           amount: 70000,
+          image: images[0],
           details: details[0],
+          approve: 1,
+          active: 1,
           createdAt: '12-12-2018',
-          updatedAt: '12-12-2018',
+          updatedAt: '12-12-2018'
         },
         {
           name: 'Platinum Hall',
@@ -38,13 +41,16 @@ module.exports = {
           state: 25,
           capacity: 2000,
           type: 2,
-          ownerid: 2,
-          contactid: 2,
+          ownerId: 2,
+          contactId: 2,
           details: details[1],
           facilities,
           amount: 70000,
+          image: images[1],
+          approve: 1,
+          active: 1,
           createdAt: '12-12-2018',
-          updatedAt: '12-12-2018',
+          updatedAt: '12-12-2018'
         },
         {
           name: 'FM EVENT Centre',
@@ -53,15 +59,17 @@ module.exports = {
           state: 25,
           capacity: 3000,
           type: 1,
-          ownerid: 1,
-          contactid: 1,
+          ownerId: 1,
+          contactId: 1,
           facilities,
           details: details[2],
           amount: 65000,
+          image: images[2],
+          approve: 1,
+          active: 1,
           createdAt: '12-12-2018',
-          updatedAt: '12-12-2018',
+          updatedAt: '12-12-2018'
         },
-
         {
           name: 'Tobol Event Centre',
           address: address[3].address,
@@ -69,16 +77,18 @@ module.exports = {
           state: 25,
           capacity: 3000,
           type: 2,
-          ownerid: 2,
-          contactid: 2,
+          ownerId: 2,
+          contactId: 2,
           details: details[3],
           facilities:
             'Chairs, Lighting, Parking Space, Sound System, Stage, Tables, Projector, White Board',
           amount: 65000,
+          image: images[3],
+          approve: 1,
+          active: 1,
           createdAt: '12-12-2018',
-          updatedAt: '12-12-2018',
+          updatedAt: '12-12-2018'
         },
-
         {
           name: 'Sheba Centre',
           address: address[4].address,
@@ -86,13 +96,16 @@ module.exports = {
           state: 25,
           capacity: 3000,
           type: 1,
-          ownerid: 1,
-          contactid: 1,
+          ownerId: 1,
+          contactId: 1,
           details: details[4],
           facilities,
           amount: 65000,
+          image: images[4],
+          approve: 1,
+          active: 1,
           createdAt: '12-12-2018',
-          updatedAt: '12-12-2018',
+          updatedAt: '12-12-2018'
         },
         {
           name: 'Knightbridge Hotels Big Hall',
@@ -101,24 +114,27 @@ module.exports = {
           state: 25,
           capacity: 3000,
           type: 2,
-          ownerid: 2,
-          contactid: 2,
+          ownerId: 2,
+          contactId: 2,
           details: details[5],
           facilities,
           amount: 65000,
+          image: images[5],
+          approve: 1,
+          active: 1,
           createdAt: '12-12-2018',
-          updatedAt: '12-12-2018',
-        },
+          updatedAt: '12-12-2018'
+        }
       ],
-      {},
+      {}
     ),
 
-  down: (queryInterface, Sequelize) =>
+  down: queryInterface =>
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
 
       Example:
     */
-    queryInterface.bulkDelete('centers', null, {}),
+    queryInterface.bulkDelete('centers', null, {})
 };

@@ -4,20 +4,24 @@
   "description": "Event Manager",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
-    "build": "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
+    "test":
+      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
+    "build":
+      "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
     "start": "node dist/index.js",
     "start:dev": "nodemon dist/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "postinstall": "npm run build"
+    "postinstall": "npm run build",
+    "db:reset":
+      "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:undo:all && sequelize db:seed:all",
+    "db:reset-test":
+      "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate && NODE_ENV=test sequelize db:seed:undo:all && NODE_ENV=test sequelize db:seed:all"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/omokolataiwo/eventmanager.git"
   },
-  "keywords": [
-    "Event"
-  ],
+  "keywords": ["Event"],
   "author": "Taiwo Kolawole",
   "license": "ISC",
   "bugs": {

@@ -15,15 +15,15 @@ const signingInUser = () => ({ type: REQUEST_SIGNIN_USER });
  * @param {object} user - signed in user details
  * @return {object} - action
  */
-const userSignedIn = user => ({ type: SIGNIN_USER, user });
+const userSignedIn = user => ({ type: SIGNIN_USER, user: user.data });
 
 /**
  * Action for signin error state
  *
- * @param {object} error - error message
+ * @param {object} errors - error messages
  * @return {object} - action
  */
-const signingInUserError = error => ({ type: SIGNIN_USER_ERROR, error });
+const signingInUserError = errors => ({ type: SIGNIN_USER_ERROR, errors });
 
 /**
  * Make http request to backend to sign in user
@@ -33,9 +33,8 @@ const signingInUserError = error => ({ type: SIGNIN_USER_ERROR, error });
  */
 const signinRequest = user => dispatch => {
   dispatch(signingInUser());
-
   axios
-    .post(`${API_PATH}/users/login`, user)
+    .post(`${API_PATH}/users/signin`, user)
     .then(response => {
       dispatch(userSignedIn(response.data));
     })
