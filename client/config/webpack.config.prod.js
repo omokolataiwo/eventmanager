@@ -68,7 +68,15 @@ module.exports = {
     new ExtractTextPlugin({
       filename: 'style.css'
     }),
-    new UglifyJSPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      minimize: true,
+      sourceMap: true,
+      comments: false,
+      compress: {
+        warnings: false,
+        drop_console: true
+      }
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve('./public/index.html')
     })

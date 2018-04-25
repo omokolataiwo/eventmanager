@@ -37,7 +37,7 @@ class Signin extends React.Component {
         password: ''
       },
       errors: {
-        global: []
+        signin: []
       }
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
@@ -105,7 +105,7 @@ class Signin extends React.Component {
       this.setState({
         errors: {
           ...this.state.errors,
-          global: ['Invalid username or password']
+          signin: ['Invalid username or password']
         }
       });
       return;
@@ -137,7 +137,7 @@ class Signin extends React.Component {
           <div className="col s12 m12 l12">
             <h5>
               <i className="material-icons">person_pin</i> SIGN IN
-              <Error messages={this.state.errors.global} />
+              <Error id="signin" messages={this.state.errors.signin} />
             </h5>
             <form>
               <div className="row">
@@ -161,7 +161,7 @@ class Signin extends React.Component {
               <div className="row" />
               <input
                 type="submit"
-                className="btn btn-large blue right"
+                className="btn btn-large blue right signinBtn"
                 value="Sign In"
                 onClick={e => {
                   e.preventDefault();

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Index from './Index';
 import Profile from './Profile';
 import { Event } from './Event';
@@ -8,15 +9,49 @@ import { Event } from './Event';
 import logo from '../../images/logo.png';
 import { ACCOUNT_TYPE_MEMBER } from '../../consts';
 
-class User extends React.Component {
-  componentWillMount() {
-    const { userdata, authenticated, history } = this.props;
+const propTypes = {
+  userdata: PropTypes.shape().isRequired,
+  authenticated: PropTypes.bool.isRequired,
+  history: PropTypes.shape().isRequired,
+  match: PropTypes.shape({
+    path: PropTypes.shape().isRequired
+  }).isRequired,
+  accessToken: PropTypes.string.isRequired
+};
 
-    if (!authenticated || userdata.role !== ACCOUNT_TYPE_MEMBER) {
+/**
+ * User Component
+ *
+ * @class User
+ * @extends {React.Component}
+ */
+class User extends React.Component {
+  /**
+   * Check if the user is auuthorised
+   *
+   * @returns {void}
+   * @memberof User
+   */
+  componentWillMount() {
+    const {
+      userdata, accessToken, authenticated, history
+    } = this.props;
+
+    if (
+      !authenticated ||
+      userdata.role !== ACCOUNT_TYPE_MEMBER ||
+      !accessToken
+    ) {
       history.push('/signin');
     }
   }
 
+  /**
+   * Renders the appropriate component
+   *
+   * @returns {object} - JSX DOM
+   * @memberof User
+   */
   render() {
     return (
       <div className="page-wrap">
@@ -24,18 +59,18 @@ class User extends React.Component {
           <div className="top-head">
             <div className="container">
               <div className="acc-wrap">
-                <div className="login-container">
+                <div className="login-container dashboard">
                   <Link to="/user">
                     <span className="material-icons left">dashboard</span>DASH
                     BOARD
                   </Link>
                 </div>
-                <div className="login-container">
+                <div className="login-container create">
                   <Link to="/user/event/create">
                     <span className="material-icons left">add</span>CREATE
                   </Link>
                 </div>
-                <div className="login-container">
+                <div className="login-container profile">
                   <Link to="/user/profile">
                     <span className="material-icons left">face</span>PROFILE
                   </Link>
@@ -87,10 +122,13 @@ class User extends React.Component {
   }
 }
 
+User.propTypes = propTypes;
+
 export default connect(state => {
-  const { authenticated, userdata } = state.user;
+  const { authenticated, userdata, accessToken } = state.user;
   return {
     authenticated,
-    userdata
+    userdata,
+    accessToken
   };
 })(User);

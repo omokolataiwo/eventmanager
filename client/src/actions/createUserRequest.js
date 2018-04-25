@@ -47,6 +47,7 @@ const createUserRequest = user => dispatch => {
       dispatch(signupUser(response.data));
     })
     .catch(e => {
+      console.dir(e);
       if (!e.response || e.response.status >= 500) {
         console.error('Internal server error.');
         return;

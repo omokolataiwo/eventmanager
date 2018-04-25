@@ -6,7 +6,11 @@ import Signin from './components/pages/Signin';
 import Signout from './components/pages/Signout';
 import Center from './components/pages/Center';
 import logo from './images/logo.png';
-
+/**
+ * Base component for non priviledged pages
+ *
+ * @returns {object} - JSX DOM
+ */
 function App() {
   return (
     <div className="page-wrap">
@@ -14,11 +18,11 @@ function App() {
         <div className="top-head">
           <div className="container">
             <div className="acc-wrap">
-              <div className="login-container">
+              <div className="login-container signin">
                 <Link to="/signin">Sign in</Link>
               </div>
-              <div className="login-container">
-                <Link to="/signup">Register</Link>
+              <div className="login-container signup">
+                <Link to="/signup">Sign up</Link>
               </div>
             </div>
           </div>

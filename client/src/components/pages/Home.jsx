@@ -124,7 +124,7 @@ class Home extends Component {
               <Link to={`/center/${center.id}`} key={center.id}>
                 <div className="col s12 m4 l4 card">
                   <div className="event-center">
-                    <img src={featuredCenterImg} alt="Featured Center" />
+                    <img src={center.image} alt="Featured Center" />
                     <div className="over-img">
                       <h4 className="truncate">{center.name}</h4>
                       <p>{center.area}</p>

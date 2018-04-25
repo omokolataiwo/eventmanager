@@ -68,7 +68,9 @@ export default class CenterController {
         }
       })
       .then(centers => res.status(200).json(centers))
-      .catch(() => res.status(500).send('Internal Server Error'));
+      .catch((error) => {
+        res.status(500).send('Internal Server Error');
+      });
   }
   /**
    * Get all centers with events registered by authenticated user

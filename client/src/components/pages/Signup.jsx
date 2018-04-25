@@ -39,8 +39,6 @@ class Signup extends React.Component {
       userdata: {
         firstName: null,
         lastName: null,
-        address: null,
-        state: null,
         phoneNumber: null,
         email: null,
         username: null,
@@ -51,8 +49,6 @@ class Signup extends React.Component {
       errors: {
         firstName: [],
         lastName: [],
-        address: [],
-        state: [],
         role: [],
         phoneNumber: [],
         email: [],
@@ -104,7 +100,7 @@ class Signup extends React.Component {
   resetErrors(callback) {
     const err = {};
 
-    Object.keys(this.state.errors).map(field => {
+    Object.keys(this.state.errors).map((field) => {
       err[field] = [];
       return field;
     });
@@ -207,27 +203,6 @@ class Signup extends React.Component {
               <div className="row">
                 <InputField
                   onChange={this.handleFormFieldChanged}
-                  id="address"
-                  type="text"
-                  title="Address"
-                  width="6"
-                  errorMessage={this.state.errors.address}
-                />
-
-                <SelectComponent
-                  default={this.state.userdata.state}
-                  id="state"
-                  change={this.handleFormFieldChanged}
-                  options={[...STATES.map((ctype, i) => [i + 1, ctype])]}
-                  label="Select State"
-                  width="6"
-                />
-                <Error messages={this.state.errors.state} />
-              </div>
-
-              <div className="row">
-                <InputField
-                  onChange={this.handleFormFieldChanged}
                   id="phoneNumber"
                   type="text"
                   title="Phone Number"
@@ -289,7 +264,7 @@ class Signup extends React.Component {
                 />
               </div>
               <button
-                onClick={e => this.registerUser(e)}
+                onClick={(e) => this.registerUser(e)}
                 className="btn btn-large blue"
               >
                 Create Account
@@ -310,7 +285,7 @@ Signup.propTypes = propTypes;
  * @param {object} state - The redux state
  * @returns {object} - Extracted properties
  */
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { user } = state;
   return {
     userdata: user.userdata,

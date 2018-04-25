@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-  messages: PropTypes.array
+  messages: PropTypes.array,
+  id: PropTypes.string
+};
+
+const defaultProps = {
+  messages: [],
+  id: 'errors'
 };
 
 /**
@@ -12,17 +18,17 @@ const propTypes = {
  *
  * @returns {object} - JSX object
  */
-const Error = props => {
-  const { messages } = props;
-  if (!Array.isArray(messages)) return <span />;
+const Error = ({ messages, id }) => {
+  if (!Array.isArray(messages) || messages.length === 0) return <span />;
   return (
-    <div>
+    <div className={`error ${id}`}>
       {messages.map((message, index) => (
-        <span key={index}>{message}&nbsp;</span>
+        <span key={index}>{message}&nbsp;</span> //eslint-disable-line
       ))}
     </div>
   );
 };
 
 Error.propTypes = propTypes;
+Error.defaultProps = defaultProps;
 export default Error;

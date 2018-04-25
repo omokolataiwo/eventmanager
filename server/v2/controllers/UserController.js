@@ -21,14 +21,14 @@ export default class UserController {
       const user = req.body;
       user.password = bcrypt.hashSync(user.password, 8);
 
-      const errors = [];
+      const errors = {};
 
       if (
         await models.users.findOne({
           where: { username: user.username }
         })
       ) {
-        errors.push({ username: ['username has already been taken.'] });
+        errors.username = ['username has already been taken.'];
       }
 
       if (
@@ -36,7 +36,7 @@ export default class UserController {
           where: { email: user.email }
         })
       ) {
-        errors.push({ email: ['email has already been used.'] });
+        errors.email = ['email has already been used.'];
       }
 
       if (
@@ -44,17 +44,17 @@ export default class UserController {
           where: { phoneNumber: user.phoneNumber }
         })
       ) {
-        errors.push({ phoneNumber: ['phone number has already been used.'] });
+        errors.phoneNumber = ['phone number has already been used.'];
       }
 
-      if (errors.length) return res.status(422).send(errors);
+      if (Object.keys(errors).length) return res.status(422).send(errors);
 
       return models.users.create(user).then((newUser) => {
         const userJSON = newUser.toJSON();
         delete userJSON.password;
         return res.status(201).json(userJSON);
       });
-    } catch (e) {
+    } catch (error) {
       return res.status(500).send('Internal Server Error.');
     }
   }
@@ -74,7 +74,7 @@ export default class UserController {
       if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
         return res
           .status(401)
-          .json({ global: ['Invalid username or password'] });
+          .json({ errors: { signin: ['Invalid username or password'] } });
       }
 
       const token = jwt.sign(
@@ -84,7 +84,7 @@ export default class UserController {
           expiresIn: 864000
         }
       );
-      return res.status(200).send({ token, userdata: user });
+      return res.status(200).send({ data: { token, role: user.role } });
     } catch (e) {
       return res.status(500).send('Internal Server Error');
     }
@@ -101,7 +101,9 @@ export default class UserController {
     return models.users
       .findOne({ where: { id: req.user.id } })
       .then(user => res.status(200).json(user))
-      .catch(() => res.status(500).json('Internal Server Error'));
+      .catch(() => {
+        res.status(500).json('Internal Server Error');
+      });
   }
 
   /**

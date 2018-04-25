@@ -35,7 +35,6 @@ export default (state = defaultUser, action) => {
   case SIGNUP_USER:
     return {
       ...state,
-      userdata: action.userdata,
       events: { ...state.events, signup: action.type }
     };
   case SIGNUP_ERROR:
@@ -49,7 +48,7 @@ export default (state = defaultUser, action) => {
   case SIGNIN_USER:
     return {
       ...state,
-      userdata: action.user.userdata,
+      userdata: { role: action.user.role },
       events: { ...state.events, signin: action.type },
       accessToken: action.user.token,
       authenticated: true
@@ -57,7 +56,7 @@ export default (state = defaultUser, action) => {
   case SIGNIN_USER_ERROR:
     return {
       ...state,
-      errors: action.error,
+      errors: action.errors,
       events: { ...state.events, signin: action.type }
     };
   case SIGNOUT_USER:

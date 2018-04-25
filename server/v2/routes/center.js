@@ -22,6 +22,7 @@ module.exports = (app) => {
 
   app.put(
     '/centers/approve/:id',
+    validateParamID,
     superAdminAuthentication,
     center.approveCenter
   );
@@ -41,6 +42,7 @@ module.exports = (app) => {
 
   app.put(
     '/centers/cancel/:id',
+    validateParamID,
     superAdminAuthentication,
     center.declineCenter
   );
