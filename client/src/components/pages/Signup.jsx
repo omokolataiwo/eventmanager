@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { validate } from 'validate.js';
 
-import { ACCOUNT_TYPE_MEMBER, STATES, ACCOUNT_TYPE_ADMIN } from '../../consts';
+import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../consts';
 import SIGNUP_VALIDATION_RULES from '../../validators/signup';
 import { SIGNUP_USER } from '../../types';
 

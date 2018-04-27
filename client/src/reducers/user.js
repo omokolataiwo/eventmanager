@@ -10,7 +10,10 @@ import {
   TOKEN_EXPIRED,
   UPDATING_USER,
   UPDATED_USER,
-  UPDATING_USER_ERROR
+  UPDATING_USER_ERROR,
+  FETCH_USER_REQUEST,
+  RECEIVED_USER,
+  FETCH_USER_ERROR
 } from '../types';
 
 const defaultUser = {
@@ -22,7 +25,8 @@ const defaultUser = {
     signout: null,
     signup: null,
     signin: null,
-    updateUser: null
+    updateUser: null,
+    fetchUser: null
   },
   authenticated: false,
   accessToken: ''
@@ -30,6 +34,20 @@ const defaultUser = {
 
 export default (state = defaultUser, action) => {
   switch (action.type) {
+  case FETCH_USER_REQUEST:
+    return { ...state, events: { ...state.events, fetchUser: action.type } };
+  case FETCH_USER_ERROR:
+    return {
+      ...state,
+      errors: action.errors,
+      events: { ...state.events, fetchUser: action.type }
+    };
+  case RECEIVED_USER:
+    return {
+      ...state,
+      userdata: action.user,
+      events: { ...state.events, fetchUser: action.type }
+    };
   case REQUEST_SIGNUP_USER:
     return { ...state, events: { ...state.events, signup: action.type } };
   case SIGNUP_USER:

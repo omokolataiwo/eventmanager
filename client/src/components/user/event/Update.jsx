@@ -2,13 +2,30 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
-import { createEventRequest } from '../../../actions/createEventRequest';
+import $ from 'jquery';
+import { updateEventRequest } from '../../../actions/updateEventRequest';
 import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
 import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
 import { STATES } from '../../../consts';
-import { CREATE_EVENT_ERROR } from '../../../types';
+import { UPDATE_EVENT_ERROR } from '../../../types';
+
+const propTypes = {
+  updateEventRequest: PropTypes.func.isRequired,
+  centers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  match: PropTypes.shape({
+    params: PropTypes.shape({ index: PropTypes.string.isRequired }).isRequired
+  }).isRequired,
+  events: PropTypes.arrayOf(PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    startDate: PropTypes.string.isRequired,
+    endDate: PropTypes.string.isRequired,
+    centerId: PropTypes.number.isRequired
+  })).isRequired,
+  errors: PropTypes.shape().isRequired,
+  actions: PropTypes.shape().isRequired
+};
 
 /**
  * Create event for center
@@ -30,7 +47,7 @@ class Update extends React.Component {
         title: '',
         startDate: '',
         endDate: '',
-        centerid: '',
+        centerId: '',
         defaultValue: ''
       },
       centers: [],
@@ -50,7 +67,7 @@ class Update extends React.Component {
     const eventID = match.params.index;
 
     const event = events.find(event => event.id === parseInt(eventID, 10));
-    const activeCenter = centers.find(center => center.id === parseInt(event.centerid, 10));
+    const activeCenter = centers.find(center => center.id === parseInt(event.centerId, 10));
     this.setState({ centers, event, activeCenter });
   }
 
@@ -64,7 +81,7 @@ class Update extends React.Component {
   componentWillReceiveProps(props) {
     const { errors, actions } = props;
 
-    if (actions.createEvents === CREATE_EVENT_ERROR) {
+    if (actions.createUpdateEvents === UPDATE_EVENT_ERROR) {
       this.setState({ errors });
     }
   }
@@ -98,6 +115,14 @@ class Update extends React.Component {
    */
   changeActiveCenter(centerid) {
     const activeCenter = this.state.centers.find(center => centerid === center.id);
+
+    $('html, body').animate(
+      {
+        scrollTop: $('.event-center-detailed').offset().top
+      },
+      1000
+    );
+
     this.setState({
       activeCenter
     });
@@ -108,16 +133,16 @@ class Update extends React.Component {
    * @param {object} event - DOM event
    * @returns {void}
    */
-  createEvent(event) {
+  updateEvent(event) {
     event.preventDefault();
     this.setState(
       {
         event: {
           ...this.state.event,
-          centerid: this.state.activeCenter.id
+          centerId: this.state.activeCenter.id
         }
       },
-      () => this.props.createEventRequest(this.state.event)
+      () => this.props.updateEventRequest(this.state.event)
     );
   }
 
@@ -129,7 +154,7 @@ class Update extends React.Component {
   render() {
     return (
       <div className="container container-medium card">
-        <h5>Create Event</h5>
+        <h5>Edit Event</h5>
         <form>
           <h4>
             <Error messages={this.state.errors.global} />
@@ -169,8 +194,8 @@ class Update extends React.Component {
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button className="btn" onClick={event => this.createEvent(event)}>
-            Book Center
+          <button className="btn" onClick={event => this.updateEvent(event)}>
+            Update Event
           </button>
         </form>
 
@@ -209,10 +234,7 @@ class Update extends React.Component {
   }
 }
 
-Update.propTypes = {
-  createEventRequest: PropTypes.func.isRequired,
-  centers: PropTypes.arrayOf(PropTypes.object).isRequired
-};
+Update.propTypes = propTypes;
 
 /**
  * Extract properties from redux and map it to component properties
@@ -233,5 +255,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  createEventRequest
+  updateEventRequest
 })(Update);

@@ -3,13 +3,15 @@ import axios from 'axios';
 axios.defaults.withCredentials = false;
 export const TOKEN_EXPIRED = 'TOKEN_EXPIRED';
 
+/* ******************** Action Types ****************** */
 // Signup Actions Types
 export const REQUEST_SIGNUP_USER = 'REQUEST_REGISTER_USER';
 export const SIGNUP_USER = 'SIGNUP_USER';
 export const SIGNUP_ERROR = 'SIGNUP_ERROR';
 
-// Signout Actions Types
-export const SIGNOUT_USER = 'SIGNOUT_USER';
+export const UPDATING_USER = 'UPDATING_USER';
+export const UPDATED_USER = 'UPDATED_USER';
+export const UPDATING_USER_ERROR = 'UPDATING_USER_ERROR';
 
 // Create Center Action Types
 export const RECEIVED_CENTER_CONTACTS = 'RECEIVED_CENTER_CONTACTS';
@@ -19,9 +21,26 @@ export const CREATING_NEW_CENTER = 'CREATING_NEW_CENTER';
 export const CREATED_NEW_CENTER = 'CREATED_NEW_CENTER';
 export const CREATING_NEW_CENTER_ERROR = 'CREATING_NEW_CENTER_ERROR';
 
+// Update Center
 export const UPDATING_CENTER = 'UPDATING_CENTER';
 export const UPDATED_CENTER = 'UPDATED_CENTER';
 export const UPDATING_CENTER_ERROR = 'UPDATING_CENTER_ERROR';
+
+// Create Event
+export const CREATED_EVENT = 'CREATED_EVENT';
+export const REQUEST_CREATE_EVENT = 'REQUEST_CREATE_EVENT';
+export const CREATE_EVENT_ERROR = 'CREATE_EVENT_ERROR';
+export const RESET_EVENT_STATE = 'RESET_EVENT_STATE';
+
+// Update Event
+export const REQUEST_UPDATE_EVENT = 'REQUEST_UPDATE_EVENT';
+export const UPDATE_EVENT_ERROR = 'UPDATE_EVENT_ERROR';
+export const UPDATED_EVENT = 'UPDATED_EVENT';
+
+// List User
+export const FETCH_USER_REQUEST = 'FETCH_USER_REQUEST';
+export const FETCH_USER_ERROR = 'FETCH_USER_ERROR';
+export const RECEIVED_USER = 'RECEIVED_USER';
 
 // List Centers
 export const RECEIVED_CENTERS = 'RECEIVED_CENTERS';
@@ -40,20 +59,15 @@ export const FETCHING_CENTERS_EVENTS = 'FETCHING_CENTERS_EVENTS';
 export const RECEIVED_CENTERS_EVENTS = 'RECEIVED_CENTERS_EVENTS';
 export const FETCHING_CENTERS_EVENTS_ERRORS = 'FETCHING_CENTERS_EVENTS_ERRORS';
 
-// Create Event
-export const CREATED_EVENT = 'CREATED_EVENT';
-export const REQUEST_CREATE_EVENT = 'REQUEST_CREATE_EVENT';
-export const CREATE_EVENT_ERROR = 'CREATE_EVENT_ERROR';
 // Get Events Actions
 export const FETCHING_EVENTS = 'FETCHING_EVENTS';
 export const RECEIVED_EVENTS = 'RECEIVED_EVENTS';
 export const FETCHING_EVENTS_ERROR = 'EVENT_ERROR';
 
-// Get User Actions
-export const UPDATING_USER = 'UPDATING_USER';
-export const UPDATED_USER = 'UPDATED_USER';
-export const UPDATING_USER_ERROR = 'UPDATING_USER_ERROR';
-
+// Signin user
 export const REQUEST_SIGNIN_USER = 'REQUEST_SIGNIN_USER';
 export const SIGNIN_USER = 'SIGNIN_USER';
 export const SIGNIN_USER_ERROR = 'SIGNIN_USER_ERROR';
+
+// Signout Actions Types
+export const SIGNOUT_USER = 'SIGNOUT_USER';
