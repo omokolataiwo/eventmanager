@@ -35,7 +35,7 @@ class DatePicker extends React.Component {
       clear: 'Clear',
       close: 'Ok',
       closeOnSelect: false,
-      onSet: date => {
+      onSet: (date) => {
         this.props.onChange({
           target: { id: this.props.id, value: date.select }
         });
@@ -50,7 +50,6 @@ class DatePicker extends React.Component {
    * @memberof DatePicker
    */
   render() {
-    console.log(this.props.defaultValue);
     return (
       <div
         className={`input-field col s12 m${this.props.width} l${

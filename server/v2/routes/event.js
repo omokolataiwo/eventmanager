@@ -4,7 +4,7 @@ import validateParamID from '../middleware/validateParamID';
 import userAuthentication from '../middleware/userAuthentication';
 import validateCreateEvent from '../middleware/validateCreateEvent';
 
-module.exports = app => {
+module.exports = (app) => {
   app.post(
     '/events',
     userAuthentication,

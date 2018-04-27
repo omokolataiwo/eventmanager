@@ -3,7 +3,7 @@ import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Index from './Index';
-import Profile from './Profile';
+
 import { Event } from './Event';
 
 import logo from '../../images/logo.png';
@@ -99,15 +99,9 @@ class User extends React.Component {
         <main className="main-wrapper">
           <Switch>
             <Route path={`${this.props.match.path}`} exact component={Index} />
-            <Route
-              path={`${this.props.match.path}/center`}
-              component={Profile}
-            />
+
             <Route path={`${this.props.match.path}/event`} component={Event} />
-            <Route
-              path={`${this.props.match.path}/profile`}
-              component={Profile}
-            />
+
             <Redirect to={`${this.props.match.path}`} />
           </Switch>
         </main>

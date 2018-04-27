@@ -4,14 +4,18 @@ import {
   FETCHING_EVENTS_ERROR,
   CREATED_EVENT,
   REQUEST_CREATE_EVENT,
-  CREATE_EVENT_ERROR
+  CREATE_EVENT_ERROR,
+  REQUEST_UPDATE_EVENT,
+  UPDATED_EVENT,
+  UPDATE_EVENT_ERROR,
+  RESET_EVENT_STATE
 } from '../types';
 
 const defaultEvent = {
   events: [],
   actions: {
     getEvents: FETCHING_EVENTS,
-    createEvents: null
+    createUpdateEvent: null
   },
   errors: {}
 };
@@ -42,7 +46,6 @@ export default (state = defaultEvent, action) => {
   case CREATED_EVENT:
     return {
       ...state,
-      events: action.event,
       actions: { ...state.actions, createEvents: action.type }
     };
   case CREATE_EVENT_ERROR:
@@ -50,6 +53,28 @@ export default (state = defaultEvent, action) => {
       ...state,
       errors: action.errors,
       actions: { ...state.actions, createEvents: action.type }
+    };
+  case REQUEST_UPDATE_EVENT:
+    return {
+      ...state,
+      actions: { ...state.actions, createEvents: action.type }
+    };
+  case UPDATED_EVENT:
+    return {
+      ...state,
+      actions: { ...state.actions, createEvents: action.type }
+    };
+  case UPDATE_EVENT_ERROR:
+    return {
+      ...state,
+      errors: action.errors,
+      actions: { ...state.actions, createEvents: action.type }
+    };
+  case RESET_EVENT_STATE:
+    return {
+      ...state,
+      errors: {},
+      actions: { ...state.actions, createEvents: null }
     };
   default:
     return state;

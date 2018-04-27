@@ -2,14 +2,19 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
+import toastr from 'toastr';
 import fetchUserEventsRequest from '../../actions/fetchUserEventsRequest';
+import fetchUserRequest from '../../actions/fetchUserRequest';
 import HorizontalFeaturedCenters from '../containers/HorizontalFeaturedCenters';
 import { STATES } from '../../consts';
+import { hasFlash, getFlash } from '../../utils/flash';
+import { CREATED_EVENT } from '../../types';
 
 const propTypes = {
   fetchUserEventsRequest: PropTypes.func.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  history: PropTypes.PropTypes.shape().isRequired
+  history: PropTypes.shape().isRequired,
+  fetchUserRequest: PropTypes.func.isRequired
 };
 
 /**
@@ -40,6 +45,20 @@ class Index extends Component {
    */
   componentWillMount() {
     this.props.fetchUserEventsRequest();
+    this.props.fetchUserRequest();
+
+    if (hasFlash(CREATED_EVENT)) {
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.success(getFlash(CREATED_EVENT));
+    }
   }
 
   /**
@@ -56,7 +75,7 @@ class Index extends Component {
   /**
    * Redirect to update event
    *
-   * @param {int} id
+   * @param {int} id - Event id
    * @returns {void}
    * @memberof Index
    */
@@ -128,8 +147,12 @@ Index.propTypes = propTypes;
  */
 const mapStateToProps = state => {
   const { accessToken } = state.user;
+  console.log(state.user);
   const { events } = state.event;
   return { accessToken, events };
 };
 
-export default connect(mapStateToProps, { fetchUserEventsRequest })(Index);
+export default connect(mapStateToProps, {
+  fetchUserEventsRequest,
+  fetchUserRequest
+})(Index);

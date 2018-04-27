@@ -8,7 +8,20 @@ import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
 import { STATES } from '../../../consts';
-import { CREATED_EVENT, CREATE_EVENT_ERROR } from '../../../types';
+import { addFlash } from '../../../utils/flash';
+import {
+  CREATED_EVENT,
+  CREATE_EVENT_ERROR,
+  RESET_EVENT_STATE
+} from '../../../types';
+
+const propTypes = {
+  createEventRequest: PropTypes.func.isRequired,
+  centers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  errors: PropTypes.shape().isRequired,
+  actions: PropTypes.string.isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired
+};
 
 /**
  * Create event for center
@@ -30,7 +43,7 @@ class Create extends React.Component {
         title: '',
         startDate: '',
         endDate: '',
-        centerid: ''
+        centerId: ''
       },
       centers: [],
       activeCenter: {},
@@ -47,8 +60,8 @@ class Create extends React.Component {
   componentWillMount() {
     this.setState({ centers: this.props.centers }, () => {
       const choiceCenter = localStorage.getItem('choice-center');
-      const centerid = choiceCenter || this.state.centers[0].id;
-      const activeCenter = this.state.centers.find(center => center.id === parseInt(centerid, 10));
+      const centerId = choiceCenter || this.state.centers[0].id;
+      const activeCenter = this.state.centers.find(center => center.id === parseInt(centerId, 10));
 
       this.setState({
         event: { ...this.state.event },
@@ -65,10 +78,18 @@ class Create extends React.Component {
    * @memberof Create
    */
   componentWillReceiveProps(props) {
-    const { errors, actions } = props;
+    const {
+      errors, actions, history, resetEventState
+    } = props;
 
     if (actions.createEvents === CREATE_EVENT_ERROR) {
       this.setState({ errors });
+    }
+
+    if (actions.createEvents === CREATED_EVENT) {
+      resetEventState();
+      addFlash(CREATED_EVENT, 'Event Created.');
+      history.push('/user');
     }
   }
 
@@ -95,12 +116,12 @@ class Create extends React.Component {
   /**
    * Change selected center for event
    *
-   * @param {int} centerid - Center ID
+   * @param {int} centerId - Center ID
    * @returns {void}
    * @memberof Create
    */
-  changeActiveCenter(centerid) {
-    const activeCenter = this.state.centers.find(center => centerid === center.id);
+  changeActiveCenter(centerId) {
+    const activeCenter = this.state.centers.find(center => centerId === center.id);
     this.setState({
       activeCenter
     });
@@ -117,7 +138,7 @@ class Create extends React.Component {
       {
         event: {
           ...this.state.event,
-          centerid: this.state.activeCenter.id
+          centerId: this.state.activeCenter.id
         }
       },
       () => this.props.createEventRequest(this.state.event)
@@ -209,10 +230,7 @@ class Create extends React.Component {
   }
 }
 
-Create.propTypes = {
-  createEventRequest: PropTypes.func.isRequired,
-  centers: PropTypes.arrayOf(PropTypes.object).isRequired
-};
+Create.propTypes = propTypes;
 
 /**
  * Extract properties from redux and map it to component properties
@@ -227,5 +245,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  createEventRequest
+  createEventRequest,
+  resetEventState: () => ({ type: RESET_EVENT_STATE })
 })(Create);

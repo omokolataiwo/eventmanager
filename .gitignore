@@ -8,6 +8,6 @@ client/package-lock.json
 package-lock.json
 client/client/src/.sass-cache
 client/reports
-client/public
+client/dist
 client/selenium-debug.log
 .vscode
