@@ -3,8 +3,8 @@ import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Index from './Index';
-
-import { Event } from './Event';
+import Profile from './Profile';
+import Event from './Event';
 
 import logo from '../../images/logo.png';
 import { ACCOUNT_TYPE_MEMBER } from '../../consts';
@@ -77,7 +77,7 @@ class User extends React.Component {
                 </div>
 
                 <div className="login-container">
-                  <Link to="/logout">LOG OUT</Link>
+                  <Link to="/signout">LOG OUT</Link>
                 </div>
               </div>
             </div>
@@ -99,9 +99,11 @@ class User extends React.Component {
         <main className="main-wrapper">
           <Switch>
             <Route path={`${this.props.match.path}`} exact component={Index} />
-
             <Route path={`${this.props.match.path}/event`} component={Event} />
-
+            <Route
+              path={`${this.props.match.path}/profile`}
+              component={Profile}
+            />
             <Redirect to={`${this.props.match.path}`} />
           </Switch>
         </main>

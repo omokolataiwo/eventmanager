@@ -2,35 +2,38 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { validate } from 'validate.js';
-
-import { ACCOUNT_TYPE_MEMBER, ACCOUNT_TYPE_ADMIN } from '../../consts';
+import toastr from 'toastr';
 import SIGNUP_VALIDATION_RULES from '../../validators/signup';
-import { SIGNUP_USER } from '../../types';
 
-import createUserRequest from '../../actions/createUserRequest';
+import updateUserRequest from '../../actions/updateUserRequest';
 import Error from '../containers/Error';
 import InputField from '../containers/forms/InputField';
-import SelectComponent from '../containers/forms/SelectComponent';
+import { UPDATED_USER, RESET_UPDATE_STATE } from '../../types';
 
 const propTypes = {
-  authenticated: PropTypes.bool.isRequired,
-  history: PropTypes.shape().isRequired,
   errors: PropTypes.shape().isRequired,
   events: PropTypes.shape().isRequired,
-  createUserRequest: PropTypes.func.isRequired
+  userdata: PropTypes.shape({
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    phoneNumber: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired
+  }).isRequired,
+  updateUserRequest: PropTypes.func.isRequired,
+  resetUpdateState: PropTypes.func.isRequired
 };
 /**
- * Sign up component
+ * User profile component
  *
- * @class Signup
+ * @class Profile
  * @extends {React.Component}
  */
-class Signup extends React.Component {
+class Profile extends React.Component {
   /**
-   * Sign up component
+   * Profile component
    *
    * @param {object} props - React/Redux props
-   * @class Signup
+   * @class Profile
    * @extends {React.Component}
    */
   constructor(props) {
@@ -40,11 +43,7 @@ class Signup extends React.Component {
         firstName: null,
         lastName: null,
         phoneNumber: null,
-        email: null,
-        username: null,
-        password: null,
-        matchPassword: null,
-        role: ACCOUNT_TYPE_MEMBER
+        email: null
       },
       errors: {
         firstName: [],
@@ -52,28 +51,25 @@ class Signup extends React.Component {
         role: [],
         phoneNumber: [],
         email: [],
-        username: [],
-        password: [],
-        matchPassword: [],
-        global: []
+        update: []
       },
       events: {}
     };
 
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
   }
-
   /**
-   * Check if user has already signed in
+   * Set status with userdata
    *
-   * @return {void}
+   * @returns {void}
+   * @memberof Profile
    */
   componentWillMount() {
-    const { authenticated, history } = this.props;
-    if (authenticated) {
-      history.push('/signout');
-    }
+    const { userdata } = this.props;
+
+    this.setState({ userdata });
   }
+
   /**
    * Update application state
    *
@@ -81,12 +77,20 @@ class Signup extends React.Component {
    * @returns {void}
    */
   componentWillReceiveProps(props) {
-    const { errors, history } = props;
-    let { events } = props;
+    const { errors, events, resetUpdateState } = props;
 
-    if (events.signup === SIGNUP_USER) {
-      localStorage.setItem('newSignup', true);
-      return history.push('/signin');
+    if (events.updateUser === UPDATED_USER) {
+      resetUpdateState();
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.success('Profile Updated!');
     }
     this.setState({ events: { ...this.state.events, ...events }, errors });
   }
@@ -110,12 +114,12 @@ class Signup extends React.Component {
   }
 
   /**
-   * Signup new user
+   * Update user's record
    *
    * @param {object} event -form event
    * @return {void}
    */
-  registerUser(event) {
+  updateUser(event) {
     event.preventDefault();
 
     // Clear error in case a field had error before and it is corrected
@@ -126,7 +130,7 @@ class Signup extends React.Component {
         this.setState({ errors });
         return;
       }
-      this.props.createUserRequest(this.state.userdata);
+      this.props.updateUserRequest(this.state.userdata);
     });
   }
 
@@ -160,7 +164,9 @@ class Signup extends React.Component {
    * @return {void}
    */
   validate(field, value) {
-    let errorMsg = validate(value, { [field]: SIGNUP_VALIDATION_RULES[field] });
+    const errorMsg = validate(value, {
+      [field]: SIGNUP_VALIDATION_RULES[field]
+    });
     let error = [];
     if (errorMsg !== undefined) error = errorMsg[field];
 
@@ -170,7 +176,7 @@ class Signup extends React.Component {
   }
 
   /**
-   * Renders signup page
+   * Renders page
    * @return {object} - JSX object
    */
   render() {
@@ -178,9 +184,9 @@ class Signup extends React.Component {
       <div className="container small-container">
         <div className="row card">
           <div className="col s12 m12 l12">
-            <h5>CREATE ACCOUNT</h5>
+            <h5>UPDATE PROFILE</h5>
             <form>
-              <Error messages={this.state.errors.global} />
+              <Error messages={this.state.errors.update} />
               <div className="row">
                 <InputField
                   onChange={this.handleFormFieldChanged}
@@ -189,6 +195,7 @@ class Signup extends React.Component {
                   title="First Name"
                   width="6"
                   errorMessage={this.state.errors.firstName}
+                  defaultValue={this.state.userdata.firstName}
                 />
                 <InputField
                   onChange={this.handleFormFieldChanged}
@@ -197,6 +204,7 @@ class Signup extends React.Component {
                   title="Last Name"
                   width="6"
                   errorMessage={this.state.errors.lastName}
+                  defaultValue={this.state.userdata.lastName}
                 />
               </div>
 
@@ -208,6 +216,7 @@ class Signup extends React.Component {
                   title="Phone Number"
                   width="6"
                   errorMessage={this.state.errors.phoneNumber}
+                  defaultValue={this.state.userdata.phoneNumber}
                 />
 
                 <InputField
@@ -217,57 +226,14 @@ class Signup extends React.Component {
                   title="Email Address"
                   width="6"
                   errorMessage={this.state.errors.email}
-                />
-              </div>
-
-              <div className="row">
-                <InputField
-                  onChange={this.handleFormFieldChanged}
-                  id="username"
-                  type="text"
-                  title="Username"
-                  width="6"
-                  errorMessage={this.state.errors.username}
-                />
-
-                <SelectComponent
-                  default={this.state.userdata.role}
-                  id="role"
-                  change={this.handleFormFieldChanged}
-                  options={[
-                    [ACCOUNT_TYPE_MEMBER, 'Regular'],
-                    [ACCOUNT_TYPE_ADMIN, 'Center Owner']
-                  ]}
-                  label="Membership Type"
-                  width="6"
-                />
-                <Error messages={this.state.errors.role} />
-              </div>
-
-              <div className="row">
-                <InputField
-                  onChange={this.handleFormFieldChanged}
-                  id="password"
-                  type="password"
-                  title="Password"
-                  width="6"
-                  errorMessage={this.state.errors.password}
-                />
-
-                <InputField
-                  onChange={this.handleFormFieldChanged}
-                  id="matchPassword"
-                  type="password"
-                  title="Retype Password"
-                  width="6"
-                  errorMessage={this.state.errors.matchPassword}
+                  defaultValue={this.state.userdata.email}
                 />
               </div>
               <button
-                onClick={(e) => this.registerUser(e)}
+                onClick={e => this.updateUser(e)}
                 className="btn btn-large blue"
               >
-                Create Account
+                UPDATE
               </button>
             </form>
           </div>
@@ -277,7 +243,7 @@ class Signup extends React.Component {
   }
 }
 
-Signup.propTypes = propTypes;
+Profile.propTypes = propTypes;
 
 /**
  * Map to properties of component
@@ -286,8 +252,16 @@ Signup.propTypes = propTypes;
  * @returns {object} - Extracted properties
  */
 const mapStateToProps = (state) => {
-  const { events, errors, authenticated } = state.user;
-  return { events, errors, authenticated };
+  const { userdata, events, errors } = state.user;
+
+  return {
+    userdata,
+    events,
+    errors
+  };
 };
 
-export default connect(mapStateToProps, { createUserRequest })(Signup);
+export default connect(mapStateToProps, {
+  updateUserRequest,
+  resetUpdateState: () => ({ type: RESET_UPDATE_STATE })
+})(Profile);

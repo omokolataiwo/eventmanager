@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Index from './Index';
 import { Center } from './Center';
 import Bookings from './Bookings';
@@ -8,7 +9,26 @@ import { ACCOUNT_TYPE_ADMIN } from '../../consts';
 
 import logo from '../../images/logo.png';
 
+const propTypes = {
+  authenticated: PropTypes.bool.isRequired,
+  userdata: PropTypes.shape({ role: PropTypes.number.isRequired }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  match: PropTypes.shape({ path: PropTypes.string.isRequired }).isRequired
+};
+
+/**
+ * Admin Component - Base component for all admin rout
+ *
+ * @class Admin
+ * @extends {React.Component}
+ */
 class Admin extends React.Component {
+  /**
+   * Checks if user is authenticated
+   *
+   * @returns {void}
+   * @memberof Admin
+   */
   componentWillMount() {
     const { authenticated, userdata, history } = this.props;
 
@@ -16,6 +36,13 @@ class Admin extends React.Component {
       history.push('/signin');
     }
   }
+  /**
+   * Renders component
+   *
+   *
+   * @returns {object} JSX DOM object
+   * @memberof Admin
+   */
   render() {
     return (
       <div className="page-wrap">
@@ -31,7 +58,7 @@ class Admin extends React.Component {
                 </div>
                 <div className="login-container">
                   <Link to="/admin/center/create">
-                    <span className="material-icons left">add</span>CREATE
+                    <span className="material-icons left create">add</span>CREATE
                   </Link>
                 </div>
                 <div className="login-container">
@@ -88,6 +115,7 @@ class Admin extends React.Component {
     );
   }
 }
+Admin.propTypes = propTypes;
 
 export default connect(state => {
   const { authenticated, userdata } = state.user;

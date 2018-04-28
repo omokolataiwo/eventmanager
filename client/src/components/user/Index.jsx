@@ -147,7 +147,6 @@ Index.propTypes = propTypes;
  */
 const mapStateToProps = state => {
   const { accessToken } = state.user;
-  console.log(state.user);
   const { events } = state.event;
   return { accessToken, events };
 };

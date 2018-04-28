@@ -24,16 +24,15 @@ const fetchUserError = errors => ({
   errors
 });
 
-
 /**
- * Make http request to backend to get user
+ * Makes http request to backend to get user
  *
  * @returns {void}
  */
 const fetchUserRequest = () => (dispatch, getState) => {
   dispatch({ type: FETCH_USER_REQUEST });
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
-  console.log('got called');
+
   axios
     .get(`${API_PATH}/users`)
     .then(response => {

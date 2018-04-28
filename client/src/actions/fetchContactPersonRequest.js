@@ -26,7 +26,7 @@ const getContactPersonRequest = () => (dispatch, getState) => {
       dispatch(centerContacts(response.data));
     })
     .catch(error => {
-      console.dir(error);
+      console.dir(error); //TODO: ELIMINATE THIS
     });
 };
 
