@@ -51,7 +51,7 @@ export const updateEventRequest = event => (dispatch, getState) => {
       endDate,
       centerId
     })
-    .then((response) => {
+    .then(response => {
       dispatch(updateEvent(response.data));
     })
     .catch(errors => {

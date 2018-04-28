@@ -3,13 +3,18 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
 import $ from 'jquery';
+import toastr from 'toastr';
 import { updateEventRequest } from '../../../actions/updateEventRequest';
 import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
 import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
 import { STATES } from '../../../consts';
-import { UPDATE_EVENT_ERROR } from '../../../types';
+import {
+  UPDATE_EVENT_ERROR,
+  UPDATED_EVENT,
+  RESET_UPDATE_EVENT_STATE
+} from '../../../types';
 
 const propTypes = {
   updateEventRequest: PropTypes.func.isRequired,
@@ -24,7 +29,8 @@ const propTypes = {
     centerId: PropTypes.number.isRequired
   })).isRequired,
   errors: PropTypes.shape().isRequired,
-  actions: PropTypes.shape().isRequired
+  actions: PropTypes.shape().isRequired,
+  resetUpdateState: PropTypes.shape().isRequired
 };
 
 /**
@@ -79,10 +85,24 @@ class Update extends React.Component {
    * @memberof Create
    */
   componentWillReceiveProps(props) {
-    const { errors, actions } = props;
+    const { errors, actions, resetUpdateState } = props;
 
     if (actions.createUpdateEvents === UPDATE_EVENT_ERROR) {
       this.setState({ errors });
+    }
+
+    if (actions.updateEvent === UPDATED_EVENT) {
+      resetUpdateState();
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.success('Event Updated.');
     }
   }
 
@@ -255,5 +275,6 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  updateEventRequest
+  updateEventRequest,
+  resetUpdateState: () => ({ type: RESET_UPDATE_EVENT_STATE })
 })(Update);

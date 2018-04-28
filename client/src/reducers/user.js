@@ -13,7 +13,8 @@ import {
   UPDATING_USER_ERROR,
   FETCH_USER_REQUEST,
   RECEIVED_USER,
-  FETCH_USER_ERROR
+  FETCH_USER_ERROR,
+  RESET_UPDATE_STATE
 } from '../types';
 
 const defaultUser = {
@@ -79,12 +80,13 @@ export default (state = defaultUser, action) => {
     };
   case SIGNOUT_USER:
     return defaultUser;
+  case RESET_UPDATE_STATE:
   case UPDATING_USER:
     return { ...state, events: { ...state.events, updateUser: action.type } };
   case UPDATED_USER:
     return {
       ...state,
-      userdata: state.user,
+      userdata: action.user,
       events: { ...state.events, updateUser: action.type }
     };
   case UPDATING_USER_ERROR:

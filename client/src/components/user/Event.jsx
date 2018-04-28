@@ -11,7 +11,7 @@ import Update from './event/Update';
  * @param {object} props - React properties
  * @returns {object} JSX DOM
  */
-export const Event = props => (
+const Event = props => (
   <Switch>
     <Route path={`${props.match.path}`} exact component={Create} />
     <Route
