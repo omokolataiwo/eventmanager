@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { STATES } from '../../consts';
 
 const propTypes = {
   events: PropTypes.arrayOf(PropTypes.object).isRequired
@@ -35,7 +36,7 @@ const BookingTable = ({ events }) => {
               <td>{event.title}</td>
               <td>{moment(event.startdate).format('DD-MM-YYYY')}</td>
               <td>{event.name}</td>
-              <td>{event.state}</td>
+              <td>{STATES[event.state]}</td>
               <td>
                 {duration} {duration > 1 ? 'days' : 'day'}
               </td>

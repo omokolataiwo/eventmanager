@@ -151,7 +151,8 @@ export default class CenterController {
         contactId,
         details,
         newContact,
-        contact
+        contact,
+        active
       } = req.body;
 
       const modifiedCenter = Object.assign({}, existingCenter.toJSON(), {
@@ -167,7 +168,8 @@ export default class CenterController {
         contactId,
         details,
         newContact,
-        contact
+        contact,
+        active
       });
 
       if (modifiedCenter.newContact && modifiedCenter.contact) {

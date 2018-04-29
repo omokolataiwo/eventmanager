@@ -1,11 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Error from '../Error';
+
 const propTypes = {
   id: PropTypes.string.isRequired,
   accept: PropTypes.string.isRequired,
   width: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
+  errorMessage: PropTypes.oneOfType([
+    PropTypes.bool.isRequired,
+    PropTypes.string.isRequired,
+    null
+  ])
 };
 
 /**
@@ -15,7 +22,7 @@ const propTypes = {
  * @return {object} - JSX DOM
  */
 const FileField = ({
-  id, accept, onChange, width
+  id, accept, onChange, width, errorMessage
 }) => (
   <div className={`input-field col s12 m{width} l{width}`}>
     <input
@@ -25,18 +32,13 @@ const FileField = ({
       id={id}
       onChange={event => onChange(event)}
     />
+    {errorMessage && <Error messages={errorMessage} />}
   </div>
 );
 
 FileField.propTypes = propTypes;
+FileField.defaultProps = {
+  errorMessage: false,
+};
 
 export default FileField;
-
-/*
- this.setState({
-        center: {
-          ...this.state.center,
-          image: e.target.files[0]
-        }
-      }
-*/

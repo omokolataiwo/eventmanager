@@ -55,7 +55,7 @@ class Signup extends React.Component {
         username: [],
         password: [],
         matchPassword: [],
-        global: []
+        signup: []
       },
       events: {}
     };
@@ -180,7 +180,7 @@ class Signup extends React.Component {
           <div className="col s12 m12 l12">
             <h5>CREATE ACCOUNT</h5>
             <form>
-              <Error messages={this.state.errors.global} />
+              <Error messages={this.state.errors.signup} />
               <div className="row">
                 <InputField
                   onChange={this.handleFormFieldChanged}

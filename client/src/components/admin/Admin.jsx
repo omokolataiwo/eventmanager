@@ -66,7 +66,7 @@ class Admin extends React.Component {
                     <span className="material-icons left">event</span>BOOKINGS
                   </Link>
                 </div>
-                <div className="login-container">
+                <div className="login-container centers">
                   <Link to="/admin/center">
                     <span className="material-icons left">explore</span>CENTERS
                   </Link>

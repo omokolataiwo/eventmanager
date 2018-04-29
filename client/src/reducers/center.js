@@ -12,7 +12,12 @@ import {
   FETCHING_ADMIN_CENTERS_ERROR,
   CREATING_NEW_CENTER,
   CREATING_NEW_CENTER_ERROR,
-  CREATED_NEW_CENTER
+  CREATED_NEW_CENTER,
+  RESET_CENTER_CREATION_STATE,
+  UPDATING_CENTER,
+  UPDATED_CENTER,
+  RESET_UPDATING_CENTER_STATE,
+  UPDATING_CENTER_ERROR
 } from '../types';
 
 const defaultCenter = {
@@ -26,12 +31,28 @@ const defaultCenter = {
     getCenters: null,
     getCenter: null,
     getEvents: null,
-    createCenter: null
+    createCenter: null,
+    updateCenter: null
   }
 };
 
 export default (state = defaultCenter, action) => {
   switch (action.type) {
+  case UPDATING_CENTER:
+  case UPDATED_CENTER:
+  case RESET_UPDATING_CENTER_STATE:
+    return {
+      ...state,
+      events: { ...state.events, updateCenter: action.type }
+    };
+
+  case UPDATING_CENTER_ERROR:
+    return {
+      ...state,
+      events: { ...state.events, updateCenter: action.type },
+      errors: action.errors
+    };
+
   case RECEIVED_CENTER_CONTACTS:
     return Object.assign({}, state, {
       ...state,
@@ -39,6 +60,8 @@ export default (state = defaultCenter, action) => {
       events: { ...state.events, getCenterContact: action.type }
     });
   case CREATING_NEW_CENTER:
+  case CREATED_NEW_CENTER:
+  case RESET_CENTER_CREATION_STATE:
     return {
       ...state,
       events: { ...state.events, createCenter: action.type }
@@ -49,12 +72,6 @@ export default (state = defaultCenter, action) => {
       ...state,
       events: { ...state.events, createCenter: action.type },
       errors: action.errors
-    };
-  case CREATED_NEW_CENTER:
-    return {
-      ...state,
-      events: { ...state.events, createCenter: action.type },
-      center: action.center
     };
   case FETCHING_CENTERS:
     return { ...state, events: { ...state.events, getCenters: action.type } };
