@@ -2,17 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
+import toastr from 'toastr';
 import updateCenterRequest from '../../../actions/updateCenterRequest';
 import getContactPersonRequest from '../../../actions/fetchContactPersonRequest'; // eslint-disable-line
-import fetchCenterRequest from '../../../actions/fetchCenterRequest';
+import fetchAdminCentersRequest from '../../../actions/fetchAdminCentersRequest';
 import SelectComponent from '../../containers/forms/SelectComponent';
 import CenterContactPerson from '../../containers/CenterContactPerson';
 import InvalidCenter from '../../containers/InvalidCenter';
 import InputField from '../../containers/forms/InputField';
 import TextArea from '../../containers/forms/TextArea';
 import FileField from '../../containers/forms/FileField';
+import Lever from '../../containers/forms/Lever';
 import { STATES, CENTER_TYPE } from '../../../consts';
-import { UPDATED_CENTER, UPDATING_CENTER_ERROR } from '../../../types';
+import {
+  UPDATED_CENTER,
+  UPDATING_CENTER_ERROR,
+  RESET_UPDATING_CENTER_STATE
+} from '../../../types';
 
 const propTypes = {
   updateCenterRequest: PropTypes.func.isRequired,
@@ -20,7 +26,9 @@ const propTypes = {
   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
   errors: PropTypes.shape().isRequired,
   match: PropTypes.shape().isRequired,
-  centers: PropTypes.arrayOf(PropTypes.shape()).isRequired
+  centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  resetUpdateCenterState: PropTypes.func.isRequired,
+  fetchAdminCentersRequest: PropTypes.func.isRequired
 };
 /**
  * Update center component
@@ -67,8 +75,10 @@ class Update extends React.Component {
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
     this.handleNewContactChanged = this.handleNewContactChanged.bind(this);
-    this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
+    this.handleContactPersonsFieldChange = this.
+      handleContactPersonsFieldChange.bind(this);
     this.handleImageFieldChanged = this.handleImageFieldChanged.bind(this);
+    this.handleAvailToggle = this.handleAvailToggle.bind(this);
   }
 
   /**
@@ -78,17 +88,7 @@ class Update extends React.Component {
    * @memberof Update
    */
   componentWillMount() {
-    const {
-      events, errors, contacts, centers, match
-    } = this.props;
-
-    if (events.createCenter === UPDATED_CENTER) {
-      // toastr
-    }
-
-    if (events.createCenter === UPDATING_CENTER_ERROR) {
-      this.setState({ errors });
-    }
+    const { contacts, centers, match } = this.props;
 
     const centerid = match.params.index;
     const center = centers.find(center => center.id === parseInt(centerid, 10));
@@ -99,7 +99,13 @@ class Update extends React.Component {
     }
 
     if (contacts.length === 0) {
-      this.setState({ center: { ...this.state.center, ...center, newContact: true } });
+      this.setState({
+        center: {
+          ...this.state.center,
+          ...center,
+          newContact: true
+        }
+      });
     } else {
       this.setState({
         center: {
@@ -144,6 +150,35 @@ class Update extends React.Component {
 
     facilitiesDOM.on('chip.add', chipChanged);
     facilitiesDOM.on('chip.delete', chipChanged);
+  }
+
+  /**
+   * Update component state
+   *
+   * @param {object} props New properties
+   * @returns {void}
+   * @memberof Update
+   */
+  componentWillReceiveProps(props) {
+    if (props.events.updateCenter === UPDATED_CENTER) {
+      props.resetUpdateCenterState();
+      props.fetchAdminCentersRequest();
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.success('Center updated.');
+    }
+
+    const { errors } = props;
+    if (props.events.updateCenter === UPDATING_CENTER_ERROR) {
+      this.setState({ errors });
+    }
   }
 
   /**
@@ -207,15 +242,31 @@ class Update extends React.Component {
     const { files, id } = event.target;
     this.setState({ center: { ...this.state.center, [id]: files[0] } });
   }
+
+  /**
+   * Toggle the availability of a center
+   *
+   * @param {object} event DOM object
+   * @returns {void}
+   * @memberof Update
+   */
+  handleAvailToggle(event) {
+    this.setState({
+      center: {
+        ...this.state.center,
+        active: this.state.center.active ? 0 : 1
+      }
+    }, this.updateCenter);
+  }
   /**
    * Update center, make request to api endpoint
    *
-   * @param {any} event - DOM event
+   * @param {object} event - DOM event
    * @returns {void}
    * @memberof Create
    */
   updateCenter(event) {
-    event.preventDefault();
+    if (event) event.preventDefault();
     this.props.updateCenterRequest(this.state.center);
   }
 
@@ -230,8 +281,11 @@ class Update extends React.Component {
     return (
       <div className="container container-medium card">
         <div className="row">
-          <div className="col s12 m10 l9">
+          <div className="col s12 m8 l8">
             <h5 className="left">UPDATE CENTER</h5>
+          </div>
+          <div className="col s12 m4 l4">
+            <Lever id="center-availability" boolValue={this.state.center.active} handleToggle={this.handleAvailToggle} />
           </div>
         </div>
         <div className="row">
@@ -375,6 +429,6 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   updateCenterRequest,
-  getContactPersonRequest,
-  fetchCenterRequest
+  fetchAdminCentersRequest,
+  resetUpdateCenterState: () => ({ type: RESET_UPDATING_CENTER_STATE })
 })(Update);

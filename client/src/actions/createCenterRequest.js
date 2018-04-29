@@ -24,8 +24,8 @@ const createdNewCenter = center => ({ type: CREATED_NEW_CENTER, center });
 /**
  * create center error state
  *
- * @param {object} error - center creation error
- * @return {object} - action
+ * @param {object} errors Center creation error
+ * @return {object}  action [CREATING_NEW_CENTER_ERROR]
  */
 const creatingNewCenterError = errors => ({
   type: CREATING_NEW_CENTER_ERROR,
@@ -41,7 +41,6 @@ const creatingNewCenterError = errors => ({
 const createCenter = center => (dispatch, getState) => {
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
 
-  // Reduce data sent to endpoint
   if (center.newContact) {
     center.contact = center.contact.newContact;
   }
@@ -51,8 +50,13 @@ const createCenter = center => (dispatch, getState) => {
     .then(response => {
       dispatch(createdNewCenter(response.data));
     })
-    .catch(e => {
-      dispatch(creatingNewCenterError(e.response.data));
+    .catch((error) => {
+      console.dir(error.response);
+      if (!error.response || error.response.status >= 500) {
+        console.error('Internal server error.');
+        return;
+      }
+      dispatch(creatingNewCenterError(error.response.data));
     });
 };
 
@@ -65,12 +69,12 @@ const createCenter = center => (dispatch, getState) => {
 export default function createCenterRequest(centerDetails) {
   return dispatch => {
     dispatch(creatingNewCenter());
-    delete axios.defaults.headers.common['x-access-token'];
+    Reflect.deleteProperty(axios.defaults.headers.common, 'x-access-token');
     const url = 'https://api.cloudinary.com/v1_1/omokolataiwo/image/upload';
     const { image } = centerDetails;
     if (!image || (image.type !== 'image/jpeg' && image.type !== 'image/png')) {
       return dispatch(creatingNewCenterError({
-        image: ['Please upload a jpeg format image.']
+        image: ['Please upload a jpeg/png format image.']
       }));
     }
     const formData = new FormData();

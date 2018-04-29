@@ -4,11 +4,14 @@ import { connect } from 'react-redux';
 import { STATES } from '../../../consts';
 import { CenterDetailsEdit } from './CenterDetailsEdit';
 
+import getContactPersonRequest from '../../../actions/fetchContactPersonRequest';
+
 const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired
-  }).isRequired
+  }).isRequired,
+  getContactPersonRequest: PropTypes.func.isRequired
 };
 
 /**
@@ -39,6 +42,7 @@ class Index extends React.Component {
    */
   componentWillMount() {
     const { centers } = this.props;
+    this.props.getContactPersonRequest();
     return this.setState({ centers });
   }
 
@@ -120,4 +124,4 @@ const mapStateToProps = state => {
   const { adminCenters } = state.center;
   return { centers: adminCenters };
 };
-export default connect(mapStateToProps)(Index);
+export default connect(mapStateToProps, { getContactPersonRequest })(Index);

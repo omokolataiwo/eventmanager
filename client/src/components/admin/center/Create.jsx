@@ -11,10 +11,12 @@ import InputField from '../../containers/forms/InputField';
 import TextArea from '../../containers/forms/TextArea';
 import FileField from '../../containers/forms/FileField';
 import { STATES, CENTER_TYPE } from '../../../consts';
+import { addFlash } from '../../../utils/flash';
 import {
   RECEIVED_CENTER_CONTACTS,
   CREATED_NEW_CENTER,
-  CREATING_NEW_CENTER_ERROR
+  CREATING_NEW_CENTER_ERROR,
+  RESET_CENTER_CREATION_STATE
 } from '../../../types';
 
 const propTypes = {
@@ -24,7 +26,8 @@ const propTypes = {
   events: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  errors: PropTypes.shape().isRequired
+  errors: PropTypes.shape().isRequired,
+  resetCreateCenterState: PropTypes.func.isRequired
 };
 /**
  * Create center component
@@ -51,7 +54,7 @@ class Create extends React.Component {
         facilities: '',
         state: 0,
         type: 0,
-        image: 'default_center_image.jpeg',
+        image: '',
         contactid: 0,
         newContact: false,
         details: '',
@@ -141,8 +144,9 @@ class Create extends React.Component {
 
     if (events.createCenter === CREATED_NEW_CENTER) {
       props.fetchAdminCentersRequest();
-      localStorage.setItem('newCenterCreated', true);
-      return history.push('/admin/center');
+      props.resetCreateCenterState();
+      addFlash('NEW_CENTER_CREATED', true);
+      return history.push('/admin/center/completed');
     }
 
     if (events.createCenter === CREATING_NEW_CENTER_ERROR) {
@@ -325,6 +329,7 @@ class Create extends React.Component {
                   accept="image/*"
                   id="image"
                   onChange={this.handleImageFieldChanged}
+                  errorMessage={this.state.errors.image}
                 />
               </div>
 
@@ -366,5 +371,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   createCenterRequest,
   getContactPersonRequest,
-  fetchAdminCentersRequest
+  fetchAdminCentersRequest,
+  resetCreateCenterState: () => ({ type: RESET_CENTER_CREATION_STATE })
 })(Create);
