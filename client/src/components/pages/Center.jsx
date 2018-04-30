@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import fetchCenterRequest from '../../actions/fetchCenterRequest';
+import { addFlash } from '../../utils/flash';
 
 const propTypes = {
   getCenter: PropTypes.func.isRequired,
@@ -10,7 +11,10 @@ const propTypes = {
       id: PropTypes.string.isRequired
     }).isRequired
   }).isRequired,
-  center: PropTypes.shape().isRequired
+  center: PropTypes.shape().isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired
+  }).isRequired
 };
 
 
@@ -52,6 +56,18 @@ class Center extends React.Component {
   componentWillReceiveProps(props) {
     this.setState({ center: props.center });
   }
+
+  /**
+   * Book event center
+   *
+   * @param {object} event DOM event
+   * @returns {void}
+   * @memberof Center
+   */
+  handleBookEvent(event) {
+    addFlash('choice-center', this.props.match.params.id);
+    this.props.history.push('/user/event/create');
+  }
   /**
    * Render the page
    *
@@ -64,7 +80,9 @@ class Center extends React.Component {
         <div className="row card">
           <div className="col s12 m12 l12">
             <h5>{this.state.center.name}</h5>
-
+            <button
+              onClick={event => this.handleBookEvent(event)}>Book Center
+            </button>
           </div>
         </div>
       </div>

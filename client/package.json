@@ -5,37 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "cross-env NODE_ENV=development webpack-dev-server --open webpack.config.js",
-    "production": "cross-env rimraf dist && webpack --config webpack.prod.config.js --progress --profile --colors",
-    "build": "NODE_ENV=production webpack --config webpack.config.js -p",
-    "lint": "eslint ./src/**/**.js",
-    "test": "jest",
+    "build": "rimraf dist && webpack --config webpack.config.js -p",
     "nightwatch": "npm run db:reset && NODE_ENV=test nightwatch",
-    "db:reset": "cd .. && npm run db:reset-test",
-    "test:watch": "jest --watch",
-    "coverage": "jest --coverage",
-    "precommit": "cross-env npm run lint && npm test",
-    "prepush": "cross-env npm run lint && npm test"
+    "db:reset": "cd .. && npm run db:reset-test"
   },
   "author": "Taiwo Kolawole",
   "license": "MIT",
-  "jest": {
-    "setupFiles": [
-      "<rootDir>/config/jest/shim.js"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/config/jest/assetsTransformer.js",
-      "\\.(css|less)$": "<rootDir>/config/jest/assetsTransformer.js"
-    },
-    "testMatch": [
-      "**/?(*.)(spec|test).js?(x)"
-    ],
-    "transform": {
-      "\\.js$": "babel-jest"
-    }
-  },
   "dependencies": {
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
