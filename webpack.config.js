@@ -1,6 +1,6 @@
 const dotEnv = require('dotenv');
-const webpackProd = require('./config/webpack.config.prod');
-const webpackDev = require('./config/webpack.config.dev');
+const webpackProd = require('./client/config/webpack.config.prod');
+const webpackDev = require('./client/config/webpack.config.dev');
 
 dotEnv.config();
 

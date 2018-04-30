@@ -1,14 +1,14 @@
 const webpack = require('webpack');
-const path = require('path');
+const { resolve } = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: ['./src/index.jsx'],
+  entry: ['./client/src/index.jsx'],
   target: 'web',
   output: {
     filename: 'bundle.js',
-    path: path.resolve('./dist'),
+    path: resolve(__dirname, '../dist'),
     publicPath: '/'
   },
   resolve: {
@@ -77,7 +77,7 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      template: path.resolve('./public/index.html')
+      template: resolve(__dirname, '../public/index.html')
     })
   ]
 };
