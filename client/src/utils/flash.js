@@ -6,7 +6,7 @@
  * @returns {void}
  */
 export const addFlash = (key, message) => {
-  sessionStorage.setItem(key, message);
+  localStorage.setItem(key, message);
 };
 /**
  * Check if message is in storage
@@ -14,7 +14,7 @@ export const addFlash = (key, message) => {
  * @param {string} key - Storage key
  * @returns {boolean} -true/false
  */
-export const hasFlash = key => !!sessionStorage.getItem(key);
+export const hasFlash = key => !!localStorage.getItem(key);
 /**
  * Get message and remove message from storage
  *
@@ -26,8 +26,8 @@ export const getFlash = (key) => {
   let message = '';
 
   if (hasFlash(key)) {
-    message = sessionStorage.getItem(key);
-    sessionStorage.removeItem(key);
+    message = localStorage.getItem(key);
+    localStorage.removeItem(key);
   }
   return message;
 };
