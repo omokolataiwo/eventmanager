@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
-    "build": "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
+    "build": "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files && cd client && npm run build",
     "start": "node dist/index.js",
     "start:dev": "nodemon dist/index.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",

@@ -47,6 +47,10 @@ class Index extends Component {
     this.props.fetchUserEventsRequest();
     this.props.fetchUserRequest();
 
+    if (hasFlash('saveRoute')) {
+      return this.props.history.push(getFlash('saveRoute'));
+    }
+
     if (hasFlash(CREATED_EVENT)) {
       toastr.options = {
         positionClass: 'toast-top-full-width',

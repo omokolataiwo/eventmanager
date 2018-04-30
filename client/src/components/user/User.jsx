@@ -2,10 +2,11 @@ import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import Index from './Index';
 import Profile from './Profile';
 import Event from './Event';
-
+import { addFlash } from '../../utils/flash';
 import logo from '../../images/logo.png';
 import { ACCOUNT_TYPE_MEMBER } from '../../consts';
 
@@ -14,7 +15,7 @@ const propTypes = {
   authenticated: PropTypes.bool.isRequired,
   history: PropTypes.shape().isRequired,
   match: PropTypes.shape({
-    path: PropTypes.shape().isRequired
+    path: PropTypes.string.isRequired
   }).isRequired,
   accessToken: PropTypes.string.isRequired
 };
@@ -26,6 +27,16 @@ const propTypes = {
  * @extends {React.Component}
  */
 class User extends React.Component {
+  /**
+   * Creates an instance of User.
+   *
+   * @param {object} props React properties
+   * @memberof User
+   */
+  constructor(props) {
+    super(props);
+    this.state = { authorized: true };
+  }
   /**
    * Check if the user is auuthorised
    *
@@ -42,6 +53,19 @@ class User extends React.Component {
       userdata.role !== ACCOUNT_TYPE_MEMBER ||
       !accessToken
     ) {
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.error('Please sign in.');
+
+      this.setState({ authorized: false });
+      addFlash('saveRoute', this.props.location.pathname);
       history.push('/signin');
     }
   }
@@ -53,6 +77,7 @@ class User extends React.Component {
    * @memberof User
    */
   render() {
+    if (!this.state.authorized) return null;
     return (
       <div className="page-wrap">
         <header className="gradient-blue">

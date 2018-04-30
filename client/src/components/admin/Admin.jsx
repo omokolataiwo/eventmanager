@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import toastr from 'toastr';
 import Index from './Index';
 import { Center } from './Center';
 import Bookings from './Bookings';
@@ -24,6 +25,16 @@ const propTypes = {
  */
 class Admin extends React.Component {
   /**
+  * Creates an instance of User.
+  *
+  * @param {object} props React properties
+  * @memberof User
+  */
+  constructor(props) {
+    super(props);
+    this.state = { authorized: true };
+  }
+  /**
    * Checks if user is authenticated
    *
    * @returns {void}
@@ -33,6 +44,17 @@ class Admin extends React.Component {
     const { authenticated, userdata, history } = this.props;
 
     if (!authenticated || userdata.role !== ACCOUNT_TYPE_ADMIN) {
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.error('Please sign in.');
+      this.setState({ authorized: false });
       history.push('/signin');
     }
   }
@@ -44,6 +66,7 @@ class Admin extends React.Component {
    * @memberof Admin
    */
   render() {
+    if (!this.state.authorized) return null;
     return (
       <div className="page-wrap">
         <header className="gradient-blue">
