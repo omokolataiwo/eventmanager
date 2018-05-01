@@ -18,13 +18,13 @@ const Home = () => (
   <div>
     <div className="search_slider_panel">
       <div className="carousel carousel-slider banner">
-        <Link className="carousel-item" to="#one!">
+        <Link className="carousel-item" to="#one!" href="#one!">
           <img src={bannercenter} alt="Center Banner" />
         </Link>
-        <Link className="carousel-item" to="#two!">
+        <Link className="carousel-item" to="#two!" href="#two!">
           <img src={bannercenter} alt="Center Banner" />
         </Link>
-        <Link className="carousel-item" to="#three!">
+        <Link className="carousel-item" to="#three!" href="#three!">
           <img src={bannercenter} alt="Index Center Banner" />
         </Link>
       </div>

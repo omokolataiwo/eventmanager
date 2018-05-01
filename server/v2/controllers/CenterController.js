@@ -382,8 +382,12 @@ export default class CenterController {
     return models.sequelize
       .query(
         `SELECT *, 
-        (SELECT COUNT(*) FROM centers ${searchCondition} AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER}) as count 
-        FROM centers ${searchCondition} AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER} ORDER BY id DESC LIMIT ${LIMIT} OFFSET ${OFFSET}`,
+        (SELECT COUNT(*) FROM centers ${searchCondition} 
+        AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER}) as count 
+        FROM centers ${searchCondition} 
+        AND active=${ACTIVE_CENTER} 
+        AND approve=${APPROVED_CENTER} 
+        ORDER BY id DESC LIMIT ${LIMIT} OFFSET ${OFFSET}`,
         {
           type: sequelize.QueryTypes.SELECT
         }

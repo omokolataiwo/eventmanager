@@ -1,5 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
+const propTypes = {
+  total: PropTypes.number.isRequired,
+  handlePagingNav: PropTypes.func.isRequired
+};
 /**
  * Pagination
  *
@@ -15,7 +20,7 @@ const Pagination = ({ total, handlePagingNav }) => {
     <ul className="pagination">
       {new Array(count).fill(null).map((array, index) => (
         <li className="active">
-          <a href="#!" onClick={event => handlePagingNav(index + 1)}>
+          <a href="#!" onClick={() => handlePagingNav(index + 1)}>
             {index + 1}
           </a>
         </li>
@@ -24,4 +29,5 @@ const Pagination = ({ total, handlePagingNav }) => {
   );
 };
 
+Pagination.propTypes = propTypes;
 export default Pagination;

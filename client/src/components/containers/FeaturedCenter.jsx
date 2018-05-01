@@ -1,9 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import $ from 'jquery';
 import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
 import Pagination from './Pagination';
+
+const propTypes = {
+  count: PropTypes.number.isRequired,
+  centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  fetchAllCentersRequest: PropTypes.func.isRequired
+};
 
 /**
  * FeaturedCenter
@@ -66,8 +72,8 @@ class FeaturedCenter extends React.Component {
     return (
       <div>
         <div className="row">
-          {this.state.centers.map((center, index) => (
-            <Link to={`/center/${center.id}`} key={center.id}>
+          {this.state.centers.map(center => (
+            <Link href="#center" to={`/center/${center.id}`} key={center.id}>
               <div className="col s12 m4 l4 card">
                 <div className="event-center">
                   <img src={center.image} alt="Featured Center" />
@@ -88,13 +94,16 @@ class FeaturedCenter extends React.Component {
     );
   }
 }
+
+FeaturedCenter.propTypes = propTypes;
+
 /**
  * Map redux state to component property
  *
  * @param {state} state - state to map to property
  * @return {object} - extracted properties from state
  */
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   const { centers, count } = state.center;
   return { centers, count };
 };
