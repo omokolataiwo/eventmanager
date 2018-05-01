@@ -55,7 +55,10 @@ export default class UserController {
         return res.status(201).json(userJSON);
       });
     } catch (error) {
-      return res.status(500).send('Internal Server Error.');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
   /**
@@ -74,7 +77,10 @@ export default class UserController {
       if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
         return res
           .status(401)
-          .json({ errors: { signin: ['Invalid username or password'] } });
+          .json({
+            status: 'error',
+            errors: [{ signin: ['Invalid username or password'] }]
+          });
       }
 
       const token = jwt.sign(
@@ -86,7 +92,10 @@ export default class UserController {
       );
       return res.status(200).send({ data: { token, role: user.role } });
     } catch (error) {
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
 
@@ -100,9 +109,12 @@ export default class UserController {
   static getUser(req, res) {
     return models.users
       .findOne({ where: { id: req.user.id } })
-      .then(user => res.status(200).json(user))
+      .then(user => res.status(200).json({ data: user }))
       .catch(() => {
-        res.status(500).json('Internal Server Error');
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
       });
   }
 
@@ -135,7 +147,12 @@ export default class UserController {
       if (phoneNumberExist && phoneNumberExist.username !== user.username) {
         return res
           .status(422)
-          .json({ phoneNumber: 'Phone number has already been used.' });
+          .json({
+            status: 'error',
+            errors: [{
+              phoneNumber: ['Phone number has already been used.']
+            }]
+          });
       }
 
       const emailAddressExist = await models.users.findOne({
@@ -145,13 +162,21 @@ export default class UserController {
       if (emailAddressExist && emailAddressExist.username !== user.username) {
         return res
           .status(422)
-          .json({ email: 'Email address has already been used.' });
+          .json({
+            status: 'error',
+            errors: [
+              { email: ['Email address has already been used.'] }
+            ]
+          });
       }
       return models.users
         .update(user, { where: { id: req.user.id } })
-        .then(() => res.status(201).json(user));
+        .then(() => res.status(200).json({ data: user }));
     } catch (e) {
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
 }

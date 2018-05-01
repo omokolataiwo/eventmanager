@@ -60,7 +60,10 @@ export default class EventController {
       });
 
       if (!center) {
-        return res.status(422).json({ centerId: ['Invalid center'] });
+        return res.status(422).json({
+          status: 'error',
+          errors: [{ centerId: ['Invalid center'] }]
+        });
       }
 
       const bookedEvent = await models.events.findOne({
@@ -73,7 +76,12 @@ export default class EventController {
       if (bookedEvent) {
         return res
           .status(422)
-          .json({ global: ['Center has already been booked.'] });
+          .json({
+            status: 'error',
+            errors: [{
+              center: ['Center has already been booked.']
+            }]
+          });
       }
 
       event.userId = req.user.id;
@@ -81,9 +89,12 @@ export default class EventController {
 
       return models.events
         .create(event)
-        .then(newEvent => res.status(201).json(newEvent));
+        .then(newEvent => res.status(201).json({ data: newEvent }));
     } catch (e) {
-      return res.status(501).send('Internal Server Error');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
   /**
@@ -102,14 +113,22 @@ export default class EventController {
       });
 
       if (!event) {
-        return res.status(404).json({ event: 'Event does not exist.' });
+        return res.status(404).json({
+          status: 'error',
+          errors: [
+            { event: ['Event does not exist.'] }
+          ]
+        });
       }
 
       return models.events
         .destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json(event));
+        .then(() => res.status(200).json({ data: event }));
     } catch (error) {
-      return res.status(501).send('Internal server error.');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
   /**
@@ -120,8 +139,10 @@ export default class EventController {
    * @return {*} - Server response
    */
   static getEvents(req, res) {
+    const LIMIT = 2;
+    const page = req.query.page - 1 || 0;
     return models.events
-      .findAll({
+      .findAndCountAll({
         include: [
           {
             model: models.centers,
@@ -130,10 +151,21 @@ export default class EventController {
         ],
         where: {
           userId: req.user.id
-        }
+        },
+        limit: LIMIT,
+        offset: LIMIT * page,
+        order: [['id', 'DESC']],
       })
-      .then(centers => res.status(200).json(centers))
-      .catch(error => res.status(501).send(error));
+      .then(events => res.status(200).json(events ? {
+        data: {
+          centers: events.rows,
+          count: events.count
+        }
+      } : { data: { events: ['No Event Found'] } }))
+      .catch(() => res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      }));
   }
   /**
    * Edit event
@@ -151,7 +183,12 @@ export default class EventController {
       });
 
       if (!event) {
-        return res.status(422).send('Event does not exist');
+        return res.status(422).json({
+          status: 'error',
+          errors: [
+            { event: ['Event does not exist'] }
+          ]
+        });
       }
       const {
         title, startDate, endDate, centerId
@@ -175,7 +212,12 @@ export default class EventController {
       });
 
       if (!center) {
-        return res.status(422).json({ centerId: 'Invalid center' });
+        return res.status(422).json({
+          status: 'error',
+          errors: [
+            { centerId: ['Invalid center'] }
+          ]
+        });
       }
 
       const bookedCenter = await models.events.findOne({
@@ -188,7 +230,12 @@ export default class EventController {
       if (bookedCenter && bookedCenter.id !== event.id) {
         return res
           .status(422)
-          .json({ global: ['Center has already been booked.'] });
+          .json({
+            status: 'error',
+            errors: [
+              { center: ['Center has already been booked.'] }
+            ]
+          });
       }
 
       return models.events
@@ -196,10 +243,13 @@ export default class EventController {
           where: { id: req.params.id }
         })
         .then(() => {
-          res.status(201).json(modifiedEvent);
+          res.status(200).json({ data: modifiedEvent });
         });
     } catch (e) {
-      return res.status(501).send('Internal server error.');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
 }

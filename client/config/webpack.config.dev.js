@@ -10,7 +10,7 @@ const config = {
     'react-hot-loader/patch',
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/only-dev-server',
-    './src/index.jsx'
+    resolve(__dirname, '../src/index.jsx')
   ],
 
   output: {

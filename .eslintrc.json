@@ -1,8 +1,7 @@
 {
   "root": true,
   "extends": [
-    "airbnb",
-    "react"
+    "airbnb"
   ],
   "env": {
     "es6": true
@@ -11,8 +10,7 @@
     "import/resolver": {
       "node": {
         "extensions": [
-          ".js",
-          ".jsx"
+          ".js"
         ],
         "paths": [
           "./",
@@ -45,17 +43,6 @@
     "curly": [
       "error",
       "multi-line"
-    ],
-    "jsx-a11y/anchor-is-valid": [
-      "error",
-      {
-        "components": [
-          "Link"
-        ],
-        "specialLink": [
-          "to"
-        ]
-      }
     ],
     "import/no-unresolved": [
       2,
