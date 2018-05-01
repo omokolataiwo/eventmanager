@@ -133,6 +133,11 @@ export default (req, res, next) => {
 
     if (contactErrors) errors.push(contactErrors);
   }
-  if (errors.length) return res.status(422).json(errors);
+  if (errors.length) {
+    return res.status(422).json({
+      status: 'error',
+      errors
+    });
+  }
   return next();
 };

@@ -7,29 +7,37 @@ import {
 } from '../types';
 
 /**
- * Action creator for received centers\
+ * Action creator for received centers
  *
- * @param {object} centers - centers from endpoint
+ * @param {object} centersResponse - centers from endpoint
  * @returns {object} - Action: RECEIVED_CENTERS
  */
-const fetchAllCenter = centers => ({
-  type: RECEIVED_CENTERS,
-  centers
-});
+const fetchAllCenter = centersResponse => {
+  const { centers, count } = centersResponse.data;
+  return {
+    type: RECEIVED_CENTERS,
+    centers,
+    count
+  };
+};
 
 /**
  * Fetch all centers from backend
  *
  * @returns {void}
  */
-const fetchAllCentersRequest = () => dispatch => {
+const fetchAllCentersRequest = query => dispatch => {
+  console.log(query);
+
   dispatch({
     type: FETCHING_CENTERS
   });
   axios
-    .get(`${API_PATH}/centers`)
-    .then(response => dispatch(fetchAllCenter(response.data)))
-    .catch(e => dispatch({ type: FETCHING_CENTERS_ERROR }));
+    .get(`${API_PATH}/centers`, { params: query })
+    .then(response => {
+      dispatch(fetchAllCenter(response.data));
+    })
+    .catch(error => dispatch({ type: FETCHING_CENTERS_ERROR }));
 };
 
 export default fetchAllCentersRequest;

@@ -26,6 +26,7 @@ const defaultCenter = {
   eventCenter: [],
   center: {},
   errors: {},
+  count: 0,
   events: {
     getCenterContact: null,
     getCenters: null,
@@ -76,7 +77,7 @@ export default (state = defaultCenter, action) => {
   case FETCHING_CENTERS:
     return { ...state, events: { ...state.events, getCenters: action.type } };
   case RECEIVED_CENTERS:
-    return Object.assign({}, state, { ...state, centers: action.centers });
+    return { ...state, centers: action.centers, count: action.count };
   case FETCHING_CENTER:
     return {
       ...state,

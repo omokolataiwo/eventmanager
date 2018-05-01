@@ -115,5 +115,10 @@ export default (req, res, next) => {
   if (errors === undefined) {
     return next();
   }
-  return res.status(422).json(errors);
+  return res.status(422).json({
+    status: 'error',
+    errors: [
+      errors
+    ]
+  });
 };

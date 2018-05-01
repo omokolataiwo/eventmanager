@@ -10,26 +10,27 @@ import validate from 'validate.js';
  */
 export default (req, res, next) => {
   const validationRule = {
-    id: {
-      presence: {
-        allowEmpty: false,
-        message: 'is required'
-      },
+    page: {
       numericality: {
         onlyInteger: true,
-        strict: true
-      }
+        strict: true,
+        message: '^Invalid query string for page',
+        greaterThan: 0
+      },
     }
   };
-  const errors = validate({ id: req.params.id }, validationRule);
+  const constriant = {};
+  Object.keys(req.query).forEach((field) => {
+    constriant[field] = req.query[field];
+  });
+  const errors = validate(constriant, validationRule);
 
   if (errors === undefined) {
     return next();
   }
   return res.status(422).json({
     status: 'error',
-    errors: [
-      errors
-    ]
+    message: 'Request query validation error',
+    errors
   });
 };

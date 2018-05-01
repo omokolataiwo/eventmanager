@@ -1,6 +1,9 @@
 import axios from 'axios';
 import { API_PATH } from '../consts';
 
+/**
+ * Search center
+ */
 export const searchCenterRequest = params => dispatch => {
   axios
     .get(`${API_PATH}/centers/search`, { params })

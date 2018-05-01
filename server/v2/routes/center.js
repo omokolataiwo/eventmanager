@@ -4,6 +4,7 @@ import adminAuthentication from '../middleware/adminAuthentication';
 import validateParamID from '../middleware/validateParamID';
 import createCenterValidation from '../middleware/createCenterValidation';
 import superAdminAuthentication from '../middleware/superAdminAuthentication';
+import validateQuery from '../middleware/validateQuery';
 
 module.exports = (app) => {
   app.post(
@@ -12,7 +13,7 @@ module.exports = (app) => {
     createCenterValidation,
     center.createCenter
   ); // Create Center
-  app.get('/centers', center.getCenters); // Get all centers
+  app.get('/centers', validateQuery, center.getCenters); // Get all centers
   app.get('/centers/admin', adminAuthentication, center.getAdminCenters); // Get own centers
   app.get('/centers/events', adminAuthentication, center.getOwnEvents); // Get own events
   app.get('/centers/contacts', adminAuthentication, center.getContacts); // Get Own Center Contacts
@@ -32,13 +33,6 @@ module.exports = (app) => {
     adminAuthentication,
     center.cancelEvent
   ); // Cancel Event
-
-  app.put(
-    '/centers/toggle-active/:id',
-    validateParamID,
-    adminAuthentication,
-    center.toggleCenterActiveness
-  ); // Toggle Center Activeness
 
   app.put(
     '/centers/cancel/:id',

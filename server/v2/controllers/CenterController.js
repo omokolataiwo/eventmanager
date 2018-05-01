@@ -6,7 +6,6 @@ import {
   ACTIVE_CENTER,
   APPROVED_CENTER,
   DECLINED_CENTER,
-  LOCK_CENTER,
   CANCEL_EVENT
 } from '../middleware/const';
 
@@ -29,6 +28,24 @@ export default class CenterController {
       const center = req.body;
       center.ownerId = req.user.id;
 
+      const existingCenter = await models.centers.findOne({
+        where: {
+          $and: [
+            { name: center.name },
+            { address: center.address },
+            { area: center.area },
+            { state: center.state }
+          ]
+        }
+      });
+
+      if (existingCenter) {
+        return res.status(409).json({
+          status: 'error',
+          errors: [{ name: 'Center already exist' }]
+        });
+      }
+
       if (center.newContact && center.contact) {
         center.contact.ownerId = center.ownerId;
         const newContact = await models.contacts.create(center.contact);
@@ -39,7 +56,10 @@ export default class CenterController {
         });
 
         if (!contactExist) {
-          return res.status(422).json({ contactId: 'Contact does not exist' });
+          return res.status(422).json({
+            status: 'error',
+            errors: [{ contactId: ['Contact does not exist'] }]
+          });
         }
       }
 
@@ -48,11 +68,15 @@ export default class CenterController {
 
       return models.centers
         .create(center)
-        .then(newCenter => res.status(201).json(newCenter));
+        .then(newCenter => res.status(201).json({ data: { newCenter } }));
     } catch (e) {
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
+
   /**
    * Get all registered center
    *
@@ -61,15 +85,32 @@ export default class CenterController {
    * @returns {*} - Server response
    */
   static getCenters(req, res) {
+    const LIMIT = 3;
+    const page = parseInt(req.query.page, 10) - 1 || 0;
+
     return models.centers
-      .findAll({
+      .findAndCountAll({
         where: {
           $and: [{ approve: APPROVED_CENTER }, { active: ACTIVE_CENTER }]
-        }
+        },
+        limit: LIMIT,
+        offset: LIMIT * page,
+        order: [['id', 'DESC']]
       })
-      .then(centers => res.status(200).json(centers))
+      .then(centers =>
+        res.status(200).json(centers
+          ? {
+            data: {
+              centers: centers.rows,
+              count: centers.count
+            }
+          }
+          : { data: { center: ['No Center Found'] } }))
       .catch((error) => {
-        res.status(500).send('Internal Server Error');
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
       });
   }
   /**
@@ -80,8 +121,11 @@ export default class CenterController {
    * @returns {*} - Server response
    */
   static getAdminCenters(req, res) {
+    const LIMIT = 2;
+    const page = req.query.page - 1 || 0;
+
     return models.centers
-      .findAll({
+      .findAndCountAll({
         include: [
           {
             model: models.events,
@@ -90,10 +134,25 @@ export default class CenterController {
         ],
         where: {
           ownerId: req.user.id
-        }
+        },
+        limit: LIMIT,
+        offset: LIMIT * page,
+        order: [['id', 'DESC']]
       })
-      .then(center => res.status(200).json(center))
-      .catch(() => res.status(500).send('Internal Server Error'));
+      .then(centers =>
+        res.status(200).json(centers
+          ? {
+            data: {
+              centers: centers.rows,
+              count: centers.count
+            }
+          }
+          : { data: { center: ['No Center Found'] } }))
+      .catch(() =>
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        }));
   }
   /**
    * Get a single center
@@ -115,11 +174,18 @@ export default class CenterController {
       })
       .then((center) => {
         if (!center) {
-          return res.status(404).json({ center: 'Center not found' });
+          return res.status(404).json({
+            status: 'error',
+            errors: [{ center: ['Center not found'] }]
+          });
         }
-        return res.status(200).json(center);
+        return res.status(200).json({ data: { center } });
       })
-      .catch(() => res.status(500).send('Internal Server Error'));
+      .catch(() =>
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        }));
   }
   /**
    * Update Center
@@ -135,7 +201,14 @@ export default class CenterController {
       });
 
       if (!existingCenter) {
-        return res.status(422).json({ center: 'Center does not exist' });
+        return res.status(422).json({
+          status: 'error',
+          errors: [
+            {
+              center: ['Center does not exist']
+            }
+          ]
+        });
       }
 
       const {
@@ -172,6 +245,19 @@ export default class CenterController {
         active
       });
 
+      const registeredBefore = await models.centers.findOne({
+        where: {
+          $and: [{ name }, { address }, { area }, { state }]
+        }
+      });
+
+      if (registeredBefore && registeredBefore.id !== existingCenter.id) {
+        return res.status(409).json({
+          status: 'error',
+          errors: [{ name: 'Center already exist' }]
+        });
+      }
+
       if (modifiedCenter.newContact && modifiedCenter.contact) {
         modifiedCenter.contact.ownerId = modifiedCenter.ownerId;
 
@@ -183,7 +269,14 @@ export default class CenterController {
         });
 
         if (!contactExist) {
-          return res.status(422).json({ contactId: 'Contact does not exist' });
+          return res.status(422).json({
+            status: 'error',
+            errors: [
+              {
+                contactId: ['Contact does not exist']
+              }
+            ]
+          });
         }
       }
 
@@ -191,9 +284,12 @@ export default class CenterController {
         .update(modifiedCenter, {
           where: { id: req.params.id }
         })
-        .then(() => res.status(201).json(modifiedCenter));
+        .then(() => res.status(201).json({ data: modifiedCenter }));
     } catch (e) {
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
     }
   }
   /**
@@ -210,9 +306,12 @@ export default class CenterController {
           ownerId: req.user.id
         }
       })
-      .then(contacts => res.status(200).json(contacts))
+      .then(contacts => res.status(200).json({ data: contacts }))
       .catch(() => {
-        res.status(500).send('Internal Server Error');
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
       });
   }
   /**
@@ -268,21 +367,33 @@ export default class CenterController {
     const END_OF_FIRST_AND = 3;
 
     if (!searchCondition) {
-      return res.status(404).send('Center not found.');
+      return res.status(404).send({
+        status: 'error',
+        errors: [{ search: ['Center not found.'] }]
+      });
     }
     searchCondition = `WHERE${searchCondition
       .trim()
       .substr(END_OF_FIRST_AND, searchCondition.length)}`;
 
+    const LIMIT = 2;
+    const OFFSET = (req.query.page - 1 || 0) * LIMIT;
+
     return models.sequelize
       .query(
-        `SELECT * FROM centers ${searchCondition} AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER}`,
+        `SELECT *, 
+        (SELECT COUNT(*) FROM centers ${searchCondition} AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER}) as count 
+        FROM centers ${searchCondition} AND active=${ACTIVE_CENTER} AND approve=${APPROVED_CENTER} ORDER BY id DESC LIMIT ${LIMIT} OFFSET ${OFFSET}`,
         {
           type: sequelize.QueryTypes.SELECT
         }
       )
-      .then(centers => res.status(200).json(centers))
-      .catch(() => res.status(500).send('Internal server error'));
+      .then(centers => res.status(200).json({ data: centers }))
+      .catch(() =>
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        }));
   }
   /**
    * Get all events
@@ -308,10 +419,13 @@ export default class CenterController {
           event.isConcluded = now.diff(endDate, 'days') > 0;
           return event;
         });
-        res.status(200).json(eventsWithActiveStatus);
+        res.status(200).json({ data: eventsWithActiveStatus });
       })
       .catch(() => {
-        res.status(500).send('Internal Server Error');
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
       });
   }
   /**
@@ -327,12 +441,21 @@ export default class CenterController {
     const center = await models.centers.findById(centerId);
 
     if (!center) {
-      return res.status(404).json({ centerId: 'Can not find center' });
+      return res.status(404).json({
+        status: 'error',
+        errors: [{ centerId: ['Can not find center'] }]
+      });
     }
 
     return models.centers
       .update({ approve: APPROVED_CENTER }, { where: { id: centerId } })
-      .then(() => res.status(201).json(center));
+      .then(() => res.status(201).json({ data: center }))
+      .catch(() => {
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
+      });
   }
 
   /**
@@ -349,41 +472,21 @@ export default class CenterController {
     const center = await models.centers.findById(centerId);
 
     if (!center) {
-      return res.status(404).json({ centerId: 'Can not find center' });
+      return res.status(404).json({
+        status: 'error',
+        errors: [{ centerId: ['Can not find center'] }]
+      });
     }
 
     return models.centers
       .update({ approve: DECLINED_CENTER }, { where: { centerId } })
-      .then(() => res.status(201).json(center));
-  }
-
-  /**
-   * Toggle the availability of a center
-   *
-   * @static
-   * @param {object} req - Server request
-   * @param {object} res - Server response
-   * @returns {*} - Server response
-   * @memberof CenterController
-   */
-  static async toggleCenterActiveness(req, res) {
-    const centerId = req.params.id;
-    const center = await models.centers.find({
-      where: {
-        $and: [{ id: centerId }, { ownerId: req.user.id }]
-      }
-    });
-
-    if (!center) {
-      return res.status(404).json({ centerId: 'Can not find center' });
-    }
-
-    const active =
-      center.active === ACTIVE_CENTER ? LOCK_CENTER : ACTIVE_CENTER;
-
-    return models.centers
-      .update({ active: DECLINED_CENTER }, { where: { active } })
-      .then(() => res.status(201).json(active));
+      .then(() => res.status(201).json({ data: center }))
+      .catch(() => {
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
+      });
   }
 
   /**
@@ -406,14 +509,20 @@ export default class CenterController {
       )
       .then((events) => {
         if (!events.length) {
-          return res.status(404).json({ eventId: 'Event not found!' });
+          return res.status(404).json({
+            status: 'error',
+            errors: [{ eventId: ['Event not found!'] }]
+          });
         }
         return models.events
           .update({ active: CANCEL_EVENT }, { where: { id: req.params.id } })
-          .then(() => res.status(201).json(events));
+          .then(() => res.status(201).json({ data: events }));
       })
       .catch(() => {
-        res.status(500).send('Internal Server Error');
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
       });
   }
 }
