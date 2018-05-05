@@ -10,7 +10,7 @@ import { RECEIVED_CENTER_CONTACTS } from '../types';
  */
 const centerContacts = contacts => ({
   type: RECEIVED_CENTER_CONTACTS,
-  contacts
+  contacts: contacts.data
 });
 
 /**
@@ -26,7 +26,7 @@ const getContactPersonRequest = () => (dispatch, getState) => {
       dispatch(centerContacts(response.data));
     })
     .catch(error => {
-      console.dir(error); //TODO: ELIMINATE THIS
+      dispatch({ type: 'FETCHING_CONTACT_ERROR' });
     });
 };
 

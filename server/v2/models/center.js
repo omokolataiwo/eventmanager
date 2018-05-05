@@ -22,9 +22,14 @@ module.exports = (sequelize, DataTypes) => {
       as: 'events'
     });
 
+    Center.belongsTo(models.contacts, {
+      foreignKey: 'contactId',
+      as: 'contacts'
+    });
+
     Center.belongsTo(models.users, {
       foreignKey: 'ownerId',
-      as: 'evnts'
+      as: 'users'
     });
   };
 

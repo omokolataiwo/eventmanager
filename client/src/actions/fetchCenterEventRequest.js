@@ -10,7 +10,7 @@ import { FETCHING_CENTERS_EVENTS, RECEIVED_CENTERS_EVENTS } from '../types';
  */
 const recievedEvents = events => ({
   type: RECEIVED_CENTERS_EVENTS,
-  events
+  events: events.data
 });
 
 /**

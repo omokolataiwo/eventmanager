@@ -1,11 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import formatNumber from 'format-num';
 import fetchCenterRequest from '../../actions/fetchCenterRequest';
+import searchCenterRequest from '../../actions/searchCenterRequest';
 import { addFlash } from '../../utils/flash';
+import SuggestedCenters from '../containers/SuggestedCenters';
+import { RECEIVED_CENTER, RESET_FETCHING_CENTER } from '../../types';
+import { STATES } from '../../consts';
+import Map from '../containers/Map';
 
 const propTypes = {
-  getCenter: PropTypes.func.isRequired,
+  fetchCenterRequest: PropTypes.func.isRequired,
   match: PropTypes.shape({
     params: PropTypes.shape({
       id: PropTypes.string.isRequired
@@ -16,7 +22,6 @@ const propTypes = {
     push: PropTypes.func.isRequired
   }).isRequired
 };
-
 
 /**
  * View center details
@@ -34,7 +39,10 @@ class Center extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      center: {}
+      center: {
+        contacts: {}
+      },
+      relatedCenters: []
     };
   }
   /**
@@ -44,7 +52,7 @@ class Center extends React.Component {
    * @memberof Center
    */
   componentWillMount() {
-    this.props.getCenter(this.props.match.params.id);
+    this.props.fetchCenterRequest(this.props.match.params.id);
   }
   /**
    * Set component state
@@ -55,6 +63,12 @@ class Center extends React.Component {
    */
   componentWillReceiveProps(props) {
     this.setState({ center: props.center });
+    this.setState({ relatedCenters: props.searched });
+
+    if (props.events.getCenter === RECEIVED_CENTER) {
+      props.resetFetchingCenter();
+      props.searchCenterRequest({ state: props.center.state });
+    }
   }
 
   /**
@@ -76,13 +90,73 @@ class Center extends React.Component {
    */
   render() {
     return (
-      <div className="container small-container">
-        <div className="row card">
+      <div className="container small-container center-page">
+        <div className="row">
           <div className="col s12 m12 l12">
-            <h5>{this.state.center.name}</h5>
-            <button
-              onClick={event => this.handleBookEvent(event)}>Book Center
-            </button>
+            <div className="row">
+              <div className="col s12 m10 l10 offset-m2 offset-l2">
+                <div className="row">
+                  <div className="col s12 m8 l8">
+                    <h5 className="center-name">{this.state.center.name}</h5>
+                  </div>
+                  <div className="col s12 m8 l8">
+                    <div className="row">
+                      <div className="col s12 m12 l12">
+                        <img src={this.state.center.image} alt="center" />
+                      </div>
+                      <div className="row">
+                        <div className="col s12 m12 l12">
+                          <SuggestedCenters
+                            centers={this.state.relatedCenters}
+                          />
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col s12 m12 l12">
+                          <h4>{this.state.center.name}</h4>
+                          <p>{this.state.center.details}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col s12 m2 l3">
+                    <p>Amount</p>
+                    <p>&#8358;{formatNumber(this.state.center.amount)}</p>
+
+                    <p>Address</p>
+                    <p>
+                      {this.state.center.address}, {this.state.center.area}{' '}
+                      {STATES[this.state.center.state]}.
+                    </p>
+                    <p>Capacity</p>
+                    <p>{formatNumber(this.state.center.capacity)}</p>
+                    <p>Facilities</p>
+                    <p>{this.state.center.facilities}</p>
+                    <div>
+                      <p>Contact</p>
+                      <p>
+                        {this.state.center.contacts.firstName} &nbsp;
+                        {this.state.center.contacts.lastName}
+                      </p>
+                      <p>
+                        <span className="material-icons left">phone</span>
+                        {this.state.center.contacts.phoneNumber}
+                      </p>
+                    </div>
+                    <button onClick={event => this.handleBookEvent(event)}>
+                      Book Center
+                    </button>
+                    {this.state.center.address && (
+                      <Map
+                        address={this.state.center.address}
+                        area={this.state.center.area}
+                        state={this.state.center.state}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -98,9 +172,7 @@ Center.propTypes = propTypes;
  * @param {func} dispatch Redux dispatch function
  * @returns {object} Object of functions
  */
-const mapDispatchToProps = dispatch => ({
-  getCenter: id => dispatch(fetchCenterRequest(id))
-});
+
 /**
  * Map redux state to properties of component
  *
@@ -108,7 +180,17 @@ const mapDispatchToProps = dispatch => ({
  * @returns {object} Object of states
  */
 const mapStateToProps = state => {
-  const { center } = state.center;
-  return { center };
+  const { center, events } = state.center;
+  let { searched } = state.center;
+
+  if (searched.length && Object.keys(center).length) {
+    searched = searched.filter(searchCenter => searchCenter.id !== center.id);
+  }
+
+  return { center, searched, events };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Center);
+export default connect(mapStateToProps, {
+  fetchCenterRequest,
+  searchCenterRequest,
+  resetFetchingCenter: () => ({ type: RESET_FETCHING_CENTER })
+})(Center);

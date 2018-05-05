@@ -3,6 +3,7 @@ import { event } from '../controllers';
 import validateParamID from '../middleware/validateParamID';
 import userAuthentication from '../middleware/userAuthentication';
 import validateCreateEvent from '../middleware/validateCreateEvent';
+import validateUpdateEvent from '../middleware/validateUpdateEvent';
 
 module.exports = (app) => {
   app.post(
@@ -21,7 +22,7 @@ module.exports = (app) => {
     '/events/:id',
     validateParamID,
     userAuthentication,
-    validateCreateEvent,
+    validateUpdateEvent,
     event.editEvent
   ); // Update event
   app.get('/events', userAuthentication, event.getEvents); // Get own events

@@ -15,6 +15,7 @@ import {
   UPDATED_EVENT,
   RESET_UPDATE_EVENT_STATE
 } from '../../../types';
+import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
 
 const propTypes = {
   updateEventRequest: PropTypes.func.isRequired,
@@ -57,10 +58,12 @@ class Update extends React.Component {
         defaultValue: ''
       },
       centers: [],
+      count: 0,
       activeCenter: {},
       errors: {}
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
+    this.changeActiveCenter = this.changeActiveCenter.bind(this);
   }
   /**
    * Set center for event
@@ -69,12 +72,19 @@ class Update extends React.Component {
    * @memberof Create
    */
   componentWillMount() {
-    const { match, events, centers } = this.props;
+    const {
+      match, events, centers, count
+    } = this.props;
     const eventID = match.params.index;
 
     const event = events.find(event => event.id === parseInt(eventID, 10));
     const activeCenter = centers.find(center => center.id === parseInt(event.centerId, 10));
-    this.setState({ centers, event, activeCenter });
+    this.setState({
+      centers,
+      count,
+      event,
+      activeCenter
+    });
   }
 
   /**
@@ -225,30 +235,11 @@ class Update extends React.Component {
             <h5>Related Centers</h5>
           </div>
         </div>
-        <div className="row center event_center">
-          <div className="col s12 m12 l12">
-            <div className="row">
-              {this.state.centers.map((center, index) => (
-                <div
-                  className="col s12 m4 l4 card"
-                  key={center.id}
-                  onClick={() => this.changeActiveCenter(center.id)}
-                  role="button"
-                  tabIndex="-20"
-                  onKeyUp={() => this.changeActiveCenter(center.id)}
-                >
-                  <div className="event-center">
-                    <img src={center.image} alt="Event Center" />
-                    <div className="over-img">
-                      <h4 className="truncate">{center.name}</h4>
-                      <p>{STATES[center.state]}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <PaginatedCentersCard
+          centers={this.state.centers}
+          count={this.state.count}
+          click={this.changeActiveCenter}
+        />
       </div>
     );
   }
@@ -264,10 +255,11 @@ Update.propTypes = propTypes;
  * @returns {object} - Extracted state
  */
 const mapStateToProps = state => {
-  const { centers } = state.center;
+  const { centers, count } = state.center;
   const { errors, actions, events } = state.event;
   return {
     centers,
+    count,
     errors,
     actions,
     events

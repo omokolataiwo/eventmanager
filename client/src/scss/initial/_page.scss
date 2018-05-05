@@ -44,9 +44,36 @@
 
 
 .banner {
-	height: 340px;
+	height: 500px;
 	background: #9a4a11;
 }
+.carousel, .slides {
+height: 500px !important;
+}
+
+/* label focus color */
+   .input-field input[type=text]:focus + label, .input-field input[type=password]:focus + label {
+     color: #222 !important;
+}
+/* label underline focus color */
+   .input-field input[type=text]:focus, .input-field input[type=password]:focus {
+     border-bottom: 0.1px solid #222 !important;
+     box-shadow: 0 0.1px 0 0 #222 !important;
+   }
+   
+   .input-field.col label {
+  color: #222;
+}
+
+
+.switch label input[type=checkbox]:checked + .lever {
+  background: #5991D5 !important;
+}
+
+.switch label input[type=checkbox]:checked + .lever:after {
+  background: #F6C042 !important;
+}
+
 
 .page-wrap {
     position: relative;
@@ -81,7 +108,10 @@ nav {
     position: relative;
     float: left;
     width: 100%;
-    padding: 10px 0 20px 0;
+}
+
+.menu-section h3 {
+    margin: 0;
 }
 
 .top-head {
@@ -94,7 +124,6 @@ nav {
 }
 
 .search_slider_panel {
-    position: relative;
     float: left;
     width: 100%;
 }

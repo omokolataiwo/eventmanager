@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import formatNumber from 'format-num';
 import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
 import Pagination from './Pagination';
+import { STATES } from '../../consts';
+import CentersCard from './CentersCard';
 
 const propTypes = {
   count: PropTypes.number.isRequired,
@@ -70,27 +72,11 @@ class FeaturedCenter extends React.Component {
    */
   render() {
     return (
-      <div>
-        <div className="row">
-          {this.state.centers.map(center => (
-            <Link href="#center" to={`/center/${center.id}`} key={center.id}>
-              <div className="col s12 m4 l4 card">
-                <div className="event-center">
-                  <img src={center.image} alt="Featured Center" />
-                  <div className="over-img">
-                    <h4 className="truncate">{center.name}</h4>
-                    <p>{center.area}</p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-        <Pagination
-          total={this.state.count}
-          handlePagingNav={this.handlePagingNav}
-        />
-      </div>
+      <CentersCard
+        centers={this.state.centers}
+        count={this.state.count}
+        handlePagingNav={this.handlePagingNav}
+      />
     );
   }
 }
@@ -103,7 +89,7 @@ FeaturedCenter.propTypes = propTypes;
  * @param {state} state - state to map to property
  * @return {object} - extracted properties from state
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { centers, count } = state.center;
   return { centers, count };
 };

@@ -1,8 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import toastr from 'toastr';
+
 import { STATES, CENTER_TYPE } from '../../consts';
 import SelectComponent from './forms/SelectComponent';
-import { searchCenterRequest } from '../../actions/searchCenterRequest';
 
 /**
  * Center search component
@@ -19,10 +19,7 @@ class OverlaySearch extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      params: {
-        state: 24,
-        type: 1
-      },
+      params: {},
       switch: {
         capacity: false,
         facilities: false,
@@ -33,11 +30,37 @@ class OverlaySearch extends React.Component {
     this.handleStateChanged = this.handleStateChanged.bind(this);
     this.handleCenterTypeChanged = this.handleCenterTypeChanged.bind(this);
   }
-  handleStateChanged(state) {
-    this.setState({ params: { ...this.state.params, state } });
+
+  /**
+   * Update component state for center state
+   *
+   * @param {number} event Center state
+   * @returns {void}
+   * @memberof OverlaySearch
+   */
+  handleStateChanged(event) {
+    this.setState({
+      params: {
+        ...this.state.params,
+        state: event.target.value
+      }
+    });
   }
-  handleCenterTypeChanged(type) {
-    this.setState({ params: { ...this.state.params, type } });
+
+  /**
+   * Update component state for center type
+   *
+   * @param {number} type Center type
+   * @returns {void}
+   * @memberof OverlaySearch
+   */
+  handleCenterTypeChanged(event) {
+    this.setState({
+      params: {
+        ...this.state.params,
+        type: event.target.value
+      }
+    });
   }
   /**
    *  Makes request to the endpoint to search for center.
@@ -47,7 +70,22 @@ class OverlaySearch extends React.Component {
    */
   search(event) {
     event.preventDefault();
-    this.props.searchCenter(this.state.params);
+    if (Object.keys(this.state.params).length === 0) {
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.error('Please provide a search term.');
+
+      return;
+    }
+    localStorage.setItem('SEARCH_PARAMS', JSON.stringify(this.state.params));
+    this.props.history.push('/search');
   }
 
   /**
@@ -63,7 +101,7 @@ class OverlaySearch extends React.Component {
       >
         <form className="search-center-form">
           <div className="row">
-            <div className="col s12 m3 l2">
+            <div className="col s12 m3 l3">
               <div className="switch">
                 <label htmlFor="switch-capacity">
                   <input
@@ -105,7 +143,7 @@ class OverlaySearch extends React.Component {
                 </label>
               </div>
             </div>
-            <div className="col s12 m3 l2">
+            <div className="col s12 m3 l3">
               <div className="switch">
                 <label htmlFor="switch-facilities">
                   <input
@@ -173,9 +211,9 @@ class OverlaySearch extends React.Component {
             </div>
             <div className="col input-field s12 m6 l6">
               <SelectComponent
-                default={this.state.params.type}
                 id="state"
-                change={this.handleCenterTypeChanged}
+                width="12"
+                change={this.handleStateChanged}
                 options={[...STATES.map((ctype, i) => [i + 1, ctype])]}
                 label="Center State"
               />
@@ -196,8 +234,8 @@ class OverlaySearch extends React.Component {
             {this.state.switch.type && (
               <div className="col input-field s12 m6 l6">
                 <SelectComponent
-                  default={this.state.params.type}
                   id="type"
+                  width="12"
                   change={this.handleCenterTypeChanged}
                   options={[...CENTER_TYPE.map((ctype, i) => [i + 1, ctype])]}
                   label="Center Type"
@@ -253,8 +291,5 @@ class OverlaySearch extends React.Component {
     );
   }
 }
-const mapDispatchToProps = dispatch => ({
-  searchCenter: params => dispatch(searchCenterRequest(params))
-});
-const mapStateToProps = state => state;
-export default connect(mapStateToProps, mapDispatchToProps)(OverlaySearch);
+
+export default OverlaySearch;

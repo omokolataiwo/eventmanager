@@ -11,7 +11,7 @@ const propTypes = {
  * @returns {object} React JSX DOM
  */
 const Pagination = ({ total, handlePagingNav }) => {
-  const LIMIT = 3;
+  const LIMIT = 6;
   if (total <= LIMIT) return null;
 
   const count = Math.ceil(total / LIMIT);

@@ -14,6 +14,7 @@ import {
   CREATE_EVENT_ERROR,
   RESET_EVENT_STATE
 } from '../../../types';
+import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
 
 const propTypes = {
   createEventRequest: PropTypes.func.isRequired,
@@ -46,10 +47,12 @@ class Create extends React.Component {
         centerId: ''
       },
       centers: [],
+      count: 0,
       activeCenter: {},
       errors: {}
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
+    this.changeActiveCenter = this.changeActiveCenter.bind(this);
   }
   /**
    * Set center for event
@@ -58,7 +61,8 @@ class Create extends React.Component {
    * @memberof Create
    */
   componentWillMount() {
-    this.setState({ centers: this.props.centers }, () => {
+    const { centers, count } = this.props;
+    this.setState({ centers, count }, () => {
       const choiceCenter = localStorage.getItem('choice-center');
       const centerId = choiceCenter || this.state.centers[0].id;
       const activeCenter = this.state.centers.find(center => center.id === parseInt(centerId, 10));
@@ -125,6 +129,13 @@ class Create extends React.Component {
     this.setState({
       activeCenter
     });
+
+    $('html, body').animate(
+      {
+        scrollTop: $('.event-center-detailed').offset().top
+      },
+      1000
+    );
   }
   /**
    * Create event for center
@@ -203,26 +214,11 @@ class Create extends React.Component {
         </div>
         <div className="row center event_center">
           <div className="col s12 m12 l12">
-            <div className="row">
-              {this.state.centers.map((center, index) => (
-                <div
-                  className="col s12 m4 l4 card"
-                  key={center.id}
-                  onClick={() => this.changeActiveCenter(center.id)}
-                  role="button"
-                  tabIndex="-20"
-                  onKeyUp={() => this.changeActiveCenter(center.id)}
-                >
-                  <div className="event-center">
-                    <img src={center.image} alt="Event Center" />
-                    <div className="over-img">
-                      <h4 className="truncate">{center.name}</h4>
-                      <p>{STATES[center.state]}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <PaginatedCentersCard
+              centers={this.state.centers}
+              count={this.state.count}
+              click={this.changeActiveCenter}
+            />
           </div>
         </div>
       </div>
@@ -239,9 +235,14 @@ Create.propTypes = propTypes;
  * @returns {object} - Extracted state
  */
 const mapStateToProps = state => {
-  const { centers } = state.center;
+  const { centers, count } = state.center;
   const { errors, actions } = state.event;
-  return { centers, errors, actions };
+  return {
+    centers,
+    count,
+    errors,
+    actions
+  };
 };
 
 export default connect(mapStateToProps, {

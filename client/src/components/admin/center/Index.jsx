@@ -5,6 +5,7 @@ import { STATES } from '../../../consts';
 import { CenterDetailsEdit } from './CenterDetailsEdit';
 
 import getContactPersonRequest from '../../../actions/fetchContactPersonRequest';
+import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
 
 const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -33,9 +34,10 @@ class Index extends React.Component {
       activeCenter: 0
     };
     this.handleEditCenter = this.handleEditCenter.bind(this);
+    this.changeActiveCenter = this.changeActiveCenter.bind(this);
   }
   /**
-   * Fetch all centers
+   * Set component state to admin centers
    *
    * @returns {void}
    * @memberof Index
@@ -85,25 +87,13 @@ class Index extends React.Component {
         <div className="row">
           <div className="col s12 m12 l12">
             <div className="row">
-              <h5>My Centers</h5>
+              <h5>Admin Centers</h5>
               <hr />
-              {this.state.centers.map((center, index) => (
-                <div className="col s12 m4 l4 card" key={center.id}>
-                  <div
-                    className="event-center"
-                    onClick={() => this.changeActiveCenter(index)}
-                    role="button"
-                    tabIndex={index}
-                    onKeyPress={() => this.changeActiveCenter(index)}
-                  >
-                    <img src={center.image} alt="Event Center" />
-                    <div className="over-img">
-                      <h4 className="truncate">{center.name}</h4>
-                      <p className="truncate">{STATES[center.state]}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <PaginatedCentersCard
+                centers={this.state.centers}
+                count="0"
+                click={this.changeActiveCenter}
+              />
             </div>
           </div>
         </div>
