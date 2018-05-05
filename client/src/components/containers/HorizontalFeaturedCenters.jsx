@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
-import featuredCenterImg from '../../images/party-room.jpg';
 import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
 import { STATES } from '../../consts';
+import PaginatedCentersCard from './PaginatedCentersCard';
 
 const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -28,8 +28,10 @@ class HorizontalFeaturedCenters extends React.Component {
     super(props);
     this.state = {
       centers: [],
+      count: 0,
       poppedCenter: {}
     };
+    this.handleModal = this.handleModal.bind(this);
   }
   /**
    * Fetch all centers
@@ -39,7 +41,6 @@ class HorizontalFeaturedCenters extends React.Component {
    */
   componentWillMount() {
     this.props.fetchAllCentersRequest();
-    this.setState({ centers: this.props.centers });
   }
   /**
    * Initialize materialize modal
@@ -49,6 +50,11 @@ class HorizontalFeaturedCenters extends React.Component {
    */
   componentDidMount() {
     $('.modal').modal();
+  }
+
+  componentWillReceiveProps(props) {
+    const { centers, count } = props;
+    this.setState({ centers, count });
   }
   /**
    * Handle pop up and populate modal with center data
@@ -103,27 +109,11 @@ class HorizontalFeaturedCenters extends React.Component {
           </div>
         </div>
 
-        {this.state.centers.map(center => (
-          <div className="col s12 m4 l4 card" key={center.id}>
-            <div
-              className="event-center"
-              onClick={() => this.handleModal(center.id)}
-              tabIndex="-99999"
-              onKeyUp={() => this.handleModal(center.id)}
-              role="button"
-            >
-              <img src={center.image} alt="Event Center" />
-              <div className="over-img">
-                <h4 className="truncate">{center.name}</h4>
-                <p>
-                  <span className="truncate">{center.address}</span> |{' '}
-                  {STATES[center.state]}
-                </p>
-                <h4>N70,000</h4>
-              </div>
-            </div>
-          </div>
-        ))}
+        <PaginatedCentersCard
+          centers={this.state.centers}
+          count={this.state.count}
+          click={this.handleModal}
+        />
       </div>
     );
   }
@@ -138,8 +128,10 @@ HorizontalFeaturedCenters.propTypes = propTypes;
  * @return {object} - Extracted properties
  */
 const mapStateToProps = state => {
-  const { centers } = state.center;
-  return { centers };
+  const { centers, count } = state.center;
+  return { centers, count };
 };
 
-export default connect(mapStateToProps, { fetchAllCentersRequest })(HorizontalFeaturedCenters);
+export default connect(mapStateToProps, {
+  fetchAllCentersRequest
+})(HorizontalFeaturedCenters);

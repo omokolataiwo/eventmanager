@@ -5,6 +5,7 @@ import Signup from './components/pages/Signup';
 import Signin from './components/pages/Signin';
 import Signout from './components/pages/Signout';
 import Center from './components/pages/Center';
+import Search from './components/pages/Search';
 import logo from './images/logo.png';
 /**
  * Base component for non priviledged pages
@@ -37,26 +38,6 @@ function App() {
                   </Link>
                 </h3>
               </div>
-              <div className="col s12 m8 l8">
-                <div className="main_menu_continer">
-                  <nav>
-                    <ul>
-                      <li>
-                        <Link to="/">Home</Link>
-                      </li>
-                      <li>
-                        <Link to="/">About</Link>
-                      </li>
-                      <li>
-                        <Link to="/">How it works</Link>
-                      </li>
-                      <li>
-                        <Link to="/">Contact</Link>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -67,6 +48,7 @@ function App() {
         <Route path="/signin" component={Signin} />
         <Route path="/signout" component={Signout} />
         <Route path="/center/:id" component={Center} />
+        <Route path="/search" component={Search} />
         <Redirect to="/" />
       </Switch>
       <footer className="page-footer blue">

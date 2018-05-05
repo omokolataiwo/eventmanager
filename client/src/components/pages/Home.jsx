@@ -1,12 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import 'materialize-css';
-import bannercenter from '../../images/banner-center2.png';
+import PropTypes from 'prop-types';
 import checkAvailabilityImg from '../../images/icons/calendar-check.png';
 import searchForCenterImg from '../../images/icons/searching-for-a-house.png';
 import bookVenueImge from '../../images/icons/calendar-book1.png';
 import OverlaySearch from '../containers/OverlaySearch';
+import Slider from '../containers/Slider';
 import FeaturedCenter from '../containers/FeaturedCenter';
+
+const propTypes = {
+  history: PropTypes.func.isRequired
+};
 
 /**
  * Home page component
@@ -14,31 +18,21 @@ import FeaturedCenter from '../containers/FeaturedCenter';
  * @class Home
  * @extends {Component}
  */
-const Home = () => (
+const Home = ({ history }) => (
   <div>
     <div className="search_slider_panel">
-      <div className="carousel carousel-slider banner">
-        <Link className="carousel-item" to="#one!" href="#one!">
-          <img src={bannercenter} alt="Center Banner" />
-        </Link>
-        <Link className="carousel-item" to="#two!" href="#two!">
-          <img src={bannercenter} alt="Center Banner" />
-        </Link>
-        <Link className="carousel-item" to="#three!" href="#three!">
-          <img src={bannercenter} alt="Index Center Banner" />
-        </Link>
-      </div>
+      <Slider />
       <div
         className="searchEvent_panel"
         style={{
-          width: '80%',
-          marginLeft: '10%',
-          maxHeight: '90%',
+          width: '60%',
+          marginLeft: '20%',
+          maxHeight: '20%',
           overflow: 'auto',
           paddingBottom: '2%'
         }}
       >
-        <OverlaySearch />
+        <OverlaySearch history={history} />
       </div>
     </div>
     <div className="container feature">
@@ -60,19 +54,14 @@ const Home = () => (
             <img src={checkAvailabilityImg} alt="Check Availability" />
             <h5>CHECK AVAILABILITY</h5>
             <p>
-              Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec
-              id elit non mi porta gravida at eget metus. Nullam id dolor id
-              nibh ultricies vehicula ut id elit.
+              Check the availability of the center. We are sure you will get a
+              center that best fit your event.
             </p>
           </div>
           <div className="col s12 m4 l4">
             <img src={bookVenueImge} alt="Book Venue" />;
             <h5>BOOK VENUE</h5>
-            <p>
-              Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec
-              id elit non mi porta gravida at eget metus. Nullam id dolor id
-              nibh ultricies vehicula ut id elit.
-            </p>
+            <p>Book the venue of your choice and have fun using the center.</p>
           </div>
         </div>
       </div>
@@ -87,4 +76,5 @@ const Home = () => (
   </div>
 );
 
+Home.propTypes = propTypes;
 export default Home;

@@ -19,7 +19,10 @@ const requestFetchUserEvent = () => ({ type: FETCHING_EVENTS });
  * @param {events} events - User's events from backend
  * @returns {object} - Action: RECEIVED_EVENTS
  */
-const userEvents = events => ({ type: RECEIVED_EVENTS, events });
+const userEvents = events => ({
+  type: RECEIVED_EVENTS,
+  events: events.data.events
+});
 
 /**
  * Action creator for dispatching received events errors
@@ -40,6 +43,7 @@ const fetchUserEventsRequest = () => (dispatch, getState) => {
   axios
     .get(`${API_PATH}/events`)
     .then(response => {
+      console.log(response.data);
       dispatch(userEvents(response.data));
     })
     .catch(e => dispatch(fetchUserEventError(e)));

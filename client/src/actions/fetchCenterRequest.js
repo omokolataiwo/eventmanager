@@ -3,7 +3,8 @@ import { API_PATH } from '../consts';
 import {
   FETCHING_CENTER,
   RECEIVED_CENTER,
-  FETCHING_CENTER_ERROR
+  FETCHING_CENTER_ERROR,
+  RESET_FETCHING_CENTER
 } from '../types';
 
 /**
@@ -14,7 +15,7 @@ import {
  */
 const recievedCenter = center => ({
   type: RECEIVED_CENTER,
-  center
+  center: center.data.center
 });
 
 /**
@@ -47,10 +48,10 @@ const fetchCenterRequest = id => dispatch => {
   dispatch(fetchingCenter());
   axios
     .get(`${API_PATH}/centers/${id}`)
-    .then(response => {
-      dispatch(recievedCenter(response.data));
-    })
-    .catch(e => dispatch(fetchingCenterError(e.response.data)));
+    .then(response => dispatch(recievedCenter(response.data)))
+    .catch(e => {
+      dispatch(fetchingCenterError(e.response.data));
+    });
 };
 
 export default fetchCenterRequest;

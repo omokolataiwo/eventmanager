@@ -24,11 +24,10 @@ const fetchAllCenter = centersResponse => {
 /**
  * Fetch all centers from backend
  *
+ * @param {object} query Page query
  * @returns {void}
  */
 const fetchAllCentersRequest = query => dispatch => {
-  console.log(query);
-
   dispatch({
     type: FETCHING_CENTERS
   });

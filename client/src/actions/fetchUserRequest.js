@@ -10,7 +10,7 @@ import { FETCH_USER_ERROR, FETCH_USER_REQUEST, RECEIVED_USER } from '../types';
  */
 const receivedUser = user => ({
   type: RECEIVED_USER,
-  user
+  user: user.data
 });
 
 /**

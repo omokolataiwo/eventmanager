@@ -47,12 +47,14 @@ export default class UserController {
         errors.phoneNumber = ['phone number has already been used.'];
       }
 
-      if (Object.keys(errors).length) return res.status(422).send(errors);
+      if (Object.keys(errors).length) {
+        return res.status(422).send({ status: 'error', errors: { ...errors } });
+      }
 
       return models.users.create(user).then((newUser) => {
         const userJSON = newUser.toJSON();
-        delete userJSON.password;
-        return res.status(201).json(userJSON);
+        Reflect.deleteProperty(userJSON, 'password');
+        return res.status(201).json({ user: userJSON });
       });
     } catch (error) {
       return res.status(500).send({
@@ -75,12 +77,10 @@ export default class UserController {
       });
 
       if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
-        return res
-          .status(401)
-          .json({
-            status: 'error',
-            errors: [{ signin: ['Invalid username or password'] }]
-          });
+        return res.status(401).json({
+          status: 'error',
+          errors: [{ signin: ['Invalid username or password'] }]
+        });
       }
 
       const token = jwt.sign(
@@ -90,7 +90,7 @@ export default class UserController {
           expiresIn: 864000
         }
       );
-      return res.status(200).send({ data: { token, role: user.role } });
+      return res.status(200).send({ token, role: user.role });
     } catch (error) {
       return res.status(500).send({
         status: 'error',
@@ -109,7 +109,7 @@ export default class UserController {
   static getUser(req, res) {
     return models.users
       .findOne({ where: { id: req.user.id } })
-      .then(user => res.status(200).json({ data: user }))
+      .then(user => res.status(200).json({ user }))
       .catch(() => {
         res.status(500).send({
           status: 'error',
@@ -129,30 +129,28 @@ export default class UserController {
     try {
       let user = await models.users.findOne({ where: { id: req.user.id } });
 
-      const {
-        firstName, lastName, email, phoneNumber
-      } = req.body;
+      if (!user) {
+        return res.status(404).json({
+          status: 'error',
+          errors: [{ user: ['User does not exist.'] }]
+        });
+      }
 
-      user = Object.assign({}, user.toJSON(), {
-        firstName,
-        lastName,
-        email,
-        phoneNumber
-      });
+      user = { ...user.toJSON(), ...req.body };
 
       const phoneNumberExist = await models.users.findOne({
         where: { phoneNumber: user.phoneNumber }
       });
 
       if (phoneNumberExist && phoneNumberExist.username !== user.username) {
-        return res
-          .status(422)
-          .json({
-            status: 'error',
-            errors: [{
+        return res.status(422).json({
+          status: 'error',
+          errors: [
+            {
               phoneNumber: ['Phone number has already been used.']
-            }]
-          });
+            }
+          ]
+        });
       }
 
       const emailAddressExist = await models.users.findOne({
@@ -160,18 +158,17 @@ export default class UserController {
       });
 
       if (emailAddressExist && emailAddressExist.username !== user.username) {
-        return res
-          .status(422)
-          .json({
-            status: 'error',
-            errors: [
-              { email: ['Email address has already been used.'] }
-            ]
-          });
+        return res.status(422).json({
+          status: 'error',
+          errors: [{ email: ['Email address has already been used.'] }]
+        });
       }
       return models.users
         .update(user, { where: { id: req.user.id } })
-        .then(() => res.status(200).json({ data: user }));
+        .then(() => {
+          Reflect.deleteProperty(user, 'password');
+          res.status(200).json({ user });
+        });
     } catch (e) {
       return res.status(500).send({
         status: 'error',

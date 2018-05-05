@@ -1,4 +1,4 @@
-import validate from 'validate.js';
+import { validate } from 'validate.js';
 
 /**
  * Validator parameter ID
@@ -16,7 +16,7 @@ export default (req, res, next) => {
         strict: true,
         message: '^Invalid query string for page',
         greaterThan: 0
-      },
+      }
     }
   };
   const constriant = {};

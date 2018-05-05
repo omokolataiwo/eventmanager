@@ -1,7 +1,7 @@
-import validate from 'validate.js';
+import { validate } from 'validate.js';
 import moment from 'moment';
 
-const validationRules = {
+export const validationRules = {
   title: {
     presence: {
       allowEmpty: false,
@@ -117,8 +117,6 @@ export default (req, res, next) => {
   }
   return res.status(422).json({
     status: 'error',
-    errors: [
-      errors
-    ]
+    errors: [errors]
   });
 };
