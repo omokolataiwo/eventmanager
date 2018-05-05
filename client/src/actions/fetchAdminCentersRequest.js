@@ -14,7 +14,7 @@ import {
  */
 const receivedAdminCenter = centers => ({
   type: RECEIVED_ADMIN_CENTERS,
-  centers
+  centers: centers.data.centers
 });
 
 /**
@@ -48,6 +48,7 @@ const fetchAdminCentersRequest = () => (dispatch, getState) => {
   axios
     .get(`${API_PATH}/centers/admin`)
     .then(response => {
+      console.log('=====', response.data);
       dispatch(receivedAdminCenter(response.data));
     })
     .catch(e => {

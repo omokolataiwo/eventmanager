@@ -1,4 +1,4 @@
-import validate from 'validate.js';
+import { validate } from 'validate.js';
 
 const rules = {
   username: {
@@ -32,8 +32,6 @@ export default (req, res, next) => {
   }
   return res.status(422).json({
     status: 'error',
-    errors: [
-      errors
-    ]
+    errors: [errors]
   });
 };

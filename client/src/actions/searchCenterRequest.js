@@ -1,16 +1,32 @@
 import axios from 'axios';
 import { API_PATH } from '../consts';
+import { SEARCH_RESULT, SEARCHING_CENTER } from '../types';
+
+/**
+ * Action creator for searched result
+ *
+ * @param {object} centers Search result
+ * @returns {object} Action [SEARCH_RESULT]
+ */
+const searchedResult = centers => ({
+  type: SEARCH_RESULT,
+  centers: centers.data
+});
 
 /**
  * Search center
+ *
+ * @param {object} params Search parameters
+ * @returns {void}
  */
-export const searchCenterRequest = params => dispatch => {
+const searchCenterRequest = params => dispatch => {
+  dispatch({ type: SEARCHING_CENTER });
   axios
     .get(`${API_PATH}/centers/search`, { params })
     .then(response => {
-      console.log(response);
+      dispatch(searchedResult(response.data));
     })
-    .catch(e => console.dir(e));
+    .catch(error => console.log(error));
 };
 
 export default searchCenterRequest;

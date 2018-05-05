@@ -20,8 +20,10 @@ class Verification extends React.Component {
    * @memberof Verification
    */
   componentWillMount() {
-    if (!hasFlash('NEW_CENTER_CREATED')) { this.props.history.push('/admin'); }
-    getFlash('NEW_CENTER_CREATED');
+    if (!hasFlash('NEW_CENTER_CREATED')) {
+      getFlash('NEW_CENTER_CREATED'); // Remove from storage
+      this.props.history.push('/admin');
+    }
   }
   /**
    * Renders the page
@@ -35,13 +37,10 @@ class Verification extends React.Component {
         <div className="row">
           <div className="col s12 m10 l9">
             <h5>New Center Created.</h5>
+            <p>An application has been opened to review your centre.</p>
             <p>
-              An application has been opened to review your centre.
-            </p>
-            <p>
-              The centre status will be active when our team
-              is done reviewing your application
-              Thank you.
+              The centre status will be active when our team is done reviewing
+              your application Thank you.
             </p>
           </div>
         </div>

@@ -1,8 +1,8 @@
 import { validate } from 'validate.js';
-import { rules } from './validateSignup';
+import { validationRules } from '../middleware/validateCreateEvent';
 
 /**
- * Validator for updating user
+ * Validate event's attributes
  *
  * @param {object} req - Request object
  * @param {object} res - Response object
@@ -13,10 +13,10 @@ export default (req, res, next) => {
   const updatingField = {};
   const fieldRules = {};
 
-  ['firstName', 'lastName', 'email', 'phoneNumber'].forEach((field) => {
+  ['title', 'startDate', 'endDate', 'centerId'].forEach((field) => {
     if (req.body[field]) {
       updatingField[field] = req.body[field];
-      fieldRules[field] = rules[field];
+      fieldRules[field] = validationRules[field];
     }
   });
 

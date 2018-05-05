@@ -3,6 +3,7 @@ import { center } from '../controllers';
 import adminAuthentication from '../middleware/adminAuthentication';
 import validateParamID from '../middleware/validateParamID';
 import createCenterValidation from '../middleware/createCenterValidation';
+import updateCenterValidation from '../middleware/updateCenterValidation';
 import superAdminAuthentication from '../middleware/superAdminAuthentication';
 import validateQuery from '../middleware/validateQuery';
 
@@ -27,25 +28,12 @@ module.exports = (app) => {
     superAdminAuthentication,
     center.approveCenter
   );
-  app.put(
-    '/centers/event/cancel/:id',
-    validateParamID,
-    adminAuthentication,
-    center.cancelEvent
-  ); // Cancel Event
-
-  app.put(
-    '/centers/cancel/:id',
-    validateParamID,
-    superAdminAuthentication,
-    center.declineCenter
-  );
 
   app.put(
     '/centers/:id',
     validateParamID,
     adminAuthentication,
-    createCenterValidation,
+    updateCenterValidation,
     center.editCenter
   ); // Update a center
 };

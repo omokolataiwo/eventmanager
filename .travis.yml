@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "node"
-  - "7"
+  - "8.11.1"
 
 after_success:
   - npm run coverage

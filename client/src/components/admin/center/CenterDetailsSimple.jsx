@@ -1,5 +1,6 @@
 import React from 'react';
 import PropsType from 'prop-types';
+import formatNumber from 'format-num';
 
 import { STATES, CENTER_TYPE } from '../../../consts';
 
@@ -15,7 +16,6 @@ export const CenterDetailsSimple = ({
   }
 }) => {
   if (!image) return null;
-
   return (
     <div className="row event-center-detailed">
       <div className="col s12 m5 l5 card">
@@ -34,14 +34,15 @@ export const CenterDetailsSimple = ({
           &nbsp;
           <span className="type">{CENTER_TYPE[type]}</span>
         </div>
-        <p className="amount">N{amount}</p>
+        <p className="amount">&#8358;{formatNumber(amount)}</p>
         <p className="capacity">
-          <span>users</span> {capacity} Capacity
+          <span className="material-icons left">people</span>&nbsp;
+          {formatNumber(capacity)} Capacity
         </p>
         <div>
           {facilities
             .split(',')
-            .map(facility => <div className="chip">{facility.value}</div>)}
+            .map(facility => <div className="chip">{facility}</div>)}
         </div>
       </div>
     </div>

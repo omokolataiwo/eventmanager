@@ -9,7 +9,7 @@ h1,h2,h3,h4,h5{
 .margin_0{margin: 0 !important;}
 
 .banner {
-	height: 340px;
+	height: 5000px;
 	background: #9a4a11;
 }
 
@@ -58,8 +58,6 @@ h1,h2,h3,h4,h5{
 	position: absolute;
 	top: 10%;
 }
-
-
 
 body {
     margin: 0;
@@ -132,12 +130,6 @@ nav {
 
 .relative {
     position: relative;
-}
-
-.search_slider_panel {
-    position: relative;
-    float: left;
-    width: 100%;
 }
 
 .menu-section img {

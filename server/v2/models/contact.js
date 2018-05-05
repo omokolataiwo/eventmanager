@@ -10,8 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
-  Contact.associate = function(models) {
-    // associations can be defined here
+  Contact.associate = (models) => {
+    // Contact.belongsTo(models.centers, {
+    //   foreignKey: 'contactId',
+    //   onDelete: 'CASCADE'
+    // });
   };
   return Contact;
 };

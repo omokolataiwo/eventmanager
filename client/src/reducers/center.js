@@ -17,12 +17,16 @@ import {
   UPDATING_CENTER,
   UPDATED_CENTER,
   RESET_UPDATING_CENTER_STATE,
-  UPDATING_CENTER_ERROR
+  UPDATING_CENTER_ERROR,
+  SEARCH_RESULT,
+  SEARCHING_CENTER,
+  RESET_FETCHING_CENTER
 } from '../types';
 
 const defaultCenter = {
   contacts: [],
   centers: [],
+  searched: [],
   eventCenter: [],
   center: {},
   errors: {},
@@ -33,7 +37,8 @@ const defaultCenter = {
     getCenter: null,
     getEvents: null,
     createCenter: null,
-    updateCenter: null
+    updateCenter: null,
+    search: null
   }
 };
 
@@ -78,6 +83,7 @@ export default (state = defaultCenter, action) => {
     return { ...state, events: { ...state.events, getCenters: action.type } };
   case RECEIVED_CENTERS:
     return { ...state, centers: action.centers, count: action.count };
+  case RESET_FETCHING_CENTER:
   case FETCHING_CENTER:
     return {
       ...state,
@@ -115,6 +121,14 @@ export default (state = defaultCenter, action) => {
     return {
       ...state,
       events: { ...state.events, getCenters: action.type }
+    };
+  case SEARCHING_CENTER:
+    return { ...state, events: { ...state.events, search: action.type } };
+  case SEARCH_RESULT:
+    return {
+      ...state,
+      searched: action.centers,
+      events: { ...state.events, search: action.type }
     };
   default:
     return state;

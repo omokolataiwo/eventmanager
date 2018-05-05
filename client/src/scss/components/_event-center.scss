@@ -1,31 +1,29 @@
 .event-center {
 		position: relative;
 		padding: 0;
+		margin-top: 20px;
+		height: 300px;
 		img {
 				width: 100%;
 				display: inline-block;
-		}
-
-		.over-img {
-				background-color: rgba(0, 0, 0, 0.77);
-				padding: 8px;
-				width: 80%;
-				height: 60%;
-				position: absolute;
-				top: 20%;
-				left: 10%;
+				height: 200px;
 		}
 
 		h4, p {
-				color: #fff;
+				color: #000;
 				margin: 0;
 				padding: 0;
 		}
 		h4 {
 				font-size: 1.5em;
+				margin: 10px 0 0 0;
 		}
 		p {
 				font-size: 0.9em;
+				font-weight: 600;
+		}
+		.material-icons {
+			font-size: 13px;
 		}
 		
 		&-detailed {

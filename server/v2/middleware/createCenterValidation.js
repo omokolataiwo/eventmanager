@@ -1,6 +1,6 @@
 import { validate } from 'validate.js';
 
-const centerRules = {
+export const centerRules = {
   name: {
     presence: {
       allowEmpty: false,
@@ -23,6 +23,16 @@ const centerRules = {
       maximum: 120
     }
   },
+  area: {
+    presence: {
+      allowEmpty: false,
+      message: 'is required'
+    },
+    length: {
+      minimum: 1,
+      maximum: 120
+    }
+  },
   state: {
     presence: {
       allowEmpty: false,
@@ -32,6 +42,17 @@ const centerRules = {
       greaterThan: 0,
       lessThan: 38,
       message: 'code is invalid'
+    }
+  },
+  type: {
+    presence: {
+      allowEmpty: false,
+      message: 'is required.'
+    },
+    numericality: {
+      greaterThan: 0,
+      lessThan: 5,
+      message: '^ center type is invalid'
     }
   },
   capacity: {
@@ -51,6 +72,26 @@ const centerRules = {
       message: 'is required.'
     }
   },
+  image: {
+    presence: {
+      allowEmpty: false,
+      message: 'is required'
+    },
+    length: {
+      minimum: 1,
+      maximum: 120
+    }
+  },
+  details: {
+    presence: {
+      allowEmpty: false,
+      message: '^ Center details is required'
+    },
+    length: {
+      minimum: 10,
+      maximum: 120
+    }
+  },
   amount: {
     presence: {
       allowEmpty: false,
@@ -64,7 +105,7 @@ const centerRules = {
   }
 };
 
-const contactRules = {
+export const contactRules = {
   firstName: {
     presence: {
       allowEmpty: false,
@@ -112,7 +153,7 @@ const contactRules = {
 };
 
 /**
- * Validator for sign up
+ * Validator for creating an event
  *
  * @param {object} req - Request object
  * @param {object} res - Response object

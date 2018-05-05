@@ -25,11 +25,11 @@ const propTypes = {
  */
 class Admin extends React.Component {
   /**
-  * Creates an instance of User.
-  *
-  * @param {object} props React properties
-  * @memberof User
-  */
+   * Creates an instance of User.
+   *
+   * @param {object} props React properties
+   * @memberof User
+   */
   constructor(props) {
     super(props);
     this.state = { authorized: true };
@@ -95,7 +95,7 @@ class Admin extends React.Component {
                   </Link>
                 </div>
                 <div className="login-container">
-                  <Link to="/logout">LOG OUT</Link>
+                  <Link to="/signout">LOG OUT</Link>
                 </div>
               </div>
             </div>
