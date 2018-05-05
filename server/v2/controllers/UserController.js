@@ -90,7 +90,12 @@ export default class UserController {
           expiresIn: 864000
         }
       );
-      return res.status(200).send({ token, role: user.role });
+      return res.status(200).send({
+        user: {
+          token,
+          role: user.role
+        }
+      });
     } catch (error) {
       return res.status(500).send({
         status: 'error',

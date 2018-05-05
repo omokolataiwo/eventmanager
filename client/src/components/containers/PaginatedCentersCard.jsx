@@ -1,6 +1,5 @@
 import React from 'react';
 import formatNumber from 'format-num';
-import { Link } from 'react-router-dom';
 import Pagination from './Pagination';
 import { STATES } from '../../consts';
 
@@ -12,7 +11,6 @@ import { STATES } from '../../consts';
 const PaginatedCentersCard = ({
   centers, count, click, handlePagingNav
 }) => {
-  console.log('=========================', centers);
   if (!Array.isArray(centers) || !centers.length) return 'Can not find center';
   return (
     <div>

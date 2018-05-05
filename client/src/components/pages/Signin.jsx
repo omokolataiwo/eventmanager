@@ -184,12 +184,15 @@ Signin.propTypes = propTypes;
  * @returns {object} - Extracted properties
  */
 const mapStateToProps = state => {
-  const { user } = state;
+  const {
+    userdata, events, errors, authenticated
+  } = state.user;
+
   return {
-    userdata: user.userdata,
-    events: user.events,
-    errors: user.errors,
-    authenticated: user.authenticated
+    userdata,
+    events,
+    errors,
+    authenticated
   };
 };
 export default connect(mapStateToProps, { signinRequest })(Signin);

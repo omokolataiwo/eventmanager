@@ -15,7 +15,7 @@ const signingInUser = () => ({ type: REQUEST_SIGNIN_USER });
  * @param {object} user - signed in user details
  * @return {object} - action
  */
-const userSignedIn = user => ({ type: SIGNIN_USER, user: user.data });
+const userSignedIn = user => ({ type: SIGNIN_USER, user });
 
 /**
  * Action for signin error state
@@ -23,7 +23,10 @@ const userSignedIn = user => ({ type: SIGNIN_USER, user: user.data });
  * @param {object} errors - error messages
  * @return {object} - action
  */
-const signingInUserError = errors => ({ type: SIGNIN_USER_ERROR, errors });
+const signingInUserError = errors => ({
+  type: SIGNIN_USER_ERROR,
+  errors: errors[0]
+});
 
 /**
  * Make http request to backend to sign in user
@@ -36,14 +39,14 @@ const signinRequest = user => dispatch => {
   axios
     .post(`${API_PATH}/users/signin`, user)
     .then(response => {
-      dispatch(userSignedIn(response.data));
+      dispatch(userSignedIn(response.data.user));
     })
-    .catch(e => {
-      if (!e.response || e.response.status >= 500) {
+    .catch((error) => {
+      if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
-      dispatch(signingInUserError(e.response.data.errors));
+      dispatch(signingInUserError(error.response.data.errors));
     });
 };
 

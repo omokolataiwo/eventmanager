@@ -15,7 +15,7 @@ import {
  */
 const recievedCenter = center => ({
   type: RECEIVED_CENTER,
-  center: center.data.center
+  center,
 });
 
 /**
@@ -48,7 +48,7 @@ const fetchCenterRequest = id => dispatch => {
   dispatch(fetchingCenter());
   axios
     .get(`${API_PATH}/centers/${id}`)
-    .then(response => dispatch(recievedCenter(response.data)))
+    .then(response => dispatch(recievedCenter(response.data.center)))
     .catch(e => {
       dispatch(fetchingCenterError(e.response.data));
     });
