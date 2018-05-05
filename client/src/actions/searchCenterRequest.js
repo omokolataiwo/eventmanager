@@ -10,7 +10,7 @@ import { SEARCH_RESULT, SEARCHING_CENTER } from '../types';
  */
 const searchedResult = centers => ({
   type: SEARCH_RESULT,
-  centers: centers.data
+  centers
 });
 
 /**
@@ -23,8 +23,8 @@ const searchCenterRequest = params => dispatch => {
   dispatch({ type: SEARCHING_CENTER });
   axios
     .get(`${API_PATH}/centers/search`, { params })
-    .then(response => {
-      dispatch(searchedResult(response.data));
+    .then((response) => {
+      dispatch(searchedResult(response.data.centers));
     })
     .catch(error => console.log(error));
 };

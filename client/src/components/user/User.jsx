@@ -17,6 +17,9 @@ const propTypes = {
   match: PropTypes.shape({
     path: PropTypes.string.isRequired
   }).isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired
+  }).isRequired,
   accessToken: PropTypes.string.isRequired
 };
 

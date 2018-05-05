@@ -13,7 +13,7 @@ import {
  * @returns {object} - Action: RECEIVED_CENTERS
  */
 const fetchAllCenter = centersResponse => {
-  const { centers, count } = centersResponse.data;
+  const { centers, count } = centersResponse;
   return {
     type: RECEIVED_CENTERS,
     centers,

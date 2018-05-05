@@ -10,7 +10,7 @@ import { FETCH_USER_ERROR, FETCH_USER_REQUEST, RECEIVED_USER } from '../types';
  */
 const receivedUser = user => ({
   type: RECEIVED_USER,
-  user: user.data
+  user,
 });
 
 /**
@@ -36,7 +36,7 @@ const fetchUserRequest = () => (dispatch, getState) => {
   axios
     .get(`${API_PATH}/users`)
     .then(response => {
-      dispatch(receivedUser(response.data));
+      dispatch(receivedUser(response.data.user));
     })
     .catch(error => {
       if (!error.response || error.response.status >= 500) {

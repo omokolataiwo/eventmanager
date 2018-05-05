@@ -186,7 +186,6 @@ Center.propTypes = propTypes;
 const mapStateToProps = state => {
   const { center, events } = state.center;
   let { searched } = state.center;
-
   if (searched.length && Object.keys(center).length) {
     searched = searched.filter(searchCenter => searchCenter.id !== center.id);
   }
