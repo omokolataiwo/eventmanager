@@ -86,6 +86,33 @@ class Center extends React.Component {
     addFlash('choice-center', this.props.match.params.id);
     this.props.history.push('/user/event/create');
   }
+
+  /**
+  * Render the contact details of a center
+  *
+  * @returns {*} JSX DOM or null
+  * @memberof Center
+  */
+  renderContactDetails() {
+    const { center } = this.state;
+    if (!center || !center.contacts) {
+      return null;
+    }
+
+    return (
+      <div>
+        <p>Contact</p>
+        <p>
+          {this.state.center.contacts.firstName} &nbsp;
+          {this.state.center.contacts.lastName}
+        </p>
+        <p>
+          <span className="material-icons left">phone</span>
+          {this.state.center.contacts.phoneNumber}
+        </p>
+      </div>
+    );
+  }
   /**
    * Render the page
    *
@@ -136,17 +163,7 @@ class Center extends React.Component {
                     <p>{formatNumber(this.state.center.capacity)}</p>
                     <p>Facilities</p>
                     <p>{this.state.center.facilities}</p>
-                    <div>
-                      <p>Contact</p>
-                      <p>
-                        {this.state.center.contacts.firstName} &nbsp;
-                        {this.state.center.contacts.lastName}
-                      </p>
-                      <p>
-                        <span className="material-icons left">phone</span>
-                        {this.state.center.contacts.phoneNumber}
-                      </p>
-                    </div>
+                    {this.renderContactDetails()}
                     <button onClick={event => this.handleBookEvent(event)}>
                       Book Center
                     </button>
