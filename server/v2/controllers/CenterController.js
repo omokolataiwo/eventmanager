@@ -140,7 +140,7 @@ export default class CenterController {
         order: [['id', 'DESC']]
       })
       .then((centers) => {
-        if (centers.rows.length) {
+        if (!centers.rows.length) {
           return res
             .status(404)
             .json({ errors: { centers: ['No Center Found'] } });

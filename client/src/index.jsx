@@ -9,6 +9,7 @@ import configureStore from './store';
 import App from './App';
 import Admin from './components/admin/Admin';
 import User from './components/user/User';
+import SuperAdmin from './components/superadmin/Admin';
 import './scss/style.scss';
 
 const { store, persistor } = configureStore();
@@ -20,6 +21,7 @@ ReactDOM.render(
         <Switch>
           <Route path="/admin" component={Admin} />
           <Route path="/user" component={User} />
+          <Route path="/super" component={SuperAdmin} />
           <Route path="/" component={App} />
         </Switch>
       </BrowserRouter>

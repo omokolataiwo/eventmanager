@@ -7,7 +7,7 @@ import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
 import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
-import { STATES } from '../../../consts';
+
 import { addFlash } from '../../../utils/flash';
 import {
   CREATED_EVENT,

@@ -10,7 +10,7 @@ import { FETCHING_CENTERS_EVENTS, RECEIVED_CENTERS_EVENTS } from '../types';
  */
 const recievedEvents = events => ({
   type: RECEIVED_CENTERS_EVENTS,
-  events: events.data
+  events
 });
 
 /**
@@ -24,7 +24,7 @@ const fetchCenterEventRequest = () => (dispatch, getState) => {
   axios
     .get(`${API_PATH}/centers/events`)
     .then(response => {
-      dispatch(recievedEvents(response.data));
+      dispatch(recievedEvents(response.data.events));
     })
     .catch(e => console.dir(e));
 };

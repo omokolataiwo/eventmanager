@@ -14,7 +14,7 @@ import {
  */
 const receivedAdminCenter = centers => ({
   type: RECEIVED_ADMIN_CENTERS,
-  centers: centers.data.centers
+  centers
 });
 
 /**
@@ -47,12 +47,11 @@ const fetchAdminCentersRequest = () => (dispatch, getState) => {
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
   axios
     .get(`${API_PATH}/centers/admin`)
-    .then(response => {
-      console.log('=====', response.data);
-      dispatch(receivedAdminCenter(response.data));
+    .then((response) => {
+      dispatch(receivedAdminCenter(response.data.centers));
     })
-    .catch(e => {
-      dispatch(fetchingAdminCentersError(e));
+    .catch((error) => {
+      dispatch(fetchingAdminCentersError(error));
     });
 };
 

@@ -1,6 +1,9 @@
 {
   "root": true,
-  "extends": ["airbnb", "react"],
+  "extends": [
+    "airbnb",
+    "react"
+  ],
   "env": {
     "es6": true,
     "browser": true,
@@ -9,43 +12,60 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx"]
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
       }
     }
   },
   "rules": {
     "no-nested-ternary": 0,
     "one-var": 0,
-    "indent": ["error", 2],
+    "indent": [
+      "error",
+      2
+    ],
     "one-var-declaration-per-line": 0,
     "new-cap": 0,
-
     "consistent-return": 0,
     "no-param-reassign": 0,
-    "max-len": [2, 80, 4, { "ignoreUrls": true, "ignoreComments": true }],
+    "max-len": [
+      2,
+      80,
+      4,
+      {
+        "ignoreUrls": true,
+        "ignoreComments": true
+      }
+    ],
     "comma-dangle": 0,
-    "curly": ["error", "multi-line"],
+    "curly": [
+      "error",
+      "multi-line"
+    ],
     "jsx-a11y/anchor-is-valid": [
       "error",
       {
-        "components": ["Link"],
-        "specialLink": ["to"]
+        "components": [
+          "Link"
+        ],
+        "specialLink": [
+          "to"
+        ]
       }
     ],
-    "import/no-unresolved": [
-      2,
-      {
-        "commonjs": true,
-        "caseSensitive": false
-      }
-    ],
+    "import/no-unresolved": 0,
     "no-shadow": [
       "warn",
       {
-        "allow": ["req", "res", "err"]
+        "allow": [
+          "req",
+          "res",
+          "err"
+        ]
       }
     ],
-
     "class-methods-use-this": 0,
     "valid-jsdoc": [
       "warn",

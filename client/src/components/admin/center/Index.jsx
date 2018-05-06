@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { STATES } from '../../../consts';
+import $ from 'jquery';
 import { CenterDetailsEdit } from './CenterDetailsEdit';
 
 import getContactPersonRequest from '../../../actions/fetchContactPersonRequest';
@@ -31,7 +31,7 @@ class Index extends React.Component {
     super(props);
     this.state = {
       centers: [],
-      activeCenter: 0
+      activeCenter: {}
     };
     this.handleEditCenter = this.handleEditCenter.bind(this);
     this.changeActiveCenter = this.changeActiveCenter.bind(this);
@@ -45,18 +45,30 @@ class Index extends React.Component {
   componentWillMount() {
     const { centers } = this.props;
     this.props.getContactPersonRequest();
-    return this.setState({ centers });
+    return this.setState({ centers, activeCenter: centers[0] });
   }
 
   /**
    * Toggle active center
    *
-   * @param {int} centerIndex - The index of the center
+   * @param {int} centerId - The index of the center
    * @returns {void}
    * @memberof Index
    */
-  changeActiveCenter(centerIndex) {
-    return this.setState({ activeCenter: centerIndex });
+  changeActiveCenter(centerId) {
+    $('html, body').animate(
+      {
+        scrollTop: $('.event-center-detailed').offset().top
+      },
+      1000
+    );
+    const { centers } = this.state;
+    const activeCenter = centers.find(center => centerId === center.id);
+    this.setState({
+      activeCenter
+    });
+
+    return this.setState({ activeCenter });
   }
   /**
    * Redirects to edit center page
@@ -80,7 +92,7 @@ class Index extends React.Component {
       <div className="container container-medium">
         {this.state.centers.length > 0 && (
           <CenterDetailsEdit
-            center={this.state.centers[this.state.activeCenter]}
+            center={this.state.activeCenter}
             click={this.handleEditCenter}
           />
         )}

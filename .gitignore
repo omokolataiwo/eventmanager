@@ -11,3 +11,4 @@ client/reports
 client/dist
 client/selenium-debug.log
 .vscode
+project.todo

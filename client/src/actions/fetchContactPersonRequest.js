@@ -10,7 +10,7 @@ import { RECEIVED_CENTER_CONTACTS } from '../types';
  */
 const centerContacts = contacts => ({
   type: RECEIVED_CENTER_CONTACTS,
-  contacts: contacts.data
+  contacts
 });
 
 /**
@@ -23,7 +23,7 @@ const getContactPersonRequest = () => (dispatch, getState) => {
   axios
     .get(`${API_PATH}/centers/contacts`)
     .then(response => {
-      dispatch(centerContacts(response.data));
+      dispatch(centerContacts(response.data.contacts));
     })
     .catch(error => {
       dispatch({ type: 'FETCHING_CONTACT_ERROR' });
