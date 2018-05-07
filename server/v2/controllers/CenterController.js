@@ -4,7 +4,7 @@ import models from '../models';
 import {
   PENDING_CENTER,
   ACTIVE_CENTER,
-  APPROVED_CENTER,
+  APPROVED_CENTER
 } from '../middleware/const';
 
 /**
@@ -82,15 +82,60 @@ export default class CenterController {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  static getCenters(req, res) {
-    const LIMIT = 6;
-    const page = parseInt(req.query.page, 10) - 1 || 0;
+  static async getCenters(req, res) {
+    try {
+      const LIMIT = 6;
+      const page = parseInt(req.query.page, 10) - 1 || 0;
 
-    return models.centers
-      .findAndCountAll({
+      const queryCondition = {
         where: {
           $and: [{ approve: APPROVED_CENTER }, { active: ACTIVE_CENTER }]
         },
+        limit: LIMIT,
+        offset: LIMIT * page,
+        order: [['id', 'DESC']]
+      };
+
+      return models.centers
+        .findAndCountAll(queryCondition)
+        .then((centers) => {
+          if (!centers.rows.length) {
+            return res
+              .status(404)
+              .json({ errors: { centers: ['No Center Found'] } });
+          }
+          return res.status(200).json({
+            centers: centers.rows,
+            count: centers.count
+          });
+        });
+    } catch (errors) {
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
+    }
+  }
+
+  /**
+   * Get all centers with events registered by authenticated user
+   *
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @returns {*} - Server response
+   */
+  static getAllProtectedCenters(req, res) {
+    const LIMIT = 6;
+    const page = req.query.page - 1 || 0;
+
+    return models.centers
+      .findAndCountAll({
+        include: [
+          {
+            model: models.contacts,
+            as: 'contacts'
+          }
+        ],
         limit: LIMIT,
         offset: LIMIT * page,
         order: [['id', 'DESC']]
@@ -106,13 +151,13 @@ export default class CenterController {
           count: centers.count
         });
       })
-      .catch((error) => {
+      .catch(() =>
         res.status(500).send({
           status: 'error',
           message: 'Internal Server Error'
-        });
-      });
+        }));
   }
+
   /**
    * Get all centers with events registered by authenticated user
    *
@@ -268,7 +313,6 @@ export default class CenterController {
         })
         .then(() => res.status(200).json({ center: modifiedCenter }));
     } catch (error) {
-      // console.log(error);
       return res.status(500).send({
         status: 'error',
         message: 'Internal Server Error'
@@ -448,7 +492,7 @@ export default class CenterController {
     }
 
     return models.centers
-      .update({ approve: APPROVED_CENTER }, { where: { id: centerId } })
+      .update({ approve: center.approve ? 0 : 1 }, { where: { id: centerId } })
       .then(() => res.status(200).json({ center }))
       .catch(() => {
         res.status(500).send({

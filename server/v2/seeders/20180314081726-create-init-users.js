@@ -43,6 +43,17 @@ module.exports = {
           role: 3,
           createdAt: '12-12-2018',
           updatedAt: '12-12-2018'
+        },
+        {
+          firstName: 'Super',
+          lastName: 'Admin',
+          phoneNumber: '07032108215',
+          email: 'super@yahoo.com',
+          username: 'super',
+          password: bcrypt.hashSync('123', 8),
+          role: 1,
+          createdAt: '12-12-2018',
+          updatedAt: '12-12-2018'
         }
       ],
       {}

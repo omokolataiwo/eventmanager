@@ -2,10 +2,14 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
+import fetchAllCentersRequest from '../../actions/fetchAllProtectedCentersRequest';
+import approveCenterRequest from '../../actions/approveCenterRequest';
+import Lever from '../containers/forms/Lever';
+
 
 const propTypes = {
   fetchAllCentersRequest: PropTypes.func.isRequired,
+  approveCenterRequest: PropTypes.func.isRequired,
   centers: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
 
@@ -27,6 +31,7 @@ class Index extends React.Component {
     this.state = {
       centers: []
     };
+    this.handleApproveToggle = this.handleApproveToggle.bind(this);
   }
   /**
    * Fetches centers
@@ -50,6 +55,27 @@ class Index extends React.Component {
   }
 
   /**
+   * Handles the center approving toggle
+   *
+   * @param {string} id - The center's ID
+   * @returns {void}
+   * @memberof Index
+   */
+  handleApproveToggle(id) {
+    this.props.approveCenterRequest(id);
+
+    let { centers } = this.state;
+    centers = centers.map((center) => {
+      if (center.id === id) {
+        center.approve = !center.approve;
+      }
+      return center;
+    });
+
+    this.setState({ centers });
+  }
+
+  /**
    * Renders centers
    *
    * @returns {object} JSX DOM
@@ -65,6 +91,10 @@ class Index extends React.Component {
           <tr>
             <th>Center Name</th>
             <th>Center Address</th>
+            <th>Contact Name</th>
+            <th>Phone Number</th>
+            <th>Email Address</th>
+            <th>Approve Center</th>
           </tr>
         </thead>
         <tbody>
@@ -72,6 +102,10 @@ class Index extends React.Component {
             <tr key={center.id}>
               <td>{center.name}</td>
               <td>{center.address}</td>
+              <td>{`${center.contacts.firstName} ${center.contacts.lastName}`}</td>
+              <td>{center.contacts.phoneNumber}</td>
+              <td>{center.contacts.email}</td>
+              <td><Lever boolValue={center.approve} handleToggle={this.handleApproveToggle} id={center.id} /></td>
             </tr>
           ))}
         </tbody>
@@ -107,4 +141,4 @@ const mapStateToProps = (state) => {
   const { centers } = state.center;
   return { centers };
 };
-export default connect(mapStateToProps, { fetchAllCentersRequest })(Index);
+export default connect(mapStateToProps, { fetchAllCentersRequest, approveCenterRequest })(Index);

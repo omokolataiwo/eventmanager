@@ -17,7 +17,7 @@ const getPath = role => {
     return '/admin';
   }
   if (role === ACCOUNT_TYPE_SUPER_ADMIN) {
-    return '/special';
+    return '/protected';
   }
   return '/';
 };

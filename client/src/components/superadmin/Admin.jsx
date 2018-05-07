@@ -2,11 +2,16 @@ import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Index from './Index';
+import toastr from 'toastr';
 
+import Index from './Index';
 import logo from '../../images/logo.png';
+import { ACCOUNT_TYPE_SUPER_ADMIN } from '../../consts';
 
 const propTypes = {
+  authenticated: PropTypes.bool.isRequired,
+  userdata: PropTypes.shape({ role: PropTypes.number.isRequired }).isRequired,
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   match: PropTypes.shape({ path: PropTypes.string.isRequired }).isRequired
 };
 
@@ -33,7 +38,24 @@ class Admin extends React.Component {
    * @returns {void}
    * @memberof Admin
    */
-  componentWillMount() {}
+  componentWillMount() {
+    const { authenticated, userdata, history } = this.props;
+
+    if (!authenticated || userdata.role !== ACCOUNT_TYPE_SUPER_ADMIN) {
+      toastr.options = {
+        positionClass: 'toast-top-full-width',
+        showDuration: '300',
+        hideDuration: '2000',
+        showEasing: 'swing',
+        hideEasing: 'linear',
+        showMethod: 'fadeIn',
+        hideMethod: 'fadeOut'
+      };
+      toastr.error('Please sign in.');
+      this.setState({ authorized: false });
+      history.push('/signin');
+    }
+  }
   /**
    * Renders component
    *
@@ -87,7 +109,7 @@ class Admin extends React.Component {
 }
 Admin.propTypes = propTypes;
 
-export default connect(state => {
+export default connect((state) => {
   const { authenticated, userdata } = state.user;
   return {
     authenticated,

@@ -21,7 +21,7 @@ ReactDOM.render(
         <Switch>
           <Route path="/admin" component={Admin} />
           <Route path="/user" component={User} />
-          <Route path="/super" component={SuperAdmin} />
+          <Route path="/protected" component={SuperAdmin} />
           <Route path="/" component={App} />
         </Switch>
       </BrowserRouter>
