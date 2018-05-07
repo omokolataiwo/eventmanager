@@ -246,11 +246,10 @@ class Update extends React.Component {
   /**
    * Toggle the availability of a center
    *
-   * @param {object} event DOM object
    * @returns {void}
    * @memberof Update
    */
-  handleAvailToggle(event) {
+  handleAvailToggle() {
     this.setState({
       center: {
         ...this.state.center,

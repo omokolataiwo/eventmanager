@@ -14,8 +14,21 @@ module.exports = (app) => {
     createCenterValidation,
     center.createCenter
   ); // Create Center
-  app.get('/centers', validateQuery, center.getCenters); // Get all centers
-  app.get('/centers/admin', adminAuthentication, center.getAdminCenters); // Get own centers
+
+  app.get(
+    '/centers',
+    validateQuery, center.getCenters
+  ); // Get all centers
+
+  app.get(
+    '/centers/admin',
+    adminAuthentication, center.getAdminCenters
+  ); // Get own centers
+
+  app.get(
+    '/centers/protected',
+    superAdminAuthentication, center.getAllProtectedCenters
+  );
   app.get('/centers/events', adminAuthentication, center.getOwnEvents); // Get own events
   app.get('/centers/contacts', adminAuthentication, center.getContacts); // Get Own Center Contacts
   app.get('/centers/search', center.search);

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import toastr from 'toastr';
 import Index from './Index';
-import { Center } from './Center';
+import Center from './Center';
 import Bookings from './Bookings';
 import { ACCOUNT_TYPE_ADMIN } from '../../consts';
 
@@ -140,7 +140,7 @@ class Admin extends React.Component {
 }
 Admin.propTypes = propTypes;
 
-export default connect(state => {
+export default connect((state) => {
   const { authenticated, userdata } = state.user;
   return {
     authenticated,

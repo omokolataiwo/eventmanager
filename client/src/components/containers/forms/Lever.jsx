@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 const propTypes = {
   boolValue: PropTypes.bool.isRequired,
   handleToggle: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired
+  id: PropTypes.string.isRequired,
+  label: PropTypes.bool
 };
 /**
  * Lever a toggle for boolean
@@ -12,7 +13,9 @@ const propTypes = {
  * @param {object} prop Component properties
  * @returns {object} JSX DOM
  */
-const Lever = ({ boolValue, handleToggle, id }) => (
+const Lever = ({
+  boolValue, handleToggle, id, label
+}) => (
   <div className="switch">
     <label htmlFor={id}>
       <input
@@ -20,13 +23,16 @@ const Lever = ({ boolValue, handleToggle, id }) => (
         type="checkbox"
         checked={boolValue}
         onChange={() => {
-          handleToggle();
+          handleToggle(id);
         }}
       />
       <span className="lever" />
-      CENTER AVAILABILITY
+      {label && 'CENTER AVAILABILITY'}
     </label>
   </div>);
 
 Lever.propTypes = propTypes;
+Lever.defaultProps = {
+  label: true
+};
 export default Lever;

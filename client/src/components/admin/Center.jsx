@@ -16,7 +16,7 @@ const propTypes = {
  * @param {object} props - React properties
  * @returns {object} JSX DOM
  */
-export const Center = props => (
+const Center = props => (
   <Switch>
     <Route path={`${props.match.path}`} exact component={Index} />
     <Route path={`${props.match.path}/create`} component={Create} />

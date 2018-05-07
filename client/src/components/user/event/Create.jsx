@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
+import $ from 'jquery';
 import { createEventRequest } from '../../../actions/createEventRequest';
 import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
 import InputField from '../../containers/forms/InputField';
@@ -21,7 +22,9 @@ const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
   errors: PropTypes.shape().isRequired,
   actions: PropTypes.string.isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired
+  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  count: PropTypes.string.isRequired,
+  resetEventState: PropTypes.func.isRequired,
 };
 
 /**
@@ -65,7 +68,8 @@ class Create extends React.Component {
     this.setState({ centers, count }, () => {
       const choiceCenter = localStorage.getItem('choice-center');
       const centerId = choiceCenter || this.state.centers[0].id;
-      const activeCenter = this.state.centers.find(center => center.id === parseInt(centerId, 10));
+      const activeCenter = this.state.centers
+        .find(center => center.id === parseInt(centerId, 10));
 
       this.setState({
         event: { ...this.state.event },
@@ -125,7 +129,8 @@ class Create extends React.Component {
    * @memberof Create
    */
   changeActiveCenter(centerId) {
-    const activeCenter = this.state.centers.find(center => centerId === center.id);
+    const activeCenter = this.state.centers
+      .find(center => centerId === center.id);
     this.setState({
       activeCenter
     });
