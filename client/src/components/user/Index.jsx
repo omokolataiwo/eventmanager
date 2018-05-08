@@ -95,33 +95,63 @@ class Index extends Component {
    */
   render() {
     return (
-      <div className="container container-medium card">
+      <div className="container container-medium event">
         <div className="row center">
           <div className="col s12 m12 l12">
-            <h4>BOOKED EVENTS</h4>
+            <h4>Booked Events</h4>
+            <hr />
           </div>
 
           <div className="col s12 m12 l12">
             <div className="row">
               {this.state.events.map(event => (
-                <div className="col s12 m6 l6" key={event.id}>
+                <div className="col s12 m4 l4" key={event.id}>
                   <div className="card-panel event-card-user">
-                    <h4 className="truncate">{event.title}</h4>
-                    <p>{moment(event.startDate).format('Do MMMM, YYYY')}</p>
-                    <p>
-                      {event.center.area} | {STATES[event.center.state]}
-                    </p>
-                    <h5 className="truncate">{event.center.name}</h5>
-                    <div className="event-actions">
-                      <span
+                    <h6 className="truncate">{event.title}
+                      <i
                         onClick={() => this.handleEditEvent(event.id)}
                         tabIndex="-99999"
                         onKeyUp={() => this.handleEditEvent(event.id)}
-                        role="button"
-                      >
-                        Edit
-                      </span>
+                        role="button" className="material-icons right delete">
+                        clear
+                      </i>
+                      <i
+                        onClick={() => this.handleEditEvent(event.id)}
+                        tabIndex="-99999"
+                        onKeyUp={() => this.handleEditEvent(event.id)}
+                        role="button" className="material-icons right edit">
+                        edit
+                      </i>
+                    </h6>
+                    <hr />
+                    <div className="row venue">
+                      <div className="col s12 m2 l2">
+                        <i className="material-icons left">location_on</i>
+                      </div>
+                      <div className="col s12 m9 l9">
+                        <h6 className="truncate">{event.center.name}</h6>
+                        <p>
+                          {event.center.area}, {STATES[event.center.state - 1]}
+                        </p>
+                      </div>
                     </div>
+                    <div className="row timer">
+                      <div className="col s12 m2 l2">
+                        <i className="material-icons">access_time</i>
+                      </div>
+                      <div className="col s12 m9 l9">
+                        <div className="col s12 m4 l4">
+                          <p>{moment(event.startDate).format('Do')}</p>
+                          <p>{moment(event.startDate).format('MMM')}.</p>
+
+                        </div>
+                        <div className="col s12 m8 l8">
+                          <p>{moment(event.startDate).diff(moment(), 'days')} Days</p>
+                          <p className="remaining">Remaining</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="row date" />
                   </div>
                 </div>
               ))}

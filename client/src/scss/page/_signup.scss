@@ -1,0 +1,18 @@
+.signup {
+  & > .card {
+    margin-bottom: 5%;
+  }
+  .material-icons {
+    color: rgb(8, 74, 144);
+  }
+  h5 {
+    font-family: 'Fjalla One', sans-serif;
+  }
+  .btn {
+    margin: 30px auto;
+  }
+
+  .errors span {
+    display: block;
+  }
+}

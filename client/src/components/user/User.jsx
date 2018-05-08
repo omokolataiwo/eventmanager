@@ -65,7 +65,7 @@ class User extends React.Component {
         showMethod: 'fadeIn',
         hideMethod: 'fadeOut'
       };
-      toastr.error('Please sign in.');
+      toastr.error('Please sign in as a user.');
 
       this.setState({ authorized: false });
       addFlash('saveRoute', this.props.location.pathname);

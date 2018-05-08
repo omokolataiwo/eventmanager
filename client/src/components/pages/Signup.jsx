@@ -175,10 +175,13 @@ class Signup extends React.Component {
    */
   render() {
     return (
-      <div className="container small-container">
+      <div className="container container-medium signup">
         <div className="row card">
           <div className="col s12 m12 l12">
-            <h5>CREATE ACCOUNT</h5>
+            <h5>
+              <i className="material-icons left">person</i>
+              CREATE ACCOUNT
+            </h5>
             <form>
               <Error messages={this.state.errors.signup} />
               <div className="row">

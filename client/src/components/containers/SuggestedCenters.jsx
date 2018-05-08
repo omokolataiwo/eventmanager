@@ -19,10 +19,11 @@ const SuggestedCenters = ({ centers }) => {
   return (
     <div className="related-centers">
       <h5>You May Also Like These Venues</h5>
+      <hr />
       <div className="row">
         {centers.map(center => (
-          <div className="col s12 m4 l4" key={center.id}>
-            <img src={center.image} alt="center" />
+          <div className="col s12 m4 l4 thumb-center" key={center.id}>
+            <img className="thumbnail-small" src={center.image} alt="center" />
             <h5 className="truncate">{center.name}</h5>
             <p>&#8358;{formatNumber(center.amount)}</p>
           </div>
