@@ -101,16 +101,16 @@ class Center extends React.Component {
 
     return (
       <div>
-        <p>Contact</p>
-        <p>
+        <p className="label">Contact</p>
+        <p className="value">
           {this.state.center.contacts.firstName} &nbsp;
           {this.state.center.contacts.lastName}
+          <span className="contact-number">
+            <i className="material-icons left">phone</i>
+            {this.state.center.contacts.phoneNumber}
+          </span>
         </p>
-        <p>
-          <span className="material-icons left">phone</span>
-          {this.state.center.contacts.phoneNumber}
-        </p>
-      </div>
+      </div >
     );
   }
   /**
@@ -125,15 +125,17 @@ class Center extends React.Component {
         <div className="row">
           <div className="col s12 m12 l12">
             <div className="row">
-              <div className="col s12 m10 l10 offset-m2 offset-l2">
+              <div className="col s12 m10 l10 offset-m1 offset-l1">
                 <div className="row">
                   <div className="col s12 m8 l8">
-                    <h5 className="center-name">{this.state.center.name}</h5>
-                  </div>
-                  <div className="col s12 m8 l8">
+                    <div className="row">
+                      <div className="col s12 m8 l8">
+                        <h3 className="center-name">{this.state.center.name}</h3>
+                      </div>
+                    </div>
                     <div className="row">
                       <div className="col s12 m12 l12">
-                        <img src={this.state.center.image} alt="center" />
+                        <img className="thumbnail-large" src={this.state.center.image} alt="center" />
                       </div>
                       <div className="row">
                         <div className="col s12 m12 l12">
@@ -144,24 +146,25 @@ class Center extends React.Component {
                       </div>
                       <div className="row">
                         <div className="col s12 m12 l12">
-                          <h4>{this.state.center.name}</h4>
+                          <h3>{this.state.center.name}</h3>
+                          <hr />
                           <p>{this.state.center.details}</p>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="col s12 m2 l3">
-                    <p>Amount</p>
-                    <p>&#8358;{formatNumber(this.state.center.amount)}</p>
+                  <div className="col s12 m4 l4 center-details">
+                    <p className="label">Amount</p>
+                    <p className="value">&#8358;{formatNumber(this.state.center.amount)}</p>
 
-                    <p>Address</p>
-                    <p>
+                    <p className="label">Address</p>
+                    <p className="value">
                       {this.state.center.address}, {this.state.center.area}{' '}
                       {STATES[this.state.center.state]}.
                     </p>
-                    <p>Capacity</p>
+                    <p className="label">Capacity</p>
                     <p>{formatNumber(this.state.center.capacity)}</p>
-                    <p>Facilities</p>
+                    <p className="label">Facilities</p>
                     <p>{this.state.center.facilities}</p>
                     {this.renderContactDetails()}
                     <button onClick={event => this.handleBookEvent(event)}>

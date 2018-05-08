@@ -29,7 +29,7 @@ const PaginatedCentersCard = ({
                   <h4 className="truncate">{center.name}</h4>
                   <p>
                     <i className="material-icons">location_on</i>
-                    {center.area} {STATES[center.state]}
+                    {center.area} {STATES[center.state - 1]}
                   </p>
                   <p> &#8358;{formatNumber(center.amount)}</p>
                 </div>

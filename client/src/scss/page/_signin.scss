@@ -1,0 +1,13 @@
+.signin-container {
+  width: 600px;
+  margin-left: 8rem !important;
+  margin-top: 0;
+  .error {
+    font-size: 16px;
+    margin: 5px;
+  }
+  @media screen and (max-width: 450px) {
+    width: 100% !important;
+    margin-left: 0 !important;
+	}
+}

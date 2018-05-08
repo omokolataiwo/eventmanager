@@ -1,20 +1,23 @@
 .container {
 
 		&-small {
-						margin: 10% auto auto auto;
+		margin: 10% auto auto auto;
 		padding: 0;
-				width: 60vw !important;
-				@media screen and (max-width: 320px) {
-						width: 100% !important;
-				}
+		width: 60vw !important;
+		@media screen and (max-width: 450px) {
+				width: 100% !important;
+			}
 		}
 		&-medium {
 		margin: 5% auto auto auto !important;
 		padding: 0;
 		width: 80vw !important;
-		@media screen and (max-width: 320px) {
+		@media screen and (max-width: 420px) {
 				width: 100% !important;
 		}
-				
+
+		h4 {
+			font-family: 'Fjalla One', sans-serif;
+		}
 		}
 }

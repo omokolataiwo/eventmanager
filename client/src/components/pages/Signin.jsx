@@ -133,7 +133,7 @@ class Signin extends React.Component {
   render() {
     return (
       <div className="container container-small">
-        <div className="row card signin">
+        <div className="row card signin-container">
           <div className="col s12 m12 l12">
             <h5>
               <i className="material-icons">person_pin</i> SIGN IN

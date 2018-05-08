@@ -94,7 +94,7 @@ class HorizontalFeaturedCenters extends React.Component {
           <div className="modal-content">
             <h4>{this.state.poppedCenter.name}</h4>
             <p>{this.state.poppedCenter.address}</p>
-            <p>{STATES[this.state.poppedCenter.state]}</p>
+            <p>{STATES[this.state.poppedCenter.state - 1]}</p>
             <p>{this.state.poppedCenter.capacity}</p>
             <p>N{this.state.poppedCenter.amount}</p>
             <p>{this.state.poppedCenter.facilities}</p>

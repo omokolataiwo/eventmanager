@@ -1,8 +1,9 @@
 .event-card {
 		margin: 3em;
 		padding-top: 2em !important;
+		background: #fff
 		
-		h4 {
+		h6 {
 				font-family: 'Open Sans', arial;
 				-webkit-font-smoothing: antialiased;
 				color: #555;
@@ -25,11 +26,47 @@
 		}
 
 		&-user {
-				background: #50392b;
-				padding: 25px;
-				h4 {
+				background: #fff;
+				padding: 20px;
+				text-align: left;
+				margin-top: 3em;
+				h6 {
 						text-transform: uppercase;
-						color: #ffd27d !important;
+						font-weight: 600;
+						margin-bottom: 15px;
+				}
+				h6 { 
+					.delete, .edit {
+						cursor: pointer;
+					}
+					.delete {
+					color: #f00;
+				}
+				.edit {
+					color: green;
+				}
+			}
+				.venue, .timer {
+					margin-top: 20px;
+
+					p,h6 {
+						margin: 0;
+					}
+					.material-icons {
+						font-size: 3em;
+					}
+				}
+				.timer {
+					p {
+						margin: 0 0 5px 0;
+						text-align: center;
+						font-size: 2em;
+					
+					}
+					.remaining {
+						font-size: 17px;
+							color: #5B90D5;
+					}
 				}
 		}
 }
