@@ -15,19 +15,20 @@ module.exports = (app) => {
     center.createCenter
   ); // Create Center
 
-  app.get(
-    '/centers',
-    validateQuery, center.getCenters
-  ); // Get all centers
+  app.get('/centers', validateQuery, center.getCenters); // Get all centers
+
+  app.get('/centers/admin', adminAuthentication, center.getAdminCenters); // Get own centers
 
   app.get(
-    '/centers/admin',
-    adminAuthentication, center.getAdminCenters
-  ); // Get own centers
+    '/centers/admin/center',
+    adminAuthentication,
+    center.getCenterWithEvents
+  ); // Get own center with event
 
   app.get(
     '/centers/protected',
-    superAdminAuthentication, center.getAllProtectedCenters
+    superAdminAuthentication,
+    center.getAllProtectedCenters
   );
   app.get('/centers/events', adminAuthentication, center.getOwnEvents); // Get own events
   app.get('/centers/contacts', adminAuthentication, center.getContacts); // Get Own Center Contacts

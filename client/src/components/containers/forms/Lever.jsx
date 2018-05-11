@@ -29,7 +29,8 @@ const Lever = ({
       <span className="lever" />
       {label && 'CENTER AVAILABILITY'}
     </label>
-  </div>);
+  </div>
+);
 
 Lever.propTypes = propTypes;
 Lever.defaultProps = {

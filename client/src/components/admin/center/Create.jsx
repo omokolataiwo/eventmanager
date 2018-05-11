@@ -2,32 +2,35 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
-import fetchAdminCentersRequest from '../../../actions/fetchAdminCentersRequest';
+import { validate } from 'validate.js';
+
+import {
+  createCenterRules,
+  contactRules
+} from '../../../validators/createCenterRules';
+
 import createCenterRequest from '../../../actions/createCenterRequest';
-import getContactPersonRequest from '../../../actions/fetchContactPersonRequest'; // eslint-disable-line
+import getContactPersonRequest from '../../../actions/fetchContactPersonRequest';
 import SelectComponent from '../../containers/forms/SelectComponent';
 import CenterContactPerson from '../../containers/CenterContactPerson';
 import InputField from '../../containers/forms/InputField';
 import TextArea from '../../containers/forms/TextArea';
 import FileField from '../../containers/forms/FileField';
+import Error from '../../containers/Error';
 import { STATES, CENTER_TYPE } from '../../../consts';
 import { addFlash } from '../../../utils/flash';
 import {
   RECEIVED_CENTER_CONTACTS,
   CREATED_NEW_CENTER,
-  CREATING_NEW_CENTER_ERROR,
-  RESET_CENTER_CREATION_STATE
+  CREATING_NEW_CENTER_ERROR
 } from '../../../types';
 
 const propTypes = {
   createCenterRequest: PropTypes.func.isRequired,
   getContactPersonRequest: PropTypes.func.isRequired,
-  fetchAdminCentersRequest: PropTypes.func.isRequired,
-  events: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  errors: PropTypes.shape().isRequired,
-  resetCreateCenterState: PropTypes.func.isRequired
+  createErrors: PropTypes.shape().isRequired
 };
 /**
  * Create center component
@@ -52,10 +55,10 @@ class Create extends React.Component {
         amount: null,
         area: null,
         facilities: '',
-        state: 0,
-        type: 0,
+        state: 1,
+        type: 1,
         image: '',
-        contactid: 0,
+        contactId: 0,
         newContact: false,
         details: '',
         contact: {
@@ -95,7 +98,7 @@ class Create extends React.Component {
   componentDidMount() {
     const facilitiesDOM = $('.facilities');
     facilitiesDOM.material_chip({
-      placeholder: 'Center Facilities'
+      placeholder: 'Facilities'
     });
 
     /**
@@ -123,10 +126,14 @@ class Create extends React.Component {
    */
   componentWillReceiveProps(props) {
     const {
-      events, errors, history, contacts
+      contactAction,
+      createAction,
+      createErrors,
+      history,
+      contacts
     } = props;
 
-    if (events.getCenterContact === RECEIVED_CENTER_CONTACTS) {
+    if (contactAction.getCenterContact === RECEIVED_CENTER_CONTACTS) {
       if (contacts.length === 0) {
         this.setState({ center: { ...this.state.center, newContact: true } });
       } else {
@@ -142,15 +149,13 @@ class Create extends React.Component {
       }
     }
 
-    if (events.createCenter === CREATED_NEW_CENTER) {
-      props.fetchAdminCentersRequest();
-      props.resetCreateCenterState();
+    if (createAction.createCenter === CREATED_NEW_CENTER) {
       addFlash('NEW_CENTER_CREATED', true);
       return history.push('/admin/center/completed');
     }
 
-    if (events.createCenter === CREATING_NEW_CENTER_ERROR) {
-      this.setState({ errors });
+    if (createAction.createCenter === CREATING_NEW_CENTER_ERROR) {
+      this.setState({ errors: createErrors });
     }
   }
 
@@ -190,6 +195,7 @@ class Create extends React.Component {
         }
       }
     });
+    this.validate(id, { [id]: value });
   }
 
   /**
@@ -202,6 +208,27 @@ class Create extends React.Component {
   handleFormFieldChanged(event) {
     const { value, id } = event.target;
     this.setState({ center: { ...this.state.center, [id]: value } });
+    this.validate(id, { [id]: value });
+  }
+
+  /**
+   * Validate form input
+   *
+   * @param {string} field - field name in state
+   * @param {string} value - input value
+   * @return {void}
+   */
+  validate(field, value) {
+    const rules = { ...createCenterRules, ...contactRules };
+
+    let errorMsg = validate(value, { [field]: rules[field] });
+    let error = [];
+    if (errorMsg !== undefined) {
+      error = errorMsg[field];
+    }
+    this.setState({
+      errors: { ...this.state.errors, [field]: error }
+    });
   }
 
   /**
@@ -255,7 +282,7 @@ class Create extends React.Component {
                 />
 
                 <SelectComponent
-                  default={this.state.center.type}
+                  default={1}
                   id="type"
                   change={this.handleFormFieldChanged}
                   options={[...CENTER_TYPE.map((ctype, i) => [i + 1, ctype])]}
@@ -283,7 +310,7 @@ class Create extends React.Component {
               </div>
               <div className="row">
                 <SelectComponent
-                  default={this.state.center.state}
+                  default={1}
                   id="state"
                   change={this.handleFormFieldChanged}
                   options={[...STATES.map((ctype, i) => [i + 1, ctype])]}
@@ -303,6 +330,7 @@ class Create extends React.Component {
               <div className="row">
                 <div className="input-field col s12 m12 l12">
                   <div className="chips facilities" />
+                  <Error messages={this.state.errors.facilities} />
                 </div>
               </div>
               <div className="row">
@@ -323,6 +351,7 @@ class Create extends React.Component {
                   title="Center Description"
                   onChange={this.handleFormFieldChanged}
                 />
+                <Error messages={this.state.errors.details} />
 
                 <FileField
                   width="12"
@@ -340,6 +369,7 @@ class Create extends React.Component {
                 onSelectContactChanged={this.handleFormFieldChanged}
                 onFieldChange={this.handleContactPersonsFieldChange}
                 defaultContact={this.state.center.contactid}
+                errors={this.state.errors}
               />
               <input
                 type="submit"
@@ -364,13 +394,16 @@ Create.propTypes = propTypes;
  * @returns {object} - Extracted properties
  */
 const mapStateToProps = state => {
-  const { contacts, events, errors } = state.center;
-  return { contacts, events, errors };
+  const { getCenterContact, center } = state;
+  return {
+    contacts: getCenterContact.contacts,
+    contactAction: getCenterContact.action,
+    createAction: center.action,
+    createErrors: center.errors
+  };
 };
 
 export default connect(mapStateToProps, {
   createCenterRequest,
-  getContactPersonRequest,
-  fetchAdminCentersRequest,
-  resetCreateCenterState: () => ({ type: RESET_CENTER_CREATION_STATE })
+  getContactPersonRequest
 })(Create);

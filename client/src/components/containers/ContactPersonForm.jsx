@@ -11,7 +11,7 @@ const propTypes = {
  * @param {object} props - React properties
  * @returns {object} - JSX DOM
  */
-const ContactPersonForm = ({ onFieldChange }) => (
+const ContactPersonForm = ({ onFieldChange, errors }) => (
   <span>
     <div className="row">
       <InputField
@@ -20,6 +20,7 @@ const ContactPersonForm = ({ onFieldChange }) => (
         type="text"
         title="First Name"
         width="6"
+        errorMessage={errors && errors.firstName}
       />
       <InputField
         onChange={onFieldChange}
@@ -27,6 +28,7 @@ const ContactPersonForm = ({ onFieldChange }) => (
         type="text"
         title="Last Name"
         width="6"
+        errorMessage={errors && errors.lastName}
       />
     </div>
     <div className="row">
@@ -36,6 +38,7 @@ const ContactPersonForm = ({ onFieldChange }) => (
         type="text"
         title="Phone Number"
         width="6"
+        errorMessage={errors && errors.phoneNumber}
       />
       <InputField
         onChange={onFieldChange}
@@ -43,6 +46,7 @@ const ContactPersonForm = ({ onFieldChange }) => (
         type="text"
         title="Email Address"
         width="6"
+        errorMessage={errors && errors.email}
       />
     </div>
   </span>

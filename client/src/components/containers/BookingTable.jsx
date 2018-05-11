@@ -30,13 +30,13 @@ const BookingTable = ({ events }) => {
       <tbody>
         {events.map(event => {
           const duration =
-            moment(event.enddate).diff(moment(event.startdate), 'days') + 1;
+            moment(event.endDate).diff(moment(event.startDate), 'days') + 1;
           return (
             <tr key={event.eid}>
               <td>{event.title}</td>
-              <td>{moment(event.startdate).format('DD-MM-YYYY')}</td>
+              <td>{moment(event.startDate).format('DD-MM-YYYY')}</td>
               <td>{event.name}</td>
-              <td>{STATES[event.state]}</td>
+              <td>{STATES[event.state - 1]}</td>
               <td>
                 {duration} {duration > 1 ? 'days' : 'day'}
               </td>

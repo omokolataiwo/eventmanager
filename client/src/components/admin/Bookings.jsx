@@ -26,8 +26,11 @@ class Bookings extends React.Component {
     this.state = {
       centers: [],
       events: [],
-      activeCenterDetails: 0
+      activeCenter: {
+        events: []
+      }
     };
+    this.changeReportCenter = this.changeReportCenter.bind(this);
   }
   /**
    * Get all Eenters and Events
@@ -52,8 +55,24 @@ class Bookings extends React.Component {
       events: eventCenter,
       centers: adminCenters,
       concludedEvents: concluded,
-      activeEvents: active
+      activeEvents: active,
+      activeCenter: adminCenters[0],
     });
+  }
+
+  /**
+   * Change active center for report
+   *
+   * @param {number} id - Center ID
+   * @returns {void}
+   * @memberof Bookings
+   */
+  changeReportCenter(id) {
+    const { centers } = this.state;
+    const center = centers.find(center =>
+      (parseInt(center.id, 10) === parseInt(id, 10)));
+
+    this.setState({ activeCenter: center });
   }
 
   /**
@@ -81,7 +100,8 @@ class Bookings extends React.Component {
         </div>
         <CenterReports
           centers={this.state.centers}
-          activeCenter={this.state.activeCenterDetails}
+          activeCenter={this.state.activeCenter}
+          changeCenter={this.changeReportCenter}
         />
       </div>
     );

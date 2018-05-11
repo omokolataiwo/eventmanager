@@ -50,13 +50,13 @@ const createCenter = center => (dispatch, getState) => {
     .then(response => {
       dispatch(createdNewCenter(response.data));
     })
-    .catch((error) => {
+    .catch(error => {
       console.dir(error.response);
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
-      dispatch(creatingNewCenterError(error.response.data));
+      dispatch(creatingNewCenterError(error.response.data.errors[0]));
     });
 };
 

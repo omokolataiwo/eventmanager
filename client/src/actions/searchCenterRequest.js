@@ -23,7 +23,7 @@ const searchCenterRequest = params => dispatch => {
   dispatch({ type: SEARCHING_CENTER });
   axios
     .get(`${API_PATH}/centers/search`, { params })
-    .then((response) => {
+    .then(response => {
       dispatch(searchedResult(response.data.centers));
     })
     .catch(error => console.log(error));

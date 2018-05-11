@@ -8,7 +8,8 @@ import combinedReducer from './reducers/index';
 
 const persistConfig = {
   key: 'root',
-  storage
+  storage,
+  whitelist: ['user']
 };
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
@@ -18,7 +19,7 @@ export default function configureStore(preloadedState) {
     persistedReducer,
     /*preloadedState,*/
     window.__REDUX_DEVTOOLS_EXTENSION__ &&
-      window.__REDUX_DEVTOOLS_EXTENSION__(),
+    window.__REDUX_DEVTOOLS_EXTENSION__(),
     applyMiddleware(thunkMiddleware, logger)
   );
   const persistor = persistStore(store);

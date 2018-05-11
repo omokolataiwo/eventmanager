@@ -20,9 +20,7 @@ const Pagination = ({ total, handlePagingNav }) => {
     <ul className="pagination">
       {new Array(count).fill(null).map((array, index) => (
         <li className="active">
-          <a href="#!" onClick={() => handlePagingNav(index + 1)}>
-            {index + 1}
-          </a>
+          <div onClick={() => handlePagingNav(index + 1)}>{index + 1}</div>
         </li>
       ))}
     </ul>
