@@ -3,26 +3,37 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import toastr from 'toastr';
+import { validate } from 'validate.js';
+import {
+  createCenterRules,
+  contactRules
+} from '../../../validators/createCenterRules';
+
 import updateCenterRequest from '../../../actions/updateCenterRequest';
-import getContactPersonRequest from '../../../actions/fetchContactPersonRequest'; // eslint-disable-line
-import fetchAdminCentersRequest from '../../../actions/fetchAdminCentersRequest';
+import getContactPersonRequest from '../../../actions/fetchContactPersonRequest';
+import fetchCenterRequest from '../../../actions/fetchCenterRequest';
+import reset from '../../../actions/reset';
 import SelectComponent from '../../containers/forms/SelectComponent';
 import CenterContactPerson from '../../containers/CenterContactPerson';
-import InvalidCenter from '../../containers/InvalidCenter';
 import InputField from '../../containers/forms/InputField';
 import TextArea from '../../containers/forms/TextArea';
 import FileField from '../../containers/forms/FileField';
+import Error from '../../containers/Error';
 import Lever from '../../containers/forms/Lever';
+import DynamicChips from '../../containers/forms/DynamicChips';
 import { STATES, CENTER_TYPE } from '../../../consts';
 import {
+  RECEIVED_CENTER_CONTACTS,
   UPDATED_CENTER,
   UPDATING_CENTER_ERROR,
+  RESET_FETCHING_CENTER_CONTACTS,
+  RECEIVED_CENTER,
+  RESET_FETCHING_CENTER,
   RESET_UPDATING_CENTER_STATE
 } from '../../../types';
 
 const propTypes = {
   updateCenterRequest: PropTypes.func.isRequired,
-  events: PropTypes.shape().isRequired,
   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
   errors: PropTypes.shape().isRequired,
   match: PropTypes.shape().isRequired,
@@ -69,14 +80,11 @@ class Update extends React.Component {
           existingContacts: []
         }
       },
-      errors: {
-        invalidCenterID: false
-      }
+      errors: {}
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
     this.handleNewContactChanged = this.handleNewContactChanged.bind(this);
-    this.handleContactPersonsFieldChange = this.
-      handleContactPersonsFieldChange.bind(this);
+    this.handleContactPersonsFieldChange = this.handleContactPersonsFieldChange.bind(this);
     this.handleImageFieldChanged = this.handleImageFieldChanged.bind(this);
     this.handleAvailToggle = this.handleAvailToggle.bind(this);
   }
@@ -88,68 +96,8 @@ class Update extends React.Component {
    * @memberof Update
    */
   componentWillMount() {
-    const { contacts, centers, match } = this.props;
-
-    const centerid = match.params.index;
-    const center = centers.find(center => center.id === parseInt(centerid, 10));
-
-    if (!center) {
-      this.setState({ errors: { invalidCenterID: true } });
-      return;
-    }
-
-    if (contacts.length === 0) {
-      this.setState({
-        center: {
-          ...this.state.center,
-          ...center,
-          newContact: true
-        }
-      });
-    } else {
-      this.setState({
-        center: {
-          ...this.state.center,
-          ...center,
-          contact: {
-            ...this.state.center.contact,
-            existingContacts: contacts
-          }
-        }
-      });
-    }
-  }
-
-  /**
-   * Initialize materialize components
-   *
-   * @return {void}
-   * @memberof Update
-   */
-  componentDidMount() {
-    const facilitiesDOM = $('.facilities');
-    facilitiesDOM.material_chip({
-      placeholder: 'Center Facilities',
-      data: this.state.center.facilities
-        .split(',')
-        .map(facility => ({ tag: facility }))
-    });
-
-    /**
-     * Initialize materialize chip component
-     *
-     * @return {void}
-     */
-    const chipChanged = () => {
-      let facilities = facilitiesDOM.material_chip('data');
-      facilities = Object.keys(facilities)
-        .map(key => facilities[key].tag)
-        .join(',');
-      this.setState({ center: { ...this.state.center, facilities } });
-    };
-
-    facilitiesDOM.on('chip.add', chipChanged);
-    facilitiesDOM.on('chip.delete', chipChanged);
+    this.props.getContactPersonRequest();
+    this.props.fetchCenterRequest({ id: this.props.match.params.index }, true);
   }
 
   /**
@@ -160,9 +108,43 @@ class Update extends React.Component {
    * @memberof Update
    */
   componentWillReceiveProps(props) {
-    if (props.events.updateCenter === UPDATED_CENTER) {
-      props.resetUpdateCenterState();
-      props.fetchAdminCentersRequest();
+    const {
+      center,
+      getCenterAction,
+      getContactAction,
+      updateAction,
+      updateErrors,
+      contacts
+    } = props;
+
+    if (getContactAction.getCenterContact === RECEIVED_CENTER_CONTACTS) {
+      if (contacts.length === 0) {
+        this.setState({
+          center: {
+            ...this.state.center,
+            newContact: true
+          }
+        });
+      } else {
+        this.setState({
+          center: {
+            ...this.state.center,
+            contact: {
+              ...this.state.center.contact,
+              existingContacts: contacts
+            }
+          }
+        });
+      }
+      props.reset(RESET_FETCHING_CENTER_CONTACTS);
+    }
+
+    if (getCenterAction.getCenter === RECEIVED_CENTER) {
+      props.reset(RESET_FETCHING_CENTER);
+      this.setState({ center: { ...this.state.center, ...center } });
+    }
+
+    if (updateAction.updateCenter === UPDATED_CENTER) {
       toastr.options = {
         positionClass: 'toast-top-full-width',
         showDuration: '300',
@@ -173,11 +155,12 @@ class Update extends React.Component {
         hideMethod: 'fadeOut'
       };
       toastr.success('Center updated.');
+
+      props.reset(RESET_UPDATING_CENTER_STATE);
     }
 
-    const { errors } = props;
-    if (props.events.updateCenter === UPDATING_CENTER_ERROR) {
-      this.setState({ errors });
+    if (updateAction.updateCenter === UPDATING_CENTER_ERROR) {
+      this.setState({ errors: updateErrors });
     }
   }
 
@@ -217,6 +200,7 @@ class Update extends React.Component {
         }
       }
     });
+    this.validate(id, { [id]: value });
   }
 
   /**
@@ -229,6 +213,27 @@ class Update extends React.Component {
   handleFormFieldChanged(event) {
     const { value, id } = event.target;
     this.setState({ center: { ...this.state.center, [id]: value } });
+    this.validate(id, { [id]: value });
+  }
+
+  /**
+   * Validate form input
+   *
+   * @param {string} field - field name in state
+   * @param {string} value - input value
+   * @return {void}
+   */
+  validate(field, value) {
+    const rules = { ...createCenterRules, ...contactRules };
+
+    let errorMsg = validate(value, { [field]: rules[field] });
+    let error = [];
+    if (errorMsg !== undefined) {
+      error = errorMsg[field];
+    }
+    this.setState({
+      errors: { ...this.state.errors, [field]: error }
+    });
   }
 
   /**
@@ -255,7 +260,7 @@ class Update extends React.Component {
         ...this.state.center,
         active: this.state.center.active ? 0 : 1
       }
-    }, this.updateCenter);
+    });
   }
   /**
    * Update center, make request to api endpoint
@@ -276,15 +281,19 @@ class Update extends React.Component {
    * @memberof Create
    */
   render() {
-    if (this.state.errors.invalidCenterID) return <InvalidCenter />;
+    if (!this.state.center.name) return null;
     return (
       <div className="container container-medium card">
         <div className="row">
-          <div className="col s12 m8 l8">
+          <div className="col s12 m10 l8">
             <h5 className="left">UPDATE CENTER</h5>
           </div>
           <div className="col s12 m4 l4">
-            <Lever id="center-availability" boolValue={this.state.center.active} handleToggle={this.handleAvailToggle} />
+            <Lever
+              id="center-availability"
+              boolValue={this.state.center.active}
+              handleToggle={this.handleAvailToggle}
+            />
           </div>
         </div>
         <div className="row">
@@ -350,11 +359,10 @@ class Update extends React.Component {
                 />
               </div>
 
-              <div className="row">
-                <div className="input-field col s12 m12 l12">
-                  <div className="chips facilities" />
-                </div>
-              </div>
+              <DynamicChips
+                value={this.state.center.facilities}
+                onChange={this.handleFormFieldChanged}
+              />
               <div className="row">
                 <InputField
                   onChange={this.handleFormFieldChanged}
@@ -375,12 +383,14 @@ class Update extends React.Component {
                   onChange={this.handleFormFieldChanged}
                   defaultValue={this.state.center.details}
                 />
+                <Error messages={this.state.errors.details} />
 
                 <FileField
                   width="12"
                   accept="image/*"
                   id="image"
                   onChange={this.handleImageFieldChanged}
+                  errorMessage={this.state.errors.image}
                 />
               </div>
 
@@ -390,7 +400,8 @@ class Update extends React.Component {
                 existingContacts={this.state.center.contact.existingContacts}
                 onSelectContactChanged={this.handleFormFieldChanged}
                 onFieldChange={this.handleContactPersonsFieldChange}
-                defaultContact={this.state.center.contactid}
+                defaultContact={this.state.center.contactId}
+                errors={this.state.errors}
               />
               <input
                 type="submit"
@@ -415,19 +426,20 @@ Update.propTypes = propTypes;
  * @returns {object} - Extracted properties
  */
 const mapStateToProps = state => {
-  const {
-    contacts, events, errors, adminCenters
-  } = state.center;
+  const { getCenter, getCenterContact, center } = state;
   return {
-    contacts,
-    events,
-    errors,
-    centers: adminCenters
+    center: getCenter.center,
+    getCenterAction: getCenter.action,
+    contacts: getCenterContact.contacts,
+    getContactAction: getCenterContact.action,
+    updateAction: center.action,
+    updateErrors: center.errors
   };
 };
 
 export default connect(mapStateToProps, {
   updateCenterRequest,
-  fetchAdminCentersRequest,
-  resetUpdateCenterState: () => ({ type: RESET_UPDATING_CENTER_STATE })
+  getContactPersonRequest,
+  fetchCenterRequest,
+  reset
 })(Update);

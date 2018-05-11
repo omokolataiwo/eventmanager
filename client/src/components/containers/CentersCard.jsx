@@ -10,9 +10,9 @@ import { STATES } from '../../consts';
  * @returns {object} JSX DOM
  */
 const CentersCard = ({ centers, count, handlePagingNav }) => {
-  if (!Array.isArray(centers) || !centers.length) return 'Can not find center';
+  if (!Array.isArray(centers) || !centers.length) return null;
   return (
-    <div>
+    <div className="animated fadeIn">
       <div className="row">
         {centers.map(center => (
           <Link href="#center" to={`/center/${center.id}`} key={center.id}>

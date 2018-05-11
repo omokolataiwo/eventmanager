@@ -2,15 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import fetchCenterEventRequest from '../../actions/fetchCenterEventRequest';
-import fetchAdminCentersRequest from '../../actions/fetchAdminCentersRequest';
-import fetchContactPersonRequest from '../../actions/fetchContactPersonRequest';
 
 import featuredCenterImg from '../../images/party-room.jpg';
 
 const propTypes = {
   fetchCenterEventRequest: PropTypes.func.isRequired,
-  fetchAdminCentersRequest: PropTypes.func.isRequired,
-  fetchContactPersonRequest: PropTypes.func.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape()).isRequired
 };
 
@@ -40,8 +36,6 @@ class Index extends React.Component {
    */
   componentWillMount() {
     this.props.fetchCenterEventRequest();
-    this.props.fetchAdminCentersRequest();
-    this.props.fetchContactPersonRequest();
   }
 
   /**
@@ -109,12 +103,10 @@ Index.propTypes = propTypes;
  * @return {object} extracted state
  */
 const mapStateToProps = state => {
-  const { eventCenter } = state.center;
-  return { events: eventCenter };
+  const { centersEvents } = state.getCentersEvents;
+  return { events: centersEvents };
 };
 
 export default connect(mapStateToProps, {
-  fetchCenterEventRequest,
-  fetchAdminCentersRequest,
-  fetchContactPersonRequest
+  fetchCenterEventRequest
 })(Index);

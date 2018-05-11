@@ -29,8 +29,7 @@ const InputField = ({
   defaultValue
 }) => {
   if (!id) return null;
-  //console.log(id);
-  //console.log(defaultValue);
+
   return (
     <div className={`input-field col s12 m${width} l${width}`}>
       <input

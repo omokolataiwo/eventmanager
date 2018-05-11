@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { hasFlash, getFlash } from '../../../utils/flash';
+import reset from '../../../actions/reset';
+import { CREATING_NEW_CENTER } from '../../../types';
 
 const propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired
@@ -21,8 +24,10 @@ class Verification extends React.Component {
    */
   componentWillMount() {
     if (!hasFlash('NEW_CENTER_CREATED')) {
-      getFlash('NEW_CENTER_CREATED'); // Remove from storage
       this.props.history.push('/admin');
+    } else {
+      getFlash('NEW_CENTER_CREATED'); // Remove from storage
+      this.props.reset(CREATING_NEW_CENTER);
     }
   }
   /**
@@ -49,4 +54,4 @@ class Verification extends React.Component {
   }
 }
 Verification.propTypes = propTypes;
-export default Verification;
+export default connect(state => {}, { reset })(Verification);

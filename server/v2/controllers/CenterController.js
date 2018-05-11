@@ -7,6 +7,8 @@ import {
   APPROVED_CENTER
 } from '../middleware/const';
 
+const LIMIT = 6;
+
 /**
  * CenterController
  *
@@ -84,7 +86,6 @@ export default class CenterController {
    */
   static async getCenters(req, res) {
     try {
-      const LIMIT = 6;
       const page = parseInt(req.query.page, 10) - 1 || 0;
 
       const queryCondition = {
@@ -96,19 +97,17 @@ export default class CenterController {
         order: [['id', 'DESC']]
       };
 
-      return models.centers
-        .findAndCountAll(queryCondition)
-        .then((centers) => {
-          if (!centers.rows.length) {
-            return res
-              .status(404)
-              .json({ errors: { centers: ['No Center Found'] } });
-          }
-          return res.status(200).json({
-            centers: centers.rows,
-            count: centers.count
-          });
+      return models.centers.findAndCountAll(queryCondition).then((centers) => {
+        if (!centers.rows.length) {
+          return res
+            .status(404)
+            .json({ errors: { centers: ['No Center Found'] } });
+        }
+        return res.status(200).json({
+          centers: centers.rows,
+          count: centers.count
         });
+      });
     } catch (errors) {
       return res.status(500).send({
         status: 'error',
@@ -125,7 +124,6 @@ export default class CenterController {
    * @returns {*} - Server response
    */
   static getAllProtectedCenters(req, res) {
-    const LIMIT = 6;
     const page = req.query.page - 1 || 0;
 
     return models.centers
@@ -166,17 +164,9 @@ export default class CenterController {
    * @returns {*} - Server response
    */
   static getAdminCenters(req, res) {
-    const LIMIT = 6;
     const page = req.query.page - 1 || 0;
-
     return models.centers
       .findAndCountAll({
-        include: [
-          {
-            model: models.events,
-            as: 'events'
-          }
-        ],
         where: {
           ownerId: req.user.id
         },
@@ -190,6 +180,7 @@ export default class CenterController {
             .status(404)
             .json({ errors: { centers: ['No Center Found'] } });
         }
+
         return res.status(200).json({
           centers: centers.rows,
           count: centers.count
@@ -240,6 +231,45 @@ export default class CenterController {
           message: 'Internal Server Error'
         });
       });
+  }
+
+  /**
+   * Get a single center with events
+   *
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @returns {*} - Server response
+   */
+  static async getCenterWithEvents(req, res) {
+    try {
+      const center = await models.centers.find({
+        where: {
+          $and: [{ id: req.query.id }, { ownerId: req.user.id }]
+        }
+      });
+
+      if (!center) {
+        return res.status(404).json({
+          status: 'error',
+          errors: [{ center: ['Center not found'] }]
+        });
+      }
+
+      if (!req.query.events) {
+        return res.status(200).json({ center });
+      }
+
+      const events = await models.event.findAndCountAll({
+        where: { centerId: req.params.id }
+      });
+
+      return res.status(200).json({ center, events });
+    } catch (error) {
+      res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
+    }
   }
   /**
    * Update Center
@@ -403,7 +433,6 @@ export default class CenterController {
       .trim()
       .substr(END_OF_FIRST_AND, searchCondition.length)}`;
 
-    const LIMIT = 3;
     const OFFSET = (req.query.page - 1 || 0) * LIMIT;
 
     return models.sequelize

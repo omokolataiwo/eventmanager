@@ -1,14 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import formatNumber from 'format-num';
 import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
-import Pagination from './Pagination';
-import { STATES } from '../../consts';
 import CentersCard from './CentersCard';
+import Preloader from './Preloader';
+import { FETCHING_CENTERS, RECEIVED_CENTERS } from '../../types';
 
 const propTypes = {
   count: PropTypes.number.isRequired,
+  action: PropTypes.string.isRequired,
   centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fetchAllCentersRequest: PropTypes.func.isRequired
 };
@@ -42,6 +42,11 @@ class FeaturedCenter extends React.Component {
    * @return {void}
    */
   componentWillMount() {
+    const { centers, action, count } = this.props;
+
+    if (action.getCenters === RECEIVED_CENTERS) {
+      return this.setState({ centers, count });
+    }
     this.props.fetchAllCentersRequest();
   }
   /**
@@ -71,6 +76,19 @@ class FeaturedCenter extends React.Component {
    * @memberof FeaturedCenter
    */
   render() {
+    const { getCenters } = this.props.action;
+    if (getCenters === FETCHING_CENTERS) {
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
+    }
+
+    if (getCenters === RECEIVED_CENTERS && !this.state.centers.length) {
+      return 'No center record yet!';
+    }
+
     return (
       <CentersCard
         centers={this.state.centers}
@@ -90,8 +108,8 @@ FeaturedCenter.propTypes = propTypes;
  * @return {object} - extracted properties from state
  */
 const mapStateToProps = state => {
-  const { centers, count } = state.center;
-  return { centers, count };
+  const { centers, count, action } = state.getAvailableCenters;
+  return { centers, count, action };
 };
 export default connect(mapStateToProps, {
   fetchAllCentersRequest

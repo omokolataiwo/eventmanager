@@ -52,7 +52,7 @@ export default (req, res, next) => {
     'newContact',
     'active'
   ].forEach((field) => {
-    if (req.body[field]) {
+    if (req.body[field] || field === 'active') {
       updatingField[field] = req.body[field];
       fieldRules[field] = rules[field];
     }
@@ -76,5 +76,6 @@ export default (req, res, next) => {
     });
   }
   req.body = updatingField;
+  console.log('========================> ', updatingField);
   return next();
 };

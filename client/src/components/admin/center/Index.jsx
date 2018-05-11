@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import $ from 'jquery';
 import { CenterDetailsEdit } from './CenterDetailsEdit';
+import fetchAdminCentersRequest from '../../../actions/fetchAdminCentersRequest';
 
-import getContactPersonRequest from '../../../actions/fetchContactPersonRequest';
 import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
 
 const propTypes = {
@@ -12,7 +12,8 @@ const propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired
   }).isRequired,
-  getContactPersonRequest: PropTypes.func.isRequired
+  fetchAdminCentersRequest: PropTypes.func.isRequired,
+  count: PropTypes.number.isRequired
 };
 
 /**
@@ -31,10 +32,12 @@ class Index extends React.Component {
     super(props);
     this.state = {
       centers: [],
+      count: 0,
       activeCenter: {}
     };
     this.handleEditCenter = this.handleEditCenter.bind(this);
     this.changeActiveCenter = this.changeActiveCenter.bind(this);
+    this.handlePagingNav = this.handlePagingNav.bind(this);
   }
   /**
    * Set component state to admin centers
@@ -43,9 +46,19 @@ class Index extends React.Component {
    * @memberof Index
    */
   componentWillMount() {
-    const { centers } = this.props;
-    this.props.getContactPersonRequest();
-    return this.setState({ centers, activeCenter: centers[0] });
+    this.props.fetchAdminCentersRequest();
+  }
+
+  /**
+   * update state
+   *
+   * @param {object} props - New properties
+   * @returns {void}
+   * @memberof Index
+   */
+  componentWillReceiveProps(props) {
+    const { centers, count } = props;
+    this.setState({ centers, count, activeCenter: centers[0] });
   }
 
   /**
@@ -70,14 +83,25 @@ class Index extends React.Component {
 
     return this.setState({ activeCenter });
   }
+
+  /**
+   * Fetch paging
+   *
+   * @param {number} index page cliced
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    this.props.fetchAdminCentersRequest({ page: index });
+  }
+
   /**
    * Redirects to edit center page
    *
+   * @param {int} id - Center ID
    * @returns {void}
    * @memberof Index
    */
-  handleEditCenter() {
-    const { id } = this.state.centers[this.state.activeCenter];
+  handleEditCenter(id) {
     return this.props.history.push(`/admin/center/update/${id}`);
   }
 
@@ -103,8 +127,9 @@ class Index extends React.Component {
               <hr />
               <PaginatedCentersCard
                 centers={this.state.centers}
-                count="0"
+                count={this.state.count}
                 click={this.changeActiveCenter}
+                handlePagingNav={this.handlePagingNav}
               />
             </div>
           </div>
@@ -123,7 +148,9 @@ Index.propTypes = propTypes;
  * @return {object} extracted states
  */
 const mapStateToProps = state => {
-  const { adminCenters } = state.center;
-  return { centers: adminCenters };
+  const { centers, count } = state.getAvailableCenters;
+  return { centers, count };
 };
-export default connect(mapStateToProps, { getContactPersonRequest })(Index);
+export default connect(mapStateToProps, {
+  fetchAdminCentersRequest
+})(Index);

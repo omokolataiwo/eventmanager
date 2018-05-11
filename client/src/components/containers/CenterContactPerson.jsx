@@ -24,13 +24,14 @@ const CenterContactPerson = ({
   onNewContactChanged,
   onFieldChange,
   onSelectContactChanged,
-  defaultContact
+  defaultContact,
+  errors
 }) => {
   let contactFormHeader = <span />;
   let contactPersonForm = (
     <SelectComponent
       default={defaultContact}
-      id="contactid"
+      id="contactId"
       change={e => onSelectContactChanged(e)}
       options={[
         ...existingContacts.map(existingContact => [
@@ -66,7 +67,9 @@ const CenterContactPerson = ({
   }
 
   if (existingContacts.length === 0 || newContact) {
-    contactPersonForm = <ContactPersonForm onFieldChange={onFieldChange} />;
+    contactPersonForm = (
+      <ContactPersonForm onFieldChange={onFieldChange} errors={errors} />
+    );
   }
 
   return (

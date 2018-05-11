@@ -3,9 +3,9 @@ import { API_PATH } from '../consts';
 import {
   FETCHING_CENTER,
   RECEIVED_CENTER,
-  FETCHING_CENTER_ERROR,
-  RESET_FETCHING_CENTER
+  FETCHING_CENTER_ERROR
 } from '../types';
+import fetchAdminCentersRequest from './fetchAdminCentersRequest';
 
 /**
  * Action for when center is received
@@ -15,7 +15,7 @@ import {
  */
 const recievedCenter = center => ({
   type: RECEIVED_CENTER,
-  center,
+  center
 });
 
 /**
@@ -39,19 +39,48 @@ const fetchingCenterError = errors => ({
 });
 
 /**
- * Make app request and dispatch state
+ * Fetch user center
  *
  * @param {int} id - Center ID
  * @returns {void}
  */
-const fetchCenterRequest = id => dispatch => {
-  dispatch(fetchingCenter());
+const userCenter = id => dispatch => {
   axios
     .get(`${API_PATH}/centers/${id}`)
     .then(response => dispatch(recievedCenter(response.data.center)))
-    .catch(e => {
-      dispatch(fetchingCenterError(e.response.data));
+    .catch(error => {
+      dispatch(fetchingCenterError(error.response.data));
     });
+};
+
+/**
+ * Fetch admin center
+ *
+ * @param {*} value Query parameters
+ * @return {void}
+ */
+const adminCenter = value => (dispatch, getState) => {
+  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+  axios
+    .get(`${API_PATH}/centers/admin/center`, { params: { ...value } })
+    .then(response => dispatch(recievedCenter(response.data.center)))
+    .catch(error => {
+      dispatch(fetchingCenterError(error.response.data));
+    });
+};
+
+/**
+ * Make app request and dispatch state
+ *
+ * @param {int} value - Center ID
+ * @param {bool} admin Request admin center
+ * @returns {void}
+ */
+const fetchCenterRequest = (value, admin) => dispatch => {
+  dispatch(fetchingCenter());
+  userCenter(value);
+  if (admin) return dispatch(adminCenter(value));
+  dispatch(userCenter(value));
 };
 
 export default fetchCenterRequest;

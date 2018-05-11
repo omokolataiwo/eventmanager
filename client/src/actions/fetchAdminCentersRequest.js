@@ -10,11 +10,13 @@ import {
  * Action for received admin center
  *
  * @param {object} centers - admin center(s)
+ * @param {int} count - Total number of centers
  * @return {object} - Action:  RECEIVED_ADMIN_CENTERS
  */
-const receivedAdminCenter = centers => ({
+const receivedAdminCenter = (centers, count) => ({
   type: RECEIVED_ADMIN_CENTERS,
-  centers
+  centers,
+  count
 });
 
 /**
@@ -40,15 +42,18 @@ const fetchingAdminCentersError = errors => ({
 /**
  * Actions creator for fetching admin centers
  *
+ * @param {object} query - Query for pagination
  * @returns {void}
  */
-const fetchAdminCentersRequest = () => (dispatch, getState) => {
+const fetchAdminCentersRequest = query => (dispatch, getState) => {
   dispatch(fetchingAdminCenters());
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+
   axios
-    .get(`${API_PATH}/centers/admin`)
-    .then((response) => {
-      dispatch(receivedAdminCenter(response.data.centers));
+    .get(`${API_PATH}/centers/admin`, { params: query })
+    .then(response => {
+      const { centers, count } = response.data;
+      dispatch(receivedAdminCenter(centers, count));
     })
     .catch((error) => {
       dispatch(fetchingAdminCentersError(error));

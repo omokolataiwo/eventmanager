@@ -52,7 +52,9 @@ export const CenterDetailsEdit = ({ center, click }) => {
         <p>{details}</p>
         <div
           className="btn"
-          onClick={click}
+          onClick={event => {
+            click(center.id);
+          }}
           role="button"
           onKeyDown={click}
           tabIndex="-1"
