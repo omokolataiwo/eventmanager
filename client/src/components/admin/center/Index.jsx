@@ -4,8 +4,12 @@ import { connect } from 'react-redux';
 import $ from 'jquery';
 import { CenterDetailsEdit } from './CenterDetailsEdit';
 import fetchAdminCentersRequest from '../../../actions/fetchAdminCentersRequest';
-
 import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
+import Preloader from '../../containers/Preloader';
+import {
+  FETCHING_ADMIN_CENTERS,
+  FETCHING_ADMIN_CENTERS_ERROR
+} from '../../../types';
 
 const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -13,7 +17,10 @@ const propTypes = {
     push: PropTypes.func.isRequired
   }).isRequired,
   fetchAdminCentersRequest: PropTypes.func.isRequired,
-  count: PropTypes.number.isRequired
+  count: PropTypes.number.isRequired,
+  action: PropTypes.shape({
+    getCenters: PropTypes.string.isRequired
+  }).isRequired
 };
 
 /**
@@ -36,6 +43,7 @@ class Index extends React.Component {
       activeCenter: {}
     };
     this.handleEditCenter = this.handleEditCenter.bind(this);
+    this.handleViewEvents = this.handleViewEvents.bind(this);
     this.changeActiveCenter = this.changeActiveCenter.bind(this);
     this.handlePagingNav = this.handlePagingNav.bind(this);
   }
@@ -59,6 +67,17 @@ class Index extends React.Component {
   componentWillReceiveProps(props) {
     const { centers, count } = props;
     this.setState({ centers, count, activeCenter: centers[0] });
+  }
+
+  /**
+   * Redirect to view event page
+   *
+   * @param {string} id center id
+   * @returns {void}
+   * @memberof Index
+   */
+  handleViewEvents(id) {
+    return this.props.history.push(`/admin/center/events/${id}`);
   }
 
   /**
@@ -112,12 +131,27 @@ class Index extends React.Component {
    * @memberof Index
    */
   render() {
+    const { getCenters } = this.props.action;
+
+    if (getCenters === FETCHING_ADMIN_CENTERS) {
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
+    }
+
+    if (getCenters === FETCHING_ADMIN_CENTERS_ERROR) {
+      return 'Invalid center';
+    }
+
     return (
       <div className="container container-medium">
         {this.state.centers.length > 0 && (
           <CenterDetailsEdit
             center={this.state.activeCenter}
             click={this.handleEditCenter}
+            handleViewEvents={this.handleViewEvents}
           />
         )}
         <div className="row">
@@ -148,8 +182,8 @@ Index.propTypes = propTypes;
  * @return {object} extracted states
  */
 const mapStateToProps = state => {
-  const { centers, count } = state.getAvailableCenters;
-  return { centers, count };
+  const { centers, count, action } = state.getAvailableCenters;
+  return { centers, count, action };
 };
 export default connect(mapStateToProps, {
   fetchAdminCentersRequest

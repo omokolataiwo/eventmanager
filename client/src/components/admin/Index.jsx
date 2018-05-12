@@ -2,12 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import fetchCenterEventRequest from '../../actions/fetchCenterEventRequest';
-
-import featuredCenterImg from '../../images/party-room.jpg';
+import AdminEventCard from '../containers/AdminEventCard';
+import Preloader from '../containers/Preloader';
+import {
+  FETCHING_CENTERS_EVENTS,
+  FETCHING_CENTERS_EVENTS_ERRORS
+} from '../../types';
 
 const propTypes = {
   fetchCenterEventRequest: PropTypes.func.isRequired,
-  events: PropTypes.arrayOf(PropTypes.shape()).isRequired
+  events: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  action: PropTypes.shape({
+    getEvents: PropTypes.string.isRequired
+  }).isRequired
 };
 
 /**
@@ -55,39 +62,27 @@ class Index extends React.Component {
    * @memberof Index
    */
   render() {
+    const { getEvents } = this.props.action;
+
+    if (getEvents === FETCHING_CENTERS_EVENTS) {
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
+    }
+
+    if (getEvents === FETCHING_CENTERS_EVENTS_ERRORS) {
+      return 'No Booking information for your centers.';
+    }
+
     return (
       <div className="container container-medium card index">
         <h5 className="center">MOST RECENT EVENTS</h5>
         <div className="row">
-          {this.state.events.length === 0 && (
-            <div className="empty-resources">
-              <i className="material-icons left">info_outline</i>No event
-              created for your centers yet.
-            </div>
-          )}
-          {this.state.events.map(event => (
-            <div className="col s12 m5 l5 center event event-card card">
-              <h4>{event.title}</h4>
-              <div className="row center">
-                <div className="col s12 m2 l2" />
-                <div className="col s12 m8 l8">
-                  <p className="date">12th December 2017 | 12:00 PM</p>
-                </div>
-                <div className="col s12 m12 l12">
-                  <h5>09032130821</h5>
-                </div>
-              </div>
-              <div className="col s12 m12 l12 card">
-                <div className="event-center">
-                  <img src={featuredCenterImg} alt="Event Center" />
-                  <div className="over-img">
-                    <h4>Royal Court</h4>
-                    <p>Lagos</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
+          <div className="col s12 m12 l12">
+            <AdminEventCard events={this.state.events} />
+          </div>
         </div>
       </div>
     );
@@ -103,8 +98,8 @@ Index.propTypes = propTypes;
  * @return {object} extracted state
  */
 const mapStateToProps = state => {
-  const { centersEvents } = state.getCentersEvents;
-  return { events: centersEvents };
+  let { centersEvents, action } = state.getCentersEvents;
+  return { events: centersEvents, action };
 };
 
 export default connect(mapStateToProps, {

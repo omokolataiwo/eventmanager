@@ -1,12 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import CenterReports from '../containers/CenterReports';
 import BookingTable from '../containers/BookingTable';
+import Preloader from '../containers/Preloader';
+import fetchCenterEventRequest from '../../actions/fetchCenterEventRequest';
+import {
+  FETCHING_CENTERS_EVENTS,
+  FETCHING_CENTERS_EVENTS_ERRORS
+} from '../../types';
 
 const propTypes = {
-  eventCenter: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  adminCenters: PropTypes.arrayOf(PropTypes.shape()).isRequired
+  fetchCenterEventRequest: PropTypes.func.isRequired,
+  centersEvents: PropTypes.shape().isRequired,
+  action: PropTypes.shape().isRequired
 };
 
 /**
@@ -24,13 +30,8 @@ class Bookings extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      centers: [],
-      events: [],
-      activeCenter: {
-        events: []
-      }
+      events: []
     };
-    this.changeReportCenter = this.changeReportCenter.bind(this);
   }
   /**
    * Get all Eenters and Events
@@ -39,40 +40,18 @@ class Bookings extends React.Component {
    * @memberof Bookings
    */
   componentWillMount() {
-    const { eventCenter, adminCenters } = this.props;
-    let active = 0;
-    let concluded = 0;
-
-    eventCenter.forEach(event => {
-      if (event.concluded) {
-        concluded += 1;
-      } else {
-        active += 1;
-      }
-    });
-
-    this.setState({
-      events: eventCenter,
-      centers: adminCenters,
-      concludedEvents: concluded,
-      activeEvents: active,
-      activeCenter: adminCenters[0],
-    });
+    this.props.fetchCenterEventRequest();
   }
-
   /**
-   * Change active center for report
+   * Update component state
    *
-   * @param {number} id - Center ID
+   * @param {any} props New properties
    * @returns {void}
    * @memberof Bookings
    */
-  changeReportCenter(id) {
-    const { centers } = this.state;
-    const center = centers.find(center =>
-      (parseInt(center.id, 10) === parseInt(id, 10)));
-
-    this.setState({ activeCenter: center });
+  componentWillReceiveProps(props) {
+    const { centersEvents } = props;
+    this.setState({ events: centersEvents });
   }
 
   /**
@@ -82,27 +61,28 @@ class Bookings extends React.Component {
    * @memberof Bookings
    */
   render() {
+    const { getEvents } = this.props.action;
+
+    if (getEvents === FETCHING_CENTERS_EVENTS) {
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
+    }
+
+    if (getEvents === FETCHING_CENTERS_EVENTS_ERRORS) {
+      return 'No Booking information for your centers.';
+    }
     return (
       <div className="container container-medium">
         <h5>Bookings</h5>
         <hr />
-        <div>
-          <div className="chip">{this.state.activeEvents} Active Events</div>
-          <div className="chip">
-            {this.state.concludedEvents} Concluded Events
-          </div>{' '}
-          <div className="chip">{this.state.centers.length} Centers</div>
-        </div>
         <div className="row">
           <div className="col s12 m12 l12">
             <BookingTable events={this.state.events} />
           </div>
         </div>
-        <CenterReports
-          centers={this.state.centers}
-          activeCenter={this.state.activeCenter}
-          changeCenter={this.changeReportCenter}
-        />
       </div>
     );
   }
@@ -117,10 +97,7 @@ Bookings.propTypes = propTypes;
  * @returns {object} - Extracted object
  */
 const mapStateToProps = state => {
-  let { adminCenters, eventCenter } = state.center;
-  adminCenters = adminCenters || [];
-  eventCenter = eventCenter || [];
-
-  return { adminCenters, eventCenter };
+  let { centersEvents, action } = state.getCentersEvents;
+  return { centersEvents, action };
 };
-export default connect(mapStateToProps)(Bookings);
+export default connect(mapStateToProps, { fetchCenterEventRequest })(Bookings);

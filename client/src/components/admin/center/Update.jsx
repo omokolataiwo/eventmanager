@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import $ from 'jquery';
 import toastr from 'toastr';
 import { validate } from 'validate.js';
 import {
@@ -20,6 +19,7 @@ import TextArea from '../../containers/forms/TextArea';
 import FileField from '../../containers/forms/FileField';
 import Error from '../../containers/Error';
 import Lever from '../../containers/forms/Lever';
+import Preloader from '../../containers/Preloader';
 import DynamicChips from '../../containers/forms/DynamicChips';
 import { STATES, CENTER_TYPE } from '../../../consts';
 import {
@@ -29,17 +29,23 @@ import {
   RESET_FETCHING_CENTER_CONTACTS,
   RECEIVED_CENTER,
   RESET_FETCHING_CENTER,
-  RESET_UPDATING_CENTER_STATE
+  RESET_UPDATING_CENTER_STATE,
+  FETCHING_CENTER_ERROR,
+  FETCHING_CENTER
 } from '../../../types';
 
 const propTypes = {
   updateCenterRequest: PropTypes.func.isRequired,
+  getContactPersonRequest: PropTypes.func.isRequired,
+  fetchCenterRequest: PropTypes.func.isRequired,
+  reset: PropTypes.func.isRequired,
   contacts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  errors: PropTypes.shape().isRequired,
   match: PropTypes.shape().isRequired,
-  centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  resetUpdateCenterState: PropTypes.func.isRequired,
-  fetchAdminCentersRequest: PropTypes.func.isRequired
+  center: PropTypes.shape().isRequired,
+  getCenterAction: PropTypes.shape().isRequired,
+  getContactAction: PropTypes.shape().isRequired,
+  updateAction: PropTypes.shape().isRequired,
+  updateErrors: PropTypes.shape().isRequired,
 };
 /**
  * Update center component
@@ -141,7 +147,7 @@ class Update extends React.Component {
 
     if (getCenterAction.getCenter === RECEIVED_CENTER) {
       props.reset(RESET_FETCHING_CENTER);
-      this.setState({ center: { ...this.state.center, ...center } });
+      this.setState({ center: { ...this.state.center, ...center.center } });
     }
 
     if (updateAction.updateCenter === UPDATED_CENTER) {
@@ -162,6 +168,16 @@ class Update extends React.Component {
     if (updateAction.updateCenter === UPDATING_CENTER_ERROR) {
       this.setState({ errors: updateErrors });
     }
+  }
+
+  /**
+   * Reset redux state
+   *
+   * @returns {void}
+   * @memberof Update
+   */
+  componentWillUnmount() {
+    this.props.reset(FETCHING_CENTER);
   }
 
   /**
@@ -281,7 +297,19 @@ class Update extends React.Component {
    * @memberof Create
    */
   render() {
-    if (!this.state.center.name) return null;
+    const { getCenter } = this.props.getCenterAction;
+
+    if (getCenter === FETCHING_CENTER) {
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
+    }
+
+    if (getCenter === FETCHING_CENTER_ERROR) {
+      return 'Center does not exist.';
+    }
     return (
       <div className="container container-medium card">
         <div className="row">

@@ -5,7 +5,6 @@ import {
   RECEIVED_CENTER,
   FETCHING_CENTER_ERROR
 } from '../types';
-import fetchAdminCentersRequest from './fetchAdminCentersRequest';
 
 /**
  * Action for when center is received
@@ -63,7 +62,9 @@ const adminCenter = value => (dispatch, getState) => {
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
   axios
     .get(`${API_PATH}/centers/admin/center`, { params: { ...value } })
-    .then(response => dispatch(recievedCenter(response.data.center)))
+    .then(response => {
+      dispatch(recievedCenter(response.data));
+    })
     .catch(error => {
       dispatch(fetchingCenterError(error.response.data));
     });
