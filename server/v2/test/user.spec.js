@@ -5,6 +5,7 @@ import server from '../../index';
 import userFixture from './fixtures/users';
 import models from '../models';
 
+
 const { expect } = chai;
 chai.use(chaiHttp);
 const request = chai.request(server);
