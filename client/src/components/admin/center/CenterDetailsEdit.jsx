@@ -3,13 +3,25 @@ import PropsType from 'prop-types';
 import formatNumber from 'format-num';
 import { STATES, CENTER_TYPE } from '../../../consts';
 
+const propTypes = {
+  center: PropsType.shape({
+    name: PropsType.string.isRequired,
+    state: PropsType.number.isRequired,
+    type: PropsType.number.isRequired,
+    amount: PropsType.number.isRequired,
+    capacity: PropsType.number.isRequired
+  }).isRequired,
+  click: PropsType.func.isRequired,
+  handleViewEvents: PropsType.func.isRequired,
+};
+
 /**
  * Display the details of a center
  *
  * @param {object} props - Center details
  * @returns {object} - JSX DOM
  */
-export const CenterDetailsEdit = ({ center, click }) => {
+export const CenterDetailsEdit = ({ center, click, handleViewEvents }) => {
   const {
     image,
     name,
@@ -51,29 +63,35 @@ export const CenterDetailsEdit = ({ center, click }) => {
         </div>
         <p>{details}</p>
         <div
-          className="btn"
+          className="btn blue"
           onClick={event => {
             click(center.id);
           }}
           role="button"
-          onKeyDown={click}
+          onKeyDown={event => {
+            click(center.id);
+          }}
           tabIndex="-1"
         >
           Edit Center
+        </div>
+        <div
+          className="btn blue"
+          onClick={event => {
+            handleViewEvents(center.id);
+          }}
+          role="button"
+          onKeyDown={event => {
+            handleViewEvents(center.id);
+          }}
+          tabIndex="-1"
+        >
+          View
         </div>
       </div>
     </div>
   );
 };
 
-CenterDetailsEdit.propTypes = {
-  center: PropsType.shape({
-    name: PropsType.string.isRequired,
-    state: PropsType.number.isRequired,
-    type: PropsType.number.isRequired,
-    amount: PropsType.number.isRequired,
-    capacity: PropsType.number.isRequired
-  }).isRequired,
-  click: PropsType.func.isRequired
-};
+CenterDetailsEdit.propTypes = propTypes;
 export default CenterDetailsEdit;

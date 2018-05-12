@@ -69,7 +69,7 @@ export default class CenterController {
       return models.centers
         .create(center)
         .then(newCenter => res.status(201).json({ center: newCenter }));
-    } catch (e) {
+    } catch (error) {
       return res.status(500).send({
         status: 'error',
         message: 'Internal Server Error'
@@ -259,11 +259,26 @@ export default class CenterController {
         return res.status(200).json({ center });
       }
 
-      const events = await models.event.findAndCountAll({
-        where: { centerId: req.params.id }
-      });
+      const events = await models.sequelize.query(
+        `SELECT events."id", events."title", events."startDate", events."endDate",
+          users."firstName", users."lastName", users."phoneNumber", users."email", 
+        (SELECT COUNT(*) FROM events WHERE events."centerId"=${
+  center.id
+}) as count 
+        FROM events, users WHERE events."centerId"=${
+  center.id
+} AND events."userId"=users."id"`,
+        {
+          type: sequelize.QueryTypes.SELECT
+        }
+      );
 
-      return res.status(200).json({ center, events });
+      let count = 0;
+      if (events.length) {
+        count = events[0].count;
+      }
+
+      return res.status(200).json({ center, events, count });
     } catch (error) {
       res.status(500).send({
         status: 'error',
@@ -473,7 +488,7 @@ export default class CenterController {
   static getOwnEvents(req, res) {
     return models.sequelize
       .query(
-        'SELECT *, events.id as eid FROM events, centers WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId',
+        'SELECT events."title", events."startDate", events."endDate", users."firstName", users."lastName", users."phoneNumber", users."email", centers."name", centers."state" FROM events, centers, users WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."userId" = users."id"',
         {
           replacements: { ownerId: req.user.id },
           type: sequelize.QueryTypes.SELECT
