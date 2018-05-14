@@ -45,7 +45,7 @@ export const createEventRequest = event => (dispatch, getState) => {
       dispatch(createEvent(response.data));
     })
     .catch(errors => {
-      dispatch(createEventError(errors.response.data));
+      dispatch(createEventError(errors.response.data.errors[0]));
     });
 };
 

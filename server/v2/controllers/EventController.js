@@ -174,6 +174,46 @@ export default class EventController {
           message: 'Internal Server Error'
         }));
   }
+
+  /**
+ * Get all user's event
+ *
+ * @param {object} req - Server request
+ * @param {object} res - Server response
+ * @return {*} - Server response
+ */
+  static getEvent(req, res) {
+    return models.events
+      .find({
+        include: [
+          {
+            model: models.centers,
+            as: 'center'
+          }
+        ],
+        where: {
+          $and: [{ userId: req.user.id }, { id: req.params.id }]
+        }
+      })
+      .then((event) => {
+        if (!event) {
+          return res.status(404).json({
+            status: 'error',
+            errors: [{ event: ['Event not found.'] }]
+          });
+        }
+
+        return res.status(200).json({
+          event: event.toJSON()
+        });
+      })
+      .catch(() => {
+        res.status(500).send({
+          status: 'error',
+          message: 'Internal Server Error'
+        });
+      });
+  }
   /**
    * Edit event
    *

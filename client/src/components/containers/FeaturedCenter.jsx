@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import fetchAllCentersRequest from '../../actions/fetchAllCentersRequest';
+import reset from '../../actions/reset';
 import CentersCard from './CentersCard';
 import Preloader from './Preloader';
 import { FETCHING_CENTERS, RECEIVED_CENTERS } from '../../types';
@@ -60,10 +61,14 @@ class FeaturedCenter extends React.Component {
     this.setState({ centers, count });
   }
 
+  componentWillUnmount() {
+    this.props.reset(FETCHING_CENTERS);
+  }
+
   /**
    * Fetch paging
    *
-   * @param {number} index page cliced
+   * @param {number} index page clicked
    * @returns {void}
    */
   handlePagingNav(index) {
@@ -77,6 +82,7 @@ class FeaturedCenter extends React.Component {
    */
   render() {
     const { getCenters } = this.props.action;
+
     if (getCenters === FETCHING_CENTERS) {
       return (
         <div className="preloader">
@@ -112,5 +118,6 @@ const mapStateToProps = state => {
   return { centers, count, action };
 };
 export default connect(mapStateToProps, {
-  fetchAllCentersRequest
+  fetchAllCentersRequest,
+  reset
 })(FeaturedCenter);

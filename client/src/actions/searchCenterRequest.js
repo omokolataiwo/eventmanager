@@ -24,7 +24,8 @@ const searchCenterRequest = params => dispatch => {
   axios
     .get(`${API_PATH}/centers/search`, { params })
     .then(response => {
-      dispatch(searchedResult(response.data.centers));
+      const { count } = response.data.centers[0];
+      dispatch(searchedResult({ centers: response.data.centers, count }));
     })
     .catch(error => console.log(error));
 };

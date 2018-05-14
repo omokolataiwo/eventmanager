@@ -5,6 +5,8 @@ import moment from 'moment';
 import $ from 'jquery';
 import { createEventRequest } from '../../../actions/createEventRequest';
 import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
+import fetchAllCentersRequest from '../../../actions/fetchAllCentersRequest';
+import Preloader from '../../containers/Preloader';
 import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
@@ -13,14 +15,19 @@ import { addFlash } from '../../../utils/flash';
 import {
   CREATED_EVENT,
   CREATE_EVENT_ERROR,
-  RESET_EVENT_STATE
+  RESET_EVENT_STATE,
+  RECEIVED_CENTERS,
+  FETCHING_CENTERS,
+  FETCHING_CENTERS_ERROR
 } from '../../../types';
 import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
 
 const propTypes = {
   createEventRequest: PropTypes.func.isRequired,
+  fetchAllCentersRequest: PropTypes.func.isRequired,
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
   errors: PropTypes.shape().isRequired,
+  centerAction: PropTypes.shape().isRequired,
   actions: PropTypes.string.isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   count: PropTypes.string.isRequired,
@@ -45,8 +52,8 @@ class Create extends React.Component {
     this.state = {
       event: {
         title: '',
-        startDate: '',
-        endDate: '',
+        startDate: moment().format('YYYY-MM-DD'),
+        endDate: moment().format('YYYY-MM-DD'),
         centerId: ''
       },
       centers: [],
@@ -57,25 +64,15 @@ class Create extends React.Component {
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
     this.changeActiveCenter = this.changeActiveCenter.bind(this);
   }
+
   /**
-   * Set center for event
+   * Fetch all centers
    *
    * @returns {void}
    * @memberof Create
    */
   componentWillMount() {
-    const { centers, count } = this.props;
-    this.setState({ centers, count }, () => {
-      const choiceCenter = localStorage.getItem('choice-center');
-      const centerId = choiceCenter || this.state.centers[0].id;
-      const activeCenter = this.state.centers
-        .find(center => center.id === parseInt(centerId, 10));
-
-      this.setState({
-        event: { ...this.state.event },
-        activeCenter
-      });
-    });
+    this.props.fetchAllCentersRequest();
   }
 
   /**
@@ -87,8 +84,23 @@ class Create extends React.Component {
    */
   componentWillReceiveProps(props) {
     const {
-      errors, actions, history, resetEventState
+      errors, actions, history, resetEventState, centers, count, centerAction
     } = props;
+
+    if (centerAction.getCenters === RECEIVED_CENTERS && centers.length !== 0) {
+      this.setState({ centers, count }, () => {
+        const choiceCenter = localStorage.getItem('choice-center');
+
+        let activeCenter = this.state.centers
+          .find(center => center.id === parseInt(choiceCenter, 10));
+        activeCenter = activeCenter || this.state.centers[0];
+
+        this.setState({
+          event: { ...this.state.event },
+          activeCenter
+        });
+      });
+    }
 
     if (actions.createEvents === CREATE_EVENT_ERROR) {
       this.setState({ errors });
@@ -150,6 +162,7 @@ class Create extends React.Component {
    */
   createEvent(event) {
     event.preventDefault();
+
     this.setState(
       {
         event: {
@@ -167,6 +180,14 @@ class Create extends React.Component {
    * @returns {object} - JSX DOM
    */
   render() {
+    if (this.props.centerAction.getCenters === FETCHING_CENTERS) {
+      return <Preloader />;
+    }
+
+    if (this.props.centerAction.getCenters === FETCHING_CENTERS_ERROR) {
+      return <h6>No Center Registered to be booked.</h6>;
+    }
+
     return (
       <div className="container container-medium card">
         <h5>Create Event</h5>
@@ -206,7 +227,7 @@ class Create extends React.Component {
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button className="btn" onClick={event => this.createEvent(event)}>
+          <button className="btn blue" onClick={event => this.createEvent(event)}>
             Book Center
           </button>
         </form>
@@ -240,17 +261,19 @@ Create.propTypes = propTypes;
  * @returns {object} - Extracted state
  */
 const mapStateToProps = state => {
-  const { centers, count } = state.center;
+  const { centers, count, action } = state.getAvailableCenters;
   const { errors, actions } = state.event;
   return {
     centers,
     count,
     errors,
-    actions
+    actions,
+    centerAction: action
   };
 };
 
 export default connect(mapStateToProps, {
   createEventRequest,
+  fetchAllCentersRequest,
   resetEventState: () => ({ type: RESET_EVENT_STATE })
 })(Create);

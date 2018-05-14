@@ -180,9 +180,8 @@ Index.propTypes = propTypes;
  * @returns {object} - Extracted properties
  */
 const mapStateToProps = state => {
-  const { accessToken } = state.user;
-  const { events } = state.event;
-  return { accessToken, events };
+  const { events, count } = state.event;
+  return { events, count };
 };
 
 export default connect(mapStateToProps, {

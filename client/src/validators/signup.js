@@ -31,11 +31,10 @@ export default {
       message: 'is required'
     },
     numericality: {
-      onlyInteger: true,
-      strict: true
+      onlyInteger: true
     },
     length: {
-      is: 10
+      is: 11
     }
   },
   username: {

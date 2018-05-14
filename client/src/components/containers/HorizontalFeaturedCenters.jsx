@@ -52,6 +52,13 @@ class HorizontalFeaturedCenters extends React.Component {
     $('.modal').modal();
   }
 
+  /**
+   * Update component state
+   *
+   * @param {object} props new properties
+   * @returns {void}
+   * @memberof HorizontalFeaturedCenters
+   */
   componentWillReceiveProps(props) {
     const { centers, count } = props;
     this.setState({ centers, count });
@@ -128,7 +135,7 @@ HorizontalFeaturedCenters.propTypes = propTypes;
  * @return {object} - Extracted properties
  */
 const mapStateToProps = state => {
-  const { centers, count } = state.center;
+  const { centers, count } = state.getAvailableCenters;
   return { centers, count };
 };
 

@@ -25,5 +25,11 @@ module.exports = (app) => {
     validateUpdateEvent,
     event.editEvent
   ); // Update event
+  app.get(
+    '/events/:id',
+    validateParamID,
+    userAuthentication,
+    event.getEvent
+  ); // Get event
   app.get('/events', userAuthentication, event.getEvents); // Get own events
 };

@@ -32,10 +32,9 @@ export const rules = {
     },
     numericality: {
       onlyInteger: true,
-      strict: true
     },
     length: {
-      is: 10
+      is: 11
     }
   },
   username: {

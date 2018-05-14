@@ -118,7 +118,7 @@ Search.propTypes = propTypes;
  * @returns {object} Extracted object
  */
 const mapStateToProps = (state) => {
-  const { searched } = state.center;
-  return { searched };
+  const { searched, count } = state.searchCenters;
+  return { searched, count };
 };
 export default connect(mapStateToProps, { searchCenterRequest })(Search);

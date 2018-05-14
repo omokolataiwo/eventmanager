@@ -186,16 +186,6 @@ class Center extends React.Component {
           </div>
           <div className="row">
             <div className="col s12 m12 l12">
-              {Object.keys(this.state.center).length && (
-                <SuggestedCenters
-                  state={this.state.center.state}
-                  handleRedirect={this.handleRedirect}
-                />
-              )}
-            </div>
-          </div>
-          <div className="row">
-            <div className="col s12 m12 l12">
               <h3>{this.state.center.name}</h3>
               <hr />
               <p>{this.state.center.details}</p>
@@ -219,11 +209,11 @@ class Center extends React.Component {
         <p className="label">Facilities</p>
         <p>{this.state.center.facilities}</p>
         {this.renderContactDetails()}
-        <button onClick={event => this.handleBookEvent(event)}>
+        <button className="btn blue" onClick={event => this.handleBookEvent(event)}>
           Book Center
         </button>
       </div>
-                                 </div>);
+                                 </div >);
   }
 }
 
