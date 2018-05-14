@@ -70,6 +70,11 @@ export const FETCHING_EVENTS = 'FETCHING_EVENTS';
 export const RECEIVED_EVENTS = 'RECEIVED_EVENTS';
 export const FETCHING_EVENTS_ERROR = 'EVENT_ERROR';
 
+// Get Event Actions
+export const FETCHING_EVENT = 'FETCHING_EVENT';
+export const RECEIVED_EVENT = 'RECEIVED_EVENT';
+export const FETCHING_EVENT_ERROR = 'FETCHING_EVENT_ERROR';
+
 // Signin user
 export const REQUEST_SIGNIN_USER = 'REQUEST_SIGNIN_USER';
 export const SIGNIN_USER = 'SIGNIN_USER';

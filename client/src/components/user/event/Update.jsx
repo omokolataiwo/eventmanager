@@ -5,17 +5,22 @@ import moment from 'moment';
 import $ from 'jquery';
 import toastr from 'toastr';
 import { updateEventRequest } from '../../../actions/updateEventRequest';
+import fetchUserEventRequest from '../../../actions/fetchUserEventRequest';
+import fetchAllCentersRequest from '../../../actions/fetchAllCentersRequest';
 import { CenterDetailsSimple } from '../../admin/center/CenterDetailsSimple';
 import InputField from '../../containers/forms/InputField';
 import Error from '../../containers/Error';
 import DatePicker from '../../containers/forms/DatePicker';
-import { STATES } from '../../../consts';
+import reset from '../../../actions/reset';
 import {
   UPDATE_EVENT_ERROR,
   UPDATED_EVENT,
-  RESET_UPDATE_EVENT_STATE
+  RECEIVED_EVENT,
+  FETCHING_EVENT,
+  RECEIVED_CENTERS
 } from '../../../types';
 import PaginatedCentersCard from '../../containers/PaginatedCentersCard';
+import Preloader from '../../containers/Preloader';
 
 const propTypes = {
   updateEventRequest: PropTypes.func.isRequired,
@@ -31,7 +36,7 @@ const propTypes = {
   })).isRequired,
   errors: PropTypes.shape().isRequired,
   actions: PropTypes.shape().isRequired,
-  resetUpdateState: PropTypes.shape().isRequired
+  reset: PropTypes.func.isRequired
 };
 
 /**
@@ -51,11 +56,6 @@ class Update extends React.Component {
     super(props);
     this.state = {
       event: {
-        title: '',
-        startDate: '',
-        endDate: '',
-        centerId: '',
-        defaultValue: ''
       },
       centers: [],
       count: 0,
@@ -72,19 +72,8 @@ class Update extends React.Component {
    * @memberof Create
    */
   componentWillMount() {
-    const {
-      match, events, centers, count
-    } = this.props;
-    const eventID = match.params.index;
-
-    const event = events.find(event => event.id === parseInt(eventID, 10));
-    const activeCenter = centers.find(center => center.id === parseInt(event.centerId, 10));
-    this.setState({
-      centers,
-      count,
-      event,
-      activeCenter
-    });
+    this.props.fetchUserEventRequest(this.props.match.params.index);
+    this.props.fetchAllCentersRequest();
   }
 
   /**
@@ -95,14 +84,23 @@ class Update extends React.Component {
    * @memberof Create
    */
   componentWillReceiveProps(props) {
-    const { errors, actions, resetUpdateState } = props;
+    const {
+      errors, actions, event, centers, centerAction
+    } = props;
 
-    if (actions.createUpdateEvents === UPDATE_EVENT_ERROR) {
+    if (actions.updateEvent === UPDATE_EVENT_ERROR) {
       this.setState({ errors });
     }
 
+    if (actions.getEvent === RECEIVED_EVENT) {
+      this.setState({ event, activeCenter: event.center });
+    }
+
+    if (centerAction.getCenters === RECEIVED_CENTERS) {
+      this.setState({ centers });
+    }
+
     if (actions.updateEvent === UPDATED_EVENT) {
-      resetUpdateState();
       toastr.options = {
         positionClass: 'toast-top-full-width',
         showDuration: '300',
@@ -114,6 +112,10 @@ class Update extends React.Component {
       };
       toastr.success('Event Updated.');
     }
+  }
+
+  componentWillUnmount() {
+    this.props.reset(FETCHING_EVENT);
   }
 
   /**
@@ -182,6 +184,9 @@ class Update extends React.Component {
    * @returns {object} - JSX DOM
    */
   render() {
+    if (this.props.actions.getEvent === FETCHING_EVENT) {
+      return <Preloader />;
+    }
     return (
       <div className="container container-medium card">
         <h5>Edit Event</h5>
@@ -224,7 +229,7 @@ class Update extends React.Component {
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button className="btn" onClick={event => this.updateEvent(event)}>
+          <button className="btn blue" onClick={event => this.updateEvent(event)}>
             Update Event
           </button>
         </form>
@@ -255,18 +260,22 @@ Update.propTypes = propTypes;
  * @returns {object} - Extracted state
  */
 const mapStateToProps = state => {
-  const { centers, count } = state.center;
-  const { errors, actions, events } = state.event;
+  const { centers, count } = state.getAvailableCenters;
+  const { errors, actions, event } = state.event;
+
   return {
     centers,
     count,
+    centerAction: state.getAvailableCenters.action,
     errors,
     actions,
-    events
+    event
   };
 };
 
 export default connect(mapStateToProps, {
   updateEventRequest,
-  resetUpdateState: () => ({ type: RESET_UPDATE_EVENT_STATE })
+  fetchUserEventRequest,
+  fetchAllCentersRequest,
+  reset
 })(Update);

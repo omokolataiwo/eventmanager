@@ -34,7 +34,7 @@ const updateUserRequest = user => (dispatch, getState) => {
   axios
     .put(`${API_PATH}/users/`, user)
     .then(response => {
-      dispatch(updatedUser(response.data));
+      dispatch(updatedUser(response.data.user));
     })
     .catch(error => {
       if (!error.response || error.response.status >= 500) {

@@ -2,6 +2,9 @@ import {
   FETCHING_EVENTS,
   RECEIVED_EVENTS,
   FETCHING_EVENTS_ERROR,
+  FETCHING_EVENT,
+  RECEIVED_EVENT,
+  FETCHING_EVENT_ERROR,
   CREATED_EVENT,
   REQUEST_CREATE_EVENT,
   CREATE_EVENT_ERROR,
@@ -16,6 +19,7 @@ const defaultEvent = {
   events: [],
   actions: {
     getEvents: FETCHING_EVENTS,
+    getEvent: FETCHING_EVENT,
     createUpdateEvent: null
   },
   errors: {}
@@ -38,6 +42,23 @@ export default (state = defaultEvent, action) => {
     return {
       ...state,
       actions: { ...state.actions, getEvents: action.type }
+    };
+
+  case FETCHING_EVENT:
+    return {
+      ...state,
+      actions: { ...state.actions, getEvent: action.type }
+    };
+  case RECEIVED_EVENT:
+    return {
+      ...state,
+      event: action.event,
+      actions: { ...state.actions, getEvent: action.type }
+    };
+  case FETCHING_EVENT_ERROR:
+    return {
+      ...state,
+      actions: { ...state.actions, getEvent: action.type }
     };
   case REQUEST_CREATE_EVENT:
   case CREATED_EVENT:
@@ -66,7 +87,7 @@ export default (state = defaultEvent, action) => {
     return {
       ...state,
       errors: action.errors,
-      actions: { ...state.actions, createEvents: action.type }
+      actions: { ...state.actions, updateEvent: action.type }
     };
   default:
     return state;

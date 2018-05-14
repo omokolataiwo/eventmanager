@@ -13,7 +13,7 @@ const CentersCard = ({ centers, count, handlePagingNav }) => {
   if (!Array.isArray(centers) || !centers.length) return null;
   return (
     <div className="animated fadeIn">
-      <div className="row">
+      <div className="row center">
         {centers.map(center => (
           <Link href="#center" to={`/center/${center.id}`} key={center.id}>
             <div className="col s12 m4 l4">
@@ -23,7 +23,7 @@ const CentersCard = ({ centers, count, handlePagingNav }) => {
                   <h4 className="truncate">{center.name}</h4>
                   <p>
                     <i className="material-icons">location_on</i>
-                    {center.area} {STATES[center.state]}
+                    {center.area} {STATES[center.state - 1]}
                   </p>
                   <p> &#8358;{formatNumber(center.amount)}</p>
                 </div>

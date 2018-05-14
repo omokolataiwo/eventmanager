@@ -19,7 +19,8 @@ export default (state = defaultCenter, action) => {
   case SEARCH_RESULT:
     return {
       ...state,
-      searched: action.centers,
+      searched: action.centers.centers,
+      count: action.centers.count,
       action: { ...state.action, searchCenter: action.type }
     };
   default:

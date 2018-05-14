@@ -88,6 +88,8 @@ class Signup extends React.Component {
       localStorage.setItem('newSignup', true);
       return history.push('/signin');
     }
+
+
     this.setState({ events: { ...this.state.events, ...events }, errors });
   }
 
@@ -133,12 +135,12 @@ class Signup extends React.Component {
   /**
    * Method changes the property of user object in state
    *
-   * @param {object} e - DOM object of changed element
+   * @param {object} event - DOM object of changed element
    *
    * @returns {void}
    */
-  handleFormFieldChanged(e) {
-    const { value, id } = e.target;
+  handleFormFieldChanged(event) {
+    const { value, id } = event.target;
     this.setState({ userdata: { ...this.state.userdata, [id]: value } });
 
     // match password and password, it is a special case validation

@@ -51,7 +51,8 @@ const createUserRequest = user => dispatch => {
         console.error('Internal server error.');
         return;
       }
-      dispatch(signupError(error.response.data));
+
+      dispatch(signupError(error.response.data.errors[0]));
     });
 };
 

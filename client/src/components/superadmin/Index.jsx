@@ -138,7 +138,7 @@ Index.propTypes = propTypes;
  * @returns {object} - Extracted states properties
  */
 const mapStateToProps = (state) => {
-  const { centers } = state.center;
+  const { centers } = state.getAvailableCenters;
   return { centers };
 };
 export default connect(mapStateToProps, { fetchAllCentersRequest, approveCenterRequest })(Index);
