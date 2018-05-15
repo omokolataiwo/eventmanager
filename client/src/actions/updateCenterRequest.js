@@ -7,7 +7,6 @@ import {
   UPDATING_CENTER_ERROR
 } from '../types';
 
-
 /**
  * Action for updating center
  *
@@ -33,7 +32,7 @@ const updatingCenterError = errors => ({
  * @param {object} center - center details
  * @returns {void}
  */
-const updateCenter = (center) => (dispatch, getState) => {
+const updateCenter = center => (dispatch, getState) => {
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
   console.log(center);
   axios
@@ -41,12 +40,12 @@ const updateCenter = (center) => (dispatch, getState) => {
     .then(response => {
       dispatch(updatedCenter(response.data));
     })
-    .catch((error) => {
+    .catch(error => {
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
-      dispatch(updatingCenterError(error.response.data));
+      dispatch(updatingCenterError(error.response.data.errors));
     });
 };
 
@@ -56,7 +55,7 @@ const updateCenter = (center) => (dispatch, getState) => {
  * @param {object} centerDetails - center details
  * @returns {void}
  */
-const updateCenterRequest = (centerDetails) => dispatch => {
+const updateCenterRequest = centerDetails => dispatch => {
   dispatch({ type: UPDATING_CENTER });
   const { image } = centerDetails;
   // If owner is not changing image ignore cloudinary upload

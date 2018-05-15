@@ -167,7 +167,8 @@ class Center extends React.Component {
       return this.renderWithLayout(<Preloader />);
     }
     if (Object.keys(this.state.center).length === 0) {
-      return this.renderWithLayout(<div>Center Does not Exist</div>);
+      this.props.history.push('/404');
+      return null;
     }
     return this.renderWithLayout(<div className="row">
       <div className="col s12 m8 l8">
@@ -185,7 +186,7 @@ class Center extends React.Component {
             />
           </div>
           <div className="row">
-            <div className="col s12 m12 l12">
+            <div className="col s12 m12 l12 details">
               <h3>{this.state.center.name}</h3>
               <hr />
               <p>{this.state.center.details}</p>
@@ -196,7 +197,7 @@ class Center extends React.Component {
       <div className="col s12 m4 l4 center-details">
         <p className="label">Amount</p>
         <p className="value">
-          &#8358;{formatNumber(this.state.center.amount)}
+            &#8358;{formatNumber(this.state.center.amount)}
         </p>
 
         <p className="label">Address</p>
@@ -209,11 +210,14 @@ class Center extends React.Component {
         <p className="label">Facilities</p>
         <p>{this.state.center.facilities}</p>
         {this.renderContactDetails()}
-        <button className="btn blue" onClick={event => this.handleBookEvent(event)}>
-          Book Center
+        <button
+          className="btn blue"
+          onClick={event => this.handleBookEvent(event)}
+        >
+            Book Center
         </button>
       </div>
-                                 </div >);
+    </div>);
   }
 }
 

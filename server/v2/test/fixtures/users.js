@@ -9,7 +9,7 @@ module.exports = {
     lucy: {
       firstName: 'Lucy',
       lastName: 'Ben',
-      phoneNumber: '2345678903',
+      phoneNumber: '08032108214',
       username: 'lucy',
       password: 'one_password',
       matchPassword: 'one_password',
@@ -19,7 +19,7 @@ module.exports = {
     blaze: {
       firstName: 'Blaze',
       lastName: 'Ben',
-      phoneNumber: '2345674903',
+      phoneNumber: '08032108215',
       username: 'blaze',
       password: 'one_password',
       matchPassword: 'one_password',
@@ -29,7 +29,7 @@ module.exports = {
     johndoe: {
       firstName: 'John',
       lastName: 'Doe',
-      phoneNumber: '1294567891',
+      phoneNumber: '08032108216',
       username: 'johndoe',
       password: 'one_password',
       matchPassword: 'one_password',
@@ -39,7 +39,7 @@ module.exports = {
     superAdmin: {
       firstName: 'Super',
       lastName: 'Admin',
-      phoneNumber: '1293567891',
+      phoneNumber: '08032108217',
       username: 'super',
       password: '$2a$08$W9kjkcQcNXAKFHGMB6rnOuxXZvLbeBtl607FEtH7gVXAH/COPGQCm',
       role: ACCOUNT_TYPE_SUPER_ADMIN,

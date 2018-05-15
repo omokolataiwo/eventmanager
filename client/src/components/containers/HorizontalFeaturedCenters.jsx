@@ -97,19 +97,39 @@ class HorizontalFeaturedCenters extends React.Component {
   render() {
     return (
       <div className="row">
-        <div id="modal1" className="modal">
+        <div id="modal1" className="modal modal-center">
           <div className="modal-content">
-            <h4>{this.state.poppedCenter.name}</h4>
-            <p>{this.state.poppedCenter.address}</p>
-            <p>{STATES[this.state.poppedCenter.state - 1]}</p>
-            <p>{this.state.poppedCenter.capacity}</p>
-            <p>N{this.state.poppedCenter.amount}</p>
-            <p>{this.state.poppedCenter.facilities}</p>
+            <div className="row">
+              <div className="col s12 m4 l4">
+                <img
+                  src={this.state.poppedCenter.image}
+                  alt="center"
+                  style={{ width: '100%', height: '100%' }}
+                />
+              </div>
+              <div className="col s12 m8 l8">
+                <h4>{this.state.poppedCenter.name}</h4>
+                <p>
+                  {this.state.poppedCenter.address}{' '}
+                  {STATES[this.state.poppedCenter.state - 1]}
+                </p>
+                <p>
+                  <b>Capacity:</b> {this.state.poppedCenter.capacity}
+                </p>
+                <p>
+                  <b>Amount:</b> N{this.state.poppedCenter.amount}
+                </p>
+                <p>
+                  <b>Facilities:</b>
+                </p>
+                <p>{this.state.poppedCenter.facilities}</p>
+              </div>
+            </div>
           </div>
           <div className="modal-footer">
             <button
               onClick={() => this.bookCenter()}
-              className="modal-action modal-close waves-effect waves-green btn-flat"
+              className="modal-action modal-close waves-effect blue btn"
             >
               Book Center
             </button>

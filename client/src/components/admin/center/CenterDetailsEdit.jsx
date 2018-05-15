@@ -12,7 +12,7 @@ const propTypes = {
     capacity: PropsType.number.isRequired
   }).isRequired,
   click: PropsType.func.isRequired,
-  handleViewEvents: PropsType.func.isRequired,
+  handleViewEvents: PropsType.func.isRequired
 };
 
 /**
@@ -30,7 +30,8 @@ export const CenterDetailsEdit = ({ center, click, handleViewEvents }) => {
     amount,
     facilities,
     capacity,
-    details
+    details,
+    approve
   } = center;
   return (
     <div className="row event-center-detailed">
@@ -39,15 +40,15 @@ export const CenterDetailsEdit = ({ center, click, handleViewEvents }) => {
           <img src={image} alt="Event Center" />
         </div>
       </div>
-      <div className="col s12 m7 l7">
+      <div className="col s12 m7 l7 details">
         <h5>{name}</h5>
         <div>
           <span className="location">
             <i className="material-icons left">location_on</i>
-            {STATES[state]}
+            {STATES[state - 1]}
           </span>
           &nbsp;
-          <span className="type">{CENTER_TYPE[type]}</span>
+          <span className="type">{CENTER_TYPE[type - 1]}</span>
         </div>
         <p className="amount">&#8358;{formatNumber(amount)}</p>
         <p className="capacity">
@@ -62,6 +63,9 @@ export const CenterDetailsEdit = ({ center, click, handleViewEvents }) => {
           ))}
         </div>
         <p>{details}</p>
+        {!approve && (
+          <p className="approved-status right">Center is not approved!</p>
+        )}
         <div
           className="btn blue"
           onClick={event => {
@@ -86,7 +90,7 @@ export const CenterDetailsEdit = ({ center, click, handleViewEvents }) => {
           }}
           tabIndex="-1"
         >
-          View
+          View Events
         </div>
       </div>
     </div>

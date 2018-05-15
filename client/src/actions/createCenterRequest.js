@@ -56,7 +56,7 @@ const createCenter = center => (dispatch, getState) => {
         console.error('Internal server error.');
         return;
       }
-      dispatch(creatingNewCenterError(error.response.data.errors[0]));
+      dispatch(creatingNewCenterError(error.response.data.errors));
     });
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SelectComponent from '../containers/forms/SelectComponent';
 import ContactPersonForm from '../containers/ContactPersonForm';
+import Error from '../containers/Error';
 
 const propTypes = {
   newContact: PropTypes.bool.isRequired,
@@ -29,19 +30,22 @@ const CenterContactPerson = ({
 }) => {
   let contactFormHeader = <span />;
   let contactPersonForm = (
-    <SelectComponent
-      default={defaultContact}
-      id="contactId"
-      change={e => onSelectContactChanged(e)}
-      options={[
-        ...existingContacts.map(existingContact => [
-          existingContact.id,
-          `${existingContact.firstName} ${existingContact.lastName}`
-        ])
-      ]}
-      label="Select Contact Person"
-      width="6"
-    />
+    <div>
+      <SelectComponent
+        default={defaultContact}
+        id="contactId"
+        change={e => onSelectContactChanged(e)}
+        options={[
+          ...existingContacts.map(existingContact => [
+            existingContact.id,
+            `${existingContact.firstName} ${existingContact.lastName}`
+          ])
+        ]}
+        label="Select Contact Person"
+        width="6"
+      />
+      <Error messages={errors.contactId} />
+    </div>
   );
 
   // We dont need the switch if there are no existing contacts

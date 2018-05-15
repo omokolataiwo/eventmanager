@@ -6,6 +6,7 @@ import Signin from './components/pages/Signin';
 import Signout from './components/pages/Signout';
 import Center from './components/pages/Center';
 import Search from './components/pages/Search';
+import Error404 from './components/pages/Error404';
 import logo from './images/logo.png';
 /**
  * Base component for non priviledged pages
@@ -42,18 +43,21 @@ function App() {
           </div>
         </div>
       </header>
-      <Switch>
-        <Route path="/" exact component={Home} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/signin" component={Signin} />
-        <Route path="/signout" component={Signout} />
-        <Route path="/center/:id" component={Center} />
-        <Route path="/search" component={Search} />
-        <Redirect to="/" />
-      </Switch>
+      <main className="main-wrapper">
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/signup" component={Signup} />
+          <Route path="/signin" component={Signin} />
+          <Route path="/signout" component={Signout} />
+          <Route path="/center/:id" component={Center} />
+          <Route path="/search" component={Search} />
+          <Route path="/404" component={Error404} />
+          <Redirect to="/404" />
+        </Switch>
+      </main>
       <footer className="page-footer blue">
         <div className="footer-copyright">
-          <div className="container">&nbsp; 2018 Copyright</div>
+          <div className="container">&copy; 2018 Copyright</div>
         </div>
       </footer>
     </div>

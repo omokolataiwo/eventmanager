@@ -11,7 +11,7 @@ import signinRequest from '../../actions/signinRequest';
 const propTypes = {
   userdata: PropTypes.shape().isRequired,
   authenticated: PropTypes.bool.isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  history: PropTypes.shape({ replace: PropTypes.func.isRequired }).isRequired,
   events: PropTypes.shape().isRequired,
   errors: PropTypes.shape().isRequired,
   signinRequest: PropTypes.func.isRequired
@@ -51,7 +51,7 @@ class Signin extends React.Component {
   componentWillMount() {
     const { userdata, authenticated, history } = this.props;
     if (authenticated) {
-      return history.push(getPath(userdata.role));
+      return history.replace(getPath(userdata.role));
     }
   }
 
@@ -88,7 +88,7 @@ class Signin extends React.Component {
     } = props;
 
     if (events.signin === SIGNIN_USER) {
-      return history.push(getPath(userdata.role));
+      return history.replace(getPath(userdata.role));
     }
     this.setState({ errors });
   }

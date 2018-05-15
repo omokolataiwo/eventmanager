@@ -19,8 +19,7 @@ const propTypes = {
   center: PropTypes.shape().isRequired,
   action: PropTypes.shape({
     getCenter: PropTypes.string.isRequired
-  }).isRequired,
-
+  }).isRequired
 };
 /**
  * Center events page
@@ -81,7 +80,8 @@ class Events extends React.Component {
     }
 
     if (getCenter === FETCHING_CENTER_ERROR) {
-      return 'Invalid center';
+      this.props.history.push('/404');
+      return null;
     }
 
     return (

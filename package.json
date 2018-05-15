@@ -4,7 +4,7 @@
   "description": "An Event Manager, for listing your event center and booking center for your events.",
   "main": "index.js",
   "scripts": {
-    "testUNTILready": "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
+    "test": "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
     "build:dev:server": "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
     "build": "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files && rimraf ./client/dist && NODE_ENV=production webpack --config ./webpack.config.js -p",
     "nightwatch": "npm run db:reset-test && cd ./client && NODE_ENV=test nightwatch",

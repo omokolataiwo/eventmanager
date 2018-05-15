@@ -14,3 +14,18 @@
   color: #fff;
 }
 }
+
+.searchEvent_panel {
+  button{
+    padding: 10px;
+    margin-top: 15px;
+    background: #496894 !important;
+
+    i {
+      margin-right: 10px;
+    }
+  }
+  @media screen and (max-width: 450px) {
+        margin-top: -200px;
+			}
+}

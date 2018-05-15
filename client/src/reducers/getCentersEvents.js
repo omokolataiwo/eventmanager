@@ -1,4 +1,8 @@
-import { FETCHING_CENTERS_EVENTS, RECEIVED_CENTERS_EVENTS } from '../types';
+import {
+  FETCHING_CENTERS_EVENTS,
+  RECEIVED_CENTERS_EVENTS,
+  FETCHING_CENTERS_EVENTS_ERRORS
+} from '../types';
 
 const defaultCenter = {
   centersEvents: [],
@@ -10,6 +14,7 @@ const defaultCenter = {
 
 export default (state = defaultCenter, action) => {
   switch (action.type) {
+  case FETCHING_CENTERS_EVENTS_ERRORS:
   case FETCHING_CENTERS_EVENTS:
     return { ...state, action: { ...state.action, getEvents: action.type } };
   case RECEIVED_CENTERS_EVENTS:

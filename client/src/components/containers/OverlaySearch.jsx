@@ -247,10 +247,10 @@ class OverlaySearch extends React.Component {
                 backgroundColor: '#000',
                 marginBottom: '20px'
               }}
-              onClick={e => {
-                this.search(e);
+              onClick={event => {
+                this.search(event);
               }}
-            >Search
+            ><i className="material-icons">search</i>Search
             </button>
           </div>
         </div>

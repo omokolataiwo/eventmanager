@@ -5,6 +5,7 @@ import server from '../../index';
 import userFixture from './fixtures/users';
 import centerFixture from './fixtures/centers';
 import models from '../models';
+import { RSA_PKCS1_OAEP_PADDING } from 'constants';
 
 const { expect } = chai;
 chai.use(chaiHttp);
@@ -62,10 +63,10 @@ describe('Base setup', () => {
       .send(userFixture.login.lucy)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.user)
           .to.be.an('object')
           .that.has.property('token');
-        lucyToken = res.body.token;
+        lucyToken = res.body.user.token;
         done();
       });
   });
@@ -76,10 +77,10 @@ describe('Base setup', () => {
       .send(userFixture.login.blaze)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.user)
           .to.be.an('object')
           .that.has.property('token');
-        blazeToken = res.body.token;
+        blazeToken = res.body.user.token;
         done();
       });
   });
@@ -90,10 +91,10 @@ describe('Base setup', () => {
       .send(userFixture.login.johndoe)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.user)
           .to.be.an('object')
           .that.has.property('token');
-        johnDoeToken = res.body.token;
+        johnDoeToken = res.body.user.token;
         done();
       });
   });
@@ -104,10 +105,10 @@ describe('Base setup', () => {
       .send(userFixture.login.superAdmin)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.user)
           .to.be.an('object')
           .that.has.property('token');
-        superAdminToken = res.body.token;
+        superAdminToken = res.body.user.token;
         done();
       });
   });
@@ -121,36 +122,38 @@ describe('post /centers', () => {
       .send(centerFixture.create.validCenter)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body).to.deep.have.property('id');
-        centerId = res.body.id;
-        contactId = res.body.contactId;
+        expect(res.body.center).to.deep.have.property('id');
+        centerId = res.body.center.id;
+        contactId = res.body.center.contactId;
         done();
       });
   });
 
   it('should create center for another user', (done) => {
+    const differentCenter = {
+      ...centerFixture.create.validCenter,
+      name: 'Center for Another user'
+    };
     request
       .post(`${API_PATH}/centers`)
       .set('x-access-token', blazeToken)
-      .send(centerFixture.create.validCenter)
+      .send(differentCenter)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body).to.deep.have.property('id');
-        blazeContactId = res.body.contactId;
+        expect(res.body.center).to.deep.have.property('id');
+        blazeContactId = res.body.center.contactId;
         done();
       });
   });
 
-  it('should not create center for user', (done) => {
+  it('should not create center for normal user', (done) => {
     request
       .post(`${API_PATH}/centers`)
       .set('x-access-token', johnDoeToken)
       .send(centerFixture.create.validCenter)
       .end((err, res) => {
         expect(res).to.have.status(403);
-        expect(res.body)
-          .to.deep.have.property('message')
-          .that.equal('Not authorized');
+        expect(res.body.errors).to.deep.have.property('auth');
         done();
       });
   });
@@ -159,7 +162,7 @@ describe('post /centers', () => {
     const centerWithExistingContact = Object.assign(
       {},
       centerFixture.create.validCenter,
-      { newContact: false, contactId }
+      { newContact: false, contactId, name: 'New Center with same ID' }
     );
 
     request
@@ -168,7 +171,7 @@ describe('post /centers', () => {
       .send(centerWithExistingContact)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body)
+        expect(res.body.center)
           .to.deep.have.property('contactId')
           .that.is.equal(contactId);
         done();
@@ -179,7 +182,11 @@ describe('post /centers', () => {
     const centerWithExistingContact = Object.assign(
       {},
       centerFixture.create.validCenter,
-      { newContact: false, contactId: 90887778 }
+      {
+        newContact: false,
+        contactId: 90887778,
+        name: 'Center with invalid contact id'
+      }
     );
 
     request
@@ -188,7 +195,7 @@ describe('post /centers', () => {
       .send(centerWithExistingContact)
       .end((err, res) => {
         expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('contactId');
+        expect(res.body.errors).to.deep.have.property('contactId');
         done();
       });
   });
@@ -201,7 +208,7 @@ describe('put /centers', () => {
       .set('x-access-token', superAdminToken)
       .send()
       .end((err, res) => {
-        expect(res).to.have.status(201);
+        expect(res).to.have.status(200);
         done();
       });
   });
@@ -214,7 +221,7 @@ describe('get /centers', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -228,7 +235,7 @@ describe('get /centers', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -241,8 +248,8 @@ describe('get /centers', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body).to.deep.have.property('contactId');
-        expect(res.body.id).to.equal(centerId);
+        expect(res.body.center).to.deep.have.property('contactId');
+        expect(res.body.center.id).to.equal(centerId);
         done();
       });
   });
@@ -253,7 +260,7 @@ describe('get /centers', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(404);
-        expect(res.body).to.deep.have.property('center');
+        expect(res.body.errors).to.deep.have.property('center');
         done();
       });
   });
@@ -271,8 +278,8 @@ describe('put /centers', () => {
       .set('x-access-token', lucyToken)
       .send(modifiedCenter)
       .end((err, res) => {
-        expect(res).to.have.status(201);
-        expect(res.body).to.deep.have.property('name');
+        expect(res).to.have.status(200);
+        expect(res.body.center).to.deep.have.property('name');
         done();
       });
   });
@@ -289,7 +296,7 @@ describe('put /centers', () => {
       .send(modifiedCenter)
       .end((err, res) => {
         expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('center');
+        expect(res.body.errors).to.deep.have.property('center');
         done();
       });
   });
@@ -308,7 +315,7 @@ describe('put /centers', () => {
       .send(modifiedCenter)
       .end((err, res) => {
         expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('contactId');
+        expect(res.body.errors).to.deep.have.property('contactId');
         done();
       });
   });
@@ -327,21 +334,21 @@ describe('put /centers', () => {
       .send(modifiedCenter)
       .end((err, res) => {
         expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('contactId');
+        expect(res.body.errors).to.deep.have.property('contactId');
         done();
       });
   });
 });
 
 describe('get /centers/contacts', () => {
-  it('should get all centers', (done) => {
+  it('should get centers contact', (done) => {
     request
       .get(`${API_PATH}/centers/contacts`)
       .set('x-access-token', lucyToken)
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.contacts)
           .to.be.an('array')
           .with.lengthOf(2);
         done();
@@ -350,16 +357,14 @@ describe('get /centers/contacts', () => {
 });
 
 describe('get /centers/events', () => {
-  it('should get all centers', (done) => {
+  it('should get all centers events', (done) => {
     request
       .get(`${API_PATH}/centers/events`)
       .set('x-access-token', lucyToken)
       .send()
       .end((err, res) => {
-        expect(res).to.have.status(200);
-        expect(res.body)
-          .to.be.an('array')
-          .with.lengthOf(0);
+        expect(res).to.have.status(404);
+        expect(res.body.errors).to.deep.have.property('events');
         done();
       });
   });
@@ -373,7 +378,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -387,7 +392,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -401,7 +406,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -415,7 +420,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -429,7 +434,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -443,7 +448,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();
@@ -457,7 +462,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
         done();

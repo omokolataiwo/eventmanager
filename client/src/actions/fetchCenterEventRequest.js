@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { API_PATH } from '../consts';
-import { FETCHING_CENTERS_EVENTS, RECEIVED_CENTERS_EVENTS } from '../types';
+import {
+  FETCHING_CENTERS_EVENTS,
+  RECEIVED_CENTERS_EVENTS,
+  FETCHING_CENTERS_EVENTS_ERRORS
+} from '../types';
 
 /**
  * Action for received events
@@ -11,6 +15,17 @@ import { FETCHING_CENTERS_EVENTS, RECEIVED_CENTERS_EVENTS } from '../types';
 const recievedEvents = events => ({
   type: RECEIVED_CENTERS_EVENTS,
   events
+});
+
+/**
+ * Action for error events
+ *
+ * @param {object} error - events booked for admin centers
+ * @return {object} Action: RECEIVED_CENTERS_EVENTS
+ */
+const fetchingCenterEventsError = error => ({
+  type: FETCHING_CENTERS_EVENTS_ERRORS,
+  error
 });
 
 /**
@@ -26,6 +41,8 @@ const fetchCenterEventRequest = () => (dispatch, getState) => {
     .then(response => {
       dispatch(recievedEvents(response.data.events));
     })
-    .catch(e => console.dir(e));
+    .catch(error => {
+      dispatch(fetchingCenterEventsError(error.response.errors));
+    });
 };
 export default fetchCenterEventRequest;

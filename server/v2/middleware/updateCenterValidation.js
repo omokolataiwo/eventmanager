@@ -31,7 +31,7 @@ const updateCenterRules = {
  */
 
 export default (req, res, next) => {
-  const errors = [];
+  let errors = {};
 
   const updatingField = {};
   const fieldRules = {};
@@ -52,7 +52,10 @@ export default (req, res, next) => {
     'newContact',
     'active'
   ].forEach((field) => {
-    if (req.body[field] || field === 'active') {
+    if (
+      req.body[field] ||
+      (field === 'active' && req.body[field] !== undefined)
+    ) {
       updatingField[field] = req.body[field];
       fieldRules[field] = rules[field];
     }
@@ -60,22 +63,22 @@ export default (req, res, next) => {
 
   const centerErrors = validate(updatingField, { ...fieldRules });
 
-  if (centerErrors) errors.push(centerErrors);
+  if (centerErrors) errors = { ...centerErrors };
 
   const center = req.body;
   if (center.newContact && center.contact) {
     const contactErrors = validate(center.contact, contactRules);
-    if (contactErrors) errors.push(contactErrors);
+    if (contactErrors) errors = { ...errors, ...contactErrors };
     updatingField.contact = center.contact;
     updatingField.newContact = center.newContact;
   }
-  if (errors.length) {
+
+  if (Object.keys(errors).length) {
     return res.status(422).json({
       status: 'error',
       errors
     });
   }
   req.body = updatingField;
-  console.log('========================> ', updatingField);
   return next();
 };

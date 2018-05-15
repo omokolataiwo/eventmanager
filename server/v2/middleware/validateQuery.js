@@ -30,7 +30,6 @@ export default (req, res, next) => {
   }
   return res.status(422).json({
     status: 'error',
-    message: 'Request query validation error',
     errors
   });
 };

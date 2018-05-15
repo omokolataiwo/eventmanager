@@ -25,7 +25,7 @@
 				margin: 0.3em;
 		}
 
-		&-user {
+		&-user, &-admin {
 				background: #fff;
 				padding: 20px;
 				text-align: left;
@@ -65,8 +65,13 @@
 					}
 					.remaining {
 						font-size: 17px;
-							color: #5B90D5;
+							color: #F6C042;
 					}
 				}
+		}
+		&-admin {
+			background: #496894;
+			color: #fff;
+			font-weight: 600;
 		}
 }

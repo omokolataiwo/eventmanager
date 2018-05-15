@@ -54,6 +54,24 @@ class Bookings extends React.Component {
     this.setState({ events: centersEvents });
   }
 
+  renderNoEvents() {
+    return (
+      <div className="container container-medium card admin-index no-event-admin">
+        <h3>Welcome!</h3>
+        <div>There is no booking information for your centers.</div>
+        <div>These are lists of things you may want to do:</div>
+        <ul>
+          <li>
+            You can <a href="/admin/center/create">create center</a>
+          </li>
+          <li>
+            You can <a href="/admin/center">edit existing center</a>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+
   /**
    * Renders the page
    *
@@ -72,7 +90,7 @@ class Bookings extends React.Component {
     }
 
     if (getEvents === FETCHING_CENTERS_EVENTS_ERRORS) {
-      return 'No Booking information for your centers.';
+      return this.renderNoEvents();
     }
     return (
       <div className="container container-medium">

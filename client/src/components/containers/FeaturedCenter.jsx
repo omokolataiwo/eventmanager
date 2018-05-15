@@ -9,6 +9,7 @@ import { FETCHING_CENTERS, RECEIVED_CENTERS } from '../../types';
 
 const propTypes = {
   count: PropTypes.number.isRequired,
+  reset: PropTypes.func.isRequired,
   action: PropTypes.string.isRequired,
   centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fetchAllCentersRequest: PropTypes.func.isRequired

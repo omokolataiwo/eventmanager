@@ -55,6 +55,24 @@ class Index extends React.Component {
   componentWillReceiveProps(props) {
     this.setState({ events: props.events });
   }
+
+  renderNoEvents() {
+    return (
+      <div className="container container-medium card admin-index no-event-admin">
+        <h3>Welcome!</h3>
+        <div>There is no booking information for your centers.</div>
+        <div>These are lists of things you may want to do:</div>
+        <ul>
+          <li>
+            You can <a href="/admin/center/create">create center</a>
+          </li>
+          <li>
+            You can <a href="/admin/center">edit existing center</a>
+          </li>
+        </ul>
+      </div>
+    );
+  }
   /**
    * Renders the component
    *
@@ -73,12 +91,13 @@ class Index extends React.Component {
     }
 
     if (getEvents === FETCHING_CENTERS_EVENTS_ERRORS) {
-      return 'No Booking information for your centers.';
+      return this.renderNoEvents();
     }
 
     return (
-      <div className="container container-medium card index">
+      <div className="container container-medium card admin-index">
         <h5 className="center">MOST RECENT EVENTS</h5>
+        <hr />
         <div className="row">
           <div className="col s12 m12 l12">
             <AdminEventCard events={this.state.events} />

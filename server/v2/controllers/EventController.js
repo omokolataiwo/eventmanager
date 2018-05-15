@@ -64,7 +64,7 @@ export default class EventController {
       if (!center) {
         return res.status(422).json({
           status: 'error',
-          errors: [{ centerId: ['Invalid center'] }]
+          errors: { centerId: ['Invalid center'] }
         });
       }
 
@@ -78,11 +78,9 @@ export default class EventController {
       if (bookedEvent) {
         return res.status(409).json({
           status: 'error',
-          errors: [
-            {
-              center: ['Center has already been booked.']
-            }
-          ]
+          errors: {
+            center: ['Center has already been booked.']
+          }
         });
       }
 
@@ -117,7 +115,7 @@ export default class EventController {
       if (!event) {
         return res.status(404).json({
           status: 'error',
-          errors: [{ event: ['Event does not exist.'] }]
+          errors: { event: ['Event does not exist.'] }
         });
       }
 
@@ -160,7 +158,7 @@ export default class EventController {
         if (!events) {
           return res.status(404).json({
             status: 'error',
-            errors: [{ event: ['Event not found.'] }]
+            errors: { event: ['Event not found.'] }
           });
         }
         return res.status(200).json({
@@ -176,12 +174,12 @@ export default class EventController {
   }
 
   /**
- * Get all user's event
- *
- * @param {object} req - Server request
- * @param {object} res - Server response
- * @return {*} - Server response
- */
+   * Get all user's event
+   *
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @return {*} - Server response
+   */
   static getEvent(req, res) {
     return models.events
       .find({
@@ -199,7 +197,7 @@ export default class EventController {
         if (!event) {
           return res.status(404).json({
             status: 'error',
-            errors: [{ event: ['Event not found.'] }]
+            errors: { event: ['Event not found.'] }
           });
         }
 
@@ -232,7 +230,7 @@ export default class EventController {
       if (!event) {
         return res.status(404).json({
           status: 'error',
-          errors: [{ event: ['Event does not exist'] }]
+          errors: { event: ['Event does not exist'] }
         });
       }
 
@@ -252,7 +250,7 @@ export default class EventController {
       if (dateError !== undefined) {
         return res.status(422).json({
           status: 'error',
-          errors: [dateError]
+          errors: { ...dateError }
         });
       }
 
@@ -269,7 +267,7 @@ export default class EventController {
       if (!center) {
         return res.status(422).json({
           status: 'error',
-          errors: [{ centerId: ['Invalid center'] }]
+          errors: { centerId: ['Invalid center'] }
         });
       }
 
@@ -283,7 +281,7 @@ export default class EventController {
       if (bookedCenter && bookedCenter.id !== event.id) {
         return res.status(409).json({
           status: 'error',
-          errors: [{ center: ['Center has already been booked.'] }]
+          errors: { center: ['Center has already been booked.'] }
         });
       }
 

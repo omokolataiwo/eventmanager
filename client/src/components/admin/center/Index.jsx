@@ -90,7 +90,7 @@ class Index extends React.Component {
   changeActiveCenter(centerId) {
     $('html, body').animate(
       {
-        scrollTop: $('.event-center-detailed').offset().top
+        scrollTop: 0
       },
       1000
     );
@@ -124,6 +124,21 @@ class Index extends React.Component {
     return this.props.history.push(`/admin/center/update/${id}`);
   }
 
+  renderNoCenter() {
+    return (
+      <div className="container container-medium card admin-index no-event-admin">
+        <h3>Welcome!</h3>
+        <div>There is no booking information for your centers.</div>
+        <div>These are lists of things you may want to do:</div>
+        <ul>
+          <li>
+            You can <a href="/admin/center/create">create center</a>
+          </li>
+        </ul>
+      </div>
+    );
+  }
+
   /**
    * Render the component
    *
@@ -142,11 +157,11 @@ class Index extends React.Component {
     }
 
     if (getCenters === FETCHING_ADMIN_CENTERS_ERROR) {
-      return 'Invalid center';
+      return this.renderNoCenter();
     }
 
     return (
-      <div className="container container-medium">
+      <div className="container container-medium animated fadeIn">
         {this.state.centers.length > 0 && (
           <CenterDetailsEdit
             center={this.state.activeCenter}

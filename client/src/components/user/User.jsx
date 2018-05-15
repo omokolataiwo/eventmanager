@@ -138,7 +138,7 @@ class User extends React.Component {
 
         <footer className="page-footer blue">
           <div className="footer-copyright">
-            <div className="container">© 2018 Copyright</div>
+            <div className="container">&copy; 2018 Copyright</div>
           </div>
         </footer>
       </div>

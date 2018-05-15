@@ -14,6 +14,7 @@ import DatePicker from '../../containers/forms/DatePicker';
 import reset from '../../../actions/reset';
 import {
   UPDATE_EVENT_ERROR,
+  REQUEST_UPDATE_EVENT,
   UPDATED_EVENT,
   RECEIVED_EVENT,
   FETCHING_EVENT,
@@ -28,7 +29,7 @@ const propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({ index: PropTypes.string.isRequired }).isRequired
   }).isRequired,
-  events: PropTypes.arrayOf(PropTypes.shape({
+  event: PropTypes.arrayOf(PropTypes.shape({
     title: PropTypes.string.isRequired,
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
@@ -55,8 +56,7 @@ class Update extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      event: {
-      },
+      event: {},
       centers: [],
       count: 0,
       activeCenter: {},
@@ -116,6 +116,7 @@ class Update extends React.Component {
 
   componentWillUnmount() {
     this.props.reset(FETCHING_EVENT);
+    this.props.reset(REQUEST_UPDATE_EVENT);
   }
 
   /**
@@ -229,7 +230,10 @@ class Update extends React.Component {
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button className="btn blue" onClick={event => this.updateEvent(event)}>
+          <button
+            className="btn blue"
+            onClick={event => this.updateEvent(event)}
+          >
             Update Event
           </button>
         </form>
