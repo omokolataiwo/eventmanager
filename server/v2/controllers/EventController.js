@@ -1,5 +1,6 @@
 import sequelize from 'sequelize';
 import { validate } from 'validate.js';
+import moment from 'moment';
 import models from '../models';
 import { APPROVED_CENTER, ACTIVE_CENTER } from '../middleware/const';
 import { validationRules } from '../middleware/validateCreateEvent';
@@ -79,7 +80,7 @@ export default class EventController {
         return res.status(409).json({
           status: 'error',
           errors: {
-            center: ['Center has already been booked.']
+            title: ['Center has already been booked.']
           }
         });
       }
@@ -137,7 +138,7 @@ export default class EventController {
    * @return {*} - Server response
    */
   static getEvents(req, res) {
-    const LIMIT = 2;
+    const LIMIT = 6;
     const page = req.query.page - 1 || 0;
     return models.events
       .findAndCountAll({
@@ -265,7 +266,7 @@ export default class EventController {
       });
 
       if (!center) {
-        return res.status(422).json({
+        return res.status(404).json({
           status: 'error',
           errors: { centerId: ['Invalid center'] }
         });
@@ -281,7 +282,7 @@ export default class EventController {
       if (bookedCenter && bookedCenter.id !== event.id) {
         return res.status(409).json({
           status: 'error',
-          errors: { center: ['Center has already been booked.'] }
+          errors: { title: ['Center has already been booked.'] }
         });
       }
 

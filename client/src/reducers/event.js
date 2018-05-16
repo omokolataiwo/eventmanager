@@ -36,6 +36,7 @@ export default (state = defaultEvent, action) => {
     return {
       ...state,
       events: action.events,
+      count: action.count,
       actions: { ...state.actions, getEvents: action.type }
     };
   case FETCHING_EVENTS_ERROR:

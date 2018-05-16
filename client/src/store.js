@@ -14,14 +14,25 @@ const persistConfig = {
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
 
+/**
+ * Configure store
+ *
+ * @param {object} preloadedState  Persisted state
+ * @return {object} State
+ */
 export default function configureStore(preloadedState) {
-  const store = createStore(
-    persistedReducer,
-    /*preloadedState,*/
-    window.__REDUX_DEVTOOLS_EXTENSION__ &&
-    window.__REDUX_DEVTOOLS_EXTENSION__(),
-    applyMiddleware(thunkMiddleware, logger)
-  );
+  let store;
+
+  if (process.env.NODE_ENV === 'development') {
+    store = createStore(
+      persistedReducer,
+      window.__REDUX_DEVTOOLS_EXTENSION__ &&
+        window.__REDUX_DEVTOOLS_EXTENSION__(),
+      applyMiddleware(thunkMiddleware, logger)
+    );
+  } else {
+    store = createStore(persistedReducer, applyMiddleware(thunkMiddleware));
+  }
   const persistor = persistStore(store);
 
   return {

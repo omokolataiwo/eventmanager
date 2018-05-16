@@ -89,7 +89,7 @@ export const centerRules = {
     },
     length: {
       minimum: 10,
-      maximum: 120
+      maximum: 420
     }
   },
   amount: {

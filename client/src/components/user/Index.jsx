@@ -11,6 +11,7 @@ import Preloader from '../containers/Preloader';
 import { STATES } from '../../consts';
 import { hasFlash, getFlash } from '../../utils/flash';
 import { CREATED_EVENT, FETCHING_EVENTS } from '../../types';
+import Pagination from '../containers/Pagination';
 
 const propTypes = {
   fetchUserEventsRequest: PropTypes.func.isRequired,
@@ -38,6 +39,7 @@ class Index extends Component {
       events: [],
       poppedEvent: null
     };
+    this.handlePagingNav = this.handlePagingNav.bind(this);
   }
 
   /**
@@ -84,6 +86,16 @@ class Index extends Component {
   }
 
   /**
+   * Fetch paging
+   *
+   * @param {number} index page cliced
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    //this.props.fetchAdminCentersRequest({ page: index });
+  }
+
+  /**
    * Redirect to update event
    *
    * @param {int} id - Event id
@@ -113,7 +125,11 @@ class Index extends Component {
    */
   render() {
     if (this.props.actions.getEvents === FETCHING_EVENTS) {
-      return <Preloader />;
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
     }
     return (
       <div className="container container-medium event">
@@ -144,80 +160,100 @@ class Index extends Component {
           <div className="col s12 m12 l12">
             {this.state.events.length ? (
               <div className="row">
-                {this.state.events.map(event => {
-                  let daysRemaining = moment(event.startDate).diff(
-                    moment(),
-                    'days'
-                  );
+                <div className="col s12 m12 l12">
+                  <div className="row">
+                    {this.state.events.map(event => {
+                      let daysRemaining = moment(event.startDate).diff(
+                        moment(),
+                        'days'
+                      );
 
-                  if (daysRemaining < 0) {
-                    daysRemaining = 0;
-                  }
+                      if (daysRemaining < 0) {
+                        daysRemaining = 0;
+                      }
 
-                  const daysRemainingDOM = (
-                    <span>
-                      <p>{daysRemaining}</p>
-                      <p>Day{!!daysRemaining && 's'}</p>
-                      <p className="remaining">Remaining</p>
-                    </span>
-                  );
+                      const daysRemainingDOM = (
+                        <span>
+                          <p>{daysRemaining}</p>
+                          <p>Day{!!daysRemaining && 's'}</p>
+                          <p className="remaining">Remaining</p>
+                        </span>
+                      );
 
-                  return (
-                    <div className="col s12 m4 l4" key={event.id}>
-                      <div className="card-panel event-card-user">
-                        <h6 className="truncate">
-                          {event.title}
-                          <i
-                            onClick={() => this.handleDeletePopEvent(event.id)}
-                            tabIndex="-99999"
-                            onKeyUp={() => this.handleDeletePopEvent(event.id)}
-                            role="button"
-                            className="material-icons right delete"
-                          >
-                            clear
-                          </i>
-                          <i
-                            onClick={() => this.handleEditEvent(event.id)}
-                            tabIndex="-99999"
-                            onKeyUp={() => this.handleEditEvent(event.id)}
-                            role="button"
-                            className="material-icons right edit"
-                          >
-                            edit
-                          </i>
-                        </h6>
-                        <hr />
-                        <div className="row venue">
-                          <div className="col s12 m2 l2">
-                            <i className="material-icons left">location_on</i>
-                          </div>
-                          <div className="col s12 m9 l9">
-                            <h6 className="truncate">{event.center.name}</h6>
-                            <p>
-                              {event.center.area},{' '}
-                              {STATES[event.center.state - 1]}
-                            </p>
+                      return (
+                        <div className="col s12 m4 l4" key={event.id}>
+                          <div className="card-panel event-card-user">
+                            <h6 className="truncate">
+                              {event.title}
+                              <i
+                                onClick={() =>
+                                  this.handleDeletePopEvent(event.id)
+                                }
+                                tabIndex="-99999"
+                                onKeyUp={() =>
+                                  this.handleDeletePopEvent(event.id)
+                                }
+                                role="button"
+                                className="material-icons right delete"
+                              >
+                                clear
+                              </i>
+                              <i
+                                onClick={() => this.handleEditEvent(event.id)}
+                                tabIndex="-99999"
+                                onKeyUp={() => this.handleEditEvent(event.id)}
+                                role="button"
+                                className="material-icons right edit"
+                              >
+                                edit
+                              </i>
+                            </h6>
+                            <hr />
+                            <div className="row venue">
+                              <div className="col s12 m2 l2">
+                                <i className="material-icons left">
+                                  location_on
+                                </i>
+                              </div>
+                              <div className="col s12 m9 l9">
+                                <h6 className="truncate">
+                                  {event.center.name}
+                                </h6>
+                                <p>
+                                  {event.center.area},{' '}
+                                  {STATES[event.center.state - 1]}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="row timer">
+                              <div className="col s12 m2 l2">
+                                <i className="material-icons">access_time</i>
+                              </div>
+                              <div className="col s12 m9 l9">
+                                <div className="col s12 m4 l4">
+                                  <p>{moment(event.startDate).format('Do')}</p>
+                                  <p>
+                                    {moment(event.startDate).format('MMM')}.
+                                  </p>
+                                </div>
+                                <div className="col s12 m8 l8">
+                                  {daysRemainingDOM}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="row date" />
                           </div>
                         </div>
-                        <div className="row timer">
-                          <div className="col s12 m2 l2">
-                            <i className="material-icons">access_time</i>
-                          </div>
-                          <div className="col s12 m9 l9">
-                            <div className="col s12 m4 l4">
-                              <p>{moment(event.startDate).format('Do')}</p>
-                              <p>{moment(event.startDate).format('MMM')}.</p>
-                            </div>
-                            <div className="col s12 m8 l8">
-                              {daysRemainingDOM}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="row date" />
-                      </div>
-                    </div>
-                  );
-                })}
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="col s12 m12 l12">
+                  <Pagination
+                    total={this.props.count}
+                    handlePagingNav={this.handlePagingNav}
+                  />
+                </div>
               </div>
             ) : (
               <h6 style={{ marginBottom: '150px', marginTop: '20px' }}>

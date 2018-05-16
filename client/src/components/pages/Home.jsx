@@ -27,7 +27,6 @@ const Home = ({ history }) => (
         style={{
           width: '60%',
           marginLeft: '20%',
-          maxHeight: '20%',
           overflow: 'auto',
           paddingBottom: '2%'
         }}

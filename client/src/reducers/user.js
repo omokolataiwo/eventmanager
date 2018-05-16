@@ -36,7 +36,11 @@ const defaultUser = {
 export default (state = defaultUser, action) => {
   switch (action.type) {
   case FETCH_USER_REQUEST:
-    return { ...state, events: { ...state.events, fetchUser: action.type } };
+    return {
+      ...state,
+      errors: {},
+      events: { ...state.events, fetchUser: action.type }
+    };
   case FETCH_USER_ERROR:
     return {
       ...state,

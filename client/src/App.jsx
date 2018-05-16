@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, Switch, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Home from './components/pages/Home';
 import Signup from './components/pages/Signup';
 import Signin from './components/pages/Signin';
@@ -8,24 +9,33 @@ import Center from './components/pages/Center';
 import Search from './components/pages/Search';
 import Error404 from './components/pages/Error404';
 import logo from './images/logo.png';
+import getPath from './utils/getPath';
 /**
  * Base component for non priviledged pages
  *
  * @returns {object} - JSX DOM
  */
-function App() {
+function App(props) {
+  let isSignedInBtn = <Link to="/signin">Sign in</Link>;
+  let isSignupBtn = <Link to="/signup">Sign up</Link>;
+  if (
+    props.user.authenticated &&
+    props.user.accessToken &&
+    props.user.userdata.role
+  ) {
+    isSignedInBtn = (
+      <Link to={getPath(props.user.userdata.role)}>Dashboard</Link>
+    );
+    isSignupBtn = <Link to="/signout">Signout</Link>;
+  }
   return (
     <div className="page-wrap">
       <header className="gradient-blue">
         <div className="top-head">
           <div className="container">
             <div className="acc-wrap">
-              <div className="login-container signin">
-                <Link to="/signin">Sign in</Link>
-              </div>
-              <div className="login-container signup">
-                <Link to="/signup">Sign up</Link>
-              </div>
+              <div className="login-container signin">{isSignedInBtn}</div>
+              <div className="login-container signup">{isSignupBtn}</div>
             </div>
           </div>
         </div>
@@ -64,4 +74,7 @@ function App() {
   );
 }
 
-export default App;
+export default connect(state => {
+  const { user } = state;
+  return { user };
+})(App);
