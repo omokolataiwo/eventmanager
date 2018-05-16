@@ -36,10 +36,6 @@
   - To run tests
   		```npm run test```
 
-### Limitations of the project
-- No implementation of payment gateway yet.
-- Currently there is not notification when event is approved.
-- No notification for center owner.
 ### Contributing to the project
 Fork the project & clone locally.
 Create an upstream remote and sync your local copy before you branch.
