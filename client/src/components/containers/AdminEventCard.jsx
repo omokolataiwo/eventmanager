@@ -7,10 +7,18 @@ import moment from 'moment';
  * @param {object} events - Center events
  * @returns {object} JSX DOM
  */
-const AdminEventCard = ({ events }) =>
-  events.map(event => (
+const AdminEventCard = ({ events }) => {
+  if (!Array.isArray(events) || !events.length) {
+    return (
+      <div>
+        <hr />
+        <h5 className="center">No Event booked for this center.</h5>
+      </div>
+    );
+  }
+  return events.map(event => (
     <div className="col s12 m4 l4" key={event.id}>
-      <div className="card-panel event-card-user">
+      <div className="card-panel event-card-admin">
         <h6 className="truncate">{event.title}</h6>
         <hr />
         <div className="row venue">
@@ -33,7 +41,8 @@ const AdminEventCard = ({ events }) =>
               <p>{moment(event.startDate).format('MMM')}.</p>
             </div>
             <div className="col s12 m8 l8">
-              <p>{moment(event.startDate).diff(moment(), 'days')} Days</p>
+              <p>{moment(event.startDate).diff(moment(), 'days')}</p>
+              <p>Days</p>
               <p className="remaining">Remaining</p>
             </div>
           </div>
@@ -42,4 +51,6 @@ const AdminEventCard = ({ events }) =>
       </div>
     </div>
   ));
+};
+
 export default AdminEventCard;

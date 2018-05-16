@@ -40,23 +40,23 @@ describe('Event Base setup', () => {
     centerId = center.id;
   });
 
-  it('should login user user', (done) => {
+  it('should signin user', (done) => {
     request
       .post(`${API_PATH}/users/signin`)
       .send(userFixture.login.lucy)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        lucyToken = res.body.token;
+        lucyToken = res.body.user.token;
         done();
       });
   });
 
-  it('should login user', (done) => {
+  it('should signin another user', (done) => {
     request
       .post(`${API_PATH}/users/signin`)
       .send(userFixture.login.johndoe)
       .end((err, res) => {
-        johndoeToken = res.body.token;
+        johndoeToken = res.body.user.token;
         expect(res).to.have.status(200);
         done();
       });
@@ -75,13 +75,13 @@ describe('post /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body).to.deep.have.property('id');
-        eventId = res.body.id;
+        expect(res.body.event).to.deep.have.property('id');
+        eventId = res.body.event.id;
         done();
       });
   });
 
-  it('should create event', (done) => {
+  it('should create second event', (done) => {
     const event = Object.assign({}, eventFixture.create.validEvent, {
       centerId,
       startDate: '2018-11-20',
@@ -94,7 +94,7 @@ describe('post /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(201);
-        expect(res.body).to.deep.have.property('id');
+        expect(res.body.event).to.deep.have.property('id');
         done();
       });
   });
@@ -109,8 +109,8 @@ describe('post /events', () => {
       .set('x-access-token', johndoeToken)
       .send(event)
       .end((err, res) => {
-        expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('global');
+        expect(res).to.have.status(409);
+        expect(res.body.errors).to.deep.have.property('title');
         done();
       });
   });
@@ -125,7 +125,7 @@ describe('post /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('centerId');
+        expect(res.body.errors).to.deep.have.property('centerId');
         done();
       });
   });
@@ -139,7 +139,7 @@ describe('get /events', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
-        expect(res.body)
+        expect(res.body.events)
           .to.be.an('array')
           .with.lengthOf(2);
         done();
@@ -157,7 +157,7 @@ describe('put /events', () => {
       .set('x-access-token', johndoeToken)
       .send(event)
       .end((err, res) => {
-        expect(res).to.have.status(201);
+        expect(res).to.have.status(200);
         done();
       });
   });
@@ -173,7 +173,7 @@ describe('put /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('message');
+        expect(res.body.errors).to.deep.have.property('auth');
         done();
       });
   });
@@ -187,7 +187,7 @@ describe('put /events', () => {
       .set('x-access-token', johndoeToken)
       .send(event)
       .end((err, res) => {
-        expect(res).to.have.status(422);
+        expect(res).to.have.status(404);
         done();
       });
   });
@@ -201,7 +201,7 @@ describe('put /events', () => {
       .set('x-access-token', johndoeToken)
       .send(event)
       .end((err, res) => {
-        expect(res).to.have.status(422);
+        expect(res).to.have.status(404);
         done();
       });
   });
@@ -217,8 +217,8 @@ describe('put /events', () => {
       .set('x-access-token', johndoeToken)
       .send(event)
       .end((err, res) => {
-        expect(res).to.have.status(422);
-        expect(res.body).to.deep.have.property('global');
+        expect(res).to.have.status(409);
+        expect(res.body.errors).to.deep.have.property('title');
         done();
       });
   });
@@ -245,38 +245,3 @@ describe('delete /events', () => {
       });
   });
 });
-
-//   it('should not update event for non user', (done) => {
-//     request
-//       .put(`${API_PATH}/events/${eventid}`)
-//       .set('x-access-token', adminToken)
-//       .send(eventFixture.create.validEvent)
-//       .end((err, res) => {
-//         expect(res).to.have.status(401);
-//         expect(res).to.be.json;
-//         expect(res.body)
-//           .to.deep.have.property('message')
-//           .that.equal('Not authorized');
-//         done();
-//       });
-//   });
-
-//   it('should not update event if center does not exist', (done) => {
-//     eventFixture.create.validEvent.centerid = centerid + 1;
-//     request
-//       .put(`${API_PATH}/events/${eventid}`)
-//       .set('x-access-token', userToken)
-//       .send(eventFixture.create.validEvent)
-//       .end((err, res) => {
-//         expect(res).to.have.status(400);
-//         expect(res).to.be.json;
-//         expect(res.body)
-//           .to.deep.have.property('error')
-//           .that.equal(true);
-//         expect(res.body)
-//           .to.deep.have.property('message')
-//           .that.have.property('center');
-//         done();
-//       });
-//   });
-// });

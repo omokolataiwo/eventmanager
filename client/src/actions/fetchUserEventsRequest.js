@@ -19,13 +19,13 @@ const requestFetchUserEvent = () => ({ type: FETCHING_EVENTS });
  * @param {events} response - User's events from backend
  * @returns {object} - Action: RECEIVED_EVENTS
  */
-const userEvents = (response) => {
+const userEvents = response => {
   const { events, count } = response;
-  return ({
+  return {
     type: RECEIVED_EVENTS,
     events,
     count
-  });
+  };
 };
 
 /**
@@ -49,7 +49,7 @@ const fetchUserEventsRequest = () => (dispatch, getState) => {
     .then(response => {
       dispatch(userEvents(response.data));
     })
-    .catch(error => dispatch(fetchUserEventError(error.response.data.errors[0])));
+    .catch(error => dispatch(fetchUserEventError(error.response.data.errors)));
 };
 
 export default fetchUserEventsRequest;

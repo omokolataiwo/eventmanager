@@ -42,7 +42,7 @@ export default class CenterController {
       if (existingCenter) {
         return res.status(409).json({
           status: 'error',
-          errors: [{ name: 'Center already exist' }]
+          errors: { name: ['Center already exist'] }
         });
       }
 
@@ -58,7 +58,7 @@ export default class CenterController {
         if (!contactExist) {
           return res.status(422).json({
             status: 'error',
-            errors: [{ contactId: ['Contact does not exist'] }]
+            errors: { contactId: ['Contact does not exist'] }
           });
         }
       }
@@ -220,7 +220,7 @@ export default class CenterController {
         if (!center) {
           return res.status(404).json({
             status: 'error',
-            errors: [{ center: ['Center not found'] }]
+            errors: { center: ['Center not found'] }
           });
         }
         return res.status(200).json({ center });
@@ -251,7 +251,7 @@ export default class CenterController {
       if (!center) {
         return res.status(404).json({
           status: 'error',
-          errors: [{ center: ['Center not found'] }]
+          errors: { center: ['Center not found'] }
         });
       }
 
@@ -302,11 +302,9 @@ export default class CenterController {
       if (!existingCenter) {
         return res.status(422).json({
           status: 'error',
-          errors: [
-            {
-              center: ['Center does not exist']
-            }
-          ]
+          errors: {
+            center: ['Center does not exist']
+          }
         });
       }
 
@@ -326,7 +324,7 @@ export default class CenterController {
       if (registeredBefore && registeredBefore.id !== existingCenter.id) {
         return res.status(409).json({
           status: 'error',
-          errors: [{ name: 'Center already exist' }]
+          errors: { name: 'Center already exist' }
         });
       }
 
@@ -343,11 +341,9 @@ export default class CenterController {
         if (!contactExist) {
           return res.status(422).json({
             status: 'error',
-            errors: [
-              {
-                contactId: ['Contact does not exist']
-              }
-            ]
+            errors: {
+              contactId: ['Contact does not exist']
+            }
           });
         }
       }
@@ -441,7 +437,7 @@ export default class CenterController {
     if (!searchCondition) {
       return res.status(404).send({
         status: 'error',
-        errors: [{ search: ['Center not found.'] }]
+        errors: { search: ['Center not found.'] }
       });
     }
     searchCondition = `WHERE${searchCondition
@@ -467,7 +463,7 @@ export default class CenterController {
         if (!centers.length) {
           return res.status(404).json({
             status: 'error',
-            errors: [{ centers: ['Centers not found.'] }]
+            errors: { centers: ['Centers not found.'] }
           });
         }
         return res.status(200).json({ centers });
@@ -498,7 +494,7 @@ export default class CenterController {
         if (!events.length) {
           return res.status(404).json({
             status: 'error',
-            errors: [{ events: ['Events not found.'] }]
+            errors: { events: ['Events not found.'] }
           });
         }
         const eventsWithActiveStatus = events.map((event) => {
@@ -531,7 +527,7 @@ export default class CenterController {
     if (!center) {
       return res.status(404).json({
         status: 'error',
-        errors: [{ centerId: ['Can not find center'] }]
+        errors: { centerId: ['Can not find center'] }
       });
     }
 

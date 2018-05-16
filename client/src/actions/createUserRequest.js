@@ -46,13 +46,13 @@ const createUserRequest = user => dispatch => {
     .then(response => {
       dispatch(signupUser(response.data));
     })
-    .catch((error) => {
+    .catch(error => {
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
 
-      dispatch(signupError(error.response.data.errors[0]));
+      dispatch(signupError(error.response.data.errors));
     });
 };
 

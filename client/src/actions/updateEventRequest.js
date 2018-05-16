@@ -55,7 +55,7 @@ export const updateEventRequest = event => (dispatch, getState) => {
       dispatch(updateEvent(response.data));
     })
     .catch(errors => {
-      dispatch(updateEventError(errors.response.data.errors[0]));
+      dispatch(updateEventError(errors.response.data.errors));
     });
 };
 

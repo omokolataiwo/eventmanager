@@ -5,13 +5,13 @@ import toastr from 'toastr';
 import Error from '../containers/Error';
 import InputField from '../containers/forms/InputField';
 import getPath from '../../utils/getPath';
-import { SIGNIN_USER } from '../../types';
+import { SIGNIN_USER, REQUEST_SIGNIN_USER } from '../../types';
 import signinRequest from '../../actions/signinRequest';
 
 const propTypes = {
   userdata: PropTypes.shape().isRequired,
   authenticated: PropTypes.bool.isRequired,
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  history: PropTypes.shape({ replace: PropTypes.func.isRequired }).isRequired,
   events: PropTypes.shape().isRequired,
   errors: PropTypes.shape().isRequired,
   signinRequest: PropTypes.func.isRequired
@@ -51,7 +51,7 @@ class Signin extends React.Component {
   componentWillMount() {
     const { userdata, authenticated, history } = this.props;
     if (authenticated) {
-      return history.push(getPath(userdata.role));
+      return history.replace(getPath(userdata.role));
     }
   }
 
@@ -88,10 +88,12 @@ class Signin extends React.Component {
     } = props;
 
     if (events.signin === SIGNIN_USER) {
-      return history.push(getPath(userdata.role));
+      return history.replace(getPath(userdata.role));
     }
-    this.setState({ errors });
+
+    this.setState(() => ({ errors }));
   }
+
   /**
    * Sign in user
    *@param {object} event - DOM event
@@ -137,7 +139,9 @@ class Signin extends React.Component {
           <div className="col s12 m12 l12">
             <h5>
               <i className="material-icons">person_pin</i> SIGN IN
-              <Error id="signin" messages={this.state.errors.signin} />
+              {this.props.events.signin !== REQUEST_SIGNIN_USER && (
+                <Error id="signin" messages={this.state.errors.signin} />
+              )}
             </h5>
             <form>
               <div className="row">

@@ -25,7 +25,7 @@ const userSignedIn = user => ({ type: SIGNIN_USER, user });
  */
 const signingInUserError = errors => ({
   type: SIGNIN_USER_ERROR,
-  errors: errors[0]
+  errors: errors
 });
 
 /**
@@ -41,7 +41,7 @@ const signinRequest = user => dispatch => {
     .then(response => {
       dispatch(userSignedIn(response.data.user));
     })
-    .catch((error) => {
+    .catch(error => {
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;

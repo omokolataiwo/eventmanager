@@ -1,38 +1,52 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
+import toastr from 'toastr';
 import { signoutRequest } from '../../actions/signoutRequest';
 
 /**
- *
+ * Signout user
  *
  * @class Signout
  * @extends {React.Component}
  */
 class Signout extends React.Component {
+  /**
+   * Dispatch signout request
+   *
+   * @returns {void}
+   * @memberof Signout
+   */
   componentWillMount() {
-    this.props.signout();
+    this.props.signoutRequest();
   }
 
+  /**
+   * Redirect to homepage
+   *
+   * @returns {void}
+   * @memberof Signout
+   */
   render() {
-    return (
-      <div className="container container-small">
-        <div className="row card">
-          <h3>Signed Out, Successfully.</h3>
-        </div>
-      </div>
-    );
+    toastr.options = {
+      positionClass: 'toast-top-full-width',
+      showDuration: '300',
+      hideDuration: '2000',
+      showEasing: 'swing',
+      hideEasing: 'linear',
+      showMethod: 'fadeIn',
+      hideMethod: 'fadeOut'
+    };
+    toastr.success('Sign out successfully.');
+    this.props.history.replace('/');
+
+    return null;
   }
 }
 
 Signout.propTypes = {
-  signout: PropTypes.func.isRequired
+  signoutRequest: PropTypes.func.isRequired,
+  history: PropTypes.shape({ replace: PropTypes.func.isRequired }).isRequired
 };
 
-const mapDispatchToProps = dispatch => ({
-  signout: () => dispatch(signoutRequest())
-});
-
-const mapStateToProps = state => ({ state });
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signout);
+export default connect(() => {}, { signoutRequest })(Signout);

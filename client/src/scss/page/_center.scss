@@ -35,6 +35,9 @@
       height: 130px;
     }
   }
+  .details {
+    margin: 40px;
+  }
   .center-details {
     padding: 20px;
     font-size: 16px;
@@ -53,9 +56,9 @@
       margin: auto 5px auto 30px;
     }
     button {
-      background: #F6C042;
       margin-bottom: 30px;
-      padding: 10px 20px;
+      padding: 2px 20px;
+      width: 100%;
       color: #fff;
     }
   }

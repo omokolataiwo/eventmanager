@@ -67,6 +67,7 @@ module.exports = {
     new ExtractTextPlugin({
       filename: 'style.css'
     }),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       sourceMap: true,

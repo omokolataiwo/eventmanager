@@ -89,7 +89,6 @@ class Signup extends React.Component {
       return history.push('/signin');
     }
 
-
     this.setState({ events: { ...this.state.events, ...events }, errors });
   }
 
@@ -102,7 +101,7 @@ class Signup extends React.Component {
   resetErrors(callback) {
     const err = {};
 
-    Object.keys(this.state.errors).map((field) => {
+    Object.keys(this.state.errors).map(field => {
       err[field] = [];
       return field;
     });
@@ -269,7 +268,7 @@ class Signup extends React.Component {
                 />
               </div>
               <button
-                onClick={(e) => this.registerUser(e)}
+                onClick={e => this.registerUser(e)}
                 className="btn btn-large blue"
               >
                 Create Account
@@ -290,7 +289,7 @@ Signup.propTypes = propTypes;
  * @param {object} state - The redux state
  * @returns {object} - Extracted properties
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { events, errors, authenticated } = state.user;
   return { events, errors, authenticated };
 };

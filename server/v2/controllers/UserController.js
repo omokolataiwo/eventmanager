@@ -79,7 +79,7 @@ export default class UserController {
       if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
         return res.status(401).json({
           status: 'error',
-          errors: [{ signin: ['Invalid username or password'] }]
+          errors: { signin: ['Invalid username or password'] }
         });
       }
 

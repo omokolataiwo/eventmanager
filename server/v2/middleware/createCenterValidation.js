@@ -89,7 +89,7 @@ export const centerRules = {
     },
     length: {
       minimum: 10,
-      maximum: 120
+      maximum: 420
     }
   },
   amount: {
@@ -125,7 +125,7 @@ export const contactRules = {
     },
     length: {
       minimum: 4,
-      maximum: 120,
+      maximum: 450,
       tooShort: 'can not be less than 4 characters.',
       tooLong: 'can not be more than 120 characters.'
     }
@@ -153,7 +153,7 @@ export const contactRules = {
 };
 
 /**
- * Validator for creating an event
+ * Validator for creating an center
  *
  * @param {object} req - Request object
  * @param {object} res - Response object
@@ -163,18 +163,18 @@ export const contactRules = {
 
 export default (req, res, next) => {
   const center = req.body;
-  const errors = [];
+  let errors = {};
 
   const centerErrors = validate(center, centerRules);
 
-  if (centerErrors) errors.push(centerErrors);
+  if (centerErrors) errors = { ...centerErrors };
 
   if (center.newContact && center.contact) {
     const contactErrors = validate(center.contact, contactRules);
 
-    if (contactErrors) errors.push(contactErrors);
+    if (contactErrors) errors = { ...errors, ...contactErrors };
   }
-  if (errors.length) {
+  if (Object.keys(errors).length) {
     return res.status(422).json({
       status: 'error',
       errors

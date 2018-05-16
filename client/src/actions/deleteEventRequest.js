@@ -1,15 +1,15 @@
 import axios from 'axios';
 import { API_PATH } from '../consts';
-import { FETCH_USER_ERROR, FETCH_USER_REQUEST, RECEIVED_USER } from '../types';
+import { DELETE_EVENT_ERROR, DELETING_EVENT, DELETED_EVENT } from '../types';
 
 /**
- * Action to get user
+ * Action to delete
  *
- * @param {object} user  Fetched user
+ * @param {object} user  Delete
  * @return {object}  action
  */
-const receivedUser = user => ({
-  type: RECEIVED_USER,
+const deletedEvent = user => ({
+  type: DELETED_EVENT,
   user
 });
 
@@ -19,32 +19,32 @@ const receivedUser = user => ({
  * @param {object} errors  Errors from backend
  * @return {object}  action
  */
-const fetchUserError = errors => ({
-  type: FETCH_USER_ERROR,
+const deleteEventError = errors => ({
+  type: DELETE_EVENT_ERROR,
   errors
 });
 
 /**
- * Makes http request to backend to get user
+ * Makes http request to backend to delete event
  *
  * @returns {void}
  */
-const fetchUserRequest = () => (dispatch, getState) => {
-  dispatch({ type: FETCH_USER_REQUEST });
+const deleteEventRequest = event => (dispatch, getState) => {
+  dispatch({ type: DELETING_EVENT });
   axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
 
   axios
-    .get(`${API_PATH}/users`)
+    .delete(`${API_PATH}/events/${event}`)
     .then(response => {
-      dispatch(receivedUser(response.data.user));
+      dispatch(deletedEvent(response.data));
     })
     .catch(error => {
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
-      dispatch(fetchUserError(error.response.data.errors));
+      dispatch(deleteEventError(error.response.data));
     });
 };
 
-export default fetchUserRequest;
+export default deleteEventRequest;

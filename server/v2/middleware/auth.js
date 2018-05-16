@@ -14,21 +14,15 @@ export default (req, res, next) => {
   if (!token) {
     return res.status(422).json({
       status: 'error',
-      errors: [
-        { message: ['No token provided'] }
-      ]
+      errors: { auth: ['No token provided'] }
     });
   }
   return jwt.verify(token, process.env.TOKEN_SECRET, (error, decoded) => {
     if (error) {
-      return res
-        .status(401)
-        .json({
-          status: 'error',
-          errors: [
-            { message: ['Failed to authenticate token.'] }
-          ]
-        });
+      return res.status(401).json({
+        status: 'error',
+        errors: { auth: ['Failed to authenticate token.'] }
+      });
     }
     if (
       decoded.role !== ACCOUNT_TYPE_ADMIN &&
@@ -36,9 +30,7 @@ export default (req, res, next) => {
     ) {
       return res.status(403).json({
         status: 'error',
-        errors: [
-          { message: ['Not authorized'] }
-        ]
+        errors: { auth: ['Not authorized'] }
       });
     }
     req.user = decoded;

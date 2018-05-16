@@ -88,6 +88,7 @@ const config = {
         }
       }
     }),
+    new webpack.EnvironmentPlugin(['NODE_ENV']),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new ExtractTextPlugin({
       filename: 'style.css'

@@ -308,7 +308,8 @@ class Update extends React.Component {
     }
 
     if (getCenter === FETCHING_CENTER_ERROR) {
-      return 'Center does not exist.';
+      this.props.history.push('/404');
+      return null;
     }
     return (
       <div className="container container-medium card">

@@ -14,12 +14,12 @@ const PaginatedCentersCard = ({
   if (!Array.isArray(centers) || !centers.length) return 'Can not find center';
   return (
     <div>
-      <div className="row">
+      <div className="row center">
         {centers.map(center => (
           <div
             onClick={() => click(center.id)}
             tabIndex="-99999"
-            onKeyUp={() => click(center.id)}
+            onKeyUp={() => {}}
             role="button"
           >
             <div className="col s12 m4 l4">

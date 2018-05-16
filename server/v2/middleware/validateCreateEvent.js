@@ -61,7 +61,7 @@ validate.extend(validate.validators.datetime, {
    * @returns {object} date object
    */
   parse(value) {
-    return +moment.utc(value);
+    return +moment.utc(value, 'YYYY-MM-DD');
   },
   // Input is a unix timestamp
   /**
@@ -117,6 +117,6 @@ export default (req, res, next) => {
   }
   return res.status(422).json({
     status: 'error',
-    errors: [errors]
+    errors
   });
 };

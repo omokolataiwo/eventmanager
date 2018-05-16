@@ -31,7 +31,7 @@ export const rules = {
       message: 'is required'
     },
     numericality: {
-      onlyInteger: true,
+      onlyInteger: true
     },
     length: {
       is: 11
@@ -95,6 +95,6 @@ export default (req, res, next) => {
   }
   return res.status(422).json({
     status: 'error',
-    errors: [errors]
+    errors
   });
 };
