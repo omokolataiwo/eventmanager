@@ -12,7 +12,7 @@ import {
  * @param {object} centersResponse - centers from endpoint
  * @returns {object} - Action: RECEIVED_CENTERS
  */
-const fetchAllCenter = (centersResponse) => {
+const fetchAllCenter = centersResponse => {
   const { centers, count } = centersResponse;
   return {
     type: RECEIVED_CENTERS,
@@ -35,7 +35,7 @@ const fetchAllCentersRequest = query => (dispatch, getState) => {
   });
   axios
     .get(`${API_PATH}/centers/protected`, { params: query })
-    .then((response) => {
+    .then(response => {
       dispatch(fetchAllCenter(response.data));
     })
     .catch(error => dispatch({ type: FETCHING_CENTERS_ERROR }));

@@ -10,7 +10,7 @@ import { FETCHING_CENTERS, RECEIVED_CENTERS } from '../../types';
 const propTypes = {
   count: PropTypes.number.isRequired,
   reset: PropTypes.func.isRequired,
-  action: PropTypes.string.isRequired,
+  action: PropTypes.shape().isRequired,
   centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   fetchAllCentersRequest: PropTypes.func.isRequired
 };
@@ -21,7 +21,7 @@ const propTypes = {
  * @class FeaturedCenter
  * @extends {React.Component}
  */
-class FeaturedCenter extends React.Component {
+class RecentCenters extends React.Component {
   /**
    * Creates an instance of FeaturedCenter.
    *
@@ -31,10 +31,6 @@ class FeaturedCenter extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = {
-      centers: [],
-      count: 0
-    };
     this.handlePagingNav = this.handlePagingNav.bind(this);
   }
 
@@ -43,25 +39,16 @@ class FeaturedCenter extends React.Component {
    *
    * @return {void}
    */
-  componentWillMount() {
-    const { centers, action, count } = this.props;
-
-    if (action.getCenters === RECEIVED_CENTERS) {
-      return this.setState({ centers, count });
-    }
+  componentDidMount() {
     this.props.fetchAllCentersRequest();
   }
-  /**
-   * Update centers when property received
-   *
-   * @param {props} props - The properties received
-   * @return {void}
-   */
-  componentWillReceiveProps(props) {
-    const { centers, count } = props;
-    this.setState({ centers, count });
-  }
 
+  /**
+   * Reset fetching state when component unmount
+   *
+   * @returns {void}
+   * @memberof RecentCenters
+   */
   componentWillUnmount() {
     this.props.reset(FETCHING_CENTERS);
   }
@@ -92,21 +79,21 @@ class FeaturedCenter extends React.Component {
       );
     }
 
-    if (getCenters === RECEIVED_CENTERS && !this.state.centers.length) {
+    if (getCenters === RECEIVED_CENTERS && !this.props.centers.length) {
       return 'No center record yet!';
     }
 
     return (
       <CentersCard
-        centers={this.state.centers}
-        count={this.state.count}
+        centers={this.props.centers}
+        count={this.props.count}
         handlePagingNav={this.handlePagingNav}
       />
     );
   }
 }
 
-FeaturedCenter.propTypes = propTypes;
+RecentCenters.propTypes = propTypes;
 
 /**
  * Map redux state to component property
@@ -121,4 +108,4 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   fetchAllCentersRequest,
   reset
-})(FeaturedCenter);
+})(RecentCenters);

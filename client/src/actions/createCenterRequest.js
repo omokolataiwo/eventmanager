@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 
 import {
@@ -38,20 +38,16 @@ const creatingNewCenterError = errors => ({
  * @param {object} center - center details
  * @returns {void}
  */
-const createCenter = center => (dispatch, getState) => {
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+export const createCenter = center => (dispatch, getState) => {
+  instance.defaults.headers.common['x-access-token'] = getState().user.accessToken;
 
   if (center.newContact) {
     center.contact = center.contact.newContact;
   }
 
-  axios
-    .post(`${API_PATH}/centers`, center)
-    .then(response => {
-      dispatch(createdNewCenter(response.data));
-    })
+  return instance.post(`${API_PATH}/centers`, center)
+    .then(response => dispatch(createdNewCenter(response.data)))
     .catch(error => {
-      console.dir(error.response);
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
@@ -66,39 +62,31 @@ const createCenter = center => (dispatch, getState) => {
  * @param {object} centerDetails - center details
  * @returns {void}
  */
-export default function createCenterRequest(centerDetails) {
-  return dispatch => {
-    dispatch(creatingNewCenter());
-    Reflect.deleteProperty(axios.defaults.headers.common, 'x-access-token');
-    const url = 'https://api.cloudinary.com/v1_1/omokolataiwo/image/upload';
-    const { image } = centerDetails;
-    if (!image || (image.type !== 'image/jpeg' && image.type !== 'image/png')) {
-      return dispatch(creatingNewCenterError({
-        image: ['Please upload a jpeg/png format image.']
-      }));
-    }
-    const formData = new FormData();
-    formData.append('upload_preset', 'hgbxt9tc');
-    formData.append('tags', 'eventman_client_upload');
-    formData.append('file', image);
-    const config = {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    };
+export const createCenterRequest = (centerDetails) => dispatch => {
+  dispatch(creatingNewCenter());
+  Reflect.deleteProperty(instance.defaults.headers.common, 'x-access-token');
 
-    axios
-      .post(url, formData, config)
-      .then(res => {
-        centerDetails.image = res.data.url;
-        dispatch(createCenter(centerDetails));
-      })
-      .catch(event => {
-        dispatch(creatingNewCenterError({
-          image: [
-            'Can not upload image to cloudinary at the moment. Please try again'
-          ]
-        }));
-      });
+  const formData = new FormData();
+  formData.append('upload_preset', 'hgbxt9tc');
+  formData.append('tags', 'eventman_client_upload');
+  formData.append('file', centerDetails.image);
+  const config = {
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    }
   };
-}
+
+  return instance
+    .post('https://api.cloudinary.com/v1_1/omokolataiwo/image/upload', formData, config)
+    .then(res => {
+      centerDetails.image = res.data.url || 'default_center_image';
+      return dispatch(createCenter(centerDetails));
+    })
+    .catch(event => dispatch(creatingNewCenterError({
+      image: [
+        'Can not upload image to cloudinary at the moment. Please try again'
+      ]
+    })));
+};
+
+export default createCenterRequest;

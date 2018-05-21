@@ -25,37 +25,21 @@ const propTypes = {
  */
 class Index extends React.Component {
   /**
-   * Creates an instance of Index.
-   * @param {object} props - React properties
-   * @memberof Index
-   */
-  constructor(props) {
-    super(props);
-    this.state = {
-      events: []
-    };
-  }
-  /**
    * Fetch relevant data
    *
    * @returns {void}
    * @memberof Index
    */
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchCenterEventRequest();
   }
 
   /**
-   * Set component state
+   * Render no events booked for centers
    *
-   * @param {object} props - Redux state
-   * @return {void}
-   * @memberof Index
+   * @returns {object} JSX DOM
+   * @memberof Bookings
    */
-  componentWillReceiveProps(props) {
-    this.setState({ events: props.events });
-  }
-
   renderNoEvents() {
     return (
       <div className="container container-medium card admin-index no-event-admin">
@@ -95,12 +79,12 @@ class Index extends React.Component {
     }
 
     return (
-      <div className="container container-medium card admin-index">
+      <div className="container container-medium card admin-index animated fadeIn">
         <h5 className="center">MOST RECENT EVENTS</h5>
         <hr />
         <div className="row">
           <div className="col s12 m12 l12">
-            <AdminEventCard events={this.state.events} />
+            <AdminEventCard events={this.props.events} />
           </div>
         </div>
       </div>

@@ -10,8 +10,7 @@ const propTypes = {
   onChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.oneOfType([
     PropTypes.bool.isRequired,
-    PropTypes.string.isRequired,
-    null
+    PropTypes.string.isRequired
   ])
 };
 
@@ -38,7 +37,7 @@ const FileField = ({
 
 FileField.propTypes = propTypes;
 FileField.defaultProps = {
-  errorMessage: false,
+  errorMessage: false
 };
 
 export default FileField;

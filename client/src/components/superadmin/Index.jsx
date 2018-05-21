@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 
 import fetchAllCentersRequest from '../../actions/fetchAllProtectedCentersRequest';
 import approveCenterRequest from '../../actions/approveCenterRequest';
 import Lever from '../containers/forms/Lever';
-
 
 const propTypes = {
   fetchAllCentersRequest: PropTypes.func.isRequired,
@@ -65,7 +65,7 @@ class Index extends React.Component {
     this.props.approveCenterRequest(id);
 
     let { centers } = this.state;
-    centers = centers.map((center) => {
+    centers = centers.map(center => {
       if (center.id === id) {
         center.approve = !center.approve;
       }
@@ -102,10 +102,18 @@ class Index extends React.Component {
             <tr key={center.id}>
               <td>{center.name}</td>
               <td>{center.address}</td>
-              <td>{`${center.contacts.firstName} ${center.contacts.lastName}`}</td>
+              <td>
+                {`${center.contacts.firstName} ${center.contacts.lastName}`}
+              </td>
               <td>{center.contacts.phoneNumber}</td>
               <td>{center.contacts.email}</td>
-              <td><Lever boolValue={center.approve} handleToggle={this.handleApproveToggle} id={center.id} /></td>
+              <td>
+                <Lever
+                  boolValue={center.approve}
+                  handleToggle={this.handleApproveToggle}
+                  id={center.id}
+                />
+              </td>
             </tr>
           ))}
         </tbody>
@@ -137,8 +145,11 @@ Index.propTypes = propTypes;
  * @param {object} state - Redux state
  * @returns {object} - Extracted states properties
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { centers } = state.getAvailableCenters;
   return { centers };
 };
-export default connect(mapStateToProps, { fetchAllCentersRequest, approveCenterRequest })(Index);
+export default connect(mapStateToProps, {
+  fetchAllCentersRequest,
+  approveCenterRequest
+})(Index);

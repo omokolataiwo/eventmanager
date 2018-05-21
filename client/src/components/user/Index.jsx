@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 import moment from 'moment';
 import toastr from 'toastr';
+import $ from 'jquery';
 import fetchUserEventsRequest from '../../actions/fetchUserEventsRequest';
 import fetchUserRequest from '../../actions/fetchUserRequest';
 import deleteEventRequest from '../../actions/deleteEventRequest';
@@ -36,7 +37,6 @@ class Index extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      events: [],
       poppedEvent: null
     };
     this.handlePagingNav = this.handlePagingNav.bind(this);
@@ -49,9 +49,6 @@ class Index extends Component {
    * @memberof Index
    */
   componentWillMount() {
-    this.props.fetchUserEventsRequest();
-    this.props.fetchUserRequest();
-
     if (hasFlash('saveRoute')) {
       return this.props.history.push(getFlash('saveRoute'));
     }
@@ -70,19 +67,16 @@ class Index extends Component {
     }
   }
 
-  componentDidMount() {
-    $('.modal').modal();
-  }
-
   /**
-   * Set events to event component state
+   * Fetch user and events
    *
-   * @param {object} props - The new incoming properties
    * @returns {void}
    * @memberof Index
    */
-  componentWillReceiveProps(props) {
-    this.setState({ events: props.events });
+  componentDidMount() {
+    this.props.fetchUserEventsRequest();
+    this.props.fetchUserRequest();
+    $('.modal').modal();
   }
 
   /**
@@ -106,14 +100,25 @@ class Index extends Component {
     this.props.history.push(`/user/event/update/${id}`);
   }
 
+  /**
+   * Set pop event and activate pop up
+   *
+   * @param {any} id Event id
+   * @returns {void}
+   * @memberof Index
+   */
   handleDeletePopEvent(id) {
     this.setState({ poppedEvent: id });
     $('#modalEvent').modal('open');
   }
 
+  /**
+   * Deletes events
+   *
+   * @returns {void}
+   * @memberof Index
+   */
   cancelEvent() {
-    const events = this.state.events.filter(event => parseInt(event.id, 10) !== this.state.poppedEvent);
-    this.setState(() => ({ events }));
     this.props.deleteEventRequest(this.state.poppedEvent);
   }
 
@@ -158,11 +163,11 @@ class Index extends Component {
           </div>
 
           <div className="col s12 m12 l12">
-            {this.state.events.length ? (
+            {this.props.events.length ? (
               <div className="row">
                 <div className="col s12 m12 l12">
                   <div className="row">
-                    {this.state.events.map(event => {
+                    {this.props.events.map(event => {
                       let daysRemaining = moment(event.startDate).diff(
                         moment(),
                         'days'
@@ -175,7 +180,7 @@ class Index extends Component {
                       const daysRemainingDOM = (
                         <span>
                           <p>{daysRemaining}</p>
-                          <p>Day{!!daysRemaining && 's'}</p>
+                          <p>Day{daysRemaining > 1 && 's'}</p>
                           <p className="remaining">Remaining</p>
                         </span>
                       );

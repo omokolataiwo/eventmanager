@@ -122,7 +122,7 @@ export default class EventController {
 
       return models.events
         .destroy({ where: { id: req.params.id } })
-        .then(() => res.status(200).json({ data: event }));
+        .then(() => res.status(200).json({ event }));
     } catch (error) {
       return res.status(500).send({
         status: 'error',

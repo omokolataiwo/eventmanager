@@ -1,6 +1,3 @@
-import axios from 'axios';
-
-axios.defaults.withCredentials = false;
 export const TOKEN_EXPIRED = 'TOKEN_EXPIRED';
 
 /* ******************** Action Types ****************** */

@@ -251,7 +251,18 @@ class Create extends React.Component {
    */
   createCenter(event) {
     event.preventDefault();
-    this.props.createCenterRequest(this.state.center);
+    const { image } = this.state.center;
+    if (!image || (image.type !== 'image/jpeg' && image.type !== 'image/png')) {
+      return this.setState({
+        errors:
+          {
+            ...this.state.errors,
+            image: ['Please upload a jpeg/png format image.']
+          }
+      });
+    }
+
+    return this.props.createCenterRequest(this.state.center);
   }
 
   /**

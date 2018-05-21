@@ -12,15 +12,29 @@ import {
   UPDATED_EVENT,
   UPDATE_EVENT_ERROR,
   RESET_EVENT_STATE,
-  RESET_UPDATE_EVENT_STATE
+  RESET_UPDATE_EVENT_STATE,
+  DELETE_EVENT_ERROR,
+  DELETING_EVENT,
+  DELETED_EVENT
 } from '../types';
+
+/**
+ * Filter out removed event
+ *
+ * @param {int} id ID of event to be removed
+ * @param {object} events User events
+ * @returns {object} User events
+ */
+const removeEvent = (id, events) =>
+  events.filter(event => parseInt(event.id, 10) !== id);
 
 const defaultEvent = {
   events: [],
   actions: {
     getEvents: FETCHING_EVENTS,
     getEvent: FETCHING_EVENT,
-    createUpdateEvent: null
+    createUpdateEvent: null,
+    cancel: DELETING_EVENT
   },
   errors: {}
 };
@@ -90,6 +104,19 @@ export default (state = defaultEvent, action) => {
       errors: action.errors,
       actions: { ...state.actions, updateEvent: action.type }
     };
+  case DELETE_EVENT_ERROR:
+  case DELETING_EVENT:
+    return {
+      ...state,
+      actions: { ...state.actions, cancel: action.type }
+    };
+  case DELETED_EVENT:
+    return {
+      ...state,
+      events: removeEvent(action.eventId, state.events),
+      count: state.count - 1
+    };
+
   default:
     return state;
   }

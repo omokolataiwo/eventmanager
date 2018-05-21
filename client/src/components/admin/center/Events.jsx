@@ -34,24 +34,13 @@ class Events extends React.Component {
    * @returns {void}
    * @memberof Events
    */
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchCenterRequest(
       { id: this.props.match.params.id, events: true },
       true
     );
   }
 
-  /**
-   * Set new state to component state
-   *
-   * @param {any} props New properties
-   * @returns{void}
-   * @memberof Events
-   */
-  componentWillReceiveProps(props) {
-    const { center, count, events } = props;
-    this.setState({ center, count, events });
-  }
   /**
    * Reset fetching state
    *
@@ -86,9 +75,9 @@ class Events extends React.Component {
 
     return (
       <div className="container container-medium">
-        <h3>{this.state.center.name}</h3>
+        <h3>{this.props.center.name}</h3>
         <div className="row">
-          <AdminEventCard events={this.state.events} count={this.state.count} />
+          <AdminEventCard events={this.props.events} count={this.props.count} />
         </div>
       </div>
     );

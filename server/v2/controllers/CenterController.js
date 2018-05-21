@@ -530,9 +530,9 @@ export default class CenterController {
         errors: { centerId: ['Can not find center'] }
       });
     }
-
+    center.approve = center.approve ? 0 : 1;
     return models.centers
-      .update({ approve: center.approve ? 0 : 1 }, { where: { id: centerId } })
+      .update({ approve: center.approve }, { where: { id: centerId } })
       .then(() => res.status(200).json({ center }))
       .catch(() => {
         res.status(500).send({

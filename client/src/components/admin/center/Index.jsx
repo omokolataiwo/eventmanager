@@ -53,7 +53,7 @@ class Index extends React.Component {
    * @returns {void}
    * @memberof Index
    */
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchAdminCentersRequest();
   }
 
