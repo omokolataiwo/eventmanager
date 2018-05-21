@@ -39,19 +39,18 @@ const creatingNewCenterError = errors => ({
  * @returns {void}
  */
 export const createCenter = center => (dispatch, getState) => {
-  instance.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
 
   if (center.newContact) {
     center.contact = center.contact.newContact;
   }
 
-  return instance.post(`${API_PATH}/centers`, center)
+  return instance
+    .post(`${API_PATH}/centers`, center)
     .then(response => dispatch(createdNewCenter(response.data)))
     .catch(error => {
-      if (!error.response || error.response.status >= 500) {
-        console.error('Internal server error.');
-        return;
-      }
       dispatch(creatingNewCenterError(error.response.data.errors));
     });
 };
@@ -62,7 +61,7 @@ export const createCenter = center => (dispatch, getState) => {
  * @param {object} centerDetails - center details
  * @returns {void}
  */
-export const createCenterRequest = (centerDetails) => dispatch => {
+export const createCenterRequest = centerDetails => dispatch => {
   dispatch(creatingNewCenter());
   Reflect.deleteProperty(instance.defaults.headers.common, 'x-access-token');
 
@@ -77,16 +76,21 @@ export const createCenterRequest = (centerDetails) => dispatch => {
   };
 
   return instance
-    .post('https://api.cloudinary.com/v1_1/omokolataiwo/image/upload', formData, config)
+    .post(
+      'https://api.cloudinary.com/v1_1/omokolataiwo/image/upload',
+      formData,
+      config
+    )
     .then(res => {
       centerDetails.image = res.data.url || 'default_center_image';
       return dispatch(createCenter(centerDetails));
     })
-    .catch(event => dispatch(creatingNewCenterError({
-      image: [
-        'Can not upload image to cloudinary at the moment. Please try again'
-      ]
-    })));
+    .catch(event =>
+      dispatch(creatingNewCenterError({
+        image: [
+          'Can not upload image to cloudinary at the moment. Please try again'
+        ]
+      })));
 };
 
 export default createCenterRequest;

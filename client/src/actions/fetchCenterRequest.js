@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_PATH } from '../consts';
+import instance from '../utils/axios';
 import {
   FETCHING_CENTER,
   RECEIVED_CENTER,
@@ -43,14 +42,13 @@ const fetchingCenterError = errors => ({
  * @param {int} id - Center ID
  * @returns {void}
  */
-const userCenter = id => dispatch => {
-  axios
-    .get(`${API_PATH}/centers/${id}`)
+const userCenter = id => dispatch =>
+  instance
+    .get(`/centers/${id}`)
     .then(response => dispatch(recievedCenter(response.data.center)))
     .catch(error => {
       dispatch(fetchingCenterError(error.response.data));
     });
-};
 
 /**
  * Fetch admin center
@@ -59,9 +57,11 @@ const userCenter = id => dispatch => {
  * @return {void}
  */
 const adminCenter = value => (dispatch, getState) => {
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
-  axios
-    .get(`${API_PATH}/centers/admin/center`, { params: { ...value } })
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
+  return instance
+    .get(`/centers/admin/center`, { params: { ...value } })
     .then(response => {
       dispatch(recievedCenter(response.data));
     })
@@ -77,11 +77,10 @@ const adminCenter = value => (dispatch, getState) => {
  * @param {bool} admin Request admin center
  * @returns {void}
  */
-const fetchCenterRequest = (value, admin) => dispatch => {
+export const fetchCenterRequest = (value, admin) => dispatch => {
   dispatch(fetchingCenter());
-  userCenter(value);
   if (admin) return dispatch(adminCenter(value));
-  dispatch(userCenter(value));
+  return dispatch(userCenter(value));
 };
 
 export default fetchCenterRequest;

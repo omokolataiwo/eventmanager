@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 import { RECEIVED_CENTER_CONTACTS } from '../types';
 
@@ -18,10 +18,12 @@ const centerContacts = contacts => ({
  *
  * @returns {void}
  */
-const getContactPersonRequest = () => (dispatch, getState) => {
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
-  axios
-    .get(`${API_PATH}/centers/contacts`)
+export const getContactPersonRequest = () => (dispatch, getState) => {
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
+  return instance
+    .get(`/centers/contacts`)
     .then(response => {
       dispatch(centerContacts(response.data.contacts));
     })

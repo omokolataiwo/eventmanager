@@ -11,8 +11,7 @@ export const center = {
   facilities:
     'Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security',
   id: 5,
-  image:
-    'default_center_image',
+  image: 'default_center_image',
   name: 'Sheba Centre',
   ownerId: 1,
   state: 25,
@@ -20,4 +19,30 @@ export const center = {
   updatedAt: '2018-12-12T00:00:00.000Z'
 };
 
-export const userMock = { user: { accessToken: '39hesdv8787338727kj' } };
+export const userMock = {
+  user: {
+    accessToken: '39hesdv8787338727kj',
+    userdata: {
+      firstName: 'Adeoye',
+      lastName: 'Taiwo',
+      role: 3,
+      email: 'ataiwo@gmail.com',
+      phoneNumber: '08032108214'
+    }
+  }
+};
+
+export const event = {
+  id: 3,
+  title: 'Birthday Party',
+  startDate: '2018-12-1',
+  endDate: '2018-12-1',
+  centerId: '2'
+};
+
+export const contact = {
+  firstName: 'Adeola',
+  lastName: 'Ore',
+  phoneNumber: '08056151112',
+  email: 'adeore@gmail.com'
+};

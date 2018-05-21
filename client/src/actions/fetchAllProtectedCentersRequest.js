@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 import {
   RECEIVED_CENTERS,
@@ -27,14 +27,16 @@ const fetchAllCenter = centersResponse => {
  * @param {object} query Page query
  * @returns {void}
  */
-const fetchAllCentersRequest = query => (dispatch, getState) => {
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+export const fetchAllCentersRequest = query => (dispatch, getState) => {
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
 
   dispatch({
     type: FETCHING_CENTERS
   });
-  axios
-    .get(`${API_PATH}/centers/protected`, { params: query })
+  return instance
+    .get(`/centers/protected`, { params: query })
     .then(response => {
       dispatch(fetchAllCenter(response.data));
     })

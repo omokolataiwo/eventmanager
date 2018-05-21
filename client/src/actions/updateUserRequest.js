@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 import {
   UPDATING_USER_REQUEST,
@@ -28,19 +28,17 @@ const updatedUser = user => ({ type: UPDATED_USER, user });
  * @param {object} user User data from form
  * @returns {void}
  */
-const updateUserRequest = user => (dispatch, getState) => {
+export const updateUserRequest = user => (dispatch, getState) => {
   dispatch({ type: UPDATING_USER_REQUEST });
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
-  axios
-    .put(`${API_PATH}/users/`, user)
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
+  return instance
+    .put(`/users/`, user)
     .then(response => {
       dispatch(updatedUser(response.data.user));
     })
     .catch(error => {
-      if (!error.response || error.response.status >= 500) {
-        console.error('Internal server error.');
-        return;
-      }
       dispatch(updatingUserError(error.response.data));
     });
 };
