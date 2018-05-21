@@ -23,37 +23,21 @@ const propTypes = {
  */
 class Bookings extends React.Component {
   /**
-   * Constructor for Center Booking Page
-   *
-   * @param {object} props - React properties
-   */
-  constructor(props) {
-    super(props);
-    this.state = {
-      events: []
-    };
-  }
-  /**
    * Get all Eenters and Events
    *
    * @return {void}
    * @memberof Bookings
    */
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchCenterEventRequest();
   }
+
   /**
-   * Update component state
+   * Render no events booked for centers
    *
-   * @param {any} props New properties
-   * @returns {void}
+   * @returns {object} JSX DOM
    * @memberof Bookings
    */
-  componentWillReceiveProps(props) {
-    const { centersEvents } = props;
-    this.setState({ events: centersEvents });
-  }
-
   renderNoEvents() {
     return (
       <div className="container container-medium card admin-index no-event-admin">
@@ -97,8 +81,8 @@ class Bookings extends React.Component {
         <h5>Bookings</h5>
         <hr />
         <div className="row">
-          <div className="col s12 m12 l12">
-            <BookingTable events={this.state.events} />
+          <div className="col s12 m12 l12 animated fadeIn">
+            <BookingTable events={this.props.centersEvents} />
           </div>
         </div>
       </div>

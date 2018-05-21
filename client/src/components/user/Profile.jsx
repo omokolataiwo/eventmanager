@@ -48,12 +48,10 @@ class Profile extends React.Component {
       errors: {
         firstName: [],
         lastName: [],
-        role: [],
         phoneNumber: [],
         email: [],
         update: []
-      },
-      events: {}
+      }
     };
 
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
@@ -65,9 +63,7 @@ class Profile extends React.Component {
    * @memberof Profile
    */
   componentWillMount() {
-    const { userdata } = this.props;
-
-    this.setState({ userdata });
+    this.setState({ userdata: this.props.userdata });
   }
 
   /**
@@ -104,7 +100,7 @@ class Profile extends React.Component {
   resetErrors(callback) {
     const err = {};
 
-    Object.keys(this.state.errors).map((field) => {
+    Object.keys(this.state.errors).map(field => {
       err[field] = [];
       return field;
     });
@@ -121,15 +117,18 @@ class Profile extends React.Component {
    */
   updateUser(event) {
     event.preventDefault();
-
     // Clear error in case a field had error before and it is corrected
     this.resetErrors(() => {
-      const errorMsg = validate(this.state.userdata, SIGNUP_VALIDATION_RULES);
+      const UPDATE_VALIDATION_RULES = { ...SIGNUP_VALIDATION_RULES };
+      Reflect.deleteProperty(UPDATE_VALIDATION_RULES, 'username');
+      Reflect.deleteProperty(UPDATE_VALIDATION_RULES, 'password');
+      const errorMsg = validate(this.state.userdata, UPDATE_VALIDATION_RULES);
       if (errorMsg !== undefined) {
         const errors = Object.assign({}, { ...this.state.errors }, errorMsg);
         this.setState({ errors });
         return;
       }
+
       this.props.updateUserRequest(this.state.userdata);
     });
   }
@@ -251,7 +250,7 @@ Profile.propTypes = propTypes;
  * @param {object} state - The redux state
  * @returns {object} - Extracted properties
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { userdata, events, errors } = state.user;
 
   return {

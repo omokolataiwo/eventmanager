@@ -4,9 +4,7 @@ import $ from 'jquery';
 
 const propTypes = {
   id: PropTypes.string.isRequired,
-  default: PropTypes.oneOfType([null,
-    PropTypes.string,
-    PropTypes.number]).isRequired,
+  default: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   options: PropTypes.array.isRequired,
   width: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired
@@ -68,5 +66,8 @@ class SelectComponent extends Component {
 }
 
 SelectComponent.propTypes = propTypes;
+SelectComponent.defaultProps = {
+  default: ''
+};
 
 export default SelectComponent;

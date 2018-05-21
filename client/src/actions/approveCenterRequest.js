@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_PATH } from '../consts';
+import instance from '../utils/axios';
 
 import {
   UPDATED_CENTER,
@@ -7,14 +6,13 @@ import {
   UPDATING_CENTER_ERROR
 } from '../types';
 
-
 /**
  * Action for updating center
  *
  * @param {object} center - created center details
  * @return {object} - action [UPDATED_CENTER]
  */
-const updatedCenter = center => ({ type: UPDATED_CENTER, center });
+export const updatedCenter = center => ({ type: UPDATED_CENTER, center });
 
 /**
  * create center error state
@@ -22,7 +20,7 @@ const updatedCenter = center => ({ type: UPDATED_CENTER, center });
  * @param {object} errors Center creation error
  * @return {object}  action [UPDATING_CENTER_ERROR]
  */
-const updatingCenterError = errors => ({
+export const updatingCenterError = errors => ({
   type: UPDATING_CENTER_ERROR,
   errors
 });
@@ -33,20 +31,21 @@ const updatingCenterError = errors => ({
  * @param {string} centerId - center ID
  * @returns {void}
  */
-const approveCenterRequest = (centerId) => (dispatch, getState) => {
+export const approveCenterRequest = centerId => (dispatch, getState) => {
   dispatch({ type: UPDATING_CENTER });
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
-  axios
-    .put(`${API_PATH}/centers/approve/${centerId}`)
+  instance.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+
+  return instance
+    .put(`/centers/approve/${centerId}`)
     .then(response => {
-      dispatch(updatedCenter(response.data));
+      dispatch(updatedCenter(response.data.center));
     })
-    .catch((error) => {
+    .catch(error => {
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
-      dispatch(updatingCenterError(error.response.data));
+      return dispatch(updatingCenterError(error.response.data.errors.errors));
     });
 };
 

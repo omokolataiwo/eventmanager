@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import formatNumber from 'format-num';
 import fetchCenterRequest from '../../actions/fetchCenterRequest';
 import { addFlash } from '../../utils/flash';
-import SuggestedCenters from '../containers/SuggestedCenters';
 import Preloader from '../containers/Preloader';
 import { STATES } from '../../consts';
 
@@ -32,48 +31,30 @@ const propTypes = {
  * @class Center
  * @extends {React.Component}
  */
-class Center extends React.Component {
-  /**
-   * Creates an instance of Center.
-   *
-   * @param {object} props React properties
-   * @memberof Center
-   */
-  constructor(props) {
-    super(props);
-    this.state = {
-      center: {}
-    };
-    this.handleRedirect = this.handleRedirect.bind(this);
-  }
+export class Center extends React.Component {
   /**
    * Fetch center details
    *
    * @returns {void}
    * @memberof Center
    */
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchCenterRequest(this.props.match.params.id);
   }
+
   /**
-   * Set component state
+   * Checks if center can not be fetched
    *
-   * @param {object} newProps New properties
+   * @param {any} props state object
    * @returns {void}
    * @memberof Center
    */
-  componentWillReceiveProps(newProps) {
-    const { center, action } = newProps;
-
-    if (
-      parseInt(newProps.match.params.id, 10) !== center.id &&
-      action.getCenter !== FETCHING_CENTER &&
-      action.getCenter !== FETCHING_CENTER_ERROR
-    ) {
-      this.props.fetchCenterRequest(this.props.match.params.id);
+  componentWillReceiveProps(props) {
+    if (props.action.getCenter === FETCHING_CENTER_ERROR) {
+      return this.props.history.push('/404');
     }
-    this.setState({ center });
   }
+
   /**
    * Reset fetching state
    *
@@ -93,18 +74,7 @@ class Center extends React.Component {
    */
   handleBookEvent(event) {
     addFlash('choice-center', this.props.match.params.id);
-    this.props.history.push('/user/event/create');
-  }
-
-  /**
-   * Redirect to center page with new center
-   *
-   * @param {int} id - ID of the new center
-   * @returns {void}
-   * @memberof Center
-   */
-  handleRedirect(id) {
-    this.props.history.replace(`/centers/${id}`);
+    this.props.history.replace('/user/event/create');
   }
 
   /**
@@ -114,7 +84,7 @@ class Center extends React.Component {
    * @memberof Center
    */
   renderContactDetails() {
-    const { center } = this.state;
+    const { center } = this.props;
     if (!center || !center.contacts) {
       return null;
     }
@@ -122,12 +92,13 @@ class Center extends React.Component {
     return (
       <div>
         <p className="label">Contact</p>
-        <p className="value">
-          {this.state.center.contacts.firstName} &nbsp;
-          {this.state.center.contacts.lastName}
+        <p className="value contact-person">
+          <span className="contact-name">
+          {this.props.center.contacts.firstName} {this.props.center.contacts.lastName}
+          </span>
           <span className="contact-number">
             <i className="material-icons left">phone</i>
-            {this.state.center.contacts.phoneNumber}
+            {this.props.center.contacts.phoneNumber}
           </span>
         </p>
       </div>
@@ -166,49 +137,48 @@ class Center extends React.Component {
     if (this.props.action.getCenter === FETCHING_CENTER) {
       return this.renderWithLayout(<Preloader />);
     }
-    if (Object.keys(this.state.center).length === 0) {
-      this.props.history.push('/404');
-      return null;
-    }
+
     return this.renderWithLayout(<div className="row">
       <div className="col s12 m8 l8">
         <div className="row">
           <div className="col s12 m8 l8">
-            <h3 className="center-name">{this.state.center.name}</h3>
+            <h3 className="center-name">{this.props.center.name}</h3>
           </div>
         </div>
         <div className="row">
           <div className="col s12 m12 l12">
             <img
               className="thumbnail-large"
-              src={this.state.center.image}
+              src={this.props.center.image}
               alt="center"
             />
           </div>
           <div className="row">
             <div className="col s12 m12 l12 details">
-              <h3>{this.state.center.name}</h3>
+              <h3>{this.props.center.name}</h3>
               <hr />
-              <p>{this.state.center.details}</p>
+              <p>{this.props.center.details}</p>
             </div>
           </div>
         </div>
       </div>
       <div className="col s12 m4 l4 center-details">
         <p className="label">Amount</p>
-        <p className="value">
-            &#8358;{formatNumber(this.state.center.amount)}
+        <p className="value amount">
+            &#8358;{formatNumber(this.props.center.amount)}
         </p>
 
         <p className="label">Address</p>
-        <p className="value">
-          {this.state.center.address}, {this.state.center.area}{' '}
-          {STATES[this.state.center.state]}.
+        <p className="value address">
+          {this.props.center.address}, {this.props.center.area}{' '}
+          {STATES[this.props.center.state]}.
         </p>
         <p className="label">Capacity</p>
-        <p>{formatNumber(this.state.center.capacity)}</p>
+        <p className="value capacity">
+          {formatNumber(this.props.center.capacity)}
+        </p>
         <p className="label">Facilities</p>
-        <p>{this.state.center.facilities}</p>
+        <p className="value facilities">{this.props.center.facilities}</p>
         {this.renderContactDetails()}
         <button
           className="btn blue"

@@ -114,7 +114,16 @@ export default class UserController {
   static getUser(req, res) {
     return models.users
       .findOne({ where: { id: req.user.id } })
-      .then(user => res.status(200).json({ user }))
+      .then((user) => {
+        const {
+          password,
+          username,
+          updatedAt,
+          createdAt,
+          ...rest
+        } = user.toJSON();
+        return res.status(200).json({ user: rest });
+      })
       .catch(() => {
         res.status(500).send({
           status: 'error',
@@ -171,8 +180,18 @@ export default class UserController {
       return models.users
         .update(user, { where: { id: req.user.id } })
         .then(() => {
-          Reflect.deleteProperty(user, 'password');
-          res.status(200).json({ user });
+          const {
+            firstName, lastName, phoneNumber, email, role
+          } = user;
+          res.status(200).json({
+            user: {
+              firstName,
+              lastName,
+              phoneNumber,
+              email,
+              role
+            }
+          });
         });
     } catch (e) {
       return res.status(500).send({

@@ -6,10 +6,10 @@ import searchForCenterImg from '../../images/icons/searching-for-a-house.png';
 import bookVenueImge from '../../images/icons/calendar-book1.png';
 import OverlaySearch from '../containers/OverlaySearch';
 import Slider from '../containers/Slider';
-import FeaturedCenter from '../containers/FeaturedCenter';
+import RecentCenters from '../containers/RecentCenters';
 
 const propTypes = {
-  history: PropTypes.func.isRequired
+  history: PropTypes.shape().isRequired
 };
 
 /**
@@ -67,9 +67,9 @@ const Home = ({ history }) => (
       <div className="row center featured-centers">
         <div className="col s12 m12 l12">
           <hr />
-          <h5>FEATURED CENTERS</h5>
+          <h5>AVAILABLE CENTERS</h5>
         </div>
-        {<FeaturedCenter />}
+        {<RecentCenters />}
       </div>
     </div>
   </div>

@@ -5,12 +5,12 @@ import { DELETE_EVENT_ERROR, DELETING_EVENT, DELETED_EVENT } from '../types';
 /**
  * Action to delete
  *
- * @param {object} user  Delete
+ * @param {object} eventId  Delete
  * @return {object}  action
  */
-const deletedEvent = user => ({
+const deletedEvent = eventId => ({
   type: DELETED_EVENT,
-  user
+  eventId
 });
 
 /**
@@ -36,14 +36,14 @@ const deleteEventRequest = event => (dispatch, getState) => {
   axios
     .delete(`${API_PATH}/events/${event}`)
     .then(response => {
-      dispatch(deletedEvent(response.data));
+      dispatch(deletedEvent(response.data.event.id));
     })
     .catch(error => {
       if (!error.response || error.response.status >= 500) {
         console.error('Internal server error.');
         return;
       }
-      dispatch(deleteEventError(error.response.data));
+      dispatch(deleteEventError(error.response.data.event.errors));
     });
 };
 
