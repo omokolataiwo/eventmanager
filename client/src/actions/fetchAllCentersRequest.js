@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 import {
   RECEIVED_CENTERS,
@@ -27,12 +27,12 @@ const fetchAllCenter = centersResponse => {
  * @param {object} query Page query
  * @returns {void}
  */
-const fetchAllCentersRequest = query => dispatch => {
+export const fetchAllCentersRequest = query => dispatch => {
   dispatch({
     type: FETCHING_CENTERS
   });
-  axios
-    .get(`${API_PATH}/centers`, { params: query })
+  return instance
+    .get(`/centers`, { params: query })
     .then(response => {
       dispatch(fetchAllCenter(response.data));
     })

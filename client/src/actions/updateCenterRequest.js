@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 
 import {
@@ -33,18 +33,16 @@ const updatingCenterError = errors => ({
  * @returns {void}
  */
 const updateCenter = center => (dispatch, getState) => {
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
-  console.log(center);
-  axios
-    .put(`${API_PATH}/centers/${center.id}`, center)
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
+
+  return instance
+    .put(`/centers/${center.id}`, center)
     .then(response => {
       dispatch(updatedCenter(response.data));
     })
     .catch(error => {
-      if (!error.response || error.response.status >= 500) {
-        console.error('Internal server error.');
-        return;
-      }
       dispatch(updatingCenterError(error.response.data.errors));
     });
 };
@@ -55,10 +53,11 @@ const updateCenter = center => (dispatch, getState) => {
  * @param {object} centerDetails - center details
  * @returns {void}
  */
-const updateCenterRequest = centerDetails => dispatch => {
+export const updateCenterRequest = centerDetails => dispatch => {
   dispatch({ type: UPDATING_CENTER });
   const { image } = centerDetails;
   // If owner is not changing image ignore cloudinary upload
+
   if (!image || (image.type !== 'image/jpeg' && image.type !== 'image/png')) {
     Reflect.deleteProperty(centerDetails, 'image');
     return dispatch(updateCenter({
@@ -68,7 +67,7 @@ const updateCenterRequest = centerDetails => dispatch => {
     }));
   }
 
-  Reflect.deleteProperty(axios.defaults.headers.common, 'x-access-token');
+  Reflect.deleteProperty(instance.defaults.headers.common, 'x-access-token');
   const url = 'https://api.cloudinary.com/v1_1/omokolataiwo/image/upload';
 
   const formData = new FormData();
@@ -81,11 +80,11 @@ const updateCenterRequest = centerDetails => dispatch => {
     }
   };
 
-  axios
+  return instance
     .post(url, formData, config)
     .then(res => {
       centerDetails.image = res.data.url;
-      dispatch(updateCenter({
+      return dispatch(updateCenter({
         ...centerDetails,
         contact: centerDetails.contact.newContact,
         events: null

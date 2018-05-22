@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 import {
   FETCHING_EVENTS,
@@ -41,11 +41,14 @@ const fetchUserEventError = error => ({ type: FETCHING_EVENTS_ERROR, error });
  *
  * @returns {void}
  */
-const fetchUserEventsRequest = () => (dispatch, getState) => {
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+export const fetchUserEventsRequest = () => (dispatch, getState) => {
+  dispatch(requestFetchUserEvent());
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
   dispatch(requestFetchUserEvent);
-  axios
-    .get(`${API_PATH}/events`)
+  return instance
+    .get(`/events`)
     .then(response => {
       dispatch(userEvents(response.data));
     })

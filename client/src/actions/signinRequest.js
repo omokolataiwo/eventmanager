@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_PATH } from '../consts';
+import instance from '../utils/axios';
 import { SIGNIN_USER, REQUEST_SIGNIN_USER, SIGNIN_USER_ERROR } from '../types';
 
 /**
@@ -34,18 +33,14 @@ const signingInUserError = errors => ({
  * @param {object} user - signin details
  * @returns {void}
  */
-const signinRequest = user => dispatch => {
+export const signinRequest = user => dispatch => {
   dispatch(signingInUser());
-  axios
-    .post(`${API_PATH}/users/signin`, user)
+  return instance
+    .post(`/users/signin`, user)
     .then(response => {
       dispatch(userSignedIn(response.data.user));
     })
     .catch(error => {
-      if (!error.response || error.response.status >= 500) {
-        console.error('Internal server error.');
-        return;
-      }
       dispatch(signingInUserError(error.response.data.errors));
     });
 };

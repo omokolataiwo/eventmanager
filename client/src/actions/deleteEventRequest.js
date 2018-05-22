@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { API_PATH } from '../consts';
+import instance from '../utils/axios';
 import { DELETE_EVENT_ERROR, DELETING_EVENT, DELETED_EVENT } from '../types';
 
 /**
@@ -27,22 +26,21 @@ const deleteEventError = errors => ({
 /**
  * Makes http request to backend to delete event
  *
+ * @param {int} event id
  * @returns {void}
  */
-const deleteEventRequest = event => (dispatch, getState) => {
+export const deleteEventRequest = event => (dispatch, getState) => {
   dispatch({ type: DELETING_EVENT });
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
 
-  axios
-    .delete(`${API_PATH}/events/${event}`)
+  return instance
+    .delete(`/events/${event}`)
     .then(response => {
       dispatch(deletedEvent(response.data.event.id));
     })
     .catch(error => {
-      if (!error.response || error.response.status >= 500) {
-        console.error('Internal server error.');
-        return;
-      }
       dispatch(deleteEventError(error.response.data.event.errors));
     });
 };

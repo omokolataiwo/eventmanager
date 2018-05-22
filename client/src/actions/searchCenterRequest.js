@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { API_PATH } from '../consts';
-import { SEARCH_RESULT, SEARCHING_CENTER } from '../types';
+import instance from '../utils/axios';
+import { SEARCH_RESULT, SEARCHING_CENTER, SEARCH_RESULT_ERROR } from '../types';
 
 /**
  * Action creator for searched result
@@ -14,20 +13,30 @@ const searchedResult = centers => ({
 });
 
 /**
+ * Action creator for center search error
+ *
+ * @param {object} errors Search errors
+ * @returns {object} Action [SEARCH_RESULT_ERROR]
+ */
+const searchResultError = errors => ({
+  type: SEARCH_RESULT_ERROR
+});
+
+/**
  * Search center
  *
  * @param {object} params Search parameters
  * @returns {void}
  */
-const searchCenterRequest = params => dispatch => {
+export const searchCenterRequest = params => dispatch => {
   dispatch({ type: SEARCHING_CENTER });
-  axios
-    .get(`${API_PATH}/centers/search`, { params })
+  return instance
+    .get(`/centers/search`, { params })
     .then(response => {
       const { count } = response.data.centers[0];
       dispatch(searchedResult({ centers: response.data.centers, count }));
     })
-    .catch(error => console.log(error));
+    .catch(error => dispatch(searchResultError(error.response.data.errors)));
 };
 
 export default searchCenterRequest;

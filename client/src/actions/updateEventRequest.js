@@ -1,10 +1,9 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import {
   UPDATED_EVENT,
   REQUEST_UPDATE_EVENT,
   UPDATE_EVENT_ERROR
 } from '../types';
-import { API_PATH } from '../consts';
 
 /**
  * Action creator for receiving updated event
@@ -38,14 +37,16 @@ export const updateEventRequest = event => (dispatch, getState) => {
   dispatch({
     type: REQUEST_UPDATE_EVENT
   });
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
 
   const {
     title, startDate, endDate, centerId
   } = event;
 
-  axios
-    .put(`${API_PATH}/events/${event.id}`, {
+  return instance
+    .put(`/events/${event.id}`, {
       title,
       startDate,
       endDate,

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import instance from '../utils/axios';
 import { API_PATH } from '../consts';
 import {
   FETCHING_ADMIN_CENTERS,
@@ -45,17 +45,19 @@ const fetchingAdminCentersError = errors => ({
  * @param {object} query - Query for pagination
  * @returns {void}
  */
-const fetchAdminCentersRequest = query => (dispatch, getState) => {
+export const fetchAdminCentersRequest = query => (dispatch, getState) => {
   dispatch(fetchingAdminCenters());
-  axios.defaults.headers.common['x-access-token'] = getState().user.accessToken;
+  instance.defaults.headers.common[
+    'x-access-token'
+  ] = getState().user.accessToken;
 
-  axios
-    .get(`${API_PATH}/centers/admin`, { params: query })
+  return instance
+    .get(`/centers/admin`, { params: query })
     .then(response => {
       const { centers, count } = response.data;
       dispatch(receivedAdminCenter(centers, count));
     })
-    .catch((error) => {
+    .catch(error => {
       dispatch(fetchingAdminCentersError(error));
     });
 };
