@@ -2,13 +2,12 @@ import {
   REQUEST_SIGNUP_USER,
   SIGNUP_USER,
   SIGNUP_ERROR,
-  ACCOUNT_TYPE_GUEST,
   REQUEST_SIGNIN_USER,
   SIGNIN_USER,
   SIGNIN_USER_ERROR,
   SIGNOUT_USER,
   TOKEN_EXPIRED,
-  UPDATING_USER,
+  UPDATING_USER_REQUEST,
   UPDATED_USER,
   UPDATING_USER_ERROR,
   FETCH_USER_REQUEST,
@@ -19,7 +18,7 @@ import {
 
 const defaultUser = {
   userdata: {
-    role: ACCOUNT_TYPE_GUEST
+    role: 0
   },
   errors: {},
   events: {
@@ -85,7 +84,7 @@ export default (state = defaultUser, action) => {
   case SIGNOUT_USER:
     return defaultUser;
   case RESET_UPDATE_STATE:
-  case UPDATING_USER:
+  case UPDATING_USER_REQUEST:
     return { ...state, events: { ...state.events, updateUser: action.type } };
   case UPDATED_USER:
     return {
@@ -94,9 +93,11 @@ export default (state = defaultUser, action) => {
       events: { ...state.events, updateUser: action.type }
     };
   case UPDATING_USER_ERROR:
-    return { ...state, errors: { ...state.errors, updateUser: action.type } };
-  case TOKEN_EXPIRED:
-    return defaultUser;
+    return {
+      ...state,
+      errors: action.errors,
+      events: { ...state.events, updateUser: action.type }
+    };
   default:
     return state;
   }

@@ -4,14 +4,14 @@ import {
   RESET_FETCHING_CENTER_CONTACTS
 } from '../types';
 
-const defaultCenter = {
+const defaultContacts = {
   contacts: [],
   action: {
     getCenterContact: null
   }
 };
 
-export default (state = defaultCenter, action) => {
+export default (state = defaultContacts, action) => {
   switch (action.type) {
   case RESET_FETCHING_CENTER_CONTACTS:
   case FETCHING_CENTER_CONTACTS:

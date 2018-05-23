@@ -24,13 +24,13 @@ export default (state = defaultCenter, action) => {
   case UPDATED_CENTER:
     return {
       ...state,
-      action: { ...state.events, updateCenter: action.type }
+      action: { ...state.action, updateCenter: action.type }
     };
 
   case UPDATING_CENTER_ERROR:
     return {
       ...state,
-      action: { ...state.events, updateCenter: action.type },
+      action: { ...state.action, updateCenter: action.type },
       errors: action.errors
     };
 
@@ -38,13 +38,13 @@ export default (state = defaultCenter, action) => {
   case CREATED_NEW_CENTER:
     return {
       ...state,
-      action: { ...state.events, createCenter: action.type }
+      action: { ...state.action, createCenter: action.type }
     };
 
   case CREATING_NEW_CENTER_ERROR:
     return {
       ...state,
-      action: { ...state.events, createCenter: action.type },
+      action: { ...state.action, createCenter: action.type },
       errors: action.errors
     };
   default:
