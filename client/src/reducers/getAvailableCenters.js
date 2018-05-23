@@ -18,7 +18,7 @@ const defaultCenter = {
 export default (state = defaultCenter, action) => {
   switch (action.type) {
   case FETCHING_CENTERS:
-    return { ...state, action: { getCenters: action.type } };
+    return { ...state, action: { ...state.action, getCenters: action.type } };
   case RECEIVED_CENTERS:
     return {
       ...state,

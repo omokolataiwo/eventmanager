@@ -4,7 +4,7 @@ import {
   FETCHING_CENTERS_EVENTS_ERRORS
 } from '../types';
 
-const defaultCenter = {
+const defaultCenterEvents = {
   centersEvents: [],
   count: 0,
   action: {
@@ -12,7 +12,7 @@ const defaultCenter = {
   }
 };
 
-export default (state = defaultCenter, action) => {
+export default (state = defaultCenterEvents, action) => {
   switch (action.type) {
   case FETCHING_CENTERS_EVENTS_ERRORS:
   case FETCHING_CENTERS_EVENTS:

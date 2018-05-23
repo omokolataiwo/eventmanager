@@ -20,7 +20,7 @@ export default (state = defaultCenter, action) => {
     return {
       ...state,
       searched: action.centers.centers,
-      count: action.centers.count,
+      count: action.centers.centers.length,
       action: { ...state.action, searchCenter: action.type }
     };
   default:

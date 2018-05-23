@@ -56,6 +56,7 @@ export default (state = defaultEvent, action) => {
   case FETCHING_EVENTS_ERROR:
     return {
       ...state,
+      errors: action.errors,
       actions: { ...state.actions, getEvents: action.type }
     };
 
@@ -73,6 +74,7 @@ export default (state = defaultEvent, action) => {
   case FETCHING_EVENT_ERROR:
     return {
       ...state,
+      errors: action.errors,
       actions: { ...state.actions, getEvent: action.type }
     };
   case REQUEST_CREATE_EVENT:
@@ -114,7 +116,8 @@ export default (state = defaultEvent, action) => {
     return {
       ...state,
       events: removeEvent(action.eventId, state.events),
-      count: state.count - 1
+      count: state.count - 1,
+      actions: { ...state.actions, cancel: action.type }
     };
 
   default:
