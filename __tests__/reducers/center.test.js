@@ -1,7 +1,7 @@
 /* global describe it expect */
 import center from '../../client/src/reducers/center';
 import * as actionTypes from '../../client/src/types';
-import { defaultCenter } from '../__mocks__/reducer/center';
+import { defaultCenter } from '../__mocks__/center';
 
 describe('center reducer', () => {
   it('should return the initial state', () => {

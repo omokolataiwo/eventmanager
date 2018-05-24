@@ -11,7 +11,6 @@ const propTypes = {
   onSelectContactChanged: PropTypes.func.isRequired,
   onFieldChange: PropTypes.func.isRequired,
   defaultContact: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    .isRequired
 };
 /**
  * Renders contact form base on existing contact details
@@ -91,4 +90,7 @@ const CenterContactPerson = ({
 };
 
 CenterContactPerson.propTypes = propTypes;
+CenterContactPerson.defaultProps = {
+  defaultContact: ''
+};
 export default CenterContactPerson;

@@ -14,7 +14,9 @@ const propTypes = {
  * @returns {object} - JSX DOM
  */
 const BookingTable = ({ events }) => {
-  if (!events) return <div>No events for your center yet.</div>;
+  if (!Array.isArray(events) || !events.length) {
+    return <div>No events for your center yet.</div>;
+  }
   return (
     <table className="bordered responsive-table">
       <thead>

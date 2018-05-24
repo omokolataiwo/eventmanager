@@ -9,10 +9,16 @@ export const defaultEvent = {
   errors: {}
 };
 
-export const event = {
+export const eventBirthday = {
   title: 'Birthday Party',
   startDate: '2018-10-12',
   endDate: '2018-10-12'
 };
 
-export const events = [event, event];
+export const eventWedding = {
+  title: 'Wedding Anniversary',
+  startDate: '2018-10-12',
+  endDate: '2018-10-12'
+};
+
+export const events = [eventBirthday, eventWedding];
