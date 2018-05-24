@@ -1,7 +1,7 @@
 /* global describe it expect */
 import searchCenters from '../../client/src/reducers/searchCenters';
 import * as actionTypes from '../../client/src/types';
-import { centers } from '../__mocks__/reducer/center';
+import { centers } from '../__mocks__/center';
 
 const defaultCenter = {
   searched: [],

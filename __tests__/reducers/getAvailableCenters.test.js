@@ -1,7 +1,7 @@
 /* global describe it expect */
 import center from '../../client/src/reducers/getAvailableCenters';
 import * as actionTypes from '../../client/src/types';
-import { centers } from '../../__tests__/__mocks__/reducer/center';
+import { centers } from '../../__tests__/__mocks__/center';
 
 const defaultCenter = {
   centers: [],

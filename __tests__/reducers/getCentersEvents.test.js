@@ -1,7 +1,7 @@
 /* global describe it expect */
 import getCentersEvents from '../../client/src/reducers/getCentersEvents';
 import * as actionTypes from '../../client/src/types';
-import { events } from '../__mocks__/reducer/event';
+import { events } from '../__mocks__/event';
 
 const defaultCenterEvents = {
   centersEvents: [],

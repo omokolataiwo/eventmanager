@@ -15,10 +15,10 @@ import { CREATED_EVENT, FETCHING_EVENTS } from '../../types';
 import Pagination from '../containers/Pagination';
 
 const propTypes = {
-  fetchUserEventsRequest: PropTypes.func.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   history: PropTypes.shape().isRequired,
-  fetchUserRequest: PropTypes.func.isRequired
+  fetchUserRequest: PropTypes.func.isRequired,
+  fetchUserEventsRequest: PropTypes.func.isRequired
 };
 
 /**
@@ -27,7 +27,7 @@ const propTypes = {
  * @class Index
  * @extends {Component}
  */
-class Index extends Component {
+export class Index extends Component {
   /**
    * Creates an instance of Index.
    *
