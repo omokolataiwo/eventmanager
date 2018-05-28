@@ -17,7 +17,7 @@ const propTypes = {
  * @class HorizontalFeaturedCenters
  * @extends {React.Component}
  */
-class HorizontalFeaturedCenters extends React.Component {
+export class HorizontalFeaturedCenters extends React.Component {
   /**
    * Creates an instance of HorizontalFeaturedCenters.
    *
@@ -33,15 +33,7 @@ class HorizontalFeaturedCenters extends React.Component {
     };
     this.handleModal = this.handleModal.bind(this);
   }
-  /**
-   * Fetch all centers
-   *
-   * @returns {void}
-   * @memberof HorizontalFeaturedCenters
-   */
-  componentWillMount() {
-    this.props.fetchAllCentersRequest();
-  }
+
   /**
    * Initialize materialize modal
    *
@@ -49,6 +41,7 @@ class HorizontalFeaturedCenters extends React.Component {
    * @memberof HorizontalFeaturedCenters
    */
   componentDidMount() {
+    this.props.fetchAllCentersRequest();
     $('.modal').modal();
   }
 

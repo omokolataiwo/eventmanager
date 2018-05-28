@@ -28,10 +28,10 @@ const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
   errors: PropTypes.shape().isRequired,
   centerAction: PropTypes.shape().isRequired,
-  actions: PropTypes.string.isRequired,
+  actions: PropTypes.shape().isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
   count: PropTypes.string.isRequired,
-  resetEventState: PropTypes.func.isRequired,
+  resetEventState: PropTypes.func.isRequired
 };
 
 /**
@@ -40,7 +40,7 @@ const propTypes = {
  * @class Create
  * @extends {React.Component}
  */
-class Create extends React.Component {
+export class Create extends React.Component {
   /**
    * Creates an instance of Create.
    *
@@ -84,15 +84,20 @@ class Create extends React.Component {
    */
   componentWillReceiveProps(props) {
     const {
-      errors, actions, history, resetEventState, centers, count, centerAction
+      errors,
+      actions,
+      history,
+      resetEventState,
+      centers,
+      count,
+      centerAction
     } = props;
 
     if (centerAction.getCenters === RECEIVED_CENTERS && centers.length !== 0) {
       this.setState({ centers, count }, () => {
         const choiceCenter = localStorage.getItem('choice-center');
 
-        let activeCenter = this.state.centers
-          .find(center => center.id === parseInt(choiceCenter, 10));
+        let activeCenter = this.state.centers.find(center => center.id === parseInt(choiceCenter, 10));
         activeCenter = activeCenter || this.state.centers[0];
 
         this.setState({
@@ -141,8 +146,7 @@ class Create extends React.Component {
    * @memberof Create
    */
   changeActiveCenter(centerId) {
-    const activeCenter = this.state.centers
-      .find(center => centerId === center.id);
+    const activeCenter = this.state.centers.find(center => centerId === center.id);
     this.setState({
       activeCenter
     });
@@ -227,7 +231,10 @@ class Create extends React.Component {
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button className="btn blue" onClick={event => this.createEvent(event)}>
+          <button
+            className="btn blue"
+            onClick={event => this.createEvent(event)}
+          >
             Book Center
           </button>
         </form>

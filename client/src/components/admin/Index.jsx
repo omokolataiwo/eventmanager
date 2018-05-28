@@ -23,7 +23,7 @@ const propTypes = {
  * @class Index
  * @extends {React.Component}
  */
-class Index extends React.Component {
+export class Index extends React.Component {
   /**
    * Fetch relevant data
    *

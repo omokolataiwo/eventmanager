@@ -11,7 +11,12 @@ export const center = {
   name: 'Sheba',
   address: '1 Olaoluwa street',
   area: 'Agege',
-  state: 26
+  facilities: 'Camera, Stage',
+  type: 1,
+  amount: 300000,
+  capacity: 400,
+  state: 26,
+  active: 1
 };
 
 export const centers = [center, center];

@@ -15,7 +15,7 @@ const propTypes = {
  * @class Search
  * @extends {Search}
  */
-class Search extends React.Component {
+export class Search extends React.Component {
   /**
    * Creates an instance of Search.
    *
@@ -117,7 +117,7 @@ Search.propTypes = propTypes;
  * @param {object} state Redux state
  * @returns {object} Extracted object
  */
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   const { searched, count } = state.searchCenters;
   return { searched, count };
 };

@@ -134,7 +134,11 @@
   },
   "jest": {
     "verbose": true,
-    "setupFiles": ["<rootDir>/__tests__/__mocks__/setup.js"],
+    "setupFiles": [
+      "<rootDir>/__tests__/__mocks__/jquery.js",
+      "<rootDir>/__tests__/__mocks__/toastr.js",
+      "<rootDir>/__tests__/__mocks__/setup.js"
+    ],
     "testPathIgnorePatterns": ["<rootDir>/__tests__/__mocks__/"],
     "globals": {
       "Materialize": true

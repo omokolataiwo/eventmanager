@@ -1,0 +1,1329 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "2.0",
+    "title": "Event Manager API and Documentation",
+    "description":
+      "### Event Manager Documentation\nEvent Manager API can be used to programatically create and manage event centers. You will be able to:\n- Create Account as a user and center owner.\n- Create an Event Center.\n- Update an Event Center.\n- Get the events booked for a center.\n- Set the availability of a center.\n- Decline an event\n- Create an event.\n- Update an event.\n- Cancel an event.\n- Get bookings information."
+  },
+  "host": "eventmanng.herokuapp.com",
+  "basePath": "/api/v2",
+  "schemes": ["https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "#### Get user's details.",
+        "summary": "Get User",
+        "tags": ["Misc"],
+        "operationId": "UsersGet",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/users",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MywiaWF0IjoxNTI0NDc0NDI3LCJleHAiOjE1MjUzMzg0Mjd9.YnsI9m768Ak0xBL5jME8miPkfxRVhsujgoZWYfFUlY"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get User",
+            "x-testDescription": "#### Get user's details."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "put": {
+        "description": "#### Update user's details.",
+        "summary": "Update User",
+        "tags": ["Misc"],
+        "operationId": "UsersPut",
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "name": "firstName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "lastName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "phoneNumber",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "PUT",
+              "uri": "/users",
+              "headers": {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MiwiaWF0IjoxNTI0NDc0NDExLCJleHAiOjE1MjUzMzg0MTF9.gogDeSi00x75oIPcOA0bkuTVyq7GZuSOmuMaPMGOdv"
+              },
+              "body":
+                "firstName=Lanre&lastName=Taiwo&phoneNumber=08132108214&email=omokolataiwo@ymail.com"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Update User",
+            "x-testDescription": "#### Update user's details."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "post": {
+        "description": "#### Creates user account.",
+        "summary": "Create User",
+        "tags": ["Misc"],
+        "operationId": "UsersPost2",
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "name": "firstName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "lastName",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "phoneNumber",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "username",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "matchPassword",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "role",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "POST",
+              "uri": "/users",
+              "headers": {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              "body":
+                "firstName=Kolawole&lastName=Taiwo&phoneNumber=08132108211&email=omokolataiwo@cail.com&username=user&password=123&matchPassword=123&role=3"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Create User",
+            "x-testDescription": "#### Creates user account."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/users/signin": {
+      "post": {
+        "description": "#### Sign in",
+        "summary": "User Signin",
+        "tags": ["Misc"],
+        "operationId": "UsersSigninPost3",
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "POST",
+              "uri": "/users/signin",
+              "headers": {
+                "Content-Type": "application/x-www-form-urlencoded"
+              },
+              "body": "username=user&password=123"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "User Sign in",
+            "x-testDescription": "#### Sign in"
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers": {
+      "get": {
+        "description": "#### Get all centers that are approved and avaliable.",
+        "summary": "Get Centers",
+        "tags": ["Misc"],
+        "operationId": "CentersGet",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/centers"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get Centers",
+            "x-testDescription":
+              "#### Get all centers that are approved and avaliable."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "post": {
+        "description": "#### Create Event Center",
+        "summary": "Create Center",
+        "tags": ["Misc"],
+        "operationId": "CentersPost",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CreateCenterrequest"
+            }
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "POST",
+              "uri": "/centers",
+              "headers": {
+                "Content-Type": "application/json",
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MiwiaWF0IjoxNTI0NDc0NDExLCJleHAiOjE1MjUzMzg0MTF9.gogDeSi00x75oIPcOA0bkuTVyq7GZuSOmuMaPMGOdvY"
+              },
+              "body":
+                "{\"name\":\"Classique Events Place Pearl Hall\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":37,\"capacity\":4000,\"type\":1,\"facilities\":\"Cameras, Stage\",\"image\":\"default_image\",\"amount\":70000,\"details\":\"Some long description\",\"newContact\":true,\"contact\":{\"firstName\":\"Somename\",\"lastName\":\"AnotherName\",\"email\":\"randommail@mail.com\",\"phoneNumber\":\"08032108214\"}}"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Create Center",
+            "x-testDescription": "#### Create Event Center"
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers/admin": {
+      "get": {
+        "description": "#### Get all centers registered by center owners.",
+        "summary": "Get Admin Centers",
+        "tags": ["Misc"],
+        "operationId": "CentersAdminGet",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/centers/admin",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MSwiaWF0IjoxNTI0NDc2MzIwLCJleHAiOjE1MjUzNDAzMjB9.eu2jzr-tpyMuUOCF73NFKZHXQGzmU2m5HHVvBRDfRPo"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get Admin Centers",
+            "x-testDescription":
+              "#### Get all centers registered by center owners."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers/1": {
+      "get": {
+        "description": "#### Get a single center by id.",
+        "summary": "Get Center",
+        "tags": ["Misc"],
+        "operationId": "Centers1Get",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/centers/1"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get Center",
+            "x-testDescription": "#### Get a single center by id."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "put": {
+        "description": "#### Update center's details.",
+        "summary": "Update Center",
+        "tags": ["Misc"],
+        "operationId": "Centers1Put",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/UpdateCenterrequest"
+            }
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "PUT",
+              "uri": "/centers/1",
+              "headers": {
+                "Content-Type": "application/json",
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNTI0NDY1OTExLCJleHAiOjE1MjUzMjk5MTF9.wozvDghGu7vvQtr28DDbK9LuRlrctwx8JH5VxI7LmZo"
+              },
+              "body":
+                "{\"name\":\"Classique Events Place\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":26,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Cameras, Stage, Security\",\"amount\":70000,\"details\":\"Some long description\",\"newContact\":false,\"contact\":{\"firstName\":\"Somename\",\"lastName\":\"AnotherName\",\"email\":\"randommail@mail.com\",\"phoneNumber\":\"08032108214\"}}"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Update Center",
+            "x-testDescription": "#### Update center's details."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers/search": {
+      "get": {
+        "description": "#### Search for center by name, address, area, state.",
+        "summary": "Search Center",
+        "tags": ["Misc"],
+        "operationId": "CentersSearchGet",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "area",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/centers/search?area=ajah&name=sheba"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Search Center",
+            "x-testDescription":
+              "#### Search for center by name, address, area, state."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers/contacts": {
+      "get": {
+        "description":
+          "#### Get all contact person registered by center owner.",
+        "summary": "Get Contacts - Admin",
+        "tags": ["Misc"],
+        "operationId": "CentersContactsGet",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/centers/contacts",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNTI0NDY1OTExLCJleHAiOjE1MjUzMjk5MTF9.wozvDghGu7vvQtr28DDbK9LuRlrctwx8JH5VxI7LmZo"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get Contacts - Admin",
+            "x-testDescription":
+              "#### Get all contact person registered by center owner."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers/events": {
+      "get": {
+        "description":
+          "#### Get all events booked for all center owner's centers.",
+        "summary": "Get Events - Admin",
+        "tags": ["Misc"],
+        "operationId": "CentersEventsGet",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/centers/events",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNTI0NDY1OTExLCJleHAiOjE1MjUzMjk5MTF9.wozvDghGu7vvQtr28DDbK9LuRlrctwx8JH5VxI7LmZo"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get Events - Admin",
+            "x-testDescription":
+              "#### Get all events booked for all center owner's centers."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "description": "#### Get all the events booked by a user.",
+        "summary": "Get Events",
+        "tags": ["Misc"],
+        "operationId": "EventsGet",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "GET",
+              "uri": "/events",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MywiaWF0IjoxNTI0NDc0NDI3LCJleHAiOjE1MjUzMzg0Mjd9.YnsI9m768Ak0xBL5jME8miPkfxRVhsujgoZWYfFUlYg"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Get Events",
+            "x-testDescription": "#### Get all the events booked by a user."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "post": {
+        "description": "#### Book a center for event.",
+        "summary": "Create Event",
+        "tags": ["Misc"],
+        "operationId": "EventsPost",
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "centerId",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "POST",
+              "uri": "/events",
+              "headers": {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MywiaWF0IjoxNTI0NDc0NDI3LCJleHAiOjE1MjUzMzg0Mjd9.YnsI9m768Ak0xBL5jME8miPkfxRVhsujgoZWYfFUlYg"
+              },
+              "body":
+                "title=Wedding Anniversary&centerId=3&startDate=2018-9-26&endDate=2018-9-26"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Create Event",
+            "x-testDescription": "#### Book a center for event."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/centers/approve/1": {
+      "put": {
+        "description": "#### Approve center by super admin.",
+        "summary": "Approve Center",
+        "tags": ["Misc"],
+        "operationId": "CentersApprove1Put",
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "PUT",
+              "uri": "/centers/approve/1",
+              "headers": {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MSwiaWF0IjoxNTI0NDc2MzIwLCJleHAiOjE1MjUzNDAzMjB9.eu2jzr-tpyMuUOCF73NFKZHXQGzmU2m5HHVvBRDfRPo"
+              },
+              "body":
+                "title=Wedding Anniversary&centerid=102&start=2018-20-5&end=2018-4-12"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Approve Center",
+            "x-testDescription": "#### Approve center by super admin."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/events/1": {
+      "put": {
+        "description": "#### Update booking information.",
+        "summary": "Update Event",
+        "tags": ["Misc"],
+        "operationId": "Events1Put",
+        "produces": ["application/json"],
+        "consumes": ["application/x-www-form-urlencoded"],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "centerId",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "startDate",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "endDate",
+            "in": "formData",
+            "required": true,
+            "type": "string",
+            "description": ""
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "PUT",
+              "uri": "/events/1",
+              "headers": {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MywiaWF0IjoxNTI0NDY1OTA3LCJleHAiOjE1MjUzMjk5MDd9.vomRxE1iOR_oSftlFhyeiwqoAgGygCV-f0mIo1HQnNk"
+              },
+              "body":
+                "title=Wedding Ceremony&centerId=1&startDate=2018-5-13&endDate=2018-5-14"
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Update Event",
+            "x-testDescription": "#### Update booking information."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      },
+      "delete": {
+        "description": "#### Cancel an event.",
+        "summary": "Delete Event",
+        "tags": ["Misc"],
+        "operationId": "Events1Delete",
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "DELETE",
+              "uri": "/events/1",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MywiaWF0IjoxNTI0NDY1OTA3LCJleHAiOjE1MjUzMjk5MDd9.vomRxE1iOR_oSftlFhyeiwqoAgGygCV-f0mIo1HQnNk"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "NONE",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {}
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Delete Event",
+            "x-testDescription": "#### Cancel an event."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CreateCenterrequest": {
+      "title": "Create CenterRequest",
+      "example": {
+        "name": "Classique Events Place Pearl Hall",
+        "address": "Somewhere in Lagos",
+        "area": "Ajah",
+        "state": 37,
+        "capacity": 4000,
+        "type": 1,
+        "facilities": "Cameras, Stage",
+        "image": "default_image",
+        "amount": 70000,
+        "details": "Some long description",
+        "newContact": true,
+        "contact": {
+          "firstName": "Somename",
+          "lastName": "AnotherName",
+          "email": "randommail@mail.com",
+          "phoneNumber": "08032108214"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "",
+          "example": "Classique Events Place Pearl Hall",
+          "type": "string"
+        },
+        "address": {
+          "description": "",
+          "example": "Somewhere in Lagos",
+          "type": "string"
+        },
+        "area": {
+          "description": "",
+          "example": "Ajah",
+          "type": "string"
+        },
+        "state": {
+          "description": "",
+          "example": 37,
+          "type": "integer",
+          "format": "int32"
+        },
+        "capacity": {
+          "description": "",
+          "example": 4000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "facilities": {
+          "description": "",
+          "example": "Cameras, Stage",
+          "type": "string"
+        },
+        "image": {
+          "description": "",
+          "example": "default_image",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "example": 70000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "details": {
+          "description": "",
+          "example": "Some long description",
+          "type": "string"
+        },
+        "newContact": {
+          "description": "",
+          "example": true,
+          "type": "boolean"
+        },
+        "contact": {
+          "$ref": "#/definitions/Contact"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "area",
+        "state",
+        "capacity",
+        "type",
+        "facilities",
+        "image",
+        "amount",
+        "details",
+        "newContact",
+        "contact"
+      ]
+    },
+    "Contact": {
+      "title": "Contact",
+      "example": {
+        "firstName": "Somename",
+        "lastName": "AnotherName",
+        "email": "randommail@mail.com",
+        "phoneNumber": "08032108214"
+      },
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "description": "",
+          "example": "Somename",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "example": "AnotherName",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "example": "randommail@mail.com",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": "08032108214",
+          "type": "string"
+        }
+      },
+      "required": ["firstName", "lastName", "email", "phoneNumber"]
+    },
+    "UpdateCenterrequest": {
+      "title": "Update CenterRequest",
+      "example": {
+        "name": "Classique Events Place",
+        "address": "Somewhere in Lagos",
+        "area": "Ajah",
+        "state": 26,
+        "capacity": 3000,
+        "type": 1,
+        "ownerId": 1,
+        "contactId": 1,
+        "facilities": "Cameras, Stage, Security",
+        "amount": 70000,
+        "details": "Some long description",
+        "newContact": false,
+        "contact": {
+          "firstName": "Somename",
+          "lastName": "AnotherName",
+          "email": "randommail@mail.com",
+          "phoneNumber": "08032108214"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "",
+          "example": "Classique Events Place",
+          "type": "string"
+        },
+        "address": {
+          "description": "",
+          "example": "Somewhere in Lagos",
+          "type": "string"
+        },
+        "area": {
+          "description": "",
+          "example": "Ajah",
+          "type": "string"
+        },
+        "state": {
+          "description": "",
+          "example": 26,
+          "type": "integer",
+          "format": "int32"
+        },
+        "capacity": {
+          "description": "",
+          "example": 3000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "ownerId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "contactId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "facilities": {
+          "description": "",
+          "example": "Cameras, Stage, Security",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "example": 70000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "details": {
+          "description": "",
+          "example": "Some long description",
+          "type": "string"
+        },
+        "newContact": {
+          "description": "",
+          "example": false,
+          "type": "boolean"
+        },
+        "contact": {
+          "$ref": "#/definitions/Contact"
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "area",
+        "state",
+        "capacity",
+        "type",
+        "ownerId",
+        "contactId",
+        "facilities",
+        "amount",
+        "details",
+        "newContact",
+        "contact"
+      ]
+    }
+  }
+}

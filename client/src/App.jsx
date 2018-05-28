@@ -15,7 +15,7 @@ import getPath from './utils/getPath';
  *
  * @returns {object} - JSX DOM
  */
-function App(props) {
+export function App(props) {
   let isSignedInBtn = <Link to="/signin">Sign in</Link>;
   let isSignupBtn = <Link to="/signup">Sign up</Link>;
   if (

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Center } from '../../client/src/components/pages/Center';
+import { Center } from '../../../client/src/components/pages/Center';
 
 const props = {
   history: {

@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import Home from '../../client/src/components/pages/Home';
-import Slider from '../../client/src/components/containers/Slider';
+import Home from '../../../client/src/components/pages/Home';
 
 const props = {
   history: {

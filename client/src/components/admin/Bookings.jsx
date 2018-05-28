@@ -11,7 +11,7 @@ import {
 
 const propTypes = {
   fetchCenterEventRequest: PropTypes.func.isRequired,
-  centersEvents: PropTypes.shape().isRequired,
+  centersEvents: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   action: PropTypes.shape().isRequired
 };
 
@@ -21,7 +21,7 @@ const propTypes = {
  * @class Bookings
  * @extends {React.Component}
  */
-class Bookings extends React.Component {
+export class Bookings extends React.Component {
   /**
    * Get all Eenters and Events
    *

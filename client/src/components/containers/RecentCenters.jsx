@@ -21,7 +21,7 @@ const propTypes = {
  * @class FeaturedCenter
  * @extends {React.Component}
  */
-class RecentCenters extends React.Component {
+export class RecentCenters extends React.Component {
   /**
    * Creates an instance of FeaturedCenter.
    *

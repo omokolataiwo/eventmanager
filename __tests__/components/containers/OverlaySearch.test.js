@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import OverlaySearch from '../../client/src/components/containers/OverlaySearch';
+import OverlaySearch from '../../../client/src/components/containers/OverlaySearch';
 
 const props = {
   history: {

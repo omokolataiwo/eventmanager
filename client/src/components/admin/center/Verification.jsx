@@ -15,7 +15,7 @@ const propTypes = {
  * @class Verification
  * @extends {React.Component}
  */
-class Verification extends React.Component {
+export class Verification extends React.Component {
   /**
    * Check if new center is created.
    *
