@@ -7,7 +7,7 @@ const props = {
     authenticated: true,
     userdata: { role: 1 }
   },
-  history: { push: () => {} },
+  history: { push: jest.fn(() => {}) },
   match: { path: '/' }
 };
 
