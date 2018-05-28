@@ -15,7 +15,7 @@ const propTypes = {
     params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired
   }).isRequired,
   count: PropTypes.string.isRequired,
-  events: PropTypes.shape().isRequired,
+  events: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   center: PropTypes.shape().isRequired,
   action: PropTypes.shape({
     getCenter: PropTypes.string.isRequired
@@ -27,7 +27,7 @@ const propTypes = {
  * @class Events
  * @extends {React.Component}
  */
-class Events extends React.Component {
+export class Events extends React.Component {
   /**
    * Fetch center and events for center
    *

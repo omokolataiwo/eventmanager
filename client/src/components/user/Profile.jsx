@@ -28,7 +28,7 @@ const propTypes = {
  * @class Profile
  * @extends {React.Component}
  */
-class Profile extends React.Component {
+export class Profile extends React.Component {
   /**
    * Profile component
    *

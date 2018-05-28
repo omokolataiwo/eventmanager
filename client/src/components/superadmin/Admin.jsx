@@ -21,7 +21,7 @@ const propTypes = {
  * @class Admin
  * @extends {React.Component}
  */
-class Admin extends React.Component {
+export class Admin extends React.Component {
   /**
    * Creates an instance of User.
    *
@@ -109,7 +109,7 @@ class Admin extends React.Component {
 }
 Admin.propTypes = propTypes;
 
-export default connect((state) => {
+export default connect(state => {
   const { authenticated, userdata } = state.user;
   return {
     authenticated,

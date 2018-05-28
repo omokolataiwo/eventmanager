@@ -1,5 +1,4 @@
 import React from 'react';
-import 'materialize-css';
 import PropTypes from 'prop-types';
 import checkAvailabilityImg from '../../images/icons/calendar-check.png';
 import searchForCenterImg from '../../images/icons/searching-for-a-house.png';

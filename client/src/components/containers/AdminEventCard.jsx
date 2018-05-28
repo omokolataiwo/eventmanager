@@ -10,7 +10,7 @@ import moment from 'moment';
 const AdminEventCard = ({ events }) => {
   if (!Array.isArray(events) || !events.length) {
     return (
-      <div>
+      <div className="no-event">
         <hr />
         <h5 className="center">No Event booked for this center.</h5>
       </div>

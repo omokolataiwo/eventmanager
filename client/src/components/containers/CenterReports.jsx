@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   activeCenter: PropTypes.shape({}).isRequired,
-  changeCenter: PropTypes.func.isRequired,
+  changeCenter: PropTypes.func.isRequired
 };
 
 /**
@@ -23,11 +23,20 @@ const CenterReports = ({ centers, activeCenter, changeCenter }) => {
       <div className="col s12 m4 l4">
         <div className="collection">
           <div className="collection-header">
-            <h6>{activeCenter.events.length} event{activeCenter.events.length > 1 && 's'}</h6>
+            <h6>
+              {activeCenter.events.length} event{activeCenter.events.length >
+                1 && 's'}
+            </h6>
             <hr />
           </div>
           {centers.map(center => (
-            <a href="#!" className={`collection-item ${center.id == activeCenter.id && 'active'}`} key={center.id} onClick={event => changeCenter(center.id)}>
+            <a
+              href="#!"
+              className={`collection-item ${center.id == activeCenter.id &&
+                'active'}`}
+              key={center.id}
+              onClick={event => changeCenter(center.id)}
+            >
               <span className="truncate">{center.name}</span>
             </a>
           ))}
@@ -35,7 +44,6 @@ const CenterReports = ({ centers, activeCenter, changeCenter }) => {
       </div>
       <div className="col s12 m8 l8">
         <ul className="collection">
-
           {activeCenter.events.map(event => (
             <li className="collection-item" key={event.id}>
               <span className="truncate">{event.title}</span>

@@ -1,7 +1,7 @@
 /* global describe it expect */
 import getCenterContact from '../../client/src/reducers/getCenterContact';
 import * as actionTypes from '../../client/src/types';
-import { contacts } from '../__mocks__/reducer/center';
+import { contacts } from '../__mocks__/center';
 
 const defaultContacts = {
   contacts: [],

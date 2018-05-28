@@ -10,7 +10,7 @@ import { signoutRequest } from '../../actions/signoutRequest';
  * @class Signout
  * @extends {React.Component}
  */
-class Signout extends React.Component {
+export class Signout extends React.Component {
   /**
    * Dispatch signout request
    *

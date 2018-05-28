@@ -1,7 +1,7 @@
 /* global describe it expect */
 import event from '../../client/src/reducers/event';
 import * as actionTypes from '../../client/src/types';
-import { defaultEvent } from '../__mocks__/reducer/event';
+import { defaultEvent } from '../__mocks__/event';
 
 describe('event reducer', () => {
   it('should return the initial state', () => {

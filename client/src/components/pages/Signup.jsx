@@ -25,7 +25,7 @@ const propTypes = {
  * @class Signup
  * @extends {React.Component}
  */
-class Signup extends React.Component {
+export class Signup extends React.Component {
   /**
    * Sign up component
    *

@@ -29,7 +29,7 @@ const propTypes = {
  * @class User
  * @extends {React.Component}
  */
-class User extends React.Component {
+export class User extends React.Component {
   /**
    * Creates an instance of User.
    *

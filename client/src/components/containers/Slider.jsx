@@ -14,7 +14,7 @@ import img7 from '../../images/slider/7.jpg';
  * @class Slider
  * @extends {React.Component}
  */
-class Slider extends React.Component {
+export class Slider extends React.Component {
   /**
    * Initialize materialize slider
    *

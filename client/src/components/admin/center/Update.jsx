@@ -53,7 +53,7 @@ const propTypes = {
  * @class Update
  * @extends {React.Component}
  */
-class Update extends React.Component {
+export class Update extends React.Component {
   /**
    * Updates an instance of Update.
    *

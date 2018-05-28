@@ -7,7 +7,7 @@ import logger from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 // import apiv1 from './v1/routes/api1';
 import apiv2 from './v2/routes/api2';
-import swaggerDocument from '../swagger.json';
+import swaggerDocument from './swagger.json';
 
 dotenv.config();
 const app = express();

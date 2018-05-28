@@ -23,7 +23,7 @@ const propTypes = {
  * @class Signin
  * @extends {React.Component}
  */
-class Signin extends React.Component {
+export class Signin extends React.Component {
   /**
    * Sign in constructor
    * @param {string} props -The application state
