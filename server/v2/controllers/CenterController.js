@@ -225,7 +225,7 @@ export default class CenterController {
         }
         return res.status(200).json({ center });
       })
-      .catch((error) => {
+      .catch(() => {
         res.status(500).send({
           status: 'error',
           message: 'Internal Server Error'
@@ -259,6 +259,7 @@ export default class CenterController {
         return res.status(200).json({ center });
       }
 
+      const OFFSET = (req.query.page - 1 || 0) * LIMIT;
       const events = await models.sequelize.query(
         `SELECT events."id", events."title", events."startDate", events."endDate",
           users."firstName", users."lastName", users."phoneNumber", users."email", 
@@ -267,7 +268,7 @@ export default class CenterController {
 }) as count 
         FROM events, users WHERE events."centerId"=${
   center.id
-} AND events."userId"=users."id"`,
+} AND events."userId"=users."id" ORDER BY events.id DESC LIMIT ${LIMIT} OFFSET ${OFFSET}`,
         {
           type: sequelize.QueryTypes.SELECT
         }
@@ -482,11 +483,13 @@ export default class CenterController {
    * @returns {*} - Server response
    */
   static getOwnEvents(req, res) {
+    const OFFSET = (parseInt(req.query.page, 10) - 1 || 0) * LIMIT;
+
     return models.sequelize
       .query(
-        'SELECT events."title", events."startDate", events."endDate", users."firstName", users."lastName", users."phoneNumber", users."email", centers."name", centers."state" FROM events, centers, users WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."userId" = users."id"',
+        'SELECT events."title", events."startDate", events."endDate", users."firstName", users."lastName", users."phoneNumber", users."email", centers."name", centers."state", (SELECT COUNT(*) FROM centers, events, users WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."userId" = users."id" ) as count  FROM events, centers, users WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."userId" = users."id" ORDER BY events.id DESC LIMIT :limit OFFSET :offset',
         {
-          replacements: { ownerId: req.user.id },
+          replacements: { ownerId: req.user.id, limit: LIMIT, offset: OFFSET },
           type: sequelize.QueryTypes.SELECT
         }
       )
@@ -512,6 +515,40 @@ export default class CenterController {
         });
       });
   }
+
+  /**
+   * Cancel an event
+   *
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @return {*} - Server response
+   */
+  static async cancelEvent(req, res) {
+    try {
+      const event = await models.events.findOne({
+        where: { id: req.params.id }
+      });
+
+      if (!event) {
+        return res.status(404).json({
+          status: 'error',
+          errors: { event: ['Event does not exist.'] }
+        });
+      }
+
+      event.centerId = 0;
+      await models.events.update(event.toJSON(), {
+        where: { id: req.params.id }
+      });
+      return res.status(200).json({ event });
+    } catch (error) {
+      return res.status(500).send({
+        status: 'error',
+        message: 'Internal Server Error'
+      });
+    }
+  }
+
   /**
    * Activate center
    *

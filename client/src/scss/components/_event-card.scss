@@ -30,6 +30,10 @@
 				padding: 20px;
 				text-align: left;
 				margin-top: 3em;
+				.event-cancelled {
+					color: #f00;
+					line-height: 16px;
+				}
 				h6 {
 						text-transform: uppercase;
 						font-weight: 600;

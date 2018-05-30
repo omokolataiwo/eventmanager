@@ -8,6 +8,7 @@ import PaginatedCentersCard from './PaginatedCentersCard';
 
 const propTypes = {
   centers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  count: PropTypes.number.isRequired,
   fetchAllCentersRequest: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired
 };
@@ -32,6 +33,7 @@ export class HorizontalFeaturedCenters extends React.Component {
       poppedCenter: {}
     };
     this.handleModal = this.handleModal.bind(this);
+    this.handlePagingNav = this.handlePagingNav.bind(this);
   }
 
   /**
@@ -69,6 +71,17 @@ export class HorizontalFeaturedCenters extends React.Component {
     });
     $('#modal1').modal('open');
   }
+
+  /**
+   * Fetch paging
+   *
+   * @param {number} index page clicked
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    this.props.fetchAllCentersRequest({ page: index });
+  }
+
   /**
    * Redirect to create event page
    *
@@ -133,6 +146,7 @@ export class HorizontalFeaturedCenters extends React.Component {
           centers={this.state.centers}
           count={this.state.count}
           click={this.handleModal}
+          handlePagingNav={this.handlePagingNav}
         />
       </div>
     );

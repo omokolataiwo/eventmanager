@@ -6,9 +6,12 @@
   "main": "index.js",
   "scripts": {
     "jest":
-      "jest __tests__ --watch --coverage --collectCoverageFrom=client/src/**/*.{js,jsx}",
-    "test":
-      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js",
+      "jest __tests__ --coverage --collectCoverageFrom=client/src/**/*.{js,jsx} && codecov -t d26319dd-01b7-4456-bb9b-4196ce3c2a9e",
+    "jest:dev":
+      "jest __tests__ --coverage --watch --collectCoverageFrom=client/src/**/*.{js,jsx}",
+    "serverTest":
+      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js && npm run coverage",
+    "test": "npm run serverTest && npm run jest",
     "build:dev:server":
       "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
     "build":

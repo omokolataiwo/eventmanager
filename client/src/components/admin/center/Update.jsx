@@ -27,7 +27,7 @@ import {
   UPDATED_CENTER,
   UPDATING_CENTER_ERROR,
   RESET_FETCHING_CENTER_CONTACTS,
-  RECEIVED_CENTER,
+  RECEIVED_ADMIN_CENTER,
   RESET_FETCHING_CENTER,
   RESET_UPDATING_CENTER_STATE,
   FETCHING_CENTER_ERROR,
@@ -45,7 +45,7 @@ const propTypes = {
   getCenterAction: PropTypes.shape().isRequired,
   getContactAction: PropTypes.shape().isRequired,
   updateAction: PropTypes.shape().isRequired,
-  updateErrors: PropTypes.shape().isRequired,
+  updateErrors: PropTypes.shape().isRequired
 };
 /**
  * Update center component
@@ -103,7 +103,13 @@ export class Update extends React.Component {
    */
   componentWillMount() {
     this.props.getContactPersonRequest();
-    this.props.fetchCenterRequest({ id: this.props.match.params.index }, true);
+    this.props.fetchCenterRequest(
+      {
+        id: this.props.match.params.index
+      },
+      {},
+      true
+    );
   }
 
   /**
@@ -145,9 +151,9 @@ export class Update extends React.Component {
       props.reset(RESET_FETCHING_CENTER_CONTACTS);
     }
 
-    if (getCenterAction.getCenter === RECEIVED_CENTER) {
+    if (getCenterAction.getCenter === RECEIVED_ADMIN_CENTER) {
       props.reset(RESET_FETCHING_CENTER);
-      this.setState({ center: { ...this.state.center, ...center.center } });
+      this.setState({ center: { ...this.state.center, ...center } });
     }
 
     if (updateAction.updateCenter === UPDATED_CENTER) {

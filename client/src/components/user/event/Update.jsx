@@ -64,6 +64,7 @@ export class Update extends React.Component {
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
     this.changeActiveCenter = this.changeActiveCenter.bind(this);
+    this.handlePagingNav = this.handlePagingNav.bind(this);
   }
   /**
    * Set center for event
@@ -72,8 +73,8 @@ export class Update extends React.Component {
    * @memberof Create
    */
   componentWillMount() {
-    this.props.fetchUserEventRequest(this.props.match.params.index);
     this.props.fetchAllCentersRequest();
+    this.props.fetchUserEventRequest(this.props.match.params.index);
   }
 
   /**
@@ -85,22 +86,26 @@ export class Update extends React.Component {
    */
   componentWillReceiveProps(props) {
     const {
-      errors, actions, event, centers, centerAction
+      errors, actions, event, centers, centerAction, count
     } = props;
 
     if (actions.updateEvent === UPDATE_EVENT_ERROR) {
       this.setState({ errors });
     }
 
-    if (actions.getEvent === RECEIVED_EVENT) {
-      this.setState({ event, activeCenter: event.center });
+    if (
+      actions.getEvent === RECEIVED_EVENT &&
+      actions.updateEvent !== UPDATED_EVENT
+    ) {
+      this.setState({ event, activeCenter: event.center || centers[0] });
     }
 
     if (centerAction.getCenters === RECEIVED_CENTERS) {
-      this.setState({ centers });
+      this.setState({ centers, count });
     }
 
     if (actions.updateEvent === UPDATED_EVENT) {
+      this.setState({ event, activeCenter: event.center });
       toastr.options = {
         positionClass: 'toast-top-full-width',
         showDuration: '300',
@@ -137,6 +142,16 @@ export class Update extends React.Component {
         [id]: value
       }
     });
+  }
+
+  /**
+   * Fetch paging
+   *
+   * @param {number} index page clicked
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    this.props.fetchAllCentersRequest({ page: index });
   }
 
   /**
@@ -186,7 +201,11 @@ export class Update extends React.Component {
    */
   render() {
     if (this.props.actions.getEvent === FETCHING_EVENT) {
-      return <Preloader />;
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
     }
     return (
       <div className="container container-medium card">
@@ -205,49 +224,58 @@ export class Update extends React.Component {
               width="8"
               errorMessage={this.state.errors.title}
             />
+          </div>
 
-            <div className="row">
-              <DatePicker
-                onChange={this.handleFormFieldChanged}
-                id="startDate"
-                type="text"
-                title="Start Date"
-                width="6"
-                errorMessage={this.state.errors.startDate}
-                defaultValue={this.state.event.startDate}
-              />
+          <div className="row">
+            <DatePicker
+              onChange={this.handleFormFieldChanged}
+              id="startDate"
+              type="text"
+              title="Start Date"
+              width="6"
+              errorMessage={this.state.errors.startDate}
+              defaultValue={this.state.event.startDate}
+            />
 
-              <DatePicker
-                onChange={this.handleFormFieldChanged}
-                id="endDate"
-                type="text"
-                title="End Date"
-                width="6"
-                errorMessage={this.state.errors.endDate}
-                defaultValue={this.state.event.endDate}
-              />
-            </div>
+            <DatePicker
+              onChange={this.handleFormFieldChanged}
+              id="endDate"
+              type="text"
+              title="End Date"
+              width="6"
+              errorMessage={this.state.errors.endDate}
+              defaultValue={this.state.event.endDate}
+            />
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button
-            className="btn blue"
-            onClick={event => this.updateEvent(event)}
-          >
-            Update Event
-          </button>
+          <div className="row">
+            <button
+              className="btn blue right"
+              onClick={event => this.updateEvent(event)}
+            >
+              Update Event
+            </button>
+          </div>
         </form>
 
         <hr />
         <div className="row">
           <div className="col s12 m12 l12">
-            <h5>Related Centers</h5>
+            <h5>Available Centers</h5>
+            <p style={{ fontSize: '17px', textAlign: 'center' }}>
+              <strong>
+                * You can choose any of the centers below for your event. Simply
+                click on one to update the booking application.
+              </strong>
+            </p>
           </div>
         </div>
         <PaginatedCentersCard
           centers={this.state.centers}
           count={this.state.count}
           click={this.changeActiveCenter}
+          handlePagingNav={this.handlePagingNav}
         />
       </div>
     );

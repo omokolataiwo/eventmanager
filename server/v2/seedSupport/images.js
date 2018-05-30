@@ -9,5 +9,9 @@ module.exports = [
 
   'http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg',
 
-  'http://res.cloudinary.com/omokolataiwo/image/upload/v1524637266/Trendy2_edbqto.jpg'
+  'http://res.cloudinary.com/omokolataiwo/image/upload/v1524637266/Trendy2_edbqto.jpg',
+
+  'http://res.cloudinary.com/omokolataiwo/image/upload/v1527561325/lavenida2_yertdh.jpg',
+
+  'http://res.cloudinary.com/omokolataiwo/image/upload/v1527561325/Fourpoint-Meetings-620x348-_qq4zrb.jpg'
 ];

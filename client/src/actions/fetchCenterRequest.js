@@ -2,8 +2,25 @@ import instance from '../utils/axios';
 import {
   FETCHING_CENTER,
   RECEIVED_CENTER,
-  FETCHING_CENTER_ERROR
+  FETCHING_CENTER_ERROR,
+  RECEIVED_ADMIN_CENTER
 } from '../types';
+
+/**
+ * Action for when center is received
+ *
+ * @param {object} centerEvent - Center object from backend
+ * @returns {object} - Action for fetched center state
+ */
+const recievedAdminCenter = centerEvent => {
+  const { center, events, count } = centerEvent;
+  return {
+    type: RECEIVED_ADMIN_CENTER,
+    center,
+    events,
+    count
+  };
+};
 
 /**
  * Action for when center is received
@@ -54,16 +71,17 @@ const userCenter = id => dispatch =>
  * Fetch admin center
  *
  * @param {*} value Query parameters
+ * @param {object} query -
  * @return {void}
  */
-const adminCenter = value => (dispatch, getState) => {
+const adminCenter = (value, query) => (dispatch, getState) => {
   instance.defaults.headers.common[
     'x-access-token'
   ] = getState().user.accessToken;
   return instance
-    .get(`/centers/admin/center`, { params: { ...value } })
+    .get(`/centers/admin/center`, { params: { ...value, ...query } })
     .then(response => {
-      dispatch(recievedCenter(response.data));
+      dispatch(recievedAdminCenter(response.data));
     })
     .catch(error => {
       dispatch(fetchingCenterError(error.response.data));
@@ -77,9 +95,9 @@ const adminCenter = value => (dispatch, getState) => {
  * @param {bool} admin Request admin center
  * @returns {void}
  */
-export const fetchCenterRequest = (value, admin) => dispatch => {
+export const fetchCenterRequest = (value, query, admin) => dispatch => {
   dispatch(fetchingCenter());
-  if (admin) return dispatch(adminCenter(value));
+  if (admin) return dispatch(adminCenter(value, query));
   return dispatch(userCenter(value));
 };
 

@@ -3,12 +3,12 @@ node_js:
   - "8.11.1"
 before_script:
   - npm install -g nyc coveralls codeclimate-test-reporter mocha
+  - npm install -g codecov
   - psql -c 'create database pyfprcyk;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 after_success:
-  - npm run coverage
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 after_script: 
   - nyc report --reporter=text-lcov | coveralls

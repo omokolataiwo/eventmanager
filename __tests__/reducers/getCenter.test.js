@@ -5,6 +5,7 @@ import { center } from '../__mocks__/center';
 
 const defaultCenter = {
   center: {},
+  events: [],
   errors: {},
   action: {
     getCenter: 'FETCHING_CENTER'

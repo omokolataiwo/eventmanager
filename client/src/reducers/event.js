@@ -15,7 +15,8 @@ import {
   RESET_UPDATE_EVENT_STATE,
   DELETE_EVENT_ERROR,
   DELETING_EVENT,
-  DELETED_EVENT
+  DELETED_EVENT,
+  RESET_DELETING_EVENT
 } from '../types';
 
 /**
@@ -92,14 +93,18 @@ export default (state = defaultEvent, action) => {
       actions: { ...state.actions, createEvents: action.type }
     };
   case REQUEST_UPDATE_EVENT:
-  case UPDATED_EVENT:
   case RESET_UPDATE_EVENT_STATE:
     return {
       ...state,
       actions: { ...state.actions, updateEvent: action.type },
       errors: {}
     };
-
+  case UPDATED_EVENT:
+    return {
+      ...state,
+      event: action.event,
+      actions: { ...state.actions, updateEvent: action.type }
+    };
   case UPDATE_EVENT_ERROR:
     return {
       ...state,
@@ -108,6 +113,7 @@ export default (state = defaultEvent, action) => {
     };
   case DELETE_EVENT_ERROR:
   case DELETING_EVENT:
+  case RESET_DELETING_EVENT:
     return {
       ...state,
       actions: { ...state.actions, cancel: action.type }

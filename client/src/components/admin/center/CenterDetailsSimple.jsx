@@ -29,7 +29,7 @@ export const CenterDetailsSimple = ({
         <div>
           <span className="location">
             <span>map </span>
-            {STATES[state]}
+            {STATES[state - 1]}
           </span>
           &nbsp;
           <span className="type">{CENTER_TYPE[type]}</span>

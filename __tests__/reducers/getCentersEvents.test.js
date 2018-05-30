@@ -31,10 +31,12 @@ describe('center reducer', () => {
   it('should handle RECEIVED_CENTERS_EVENTS', () => {
     expect(getCentersEvents(defaultCenterEvents, {
       type: actionTypes.RECEIVED_CENTERS_EVENTS,
-      events
+      events,
+      count: events.length
     })).toEqual({
       ...defaultCenterEvents,
       centersEvents: events,
+      count: events.length,
       action: {
         ...defaultCenterEvents.action,
         getEvents: actionTypes.RECEIVED_CENTERS_EVENTS
