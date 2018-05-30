@@ -33,12 +33,12 @@ Event Manager has the following features:
   
 Event Manager is built majorly with Model-View-Controller and Middleware patterns and architecture. It is built with the following technologies and tools:  
   
-1. Event Manager is built majorly with JavaScript es6
-2. Express.js: Express.js is a web application framework for Node.js. It provides various features that make web application development fast and easy.  
-3. ReactJS: React is a front-end library that is used for handling the view layer of web and mobile applications.  
-4. Redux: Redux is a predictable state container for JavaScript apps. It helps applications that behave consistently.  
-5. PostgreSQL: PostgreSQL is a powerful, open source object-relational database system that uses and extends the SQL language combined with many features that safely store and scale the most complicated data workloads.  
-6. Sequelize ORM: Sequelize is an ORM which is designed to work with Node.JS. It supports many major database engines.  
+1. Event Manager is built majorly with **JavaScript es6**
+2. **Express.js**: Express.js is a web application framework for Node.js. It provides various features that make web application development fast and easy.  
+3. **ReactJS**: React is a front-end library that is used for handling the view layer of web and mobile applications.  
+4. **Redux**: Redux is a predictable state container for JavaScript apps. It helps applications that behave consistently.  
+5. **PostgreSQL**: PostgreSQL is a powerful, open source object-relational database system that uses and extends the SQL language combined with many features that safely store and scale the most complicated data workloads.  
+6. **Sequelize ORM**: Sequelize is an ORM which is designed to work with Node.JS. It supports many major database engines.  
   
   
 ## Installation and Setup  
