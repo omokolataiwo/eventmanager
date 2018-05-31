@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/omokolataiwo/eventmanager.svg?branch=develop)](https://travis-ci.org/omokolataiwo/eventmanager)
 [![Coverage Status](https://coveralls.io/repos/github/omokolataiwo/eventmanager/badge.svg?branch=develop)](https://coveralls.io/github/omokolataiwo/eventmanager?branch=develop)
 [![Maintainability](https://api.codeclimate.com/v1/badges/c777965ceb99782c5981/maintainability)](https://codeclimate.com/github/omokolataiwo/eventmanager/maintainability)
+[![codecov](https://codecov.io/gh/omokolataiwo/eventmanager/branch/develop/graph/badge.svg)](https://codecov.io/gh/omokolataiwo/eventmanager)
 # Event Manager  
 Event Manager is an application that manages event centers by giving a platform where center owners can register their centers and manage them all in one place.  
   
