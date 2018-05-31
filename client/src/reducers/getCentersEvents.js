@@ -21,6 +21,7 @@ export default (state = defaultCenterEvents, action) => {
     return {
       ...state,
       centersEvents: action.events,
+      count: parseInt(action.count, 10),
       action: { ...state.action, getEvents: action.type }
     };
   default:

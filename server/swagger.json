@@ -1,13 +1,30 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "2.0",
-    "title": "Event Manager API and Documentation",
+    "version": "1.0",
+    "title": "EventManager API and Documentation",
     "description":
-      "### Event Manager Documentation\nEvent Manager API can be used to programatically create and manage event centers. You will be able to:\n- Create Account as a user and center owner.\n- Create an Event Center.\n- Update an Event Center.\n- Get the events booked for a center.\n- Set the availability of a center.\n- Decline an event\n- Create an event.\n- Update an event.\n- Cancel an event.\n- Get bookings information."
+      "### EventManager API Documentation.\nEventManager API can be used to programatically create and manage event centers. You will be able to:\n- Create Account as a user and center owner.\n- Create an Event Center.\n- Update an Event Center.\n- Get the events booked for a center.\n- Set the availability of a center.\n- Decline an event\n- Create an event.\n- Update an event.\n- Cancel an event.\n- Get bookings information."
   },
   "host": "eventmanng.herokuapp.com",
   "basePath": "/api/v2",
+  "securityDefinitions": {
+    "userToken": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-access-token"
+    },
+    "adminToken": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-access-token"
+    },
+    "superAdminToken": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "x-access-token"
+    }
+  },
   "schemes": ["https"],
   "consumes": ["application/json"],
   "produces": ["application/json"],
@@ -16,41 +33,76 @@
       "get": {
         "description": "#### Get user's details.",
         "summary": "Get User",
-        "tags": ["Misc"],
+        "tags": ["Users and Authentication"],
         "operationId": "UsersGet",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          }
-        ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Successfully gets user's details",
+            "schema": {
+              "$ref": "#/definitions/GetUser"
+            },
+            "examples": {
+              "application/json": {
+                "user": {
+                  "id": 8,
+                  "firstName": "Kolawole",
+                  "lastName": "Taiwo",
+                  "phoneNumber": "08132108218",
+                  "email": "omokolataiwo@call.com",
+                  "role": 3
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "No token provided for this operation.",
+            "schema": {
+              "$ref": "#/definitions/GetUser14"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "auth": ["No token provided"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "userToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
               "method": "GET",
               "uri": "/users",
               "headers": {
-                "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MywiaWF0IjoxNTI0NDc0NDI3LCJleHAiOjE1MjUzMzg0Mjd9.YnsI9m768Ak0xBL5jME8miPkfxRVhsujgoZWYfFUlY"
+                "x-access-token": ""
               }
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "128",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:04:11 GMT",
+                "Etag": "W/\"80-lj0GQNUhjXWcB8TxVxt26sV8vYE\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"user\":{\"id\":8,\"firstName\":\"Kolawole\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08132108218\",\"email\":\"omokolataiwo@call.com\",\"role\":3}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -68,7 +120,7 @@
       "put": {
         "description": "#### Update user's details.",
         "summary": "Update User",
-        "tags": ["Misc"],
+        "tags": ["Users and Authentication"],
         "operationId": "UsersPut",
         "produces": ["application/json"],
         "consumes": ["application/x-www-form-urlencoded"],
@@ -100,21 +152,48 @@
             "required": true,
             "type": "string",
             "description": ""
-          },
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "User profile successfully updated.",
+            "schema": {
+              "$ref": "#/definitions/UpdateUser18"
+            },
+            "examples": {
+              "application/json": {
+                "user": {
+                  "firstName": "Lanre",
+                  "lastName": "Taiwo",
+                  "phoneNumber": "08132108219",
+                  "email": "omokolataiwo@ymail.com",
+                  "role": 3
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed validation errors.",
+            "schema": {
+              "$ref": "#/definitions/UpdateUser"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": [
+                  {
+                    "phoneNumber": ["Phone number has already been used."]
+                  }
+                ]
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "userToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -122,19 +201,30 @@
               "uri": "/users",
               "headers": {
                 "Content-Type": "application/x-www-form-urlencoded",
-                "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MiwiaWF0IjoxNTI0NDc0NDExLCJleHAiOjE1MjUzMzg0MTF9.gogDeSi00x75oIPcOA0bkuTVyq7GZuSOmuMaPMGOdv"
+                "x-access-token": ""
               },
               "body":
-                "firstName=Lanre&lastName=Taiwo&phoneNumber=08132108214&email=omokolataiwo@ymail.com"
+                "firstName=Lanre&lastName=Taiwo&phoneNumber=08132108219&email=omokolataiwo@ymail.com"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "119",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:07:06 GMT",
+                "Etag": "W/\"77-fULVNApB3wNAxCo3JRb6LrzG8YQ\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"user\":{\"firstName\":\"Lanre\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08132108219\",\"email\":\"omokolataiwo@ymail.com\",\"role\":3}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -152,7 +242,7 @@
       "post": {
         "description": "#### Creates user account.",
         "summary": "Create User",
-        "tags": ["Misc"],
+        "tags": ["Users and Authentication"],
         "operationId": "UsersPost2",
         "produces": ["application/json"],
         "consumes": ["application/x-www-form-urlencoded"],
@@ -162,64 +252,100 @@
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "First name of the user"
           },
           {
             "name": "lastName",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Last name of the user"
           },
           {
             "name": "phoneNumber",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Phone number of the user"
           },
           {
             "name": "email",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Email address of the user"
           },
           {
             "name": "username",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Username"
           },
           {
             "name": "password",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Password"
           },
           {
             "name": "matchPassword",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Password Match"
           },
           {
             "name": "role",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Account Type"
           }
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Account successfully created.",
+            "schema": {
+              "$ref": "#/definitions/CreateUser"
+            },
+            "examples": {
+              "application/json": {
+                "user": {
+                  "id": 8,
+                  "firstName": "Kolawole",
+                  "lastName": "Taiwo",
+                  "phoneNumber": "08132108218",
+                  "email": "omokolataiwo@call.com",
+                  "username": "user3",
+                  "role": 3,
+                  "updatedAt": "2018-05-30T05:52:42.806Z",
+                  "createdAt": "2018-05-30T05:52:42.806Z"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Failed validation errors.",
+            "schema": {
+              "$ref": "#/definitions/CreateUser2"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "firstName": ["First name is required."],
+                  "email": ["Email address is required"],
+                  "phoneNumber": ["Phone number is required"],
+                  "matchPassword": [
+                    "Match password is not the same as Password"
+                  ]
+                }
+              }
+            }
           }
         },
-        "security": [],
         "x-unitTests": [
           {
             "request": {
@@ -229,15 +355,27 @@
                 "Content-Type": "application/x-www-form-urlencoded"
               },
               "body":
-                "firstName=Kolawole&lastName=Taiwo&phoneNumber=08132108211&email=omokolataiwo@cail.com&username=user&password=123&matchPassword=123&role=3"
+                "firstName=Kolawole&lastName=Taiwo&phoneNumber=08132108218&email=omokolataiwo@call.com&username=user1&password=123&matchPassword=123&role=3"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "225",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 05:52:42 GMT",
+                "Etag": "W/\"e1-w/ZcKqj7ZifyK7T/Gg2JLZ+X6vM\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"user\":{\"id\":8,\"firstName\":\"Kolawole\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08132108218\",\"email\":\"omokolataiwo@call.com\",\"username\":\"user3\",\"role\":3,\"updatedAt\":\"2018-05-30T05:52:42.806Z\",\"createdAt\":\"2018-05-30T05:52:42.806Z\"}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -256,8 +394,8 @@
     "/users/signin": {
       "post": {
         "description": "#### Sign in",
-        "summary": "User Signin",
-        "tags": ["Misc"],
+        "summary": "Login User",
+        "tags": ["Users and Authentication"],
         "operationId": "UsersSigninPost3",
         "produces": ["application/json"],
         "consumes": ["application/x-www-form-urlencoded"],
@@ -267,22 +405,61 @@
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Username"
           },
           {
             "name": "password",
             "in": "formData",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Password"
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Sign in successful",
+            "schema": {
+              "$ref": "#/definitions/LoginUser"
+            },
+            "examples": {
+              "application/json": {
+                "user": {
+                  "token": "",
+                  "role": 3
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/LoginUser8"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "signin": ["Invalid username or password"]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "VAlidation errors",
+            "schema": {
+              "$ref": "#/definitions/LoginUser10"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "username": ["Username is required."],
+                  "password": ["Password is required."]
+                }
+              }
+            }
           }
         },
-        "security": [],
         "x-unitTests": [
           {
             "request": {
@@ -291,19 +468,31 @@
               "headers": {
                 "Content-Type": "application/x-www-form-urlencoded"
               },
-              "body": "username=user&password=123"
+              "body": "username=user3&password=123"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "179",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:00:35 GMT",
+                "Etag": "W/\"b3-pMY+GsFdV4W8KatcC311YRn8pDc\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"user\":{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMDM1LCJleHAiOjE1Mjg1MjQwMzV9.1RozDMhP_EeWoWHPYQa8K72tNw9e50Q\",\"role\":3}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
-            "x-testName": "User Sign in",
+            "x-testName": "Login User",
             "x-testDescription": "#### Sign in"
           }
         ],
@@ -319,16 +508,58 @@
       "get": {
         "description": "#### Get all centers that are approved and avaliable.",
         "summary": "Get Centers",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "CentersGet",
         "produces": ["application/json"],
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Got available centers",
+            "schema": {
+              "$ref": "#/definitions/GetCenters"
+            },
+            "examples": {
+              "application/json": {
+                "centers": [
+                  {
+                    "id": 7,
+                    "name": "Havilla Center",
+                    "address": "11 Oguntade street",
+                    "area": "Iju",
+                    "state": 1,
+                    "capacity": 3000,
+                    "type": 1,
+                    "ownerId": 1,
+                    "contactId": 3,
+                    "facilities": "Chairs,Cameras,Security",
+                    "amount": 7000000,
+                    "details": "The best place you can have your event.",
+                    "image":
+                      "http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg",
+                    "approve": 1,
+                    "active": 1,
+                    "createdAt": "2018-05-16T16:29:40.05Z",
+                    "updatedAt": "2018-05-16T16:35:40.562Z"
+                  }
+                ],
+                "count": 1
+              }
+            }
+          },
+          "404": {
+            "description": "No center found.",
+            "schema": {
+              "$ref": "#/definitions/GetCenters"
+            },
+            "examples": {
+              "application/json": {
+                "errors": {
+                  "centers": ["No center found."]
+                }
+              }
+            }
           }
         },
-        "security": [],
         "x-unitTests": [
           {
             "request": {
@@ -337,11 +568,23 @@
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "5088",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:13:27 GMT",
+                "Etag": "W/\"13e0-FjCdSfhxI2Etn0AlCc9ddqnRI5U\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"centers\":[{\"id\":7,\"name\":\"Havilla Center\",\"address\":\"11 Oguntade street\",\"area\":\"Iju\",\"state\":1,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":3,\"facilities\":\"Chairs,Cameras,Security\",\"amount\":7000000,\"details\":\"The best place you can have your event.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-05-16T16:29:40.05Z\",\"updatedAt\":\"2018-05-16T16:35:40.562Z\"},{\"id\":6,\"name\":\"Knightbridge Hotels Big Hall\",\"address\":\"171, Oworonsoki Oshodi Expressway,\",\"area\":\"Gbagada\",\"state\":25,\"capacity\":3000,\"type\":2,\"ownerId\":2,\"contactId\":2,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Classy is just a tip of the iceberg with Sheba Centre. A Grand marquee setting aimed at pleasing you and granting all your wishes on that special day. Classy chandeliers to add glam to your day. It is located in a serene environment that is accessible from every part of Lagos. State of the art changing room and classy rest room after devouring the owambe delicacies await you. It seats comfortably 800 persons in banquet setting. A very spacious compound for flawless parking of cars is available for your guest. Tables, chairs, well-structured stage, 24 hour power supply, lighting, air condition, well-structured stage and maximum security is guaranteed.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637266/Trendy2_edbqto.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":5,\"name\":\"Sheba Centre\",\"address\":\"28, Ayodele Okeowo Street, Soluyi\",\"area\":\"Ajah\",\"state\":25,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":4,\"name\":\"Tobol Event Centre\",\"address\":\"17 Billing way, Oregun\",\"area\":\"Ikeja\",\"state\":25,\"capacity\":3000,\"type\":2,\"ownerId\":2,\"contactId\":2,\"facilities\":\"Chairs, Lighting, Parking Space, Sound System, Stage, Tables, Projector, White Board\",\"amount\":65000,\"details\":\"FM EVENT Centre is a perfect venue for you, whether for a wedding, Christmas party, product launch, meetings, conferences or entertainment events. Together with our experienced events managers and award winning hospitality, we ensure that your experience with us is extraordinary and truly memorable.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/opique-event-center-28540i1lTOVEbXw5K4i4ntjD_1038_600_wbr2eg.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":3,\"name\":\"FM EVENT Centre\",\"address\":\"Ijaiye-Isheri Road, Aguda-Ogba\",\"area\":\"Lekki\",\"state\":25,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":2,\"name\":\"Platinum Hall\",\"address\":\"9/11, Kudirat Abiola Way, Oregun Bus-stop\",\"area\":\"Ikeja\",\"state\":25,\"capacity\":2000,\"type\":2,\"ownerId\":2,\"contactId\":2,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":70000,\"details\":\"Platinum Hall is Marquee tent located on a spacious landmass within the premises in a serene and secured environment of Ikeja with full AC. Our hall is suitable for all kinds of events with a capacity of 400 guests.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/20160601_154458-min_iod3wp.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"}],\"count\":7}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -360,33 +603,84 @@
       "post": {
         "description": "#### Create Event Center",
         "summary": "Create Center",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "CentersPost",
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "Body",
+            "name": "Center",
             "in": "body",
             "required": true,
             "description": "",
             "schema": {
               "$ref": "#/definitions/CreateCenterrequest"
             }
-          },
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
           }
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Created a center",
+            "schema": {
+              "$ref": "#/definitions/CreateCenter24"
+            },
+            "examples": {
+              "application/json": {
+                "center": {
+                  "id": 8,
+                  "name": "Classique Events Place Pearl Hall",
+                  "address": "Somewhere in Lagos",
+                  "area": "Ajah",
+                  "state": 37,
+                  "capacity": 4000,
+                  "type": 1,
+                  "facilities": "Cameras, Stage",
+                  "image": "default_image",
+                  "amount": 70000,
+                  "details": "Some long description",
+                  "ownerId": 1,
+                  "contactId": 4,
+                  "approve": 0,
+                  "active": 1,
+                  "updatedAt": "2018-05-30T06:12:07.049Z",
+                  "createdAt": "2018-05-30T06:12:07.049Z"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - Center already exist",
+            "schema": {
+              "$ref": "#/definitions/CreateCenter28"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "name": ["Center already exist"]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation errors - Contact person does not exist.",
+            "schema": {
+              "$ref": "#/definitions/CreateCenter"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "contactId": ["Contact does not exist"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "adminToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -395,18 +689,30 @@
               "headers": {
                 "Content-Type": "application/json",
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MiwiaWF0IjoxNTI0NDc0NDExLCJleHAiOjE1MjUzMzg0MTF9.gogDeSi00x75oIPcOA0bkuTVyq7GZuSOmuMaPMGOdvY"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MiwiaWF0IjoxNTI3NjYwMjEyLCJleHAiOjE1Mjg1MjQyMTJ9.U4QE77cLzkBD--Wrg8UfrXHGvS8tWG3bAPhn5KQXYAs"
               },
               "body":
                 "{\"name\":\"Classique Events Place Pearl Hall\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":37,\"capacity\":4000,\"type\":1,\"facilities\":\"Cameras, Stage\",\"image\":\"default_image\",\"amount\":70000,\"details\":\"Some long description\",\"newContact\":true,\"contact\":{\"firstName\":\"Somename\",\"lastName\":\"AnotherName\",\"email\":\"randommail@mail.com\",\"phoneNumber\":\"08032108214\"}}"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "373",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:12:07 GMT",
+                "Etag": "W/\"175-/eQZJ1+SF1BRqb/Q7CiftTVt4e0\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"center\":{\"id\":8,\"name\":\"Classique Events Place Pearl Hall\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":37,\"capacity\":4000,\"type\":1,\"facilities\":\"Cameras, Stage\",\"image\":\"default_image\",\"amount\":70000,\"details\":\"Some long description\",\"ownerId\":1,\"contactId\":4,\"approve\":0,\"active\":1,\"updatedAt\":\"2018-05-30T06:12:07.049Z\",\"createdAt\":\"2018-05-30T06:12:07.049Z\"}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -426,24 +732,63 @@
       "get": {
         "description": "#### Get all centers registered by center owners.",
         "summary": "Get Admin Centers",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "CentersAdminGet",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Got centers registered by admin.",
+            "schema": {
+              "$ref": "#/definitions/GetAdminCenters34"
+            },
+            "examples": {
+              "application/json": {
+                "centers": [
+                  {
+                    "id": 8,
+                    "name": "Classique Events Place Pearl Hall",
+                    "address": "Somewhere in Lagos",
+                    "area": "Ajah",
+                    "state": 37,
+                    "capacity": 4000,
+                    "type": 1,
+                    "ownerId": 1,
+                    "contactId": 4,
+                    "facilities": "Cameras, Stage",
+                    "amount": 70000,
+                    "details": "Some long description",
+                    "image": "default_image",
+                    "approve": 0,
+                    "active": 1,
+                    "createdAt": "2018-05-30T06:12:07.049Z",
+                    "updatedAt": "2018-05-30T06:12:07.049Z"
+                  }
+                ],
+                "count": 1
+              }
+            }
+          },
+          "422": {
+            "description": "No token provided.",
+            "schema": {
+              "$ref": "#/definitions/GetAdminCenters"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "auth": ["No token provided"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "adminToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -451,16 +796,28 @@
               "uri": "/centers/admin",
               "headers": {
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MSwiaWF0IjoxNTI0NDc2MzIwLCJleHAiOjE1MjUzNDAzMjB9.eu2jzr-tpyMuUOCF73NFKZHXQGzmU2m5HHVvBRDfRPo"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MiwiaWF0IjoxNTI3NjYwMjEyLCJleHAiOjE1Mjg1MjQyMTJ9.U4QE77cLzkBD--Wrg8UfrXHGvS8tWG3bAPhn5KQXYAs"
               }
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "3916",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:15:37 GMT",
+                "Etag": "W/\"f4c-1XXuREgekdCmAiSRP1if0tSjls0\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"centers\":[{\"id\":8,\"name\":\"Classique Events Place Pearl Hall\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":37,\"capacity\":4000,\"type\":1,\"ownerId\":1,\"contactId\":4,\"facilities\":\"Cameras, Stage\",\"amount\":70000,\"details\":\"Some long description\",\"image\":\"default_image\",\"approve\":0,\"active\":1,\"createdAt\":\"2018-05-30T06:12:07.049Z\",\"updatedAt\":\"2018-05-30T06:12:07.049Z\"},{\"id\":7,\"name\":\"Havilla Center\",\"address\":\"11 Oguntade street\",\"area\":\"Iju\",\"state\":1,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":3,\"facilities\":\"Chairs,Cameras,Security\",\"amount\":7000000,\"details\":\"The best place you can have your event.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-05-16T16:29:40.05Z\",\"updatedAt\":\"2018-05-16T16:35:40.562Z\"},{\"id\":5,\"name\":\"Sheba Centre\",\"address\":\"28, Ayodele Okeowo Street, Soluyi\",\"area\":\"Ajah\",\"state\":25,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":3,\"name\":\"FM EVENT Centre\",\"address\":\"Ijaiye-Isheri Road, Aguda-Ogba\",\"area\":\"Lekki\",\"state\":25,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":1,\"name\":\"Classique Events Place Pearl Hall\",\"address\":\"MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,\",\"area\":\"Anthony\",\"state\":25,\"capacity\":4000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":70000,\"details\":\"It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.\",\"image\":\"  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"}],\"count\":5}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -477,20 +834,80 @@
         }
       }
     },
-    "/centers/1": {
+    "/centers/{centerId}": {
       "get": {
         "description": "#### Get a single center by id.",
         "summary": "Get Center",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "Centers1Get",
         "produces": ["application/json"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "centerId",
+            "in": "path",
+            "required": true,
+            "description": "Id of center to be fetched"
+          }
+        ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Center successfully fetched.",
+            "schema": {
+              "$ref": "#/definitions/GetCenter38"
+            },
+            "examples": {
+              "application/json": {
+                "center": {
+                  "id": 1,
+                  "name": "Classique Events Place Pearl Hall",
+                  "address":
+                    "MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,",
+                  "area": "Anthony",
+                  "state": 25,
+                  "capacity": 4000,
+                  "type": 1,
+                  "ownerId": 1,
+                  "contactId": 1,
+                  "facilities":
+                    "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+                  "amount": 70000,
+                  "details":
+                    "It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.",
+                  "image":
+                    "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+                  "approve": 1,
+                  "active": 1,
+                  "createdAt": "2018-12-12T00:00:00Z",
+                  "updatedAt": "2018-12-12T00:00:00Z",
+                  "contacts": {
+                    "id": 1,
+                    "firstName": "Folusho",
+                    "lastName": "Banwo",
+                    "phoneNumber": "1234567890",
+                    "email": "fbanwo@gmail.com",
+                    "ownerId": 1,
+                    "createdAt": "2018-12-12T00:00:00Z",
+                    "updatedAt": "2018-12-12T00:00:00Z"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid center id supplied",
+            "schema": {
+              "$ref": "#/definitions/GetCenter"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "id": ["Id must be a valid number"]
+                }
+              }
+            }
           }
         },
-        "security": [],
         "x-unitTests": [
           {
             "request": {
@@ -499,11 +916,23 @@
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "1550",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:17:31 GMT",
+                "Etag": "W/\"60e-M3W/dHbrIXfgNDER6BzZ4IwAIlM\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"center\":{\"id\":1,\"name\":\"Classique Events Place Pearl Hall\",\"address\":\"MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,\",\"area\":\"Anthony\",\"state\":25,\"capacity\":4000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":70000,\"details\":\"It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.\",\"image\":\"  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\",\"contacts\":{\"id\":1,\"firstName\":\"Folusho\",\"lastName\":\"Banwo\",\"phoneNumber\":\"1234567890\",\"email\":\"fbanwo@gmail.com\",\"ownerId\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"}}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -521,7 +950,7 @@
       "put": {
         "description": "#### Update center's details.",
         "summary": "Update Center",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "Centers1Put",
         "produces": ["application/json"],
         "parameters": [
@@ -535,19 +964,64 @@
             }
           },
           {
-            "name": "x-access-token",
-            "in": "header",
+            "name": "centerId",
+            "in": "path",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "ID of the center to be updated."
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Center updated.",
+            "schema": {
+              "$ref": "#/definitions/UpdateCenter57"
+            },
+            "examples": {
+              "application/json": {
+                "center": {
+                  "id": 1,
+                  "name": "Classique Events Place",
+                  "address": "Somewhere in Lagos",
+                  "area": "Ajah",
+                  "state": 26,
+                  "capacity": 3000,
+                  "type": 1,
+                  "ownerId": 1,
+                  "contactId": 1,
+                  "facilities": "Cameras, Stage, Security",
+                  "amount": 70000,
+                  "details": "Some long description",
+                  "image":
+                    "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+                  "approve": 1,
+                  "active": 1,
+                  "createdAt": "2018-12-12T00:00:00Z",
+                  "updatedAt": "2018-12-12T00:00:00Z"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error. Invalid center id type.",
+            "schema": {
+              "$ref": "#/definitions/UpdateCenter"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "id": ["Id must be a valid number"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "adminToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -556,18 +1030,30 @@
               "headers": {
                 "Content-Type": "application/json",
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNTI0NDY1OTExLCJleHAiOjE1MjUzMjk5MTF9.wozvDghGu7vvQtr28DDbK9LuRlrctwx8JH5VxI7LmZo"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MiwiaWF0IjoxNTI3NjYwMjEyLCJleHAiOjE1Mjg1MjQyMTJ9.U4QE77cLzkBD--Wrg8UfrXHGvS8tWG3bAPhn5KQXYAs"
               },
               "body":
                 "{\"name\":\"Classique Events Place\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":26,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Cameras, Stage, Security\",\"amount\":70000,\"details\":\"Some long description\",\"newContact\":false,\"contact\":{\"firstName\":\"Somename\",\"lastName\":\"AnotherName\",\"email\":\"randommail@mail.com\",\"phoneNumber\":\"08032108214\"}}"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "464",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:24:40 GMT",
+                "Etag": "W/\"1d0-vKMEs0ITrgvjMQprjibZnNKkqTA\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"center\":{\"id\":1,\"name\":\"Classique Events Place\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":26,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Cameras, Stage, Security\",\"amount\":70000,\"details\":\"Some long description\",\"image\":\"  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -587,7 +1073,7 @@
       "get": {
         "description": "#### Search for center by name, address, area, state.",
         "summary": "Search Center",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "CentersSearchGet",
         "produces": ["application/json"],
         "parameters": [
@@ -608,10 +1094,55 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Search found result.",
+            "schema": {
+              "$ref": "#/definitions/SearchCenter43"
+            },
+            "examples": {
+              "application/json": {
+                "centers": [
+                  {
+                    "id": 5,
+                    "name": "Sheba Centre",
+                    "address": "28, Ayodele Okeowo Street, Soluyi",
+                    "area": "Ajah",
+                    "state": 25,
+                    "capacity": 3000,
+                    "type": 1,
+                    "ownerId": 1,
+                    "contactId": 1,
+                    "facilities":
+                      "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+                    "amount": 65000,
+                    "details":
+                      "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+                    "image":
+                      "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+                    "approve": 1,
+                    "active": 1,
+                    "createdAt": "2018-12-12T00:00:00Z",
+                    "updatedAt": "2018-12-12T00:00:00Z",
+                    "count": "1"
+                  }
+                ]
+              }
+            }
+          },
+          "404": {
+            "description": "Center not found.",
+            "schema": {
+              "$ref": "#/definitions/SearchCenter"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "centers": ["Centers not found."]
+                }
+              }
+            }
           }
         },
-        "security": [],
         "x-unitTests": [
           {
             "request": {
@@ -620,11 +1151,23 @@
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "999",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:19:32 GMT",
+                "Etag": "W/\"3e7-+D8NcnvbN69/eChJXydWuK035fg\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"centers\":[{\"id\":5,\"name\":\"Sheba Centre\",\"address\":\"28, Ayodele Okeowo Street, Soluyi\",\"area\":\"Ajah\",\"state\":25,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\",\"count\":\"1\"}]}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -646,24 +1189,83 @@
         "description":
           "#### Get all contact person registered by center owner.",
         "summary": "Get Contacts - Admin",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "CentersContactsGet",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Got center owner's contact person.",
+            "schema": {
+              "$ref": "#/definitions/Get contacts  admin47"
+            },
+            "examples": {
+              "application/json": {
+                "contacts": [
+                  {
+                    "id": 1,
+                    "firstName": "Folusho",
+                    "lastName": "Banwo",
+                    "phoneNumber": "1234567890",
+                    "email": "fbanwo@gmail.com",
+                    "ownerId": 1,
+                    "createdAt": "2018-12-12T00:00:00Z",
+                    "updatedAt": "2018-12-12T00:00:00Z"
+                  },
+                  {
+                    "id": 2,
+                    "firstName": "Mike",
+                    "lastName": "Aiyegbe",
+                    "phoneNumber": "7334567890",
+                    "email": "maiyegbe@yahoo.com",
+                    "ownerId": 1,
+                    "createdAt": "2018-12-12T00:00:00Z",
+                    "updatedAt": "2018-12-12T00:00:00Z"
+                  },
+                  {
+                    "id": 3,
+                    "firstName": "Dayo",
+                    "lastName": "Olaoluwa",
+                    "phoneNumber": "08023108214",
+                    "email": "dolaoluwa@yandex.com",
+                    "ownerId": 1,
+                    "createdAt": "2018-05-16T16:29:40.043Z",
+                    "updatedAt": "2018-05-16T16:29:40.043Z"
+                  },
+                  {
+                    "id": 4,
+                    "firstName": "Somename",
+                    "lastName": "AnotherName",
+                    "phoneNumber": "08032108214",
+                    "email": "randommail@mail.com",
+                    "ownerId": 1,
+                    "createdAt": "2018-05-30T06:12:07.04Z",
+                    "updatedAt": "2018-05-30T06:12:07.04Z"
+                  }
+                ]
+              }
+            }
+          },
+          "422": {
+            "description": "No token provided.",
+            "schema": {
+              "$ref": "#/definitions/Get contacts  admin"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "auth": ["No token provided"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "adminToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -671,16 +1273,28 @@
               "uri": "/centers/contacts",
               "headers": {
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNTI0NDY1OTExLCJleHAiOjE1MjUzMjk5MTF9.wozvDghGu7vvQtr28DDbK9LuRlrctwx8JH5VxI7LmZo"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MiwiaWF0IjoxNTI3NjYwMjEyLCJleHAiOjE1Mjg1MjQyMTJ9.U4QE77cLzkBD--Wrg8UfrXHGvS8tWG3bAPhn5KQXYAs"
               }
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "807",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:22:25 GMT",
+                "Etag": "W/\"327-nB7KqebZOomNlvIOiZwe9LHGyTI\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"contacts\":[{\"id\":1,\"firstName\":\"Folusho\",\"lastName\":\"Banwo\",\"phoneNumber\":\"1234567890\",\"email\":\"fbanwo@gmail.com\",\"ownerId\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":2,\"firstName\":\"Mike\",\"lastName\":\"Aiyegbe\",\"phoneNumber\":\"7334567890\",\"email\":\"maiyegbe@yahoo.com\",\"ownerId\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"},{\"id\":3,\"firstName\":\"Dayo\",\"lastName\":\"Olaoluwa\",\"phoneNumber\":\"08023108214\",\"email\":\"dolaoluwa@yandex.com\",\"ownerId\":1,\"createdAt\":\"2018-05-16T16:29:40.043Z\",\"updatedAt\":\"2018-05-16T16:29:40.043Z\"},{\"id\":4,\"firstName\":\"Somename\",\"lastName\":\"AnotherName\",\"phoneNumber\":\"08032108214\",\"email\":\"randommail@mail.com\",\"ownerId\":1,\"createdAt\":\"2018-05-30T06:12:07.04Z\",\"updatedAt\":\"2018-05-30T06:12:07.04Z\"}]}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -702,24 +1316,55 @@
         "description":
           "#### Get all events booked for all center owner's centers.",
         "summary": "Get Events - Admin",
-        "tags": ["Misc"],
+        "tags": ["Centers"],
         "operationId": "CentersEventsGet",
         "produces": ["application/json"],
-        "parameters": [
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Got events for all admin center.",
+            "schema": {
+              "$ref": "#/definitions/Get events  admin51"
+            },
+            "examples": {
+              "application/json": {
+                "events": [
+                  {
+                    "title": "Wedding Party",
+                    "startDate": "2018-12-02",
+                    "endDate": "2018-12-02",
+                    "firstName": "Kolawole",
+                    "lastName": "Taiwo",
+                    "phoneNumber": "08132108214",
+                    "email": "omokolataiwo@gmail.cm",
+                    "name": "Classique Events Place Pearl Hall",
+                    "state": 25,
+                    "isConcluded": false
+                  }
+                ]
+              }
+            }
+          },
+          "422": {
+            "description": "No token provided.",
+            "schema": {
+              "$ref": "#/definitions/Get events  admin"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "auth": ["No token provided"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "adminToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -727,16 +1372,28 @@
               "uri": "/centers/events",
               "headers": {
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MiwiaWF0IjoxNTI0NDY1OTExLCJleHAiOjE1MjUzMjk5MTF9.wozvDghGu7vvQtr28DDbK9LuRlrctwx8JH5VxI7LmZo"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MiwiaWF0IjoxNTI3NjYwMjEyLCJleHAiOjE1Mjg1MjQyMTJ9.U4QE77cLzkBD--Wrg8UfrXHGvS8tWG3bAPhn5KQXYAs"
               }
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "1218",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:23:20 GMT",
+                "Etag": "W/\"4c2-kxOvmhvtTjPN5fFKIILzSlYZtOc\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"events\":[{\"title\":\"Wedding Party\",\"startDate\":\"2018-12-02\",\"endDate\":\"2018-12-02\",\"firstName\":\"Kolawole\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08132108214\",\"email\":\"omokolataiwo@gmail.cm\",\"name\":\"Classique Events Place Pearl Hall\",\"state\":25,\"isConcluded\":false},{\"title\":\"Birthday Party\",\"startDate\":\"2018-12-06\",\"endDate\":\"2018-12-06\",\"firstName\":\"Lanre\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08032108215\",\"email\":\"omokolataiwo@yahoo.com\",\"name\":\"Classique Events Place Pearl Hall\",\"state\":25,\"isConcluded\":false},{\"title\":\"Naming Ceremony\",\"startDate\":\"2018-12-10\",\"endDate\":\"2018-12-10\",\"firstName\":\"Lanre\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08032108215\",\"email\":\"omokolataiwo@yahoo.com\",\"name\":\"Classique Events Place Pearl Hall\",\"state\":25,\"isConcluded\":false},{\"title\":\"Music Concert\",\"startDate\":\"2018-12-08\",\"endDate\":\"2018-12-08\",\"firstName\":\"Lanre\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08032108215\",\"email\":\"omokolataiwo@yahoo.com\",\"name\":\"FM EVENT Centre\",\"state\":25,\"isConcluded\":false},{\"title\":\"House warming\",\"startDate\":\"2018-12-04\",\"endDate\":\"2018-12-05\",\"firstName\":\"Lanre\",\"lastName\":\"Taiwo\",\"phoneNumber\":\"08032108215\",\"email\":\"omokolataiwo@yahoo.com\",\"name\":\"Sheba Centre\",\"state\":25,\"isConcluded\":false}]}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -753,45 +1410,206 @@
         }
       }
     },
-    "/events": {
-      "get": {
-        "description": "#### Get all the events booked by a user.",
-        "summary": "Get Events",
-        "tags": ["Misc"],
-        "operationId": "EventsGet",
+    "/centers/approve/{centerId}": {
+      "put": {
+        "description": "#### Toggle the approval of center by super admin.",
+        "summary": "Approve Center",
+        "tags": ["Centers"],
+        "operationId": "CentersApprove1Put",
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "x-access-token",
-            "in": "header",
+            "name": "centerId",
+            "in": "path",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "ID of center to be approved."
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Center Approved/Disapproved",
+            "schema": {
+              "$ref": "#/definitions/ApproveCenter"
+            },
+            "examples": {
+              "application/json": {
+                "center": {
+                  "id": 1,
+                  "name": "Classique Events Place",
+                  "address": "Somewhere in Lagos",
+                  "area": "Ajah",
+                  "state": 26,
+                  "capacity": 3000,
+                  "type": 1,
+                  "ownerId": 1,
+                  "contactId": 1,
+                  "facilities": "Cameras, Stage, Security",
+                  "amount": 70000,
+                  "details": "Some long description",
+                  "image":
+                    "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+                  "approve": 1,
+                  "active": 1,
+                  "createdAt": "2018-12-12T00:00:00Z",
+                  "updatedAt": "2018-05-30T06:28:28.469Z"
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "superAdminToken": []
+          }
+        ],
+        "x-unitTests": [
+          {
+            "request": {
+              "method": "PUT",
+              "uri": "/centers/approve/1",
+              "headers": {
+                "x-access-token":
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwicm9sZSI6MSwiaWF0IjoxNTI3NjYwMjE2LCJleHAiOjE1Mjg1MjQyMTZ9.NfuFDCgpsPtRkkDl-47WNUV3mACzA7RhG8cN84Ppklw"
+              }
+            },
+            "expectedResponse": {
+              "x-allowExtraHeaders": true,
+              "x-bodyMatchMode": "RAW",
+              "x-arrayOrderedMatching": false,
+              "x-arrayCheckCount": false,
+              "x-matchResponseSchema": true,
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "464",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:29:13 GMT",
+                "Etag": "W/\"1d0-ZzqbLqj9i4KSVCfu97GHh6U48E4\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"center\":{\"id\":1,\"name\":\"Classique Events Place\",\"address\":\"Somewhere in Lagos\",\"area\":\"Ajah\",\"state\":26,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Cameras, Stage, Security\",\"amount\":70000,\"details\":\"Some long description\",\"image\":\"  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-05-30T06:28:28.469Z\"}}"
+            },
+            "x-testShouldPass": true,
+            "x-testEnabled": true,
+            "x-testName": "Approve Center",
+            "x-testDescription": "#### Approve center by super admin."
+          }
+        ],
+        "x-operation-settings": {
+          "CollectParameters": false,
+          "AllowDynamicQueryParameters": false,
+          "AllowDynamicFormParameters": false,
+          "IsMultiContentStreaming": false
+        }
+      }
+    },
+    "/events": {
+      "get": {
+        "description": "#### Get all the events booked by a user.",
+        "summary": "Get Events",
+        "tags": ["Events"],
+        "operationId": "EventsGet",
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Got all events for user.",
+            "schema": {
+              "$ref": "#/definitions/GetEvents"
+            },
+            "examples": {
+              "application/json": {
+                "events": [
+                  {
+                    "id": 12,
+                    "title": "Wedding Anniversary",
+                    "startDate": "2018-09-26",
+                    "endDate": "2018-09-26",
+                    "centerId": 3,
+                    "userId": 8,
+                    "active": 1,
+                    "createdAt": "2018-05-30T06:39:12.8Z",
+                    "updatedAt": "2018-05-30T06:39:12.8Z",
+                    "center": {
+                      "id": 3,
+                      "name": "FM EVENT Centre",
+                      "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+                      "area": "Lekki",
+                      "state": 25,
+                      "capacity": 3000,
+                      "type": 1,
+                      "ownerId": 1,
+                      "contactId": 1,
+                      "facilities":
+                        "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+                      "amount": 65000,
+                      "details":
+                        "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+                      "image":
+                        "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+                      "approve": 1,
+                      "active": 1,
+                      "createdAt": "2018-12-12T00:00:00Z",
+                      "updatedAt": "2018-12-12T00:00:00Z"
+                    }
+                  }
+                ],
+                "count": 1
+              }
+            }
+          },
+          "422": {
+            "description": "Token Error",
+            "schema": {
+              "$ref": "#/definitions/GetEvents90"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "auth": ["No token provided"]
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "userToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
               "method": "GET",
               "uri": "/events",
               "headers": {
-                "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MywiaWF0IjoxNTI0NDc0NDI3LCJleHAiOjE1MjUzMzg0Mjd9.YnsI9m768Ak0xBL5jME8miPkfxRVhsujgoZWYfFUlYg"
+                "x-access-token": ""
               }
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "1007",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:39:16 GMT",
+                "Etag": "W/\"3ef-Ah/bBxRhPWpR77gXSkbFnrNFoJ8\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"events\":[{\"id\":12,\"title\":\"Wedding Anniversary\",\"startDate\":\"2018-09-26\",\"endDate\":\"2018-09-26\",\"centerId\":3,\"userId\":8,\"active\":1,\"createdAt\":\"2018-05-30T06:39:12.8Z\",\"updatedAt\":\"2018-05-30T06:39:12.8Z\",\"center\":{\"id\":3,\"name\":\"FM EVENT Centre\",\"address\":\"Ijaiye-Isheri Road, Aguda-Ogba\",\"area\":\"Lekki\",\"state\":25,\"capacity\":3000,\"type\":1,\"ownerId\":1,\"contactId\":1,\"facilities\":\"Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security\",\"amount\":65000,\"details\":\"Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.\",\"image\":\"http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg\",\"approve\":1,\"active\":1,\"createdAt\":\"2018-12-12T00:00:00Z\",\"updatedAt\":\"2018-12-12T00:00:00Z\"}}],\"count\":1}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -809,7 +1627,7 @@
       "post": {
         "description": "#### Book a center for event.",
         "summary": "Create Event",
-        "tags": ["Misc"],
+        "tags": ["Events"],
         "operationId": "EventsPost",
         "produces": ["application/json"],
         "consumes": ["application/x-www-form-urlencoded"],
@@ -841,21 +1659,64 @@
             "required": true,
             "type": "string",
             "description": ""
-          },
-          {
-            "name": "x-access-token",
-            "in": "header",
-            "required": true,
-            "type": "string",
-            "description": ""
           }
         ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Event created successfully.",
+            "schema": {
+              "$ref": "#/definitions/CreateEvent"
+            },
+            "examples": {
+              "application/json": {
+                "event": {
+                  "id": 11,
+                  "title": "Wedding Anniversary",
+                  "centerId": 3,
+                  "startDate": "2018-09-26",
+                  "endDate": "2018-09-26",
+                  "userId": 8,
+                  "active": 1,
+                  "updatedAt": "2018-05-30T06:26:40.867Z",
+                  "createdAt": "2018-05-30T06:26:40.867Z"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - record already exist",
+            "schema": {
+              "$ref": "#/definitions/CreateEvent69"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "title": ["Center has already been booked."]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid Center provided.",
+            "schema": {
+              "$ref": "#/definitions/CreateEvent67"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "centerId": ["Invalid center"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "userToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
@@ -864,18 +1725,30 @@
               "headers": {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6MywiaWF0IjoxNTI0NDc0NDI3LCJleHAiOjE1MjUzMzg0Mjd9.YnsI9m768Ak0xBL5jME8miPkfxRVhsujgoZWYfFUlYg"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMTkyLCJleHAiOjE1Mjg1MjQxOTJ9.VOLxfMWMrAbqlb0Ziwm4Ge4Wc1K_mpVqvsS7UJ5jZbw"
               },
               "body":
                 "title=Wedding Anniversary&centerId=3&startDate=2018-9-26&endDate=2018-9-26"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "210",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:26:40 GMT",
+                "Etag": "W/\"d2-/OCpSy/HaBKm+DZU3AIYK2ifh0Y\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"event\":{\"id\":11,\"title\":\"Wedding Anniversary\",\"centerId\":3,\"startDate\":\"2018-09-26\",\"endDate\":\"2018-09-26\",\"userId\":8,\"active\":1,\"updatedAt\":\"2018-05-30T06:26:40.867Z\",\"createdAt\":\"2018-05-30T06:26:40.867Z\"}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -891,62 +1764,12 @@
         }
       }
     },
-    "/centers/approve/1": {
-      "put": {
-        "description": "#### Approve center by super admin.",
-        "summary": "Approve Center",
-        "tags": ["Misc"],
-        "operationId": "CentersApprove1Put",
-        "produces": ["application/json"],
-        "consumes": ["application/x-www-form-urlencoded"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [],
-        "x-unitTests": [
-          {
-            "request": {
-              "method": "PUT",
-              "uri": "/centers/approve/1",
-              "headers": {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6MSwiaWF0IjoxNTI0NDc2MzIwLCJleHAiOjE1MjUzNDAzMjB9.eu2jzr-tpyMuUOCF73NFKZHXQGzmU2m5HHVvBRDfRPo"
-              },
-              "body":
-                "title=Wedding Anniversary&centerid=102&start=2018-20-5&end=2018-4-12"
-            },
-            "expectedResponse": {
-              "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
-              "x-arrayOrderedMatching": false,
-              "x-arrayCheckCount": false,
-              "x-matchResponseSchema": true,
-              "headers": {}
-            },
-            "x-testShouldPass": true,
-            "x-testEnabled": true,
-            "x-testName": "Approve Center",
-            "x-testDescription": "#### Approve center by super admin."
-          }
-        ],
-        "x-operation-settings": {
-          "CollectParameters": false,
-          "AllowDynamicQueryParameters": false,
-          "AllowDynamicFormParameters": false,
-          "IsMultiContentStreaming": false
-        }
-      }
-    },
-    "/events/1": {
+    "/events/{eventId}": {
       "put": {
         "description": "#### Update booking information.",
         "summary": "Update Event",
-        "tags": ["Misc"],
-        "operationId": "Events1Put",
+        "tags": ["Events"],
+        "operationId": "Events11Put",
         "produces": ["application/json"],
         "consumes": ["application/x-www-form-urlencoded"],
         "parameters": [
@@ -979,39 +1802,102 @@
             "description": ""
           },
           {
-            "name": "x-access-token",
-            "in": "header",
+            "name": "eventId",
+            "in": "path",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "Id of Event to be modified."
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Event updated.",
+            "schema": {
+              "$ref": "#/definitions/UpdateEvent73"
+            },
+            "examples": {
+              "application/json": {
+                "event": {
+                  "id": 11,
+                  "title": "Wedding Ceremony",
+                  "startDate": "2018-6-3",
+                  "endDate": "2018-6-4",
+                  "centerId": "1",
+                  "userId": 8,
+                  "active": 1,
+                  "createdAt": "2018-05-30T06:26:40.867Z",
+                  "updatedAt": "2018-05-30T06:26:40.867Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not Found",
+            "schema": {
+              "$ref": "#/definitions/UpdateEvent"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "event": ["Event does not exist"]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation error.",
+            "schema": {
+              "$ref": "#/definitions/UpdateEvent77"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "startDate": ["Start date is a past date."],
+                  "endDate": ["End date is a past date."]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "userToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
               "method": "PUT",
-              "uri": "/events/1",
+              "uri": "/events/11",
               "headers": {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MywiaWF0IjoxNTI0NDY1OTA3LCJleHAiOjE1MjUzMjk5MDd9.vomRxE1iOR_oSftlFhyeiwqoAgGygCV-f0mIo1HQnNk"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMTkyLCJleHAiOjE1Mjg1MjQxOTJ9.VOLxfMWMrAbqlb0Ziwm4Ge4Wc1K_mpVqvsS7UJ5jZbw"
               },
               "body":
-                "title=Wedding Ceremony&centerId=1&startDate=2018-5-13&endDate=2018-5-14"
+                "title=Wedding Ceremony&centerId=1&startDate=2018-6-3&endDate=2018-6-4"
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "205",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:37:46 GMT",
+                "Etag": "W/\"cd-tcETXTFeEJNUic5ANoHEJu1ogJs\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"event\":{\"id\":11,\"title\":\"Wedding Ceremony\",\"startDate\":\"2018-6-3\",\"endDate\":\"2018-6-4\",\"centerId\":\"1\",\"userId\":8,\"active\":1,\"createdAt\":\"2018-05-30T06:26:40.867Z\",\"updatedAt\":\"2018-05-30T06:26:40.867Z\"}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -1029,41 +1915,103 @@
       "delete": {
         "description": "#### Cancel an event.",
         "summary": "Delete Event",
-        "tags": ["Misc"],
-        "operationId": "Events1Delete",
+        "tags": ["Events"],
+        "operationId": "Events11Delete",
         "produces": ["application/json"],
         "parameters": [
           {
-            "name": "x-access-token",
-            "in": "header",
+            "name": "eventId",
+            "in": "path",
             "required": true,
             "type": "string",
-            "description": ""
+            "description": "ID of event to be deleted."
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Event deleted",
+            "schema": {
+              "$ref": "#/definitions/DeleteEvent85"
+            },
+            "examples": {
+              "application/json": {
+                "event": {
+                  "id": 11,
+                  "title": "Wedding Ceremony",
+                  "startDate": "2018-06-03",
+                  "endDate": "2018-06-04",
+                  "centerId": 1,
+                  "userId": 8,
+                  "active": 1,
+                  "createdAt": "2018-05-30T06:26:40.867Z",
+                  "updatedAt": "2018-05-30T06:37:46.398Z"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "schema": {
+              "$ref": "#/definitions/DeleteEvent83"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "event": ["Event does not exist."]
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Token not provided",
+            "schema": {
+              "$ref": "#/definitions/DeleteEvent"
+            },
+            "examples": {
+              "application/json": {
+                "status": "error",
+                "errors": {
+                  "auth": ["No token provided"]
+                }
+              }
+            }
           }
         },
-        "security": [],
+        "security": [
+          {
+            "userToken": []
+          }
+        ],
         "x-unitTests": [
           {
             "request": {
               "method": "DELETE",
-              "uri": "/events/1",
+              "uri": "/events/11",
               "headers": {
                 "x-access-token":
-                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6MywiaWF0IjoxNTI0NDY1OTA3LCJleHAiOjE1MjUzMjk5MDd9.vomRxE1iOR_oSftlFhyeiwqoAgGygCV-f0mIo1HQnNk"
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMTkyLCJleHAiOjE1Mjg1MjQxOTJ9.VOLxfMWMrAbqlb0Ziwm4Ge4Wc1K_mpVqvsS7UJ5jZbw"
               }
             },
             "expectedResponse": {
               "x-allowExtraHeaders": true,
-              "x-bodyMatchMode": "NONE",
+              "x-bodyMatchMode": "RAW",
               "x-arrayOrderedMatching": false,
               "x-arrayCheckCount": false,
               "x-matchResponseSchema": true,
-              "headers": {}
+              "headers": {
+                "Access-Control-Allow-Origin": "*",
+                "Connection": "keep-alive",
+                "Content-Length": "207",
+                "Content-Type": "application/json; charset=utf-8",
+                "Date": "Wed, 30 May 2018 06:38:22 GMT",
+                "Etag": "W/\"cf-9gPv3yvbwoT4VZj8SMFxWR0iA54\"",
+                "Server": "Cowboy",
+                "Via": "1.1 vegur",
+                "X-Powered-By": "Express"
+              },
+              "body":
+                "{\"event\":{\"id\":11,\"title\":\"Wedding Ceremony\",\"startDate\":\"2018-06-03\",\"endDate\":\"2018-06-04\",\"centerId\":1,\"userId\":8,\"active\":1,\"createdAt\":\"2018-05-30T06:26:40.867Z\",\"updatedAt\":\"2018-05-30T06:37:46.398Z\"}}"
             },
             "x-testShouldPass": true,
             "x-testEnabled": true,
@@ -1081,6 +2029,575 @@
     }
   },
   "definitions": {
+    "CreateUser": {
+      "title": "Create User",
+      "example": {
+        "user": {
+          "id": 8,
+          "firstName": "Kolawole",
+          "lastName": "Taiwo",
+          "phoneNumber": "08132108218",
+          "email": "omokolataiwo@call.com",
+          "username": "user3",
+          "role": 3,
+          "updatedAt": "2018-05-30T05:52:42.806Z",
+          "createdAt": "2018-05-30T05:52:42.806Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/User"
+        }
+      },
+      "required": ["user"]
+    },
+    "User": {
+      "title": "User",
+      "example": {
+        "id": 8,
+        "firstName": "Kolawole",
+        "lastName": "Taiwo",
+        "phoneNumber": "08132108218",
+        "email": "omokolataiwo@call.com",
+        "username": "user3",
+        "role": 3,
+        "updatedAt": "2018-05-30T05:52:42.806Z",
+        "createdAt": "2018-05-30T05:52:42.806Z"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 8,
+          "type": "integer",
+          "format": "int32"
+        },
+        "firstName": {
+          "description": "",
+          "example": "Kolawole",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "example": "Taiwo",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": "08132108218",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "example": "omokolataiwo@call.com",
+          "type": "string"
+        },
+        "username": {
+          "description": "",
+          "example": "user3",
+          "type": "string"
+        },
+        "role": {
+          "description": "",
+          "example": 3,
+          "type": "integer",
+          "format": "int32"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "5/30/2018 5:52:42 AM",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "5/30/2018 5:52:42 AM",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "email",
+        "username",
+        "role",
+        "updatedAt",
+        "createdAt"
+      ]
+    },
+    "CreateUser2": {
+      "title": "Create User2",
+      "example": {
+        "status": "error",
+        "errors": {
+          "firstName": ["First name is required."],
+          "email": ["Email address is required"],
+          "phoneNumber": ["Phone number is required"],
+          "matchPassword": ["Match password is not the same as Password"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors": {
+      "title": "Errors",
+      "example": {
+        "firstName": ["First name is required."],
+        "email": ["Email address is required"],
+        "phoneNumber": ["Phone number is required"],
+        "matchPassword": ["Match password is not the same as Password"]
+      },
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "description": "",
+          "example": ["First name is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email": {
+          "description": "",
+          "example": ["Email address is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": ["Phone number is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "matchPassword": {
+          "description": "",
+          "example": ["Match password is not the same as Password"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["firstName", "email", "phoneNumber", "matchPassword"]
+    },
+    "CreateUser4": {
+      "title": "Create User4",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors5"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors5": {
+      "title": "Errors5",
+      "example": {
+        "username": ["username has already been taken."],
+        "email": ["email has already been used."],
+        "phoneNumber": ["phone number has already been used."]
+      },
+      "type": "object",
+      "properties": {
+        "username": {
+          "description": "",
+          "example": ["username has already been taken."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "email": {
+          "description": "",
+          "example": ["email has already been used."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": ["phone number has already been used."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["username", "email", "phoneNumber"]
+    },
+    "LoginUser": {
+      "title": "Login User",
+      "example": {
+        "user": {
+          "token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMDM1LCJleHAiOjE1Mjg1MjQwMzV9.1RozDMhP_EeWoWHPYQa8K72tNw9e50Q",
+          "role": 3
+        }
+      },
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/User7"
+        }
+      },
+      "required": ["user"]
+    },
+    "User7": {
+      "title": "User7",
+      "example": {
+        "token":
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMDM1LCJleHAiOjE1Mjg1MjQwMzV9.1RozDMhP_EeWoWHPYQa8K72tNw9e50Q",
+        "role": 3
+      },
+      "type": "object",
+      "properties": {
+        "token": {
+          "description": "",
+          "example":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwicm9sZSI6MywiaWF0IjoxNTI3NjYwMDM1LCJleHAiOjE1Mjg1MjQwMzV9.1RozDMhP_EeWoWHPYQa8K72tNw9e50Q",
+          "type": "string"
+        },
+        "role": {
+          "description": "",
+          "example": 3,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": ["token", "role"]
+    },
+    "LoginUser8": {
+      "title": "Login User8",
+      "example": {
+        "status": "error",
+        "errors": {
+          "signin": ["Invalid username or password"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors9"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors9": {
+      "title": "Errors9",
+      "example": {
+        "signin": ["Invalid username or password"]
+      },
+      "type": "object",
+      "properties": {
+        "signin": {
+          "description": "",
+          "example": ["Invalid username or password"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["signin"]
+    },
+    "LoginUser10": {
+      "title": "Login User10",
+      "example": {
+        "status": "error",
+        "errors": {
+          "username": ["Username is required."],
+          "password": ["Password is required."]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors11"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors11": {
+      "title": "Errors11",
+      "example": {
+        "username": ["Username is required."],
+        "password": ["Password is required."]
+      },
+      "type": "object",
+      "properties": {
+        "username": {
+          "description": "",
+          "example": ["Username is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "password": {
+          "description": "",
+          "example": ["Password is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["username", "password"]
+    },
+    "GetUser": {
+      "title": "Get User",
+      "example": {
+        "user": {
+          "id": 8,
+          "firstName": "Kolawole",
+          "lastName": "Taiwo",
+          "phoneNumber": "08132108218",
+          "email": "omokolataiwo@call.com",
+          "role": 3
+        }
+      },
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/User13"
+        }
+      },
+      "required": ["user"]
+    },
+    "User13": {
+      "title": "User13",
+      "example": {
+        "id": 8,
+        "firstName": "Kolawole",
+        "lastName": "Taiwo",
+        "phoneNumber": "08132108218",
+        "email": "omokolataiwo@call.com",
+        "role": 3
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 8,
+          "type": "integer",
+          "format": "int32"
+        },
+        "firstName": {
+          "description": "",
+          "example": "Kolawole",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "example": "Taiwo",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": "08132108218",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "example": "omokolataiwo@call.com",
+          "type": "string"
+        },
+        "role": {
+          "description": "",
+          "example": 3,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "email",
+        "role"
+      ]
+    },
+    "GetUser14": {
+      "title": "Get User14",
+      "example": {
+        "status": "error",
+        "errors": {
+          "auth": ["No token provided"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors15": {
+      "title": "Errors15",
+      "example": {
+        "auth": ["No token provided"]
+      },
+      "type": "object",
+      "properties": {
+        "auth": {
+          "description": "",
+          "example": ["No token provided"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["auth"]
+    },
+    "UpdateUser": {
+      "title": "Update User",
+      "example": {
+        "status": "error",
+        "errors": [
+          {
+            "phoneNumber": ["Phone number has already been used."]
+          }
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "description": "",
+          "example": [
+            {
+              "phoneNumber": ["Phone number has already been used."]
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Errors17"
+          }
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors17": {
+      "title": "Errors17",
+      "example": {
+        "phoneNumber": ["Phone number has already been used."]
+      },
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "description": "",
+          "example": ["Phone number has already been used."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["phoneNumber"]
+    },
+    "UpdateUser18": {
+      "title": "Update User18",
+      "example": {
+        "user": {
+          "firstName": "Lanre",
+          "lastName": "Taiwo",
+          "phoneNumber": "08132108219",
+          "email": "omokolataiwo@ymail.com",
+          "role": 3
+        }
+      },
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/User19"
+        }
+      },
+      "required": ["user"]
+    },
+    "User19": {
+      "title": "User19",
+      "example": {
+        "firstName": "Lanre",
+        "lastName": "Taiwo",
+        "phoneNumber": "08132108219",
+        "email": "omokolataiwo@ymail.com",
+        "role": 3
+      },
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "description": "",
+          "example": "Lanre",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "example": "Taiwo",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": "08132108219",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "example": "omokolataiwo@ymail.com",
+          "type": "string"
+        },
+        "role": {
+          "description": "",
+          "example": 3,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": ["firstName", "lastName", "phoneNumber", "email", "role"]
+    },
     "CreateCenterrequest": {
       "title": "Create CenterRequest",
       "example": {
@@ -1215,6 +2732,1851 @@
       },
       "required": ["firstName", "lastName", "email", "phoneNumber"]
     },
+    "CreateCenter": {
+      "title": "Create Center",
+      "example": {
+        "status": "error",
+        "errors": {
+          "contactId": ["Contact does not exist"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors23"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors23": {
+      "title": "Errors23",
+      "example": {
+        "contactId": ["Contact does not exist"]
+      },
+      "type": "object",
+      "properties": {
+        "contactId": {
+          "description": "",
+          "example": ["Contact does not exist"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["contactId"]
+    },
+    "CreateCenter24": {
+      "title": "Create Center24",
+      "example": {
+        "center": {
+          "id": 8,
+          "name": "Classique Events Place Pearl Hall",
+          "address": "Somewhere in Lagos",
+          "area": "Ajah",
+          "state": 37,
+          "capacity": 4000,
+          "type": 1,
+          "facilities": "Cameras, Stage",
+          "image": "default_image",
+          "amount": 70000,
+          "details": "Some long description",
+          "ownerId": 1,
+          "contactId": 4,
+          "approve": 0,
+          "active": 1,
+          "updatedAt": "2018-05-30T06:12:07.049Z",
+          "createdAt": "2018-05-30T06:12:07.049Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "center": {
+          "$ref": "#/definitions/Center"
+        }
+      },
+      "required": ["center"]
+    },
+    "Center": {
+      "title": "Center",
+      "example": {
+        "id": 8,
+        "name": "Classique Events Place Pearl Hall",
+        "address": "Somewhere in Lagos",
+        "area": "Ajah",
+        "state": 37,
+        "capacity": 4000,
+        "type": 1,
+        "facilities": "Cameras, Stage",
+        "image": "default_image",
+        "amount": 70000,
+        "details": "Some long description",
+        "ownerId": 1,
+        "contactId": 4,
+        "approve": 0,
+        "active": 1,
+        "updatedAt": "2018-05-30T06:12:07.049Z",
+        "createdAt": "2018-05-30T06:12:07.049Z"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 8,
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "",
+          "example": "Classique Events Place Pearl Hall",
+          "type": "string"
+        },
+        "address": {
+          "description": "",
+          "example": "Somewhere in Lagos",
+          "type": "string"
+        },
+        "area": {
+          "description": "",
+          "example": "Ajah",
+          "type": "string"
+        },
+        "state": {
+          "description": "",
+          "example": 37,
+          "type": "integer",
+          "format": "int32"
+        },
+        "capacity": {
+          "description": "",
+          "example": 4000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "facilities": {
+          "description": "",
+          "example": "Cameras, Stage",
+          "type": "string"
+        },
+        "image": {
+          "description": "",
+          "example": "default_image",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "example": 70000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "details": {
+          "description": "",
+          "example": "Some long description",
+          "type": "string"
+        },
+        "ownerId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "contactId": {
+          "description": "",
+          "example": 4,
+          "type": "integer",
+          "format": "int32"
+        },
+        "approve": {
+          "description": "",
+          "example": 0,
+          "type": "integer",
+          "format": "int32"
+        },
+        "active": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "5/30/2018 6:12:07 AM",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "5/30/2018 6:12:07 AM",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "address",
+        "area",
+        "state",
+        "capacity",
+        "type",
+        "facilities",
+        "image",
+        "amount",
+        "details",
+        "ownerId",
+        "contactId",
+        "approve",
+        "active",
+        "updatedAt",
+        "createdAt"
+      ]
+    },
+    "CreateCenter26": {
+      "title": "Create Center26",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors27"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors27": {
+      "title": "Errors27",
+      "example": {
+        "name": ["Name is required"],
+        "address": ["Address is required"],
+        "area": ["Area is required"],
+        "state": ["State is required."],
+        "type": ["Type is required."],
+        "capacity": ["Capacity is required."],
+        "facilities": ["Facilities is required."],
+        "image": ["Image is required"],
+        "details": [" Center details is required"],
+        "amount": ["Amount is required"]
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "",
+          "example": ["Name is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "address": {
+          "description": "",
+          "example": ["Address is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "area": {
+          "description": "",
+          "example": ["Area is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "state": {
+          "description": "",
+          "example": ["State is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "description": "",
+          "example": ["Type is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capacity": {
+          "description": "",
+          "example": ["Capacity is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "facilities": {
+          "description": "",
+          "example": ["Facilities is required."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "image": {
+          "description": "",
+          "example": ["Image is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "details": {
+          "description": "",
+          "example": [" Center details is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "amount": {
+          "description": "",
+          "example": ["Amount is required"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "address",
+        "area",
+        "state",
+        "type",
+        "capacity",
+        "facilities",
+        "image",
+        "details",
+        "amount"
+      ]
+    },
+    "CreateCenter28": {
+      "title": "Create Center28",
+      "example": {
+        "status": "error",
+        "errors": {
+          "name": ["Center already exist"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors29"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors29": {
+      "title": "Errors29",
+      "example": {
+        "name": ["Center already exist"]
+      },
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "",
+          "example": ["Center already exist"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["name"]
+    },
+    "GetCenters": {
+      "title": "Get Centers",
+      "example": {
+        "centers": [
+          {
+            "id": 7,
+            "name": "Havilla Center",
+            "address": "11 Oguntade street",
+            "area": "Iju",
+            "state": 1,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 3,
+            "facilities": "Chairs,Cameras,Security",
+            "amount": 7000000,
+            "details": "The best place you can have your event.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-05-16T16:29:40.05Z",
+            "updatedAt": "2018-05-16T16:35:40.562Z"
+          },
+          {
+            "id": 6,
+            "name": "Knightbridge Hotels Big Hall",
+            "address": "171, Oworonsoki Oshodi Expressway,",
+            "area": "Gbagada",
+            "state": 25,
+            "capacity": 3000,
+            "type": 2,
+            "ownerId": 2,
+            "contactId": 2,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 65000,
+            "details":
+              "Classy is just a tip of the iceberg with Sheba Centre. A Grand marquee setting aimed at pleasing you and granting all your wishes on that special day. Classy chandeliers to add glam to your day. It is located in a serene environment that is accessible from every part of Lagos. State of the art changing room and classy rest room after devouring the owambe delicacies await you. It seats comfortably 800 persons in banquet setting. A very spacious compound for flawless parking of cars is available for your guest. Tables, chairs, well-structured stage, 24 hour power supply, lighting, air condition, well-structured stage and maximum security is guaranteed.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637266/Trendy2_edbqto.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 5,
+            "name": "Sheba Centre",
+            "address": "28, Ayodele Okeowo Street, Soluyi",
+            "area": "Ajah",
+            "state": 25,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 1,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 65000,
+            "details":
+              "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 4,
+            "name": "Tobol Event Centre",
+            "address": "17 Billing way, Oregun",
+            "area": "Ikeja",
+            "state": 25,
+            "capacity": 3000,
+            "type": 2,
+            "ownerId": 2,
+            "contactId": 2,
+            "facilities":
+              "Chairs, Lighting, Parking Space, Sound System, Stage, Tables, Projector, White Board",
+            "amount": 65000,
+            "details":
+              "FM EVENT Centre is a perfect venue for you, whether for a wedding, Christmas party, product launch, meetings, conferences or entertainment events. Together with our experienced events managers and award winning hospitality, we ensure that your experience with us is extraordinary and truly memorable.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/opique-event-center-28540i1lTOVEbXw5K4i4ntjD_1038_600_wbr2eg.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 3,
+            "name": "FM EVENT Centre",
+            "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+            "area": "Lekki",
+            "state": 25,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 1,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 65000,
+            "details":
+              "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 2,
+            "name": "Platinum Hall",
+            "address": "9/11, Kudirat Abiola Way, Oregun Bus-stop",
+            "area": "Ikeja",
+            "state": 25,
+            "capacity": 2000,
+            "type": 2,
+            "ownerId": 2,
+            "contactId": 2,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 70000,
+            "details":
+              "Platinum Hall is Marquee tent located on a spacious landmass within the premises in a serene and secured environment of Ikeja with full AC. Our hall is suitable for all kinds of events with a capacity of 400 guests.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/20160601_154458-min_iod3wp.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          }
+        ],
+        "count": 7
+      },
+      "type": "object",
+      "properties": {
+        "centers": {
+          "description": "",
+          "example": [
+            {
+              "id": 7,
+              "name": "Havilla Center",
+              "address": "11 Oguntade street",
+              "area": "Iju",
+              "state": 1,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 3,
+              "facilities": "Chairs,Cameras,Security",
+              "amount": 7000000,
+              "details": "The best place you can have your event.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-05-16T16:29:40.05Z",
+              "updatedAt": "2018-05-16T16:35:40.562Z"
+            },
+            {
+              "id": 6,
+              "name": "Knightbridge Hotels Big Hall",
+              "address": "171, Oworonsoki Oshodi Expressway,",
+              "area": "Gbagada",
+              "state": 25,
+              "capacity": 3000,
+              "type": 2,
+              "ownerId": 2,
+              "contactId": 2,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Classy is just a tip of the iceberg with Sheba Centre. A Grand marquee setting aimed at pleasing you and granting all your wishes on that special day. Classy chandeliers to add glam to your day. It is located in a serene environment that is accessible from every part of Lagos. State of the art changing room and classy rest room after devouring the owambe delicacies await you. It seats comfortably 800 persons in banquet setting. A very spacious compound for flawless parking of cars is available for your guest. Tables, chairs, well-structured stage, 24 hour power supply, lighting, air condition, well-structured stage and maximum security is guaranteed.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637266/Trendy2_edbqto.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 5,
+              "name": "Sheba Centre",
+              "address": "28, Ayodele Okeowo Street, Soluyi",
+              "area": "Ajah",
+              "state": 25,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 4,
+              "name": "Tobol Event Centre",
+              "address": "17 Billing way, Oregun",
+              "area": "Ikeja",
+              "state": 25,
+              "capacity": 3000,
+              "type": 2,
+              "ownerId": 2,
+              "contactId": 2,
+              "facilities":
+                "Chairs, Lighting, Parking Space, Sound System, Stage, Tables, Projector, White Board",
+              "amount": 65000,
+              "details":
+                "FM EVENT Centre is a perfect venue for you, whether for a wedding, Christmas party, product launch, meetings, conferences or entertainment events. Together with our experienced events managers and award winning hospitality, we ensure that your experience with us is extraordinary and truly memorable.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/opique-event-center-28540i1lTOVEbXw5K4i4ntjD_1038_600_wbr2eg.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 3,
+              "name": "FM EVENT Centre",
+              "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+              "area": "Lekki",
+              "state": 25,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 2,
+              "name": "Platinum Hall",
+              "address": "9/11, Kudirat Abiola Way, Oregun Bus-stop",
+              "area": "Ikeja",
+              "state": 25,
+              "capacity": 2000,
+              "type": 2,
+              "ownerId": 2,
+              "contactId": 2,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 70000,
+              "details":
+                "Platinum Hall is Marquee tent located on a spacious landmass within the premises in a serene and secured environment of Ikeja with full AC. Our hall is suitable for all kinds of events with a capacity of 400 guests.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/20160601_154458-min_iod3wp.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Center"
+          }
+        },
+        "count": {
+          "description": "",
+          "example": 7,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": ["centers", "count"]
+    },
+    "GetAdminCenters": {
+      "title": "Get Admin Centers",
+      "example": {
+        "status": "error",
+        "errors": {
+          "auth": ["No token provided"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "GetAdminCenters34": {
+      "title": "Get Admin Centers34",
+      "example": {
+        "centers": [
+          {
+            "id": 8,
+            "name": "Classique Events Place Pearl Hall",
+            "address": "Somewhere in Lagos",
+            "area": "Ajah",
+            "state": 37,
+            "capacity": 4000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 4,
+            "facilities": "Cameras, Stage",
+            "amount": 70000,
+            "details": "Some long description",
+            "image": "default_image",
+            "approve": 0,
+            "active": 1,
+            "createdAt": "2018-05-30T06:12:07.049Z",
+            "updatedAt": "2018-05-30T06:12:07.049Z"
+          },
+          {
+            "id": 7,
+            "name": "Havilla Center",
+            "address": "11 Oguntade street",
+            "area": "Iju",
+            "state": 1,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 3,
+            "facilities": "Chairs,Cameras,Security",
+            "amount": 7000000,
+            "details": "The best place you can have your event.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-05-16T16:29:40.05Z",
+            "updatedAt": "2018-05-16T16:35:40.562Z"
+          },
+          {
+            "id": 5,
+            "name": "Sheba Centre",
+            "address": "28, Ayodele Okeowo Street, Soluyi",
+            "area": "Ajah",
+            "state": 25,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 1,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 65000,
+            "details":
+              "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 3,
+            "name": "FM EVENT Centre",
+            "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+            "area": "Lekki",
+            "state": 25,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 1,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 65000,
+            "details":
+              "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 1,
+            "name": "Classique Events Place Pearl Hall",
+            "address": "MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,",
+            "area": "Anthony",
+            "state": 25,
+            "capacity": 4000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 1,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 70000,
+            "details":
+              "It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.",
+            "image":
+              "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          }
+        ],
+        "count": 5
+      },
+      "type": "object",
+      "properties": {
+        "centers": {
+          "description": "",
+          "example": [
+            {
+              "id": 8,
+              "name": "Classique Events Place Pearl Hall",
+              "address": "Somewhere in Lagos",
+              "area": "Ajah",
+              "state": 37,
+              "capacity": 4000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 4,
+              "facilities": "Cameras, Stage",
+              "amount": 70000,
+              "details": "Some long description",
+              "image": "default_image",
+              "approve": 0,
+              "active": 1,
+              "createdAt": "2018-05-30T06:12:07.049Z",
+              "updatedAt": "2018-05-30T06:12:07.049Z"
+            },
+            {
+              "id": 7,
+              "name": "Havilla Center",
+              "address": "11 Oguntade street",
+              "area": "Iju",
+              "state": 1,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 3,
+              "facilities": "Chairs,Cameras,Security",
+              "amount": 7000000,
+              "details": "The best place you can have your event.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1526488178/txhdrd6bct4krpkegqzj.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-05-16T16:29:40.05Z",
+              "updatedAt": "2018-05-16T16:35:40.562Z"
+            },
+            {
+              "id": 5,
+              "name": "Sheba Centre",
+              "address": "28, Ayodele Okeowo Street, Soluyi",
+              "area": "Ajah",
+              "state": 25,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 3,
+              "name": "FM EVENT Centre",
+              "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+              "area": "Lekki",
+              "state": 25,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 1,
+              "name": "Classique Events Place Pearl Hall",
+              "address": "MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,",
+              "area": "Anthony",
+              "state": 25,
+              "capacity": 4000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 70000,
+              "details":
+                "It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.",
+              "image":
+                "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Center"
+          }
+        },
+        "count": {
+          "description": "",
+          "example": 5,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": ["centers", "count"]
+    },
+    "GetCenter": {
+      "title": "Get Center",
+      "example": {
+        "status": "error",
+        "errors": {
+          "id": ["Id must be a valid number"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors37"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors37": {
+      "title": "Errors37",
+      "example": {
+        "id": ["Id must be a valid number"]
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": ["Id must be a valid number"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["id"]
+    },
+    "GetCenter38": {
+      "title": "Get Center38",
+      "example": {
+        "center": {
+          "id": 1,
+          "name": "Classique Events Place Pearl Hall",
+          "address": "MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,",
+          "area": "Anthony",
+          "state": 25,
+          "capacity": 4000,
+          "type": 1,
+          "ownerId": 1,
+          "contactId": 1,
+          "facilities":
+            "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+          "amount": 70000,
+          "details":
+            "It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.",
+          "image":
+            "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+          "approve": 1,
+          "active": 1,
+          "createdAt": "2018-12-12T00:00:00Z",
+          "updatedAt": "2018-12-12T00:00:00Z",
+          "contacts": {
+            "id": 1,
+            "firstName": "Folusho",
+            "lastName": "Banwo",
+            "phoneNumber": "1234567890",
+            "email": "fbanwo@gmail.com",
+            "ownerId": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          }
+        }
+      },
+      "type": "object",
+      "properties": {
+        "center": {
+          "$ref": "#/definitions/Center39"
+        }
+      },
+      "required": ["center"]
+    },
+    "Center39": {
+      "title": "Center39",
+      "example": {
+        "id": 1,
+        "name": "Classique Events Place Pearl Hall",
+        "address": "MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,",
+        "area": "Anthony",
+        "state": 25,
+        "capacity": 4000,
+        "type": 1,
+        "ownerId": 1,
+        "contactId": 1,
+        "facilities":
+          "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+        "amount": 70000,
+        "details":
+          "It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.",
+        "image":
+          "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+        "approve": 1,
+        "active": 1,
+        "createdAt": "2018-12-12T00:00:00Z",
+        "updatedAt": "2018-12-12T00:00:00Z",
+        "contacts": {
+          "id": 1,
+          "firstName": "Folusho",
+          "lastName": "Banwo",
+          "phoneNumber": "1234567890",
+          "email": "fbanwo@gmail.com",
+          "ownerId": 1,
+          "createdAt": "2018-12-12T00:00:00Z",
+          "updatedAt": "2018-12-12T00:00:00Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "",
+          "example": "Classique Events Place Pearl Hall",
+          "type": "string"
+        },
+        "address": {
+          "description": "",
+          "example": "MKO Abiola Gardens, Opposite NNPC Gas Plant, Alausa,",
+          "type": "string"
+        },
+        "area": {
+          "description": "",
+          "example": "Anthony",
+          "type": "string"
+        },
+        "state": {
+          "description": "",
+          "example": 25,
+          "type": "integer",
+          "format": "int32"
+        },
+        "capacity": {
+          "description": "",
+          "example": 4000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "ownerId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "contactId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "facilities": {
+          "description": "",
+          "example":
+            "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "example": 70000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "details": {
+          "description": "",
+          "example":
+            "It gives us great pleasure to introduce, Classique Events Place Pearl Hall. A one and a half acre piece of property, uniquely brick built with the state of the art facility within a well kept vicinity. It is spacious, fully airconditioned and highly insulated with capacity to host up to 500 guests in banquet settings and 1000 guests in theater settings. This makes it convenient for us to host both corporate and retail events in a serene environment. They can conveniently host weddings, corporate functions, parties, banquets, church services and more It further has the capacity to accommodate over 300 cars parked within the premises without obstructing free flow of traffic along the high way.",
+          "type": "string"
+        },
+        "image": {
+          "description": "",
+          "example":
+            "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+          "type": "string"
+        },
+        "approve": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "active": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "12/12/2018 12:00:00 AM",
+          "type": "string"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "12/12/2018 12:00:00 AM",
+          "type": "string"
+        },
+        "contacts": {
+          "$ref": "#/definitions/Contacts"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "address",
+        "area",
+        "state",
+        "capacity",
+        "type",
+        "ownerId",
+        "contactId",
+        "facilities",
+        "amount",
+        "details",
+        "image",
+        "approve",
+        "active",
+        "createdAt",
+        "updatedAt",
+        "contacts"
+      ]
+    },
+    "Contacts": {
+      "title": "Contacts",
+      "example": {
+        "id": 1,
+        "firstName": "Folusho",
+        "lastName": "Banwo",
+        "phoneNumber": "1234567890",
+        "email": "fbanwo@gmail.com",
+        "ownerId": 1,
+        "createdAt": "2018-12-12T00:00:00Z",
+        "updatedAt": "2018-12-12T00:00:00Z"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "firstName": {
+          "description": "",
+          "example": "Folusho",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "example": "Banwo",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": "1234567890",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "example": "fbanwo@gmail.com",
+          "type": "string"
+        },
+        "ownerId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "12/12/2018 12:00:00 AM",
+          "type": "string"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "12/12/2018 12:00:00 AM",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "email",
+        "ownerId",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "SearchCenter": {
+      "title": "Search Center",
+      "example": {
+        "status": "error",
+        "errors": {
+          "centers": ["Centers not found."]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors42"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors42": {
+      "title": "Errors42",
+      "example": {
+        "centers": ["Centers not found."]
+      },
+      "type": "object",
+      "properties": {
+        "centers": {
+          "description": "",
+          "example": ["Centers not found."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["centers"]
+    },
+    "SearchCenter43": {
+      "title": "Search Center43",
+      "example": {
+        "centers": [
+          {
+            "id": 5,
+            "name": "Sheba Centre",
+            "address": "28, Ayodele Okeowo Street, Soluyi",
+            "area": "Ajah",
+            "state": 25,
+            "capacity": 3000,
+            "type": 1,
+            "ownerId": 1,
+            "contactId": 1,
+            "facilities":
+              "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+            "amount": 65000,
+            "details":
+              "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+            "image":
+              "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+            "approve": 1,
+            "active": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z",
+            "count": "1"
+          }
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "centers": {
+          "description": "",
+          "example": [
+            {
+              "id": 5,
+              "name": "Sheba Centre",
+              "address": "28, Ayodele Okeowo Street, Soluyi",
+              "area": "Ajah",
+              "state": 25,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z",
+              "count": "1"
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Center44"
+          }
+        }
+      },
+      "required": ["centers"]
+    },
+    "Center44": {
+      "title": "Center44",
+      "example": {
+        "id": 5,
+        "name": "Sheba Centre",
+        "address": "28, Ayodele Okeowo Street, Soluyi",
+        "area": "Ajah",
+        "state": 25,
+        "capacity": 3000,
+        "type": 1,
+        "ownerId": 1,
+        "contactId": 1,
+        "facilities":
+          "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+        "amount": 65000,
+        "details":
+          "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+        "image":
+          "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+        "approve": 1,
+        "active": 1,
+        "createdAt": "2018-12-12T00:00:00Z",
+        "updatedAt": "2018-12-12T00:00:00Z",
+        "count": "1"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 5,
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "",
+          "example": "Sheba Centre",
+          "type": "string"
+        },
+        "address": {
+          "description": "",
+          "example": "28, Ayodele Okeowo Street, Soluyi",
+          "type": "string"
+        },
+        "area": {
+          "description": "",
+          "example": "Ajah",
+          "type": "string"
+        },
+        "state": {
+          "description": "",
+          "example": 25,
+          "type": "integer",
+          "format": "int32"
+        },
+        "capacity": {
+          "description": "",
+          "example": 3000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "ownerId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "contactId": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "facilities": {
+          "description": "",
+          "example":
+            "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "example": 65000,
+          "type": "integer",
+          "format": "int32"
+        },
+        "details": {
+          "description": "",
+          "example":
+            "Add a unique touch to your event at Tobol Event Centre. Have a grand event at our exquisite marquee. Be classy on your memorable day with state of the art decoration. It seats 500 persons in a banquet setting and 650 in a theatre setting. Facilities such as tables, chairs, rest rooms, changing room, air condition, 24 hour power supply, fans and reliable security are available just for you.",
+          "type": "string"
+        },
+        "image": {
+          "description": "",
+          "example":
+            "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637267/1EJsG8mML7zCBdC1KN8E_ll2egj.jpg",
+          "type": "string"
+        },
+        "approve": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "active": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "12/12/2018 12:00:00 AM",
+          "type": "string"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "12/12/2018 12:00:00 AM",
+          "type": "string"
+        },
+        "count": {
+          "description": "",
+          "example": "1",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "address",
+        "area",
+        "state",
+        "capacity",
+        "type",
+        "ownerId",
+        "contactId",
+        "facilities",
+        "amount",
+        "details",
+        "image",
+        "approve",
+        "active",
+        "createdAt",
+        "updatedAt",
+        "count"
+      ]
+    },
+    "Get contacts  admin": {
+      "title": "Get Contacts - Admin",
+      "example": {
+        "status": "error",
+        "errors": {
+          "auth": ["No token provided"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Get contacts  admin47": {
+      "title": "Get Contacts - Admin47",
+      "example": {
+        "contacts": [
+          {
+            "id": 1,
+            "firstName": "Folusho",
+            "lastName": "Banwo",
+            "phoneNumber": "1234567890",
+            "email": "fbanwo@gmail.com",
+            "ownerId": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 2,
+            "firstName": "Mike",
+            "lastName": "Aiyegbe",
+            "phoneNumber": "7334567890",
+            "email": "maiyegbe@yahoo.com",
+            "ownerId": 1,
+            "createdAt": "2018-12-12T00:00:00Z",
+            "updatedAt": "2018-12-12T00:00:00Z"
+          },
+          {
+            "id": 3,
+            "firstName": "Dayo",
+            "lastName": "Olaoluwa",
+            "phoneNumber": "08023108214",
+            "email": "dolaoluwa@yandex.com",
+            "ownerId": 1,
+            "createdAt": "2018-05-16T16:29:40.043Z",
+            "updatedAt": "2018-05-16T16:29:40.043Z"
+          },
+          {
+            "id": 4,
+            "firstName": "Somename",
+            "lastName": "AnotherName",
+            "phoneNumber": "08032108214",
+            "email": "randommail@mail.com",
+            "ownerId": 1,
+            "createdAt": "2018-05-30T06:12:07.04Z",
+            "updatedAt": "2018-05-30T06:12:07.04Z"
+          }
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "contacts": {
+          "description": "",
+          "example": [
+            {
+              "id": 1,
+              "firstName": "Folusho",
+              "lastName": "Banwo",
+              "phoneNumber": "1234567890",
+              "email": "fbanwo@gmail.com",
+              "ownerId": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 2,
+              "firstName": "Mike",
+              "lastName": "Aiyegbe",
+              "phoneNumber": "7334567890",
+              "email": "maiyegbe@yahoo.com",
+              "ownerId": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            },
+            {
+              "id": 3,
+              "firstName": "Dayo",
+              "lastName": "Olaoluwa",
+              "phoneNumber": "08023108214",
+              "email": "dolaoluwa@yandex.com",
+              "ownerId": 1,
+              "createdAt": "2018-05-16T16:29:40.043Z",
+              "updatedAt": "2018-05-16T16:29:40.043Z"
+            },
+            {
+              "id": 4,
+              "firstName": "Somename",
+              "lastName": "AnotherName",
+              "phoneNumber": "08032108214",
+              "email": "randommail@mail.com",
+              "ownerId": 1,
+              "createdAt": "2018-05-30T06:12:07.04Z",
+              "updatedAt": "2018-05-30T06:12:07.04Z"
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Contacts"
+          }
+        }
+      },
+      "required": ["contacts"]
+    },
+    "Get events  admin": {
+      "title": "Get Events - Admin",
+      "example": {
+        "status": "error",
+        "errors": {
+          "auth": ["No token provided"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Get events  admin51": {
+      "title": "Get Events - Admin51",
+      "example": {
+        "events": [
+          {
+            "title": "Wedding Party",
+            "startDate": "2018-12-02",
+            "endDate": "2018-12-02",
+            "firstName": "Kolawole",
+            "lastName": "Taiwo",
+            "phoneNumber": "08132108214",
+            "email": "omokolataiwo@gmail.cm",
+            "name": "Classique Events Place Pearl Hall",
+            "state": 25,
+            "isConcluded": false
+          },
+          {
+            "title": "Birthday Party",
+            "startDate": "2018-12-06",
+            "endDate": "2018-12-06",
+            "firstName": "Lanre",
+            "lastName": "Taiwo",
+            "phoneNumber": "08032108215",
+            "email": "omokolataiwo@yahoo.com",
+            "name": "Classique Events Place Pearl Hall",
+            "state": 25,
+            "isConcluded": false
+          },
+          {
+            "title": "Naming Ceremony",
+            "startDate": "2018-12-10",
+            "endDate": "2018-12-10",
+            "firstName": "Lanre",
+            "lastName": "Taiwo",
+            "phoneNumber": "08032108215",
+            "email": "omokolataiwo@yahoo.com",
+            "name": "Classique Events Place Pearl Hall",
+            "state": 25,
+            "isConcluded": false
+          },
+          {
+            "title": "Music Concert",
+            "startDate": "2018-12-08",
+            "endDate": "2018-12-08",
+            "firstName": "Lanre",
+            "lastName": "Taiwo",
+            "phoneNumber": "08032108215",
+            "email": "omokolataiwo@yahoo.com",
+            "name": "FM EVENT Centre",
+            "state": 25,
+            "isConcluded": false
+          },
+          {
+            "title": "House warming",
+            "startDate": "2018-12-04",
+            "endDate": "2018-12-05",
+            "firstName": "Lanre",
+            "lastName": "Taiwo",
+            "phoneNumber": "08032108215",
+            "email": "omokolataiwo@yahoo.com",
+            "name": "Sheba Centre",
+            "state": 25,
+            "isConcluded": false
+          }
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "events": {
+          "description": "",
+          "example": [
+            {
+              "title": "Wedding Party",
+              "startDate": "2018-12-02",
+              "endDate": "2018-12-02",
+              "firstName": "Kolawole",
+              "lastName": "Taiwo",
+              "phoneNumber": "08132108214",
+              "email": "omokolataiwo@gmail.cm",
+              "name": "Classique Events Place Pearl Hall",
+              "state": 25,
+              "isConcluded": false
+            },
+            {
+              "title": "Birthday Party",
+              "startDate": "2018-12-06",
+              "endDate": "2018-12-06",
+              "firstName": "Lanre",
+              "lastName": "Taiwo",
+              "phoneNumber": "08032108215",
+              "email": "omokolataiwo@yahoo.com",
+              "name": "Classique Events Place Pearl Hall",
+              "state": 25,
+              "isConcluded": false
+            },
+            {
+              "title": "Naming Ceremony",
+              "startDate": "2018-12-10",
+              "endDate": "2018-12-10",
+              "firstName": "Lanre",
+              "lastName": "Taiwo",
+              "phoneNumber": "08032108215",
+              "email": "omokolataiwo@yahoo.com",
+              "name": "Classique Events Place Pearl Hall",
+              "state": 25,
+              "isConcluded": false
+            },
+            {
+              "title": "Music Concert",
+              "startDate": "2018-12-08",
+              "endDate": "2018-12-08",
+              "firstName": "Lanre",
+              "lastName": "Taiwo",
+              "phoneNumber": "08032108215",
+              "email": "omokolataiwo@yahoo.com",
+              "name": "FM EVENT Centre",
+              "state": 25,
+              "isConcluded": false
+            },
+            {
+              "title": "House warming",
+              "startDate": "2018-12-04",
+              "endDate": "2018-12-05",
+              "firstName": "Lanre",
+              "lastName": "Taiwo",
+              "phoneNumber": "08032108215",
+              "email": "omokolataiwo@yahoo.com",
+              "name": "Sheba Centre",
+              "state": 25,
+              "isConcluded": false
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event"
+          }
+        }
+      },
+      "required": ["events"]
+    },
+    "Event": {
+      "title": "Event",
+      "example": {
+        "title": "Wedding Party",
+        "startDate": "2018-12-02",
+        "endDate": "2018-12-02",
+        "firstName": "Kolawole",
+        "lastName": "Taiwo",
+        "phoneNumber": "08132108214",
+        "email": "omokolataiwo@gmail.cm",
+        "name": "Classique Events Place Pearl Hall",
+        "state": 25,
+        "isConcluded": false
+      },
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "",
+          "example": "Wedding Party",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "",
+          "example": "2018-12-02",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "",
+          "example": "2018-12-02",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "",
+          "example": "Kolawole",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "",
+          "example": "Taiwo",
+          "type": "string"
+        },
+        "phoneNumber": {
+          "description": "",
+          "example": "08132108214",
+          "type": "string"
+        },
+        "email": {
+          "description": "",
+          "example": "omokolataiwo@gmail.cm",
+          "type": "string"
+        },
+        "name": {
+          "description": "",
+          "example": "Classique Events Place Pearl Hall",
+          "type": "string"
+        },
+        "state": {
+          "description": "",
+          "example": 25,
+          "type": "integer",
+          "format": "int32"
+        },
+        "isConcluded": {
+          "description": "",
+          "example": false,
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "title",
+        "startDate",
+        "endDate",
+        "firstName",
+        "lastName",
+        "phoneNumber",
+        "email",
+        "name",
+        "state",
+        "isConcluded"
+      ]
+    },
     "UpdateCenterrequest": {
       "title": "Update CenterRequest",
       "example": {
@@ -1324,6 +4686,834 @@
         "newContact",
         "contact"
       ]
+    },
+    "UpdateCenter": {
+      "title": "Update Center",
+      "example": {
+        "status": "error",
+        "errors": {
+          "id": ["Id must be a valid number"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors37"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "UpdateCenter57": {
+      "title": "Update Center57",
+      "example": {
+        "center": {
+          "id": 1,
+          "name": "Classique Events Place",
+          "address": "Somewhere in Lagos",
+          "area": "Ajah",
+          "state": 26,
+          "capacity": 3000,
+          "type": 1,
+          "ownerId": 1,
+          "contactId": 1,
+          "facilities": "Cameras, Stage, Security",
+          "amount": 70000,
+          "details": "Some long description",
+          "image":
+            "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+          "approve": 1,
+          "active": 1,
+          "createdAt": "2018-12-12T00:00:00Z",
+          "updatedAt": "2018-12-12T00:00:00Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "center": {
+          "$ref": "#/definitions/Center"
+        }
+      },
+      "required": ["center"]
+    },
+    "UpdateCenter59": {
+      "title": "Update Center59",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors60"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors60": {
+      "title": "Errors60",
+      "example": {
+        "center": ["Center does not exist"]
+      },
+      "type": "object",
+      "properties": {
+        "center": {
+          "description": "",
+          "example": ["Center does not exist"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["center"]
+    },
+    "UpdateCenter61": {
+      "title": "Update Center61",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "ApproveCenter": {
+      "title": "Approve Center",
+      "example": {
+        "center": {
+          "id": 1,
+          "name": "Classique Events Place",
+          "address": "Somewhere in Lagos",
+          "area": "Ajah",
+          "state": 26,
+          "capacity": 3000,
+          "type": 1,
+          "ownerId": 1,
+          "contactId": 1,
+          "facilities": "Cameras, Stage, Security",
+          "amount": 70000,
+          "details": "Some long description",
+          "image":
+            "  http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/PetersenEventsCenter_at_Pitt_efkwv8.jpg",
+          "approve": 1,
+          "active": 1,
+          "createdAt": "2018-12-12T00:00:00Z",
+          "updatedAt": "2018-05-30T06:28:28.469Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "center": {
+          "$ref": "#/definitions/Center"
+        }
+      },
+      "required": ["center"]
+    },
+    "CreateEvent": {
+      "title": "Create Event",
+      "example": {
+        "event": {
+          "id": 11,
+          "title": "Wedding Anniversary",
+          "centerId": 3,
+          "startDate": "2018-09-26",
+          "endDate": "2018-09-26",
+          "userId": 8,
+          "active": 1,
+          "updatedAt": "2018-05-30T06:26:40.867Z",
+          "createdAt": "2018-05-30T06:26:40.867Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/Event66"
+        }
+      },
+      "required": ["event"]
+    },
+    "Event66": {
+      "title": "Event66",
+      "example": {
+        "id": 11,
+        "title": "Wedding Anniversary",
+        "centerId": 3,
+        "startDate": "2018-09-26",
+        "endDate": "2018-09-26",
+        "userId": 8,
+        "active": 1,
+        "updatedAt": "2018-05-30T06:26:40.867Z",
+        "createdAt": "2018-05-30T06:26:40.867Z"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 11,
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "description": "",
+          "example": "Wedding Anniversary",
+          "type": "string"
+        },
+        "centerId": {
+          "description": "",
+          "example": 3,
+          "type": "integer",
+          "format": "int32"
+        },
+        "startDate": {
+          "description": "",
+          "example": "2018-09-26",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "",
+          "example": "2018-09-26",
+          "type": "string"
+        },
+        "userId": {
+          "description": "",
+          "example": 8,
+          "type": "integer",
+          "format": "int32"
+        },
+        "active": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "5/30/2018 6:26:40 AM",
+          "type": "string"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "5/30/2018 6:26:40 AM",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "centerId",
+        "startDate",
+        "endDate",
+        "userId",
+        "active",
+        "updatedAt",
+        "createdAt"
+      ]
+    },
+    "CreateEvent67": {
+      "title": "Create Event67",
+      "example": {
+        "status": "error",
+        "errors": {
+          "centerId": ["Invalid center"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors68"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors68": {
+      "title": "Errors68",
+      "example": {
+        "centerId": ["Invalid center"]
+      },
+      "type": "object",
+      "properties": {
+        "centerId": {
+          "description": "",
+          "example": ["Invalid center"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["centerId"]
+    },
+    "CreateEvent69": {
+      "title": "Create Event69",
+      "example": {
+        "status": "error",
+        "errors": {
+          "title": ["Center has already been booked."]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors70"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors70": {
+      "title": "Errors70",
+      "example": {
+        "title": ["Center has already been booked."]
+      },
+      "type": "object",
+      "properties": {
+        "title": {
+          "description": "",
+          "example": ["Center has already been booked."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["title"]
+    },
+    "UpdateEvent": {
+      "title": "Update Event",
+      "example": {
+        "status": "error",
+        "errors": {
+          "event": ["Event does not exist"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors72"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors72": {
+      "title": "Errors72",
+      "example": {
+        "event": ["Event does not exist"]
+      },
+      "type": "object",
+      "properties": {
+        "event": {
+          "description": "",
+          "example": ["Event does not exist"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["event"]
+    },
+    "UpdateEvent73": {
+      "title": "Update Event73",
+      "example": {
+        "event": {
+          "id": 11,
+          "title": "Wedding Ceremony",
+          "startDate": "2018-6-3",
+          "endDate": "2018-6-4",
+          "centerId": "1",
+          "userId": 8,
+          "active": 1,
+          "createdAt": "2018-05-30T06:26:40.867Z",
+          "updatedAt": "2018-05-30T06:26:40.867Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/Event74"
+        }
+      },
+      "required": ["event"]
+    },
+    "Event74": {
+      "title": "Event74",
+      "example": {
+        "id": 11,
+        "title": "Wedding Ceremony",
+        "startDate": "2018-6-3",
+        "endDate": "2018-6-4",
+        "centerId": "1",
+        "userId": 8,
+        "active": 1,
+        "createdAt": "2018-05-30T06:26:40.867Z",
+        "updatedAt": "2018-05-30T06:26:40.867Z"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 11,
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "description": "",
+          "example": "Wedding Ceremony",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "",
+          "example": "2018-6-3",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "",
+          "example": "2018-6-4",
+          "type": "string"
+        },
+        "centerId": {
+          "description": "",
+          "example": "1",
+          "type": "string"
+        },
+        "userId": {
+          "description": "",
+          "example": 8,
+          "type": "integer",
+          "format": "int32"
+        },
+        "active": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "5/30/2018 6:26:40 AM",
+          "type": "string"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "5/30/2018 6:26:40 AM",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "startDate",
+        "endDate",
+        "centerId",
+        "userId",
+        "active",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "UpdateEvent75": {
+      "title": "Update Event75",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors68"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "UpdateEvent77": {
+      "title": "Update Event77",
+      "example": {
+        "status": "error",
+        "errors": {
+          "startDate": ["Start date is a past date."],
+          "endDate": ["End date is a past date."]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors78"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors78": {
+      "title": "Errors78",
+      "example": {
+        "startDate": ["Start date is a past date."],
+        "endDate": ["End date is a past date."]
+      },
+      "type": "object",
+      "properties": {
+        "startDate": {
+          "description": "",
+          "example": ["Start date is a past date."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "endDate": {
+          "description": "",
+          "example": ["End date is a past date."],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["startDate", "endDate"]
+    },
+    "UpdateEvent79": {
+      "title": "Update Event79",
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors80"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "Errors80": {
+      "title": "Errors80",
+      "example": {
+        "endDate": ["Start date can not be greater than end date"]
+      },
+      "type": "object",
+      "properties": {
+        "endDate": {
+          "description": "",
+          "example": ["Start date can not be greater than end date"],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["endDate"]
+    },
+    "DeleteEvent": {
+      "title": "Delete Event",
+      "example": {
+        "status": "error",
+        "errors": {
+          "auth": ["No token provided"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "DeleteEvent83": {
+      "title": "Delete Event83",
+      "example": {
+        "status": "error",
+        "errors": {
+          "event": ["Event does not exist."]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors72"
+        }
+      },
+      "required": ["status", "errors"]
+    },
+    "DeleteEvent85": {
+      "title": "Delete Event85",
+      "example": {
+        "event": {
+          "id": 11,
+          "title": "Wedding Ceremony",
+          "startDate": "2018-06-03",
+          "endDate": "2018-06-04",
+          "centerId": 1,
+          "userId": 8,
+          "active": 1,
+          "createdAt": "2018-05-30T06:26:40.867Z",
+          "updatedAt": "2018-05-30T06:37:46.398Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "event": {
+          "$ref": "#/definitions/Event66"
+        }
+      },
+      "required": ["event"]
+    },
+    "GetEvents": {
+      "title": "Get Events",
+      "example": {
+        "events": [
+          {
+            "id": 12,
+            "title": "Wedding Anniversary",
+            "startDate": "2018-09-26",
+            "endDate": "2018-09-26",
+            "centerId": 3,
+            "userId": 8,
+            "active": 1,
+            "createdAt": "2018-05-30T06:39:12.8Z",
+            "updatedAt": "2018-05-30T06:39:12.8Z",
+            "center": {
+              "id": 3,
+              "name": "FM EVENT Centre",
+              "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+              "area": "Lekki",
+              "state": 25,
+              "capacity": 3000,
+              "type": 1,
+              "ownerId": 1,
+              "contactId": 1,
+              "facilities":
+                "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+              "amount": 65000,
+              "details":
+                "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+              "image":
+                "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+              "approve": 1,
+              "active": 1,
+              "createdAt": "2018-12-12T00:00:00Z",
+              "updatedAt": "2018-12-12T00:00:00Z"
+            }
+          }
+        ],
+        "count": 1
+      },
+      "type": "object",
+      "properties": {
+        "events": {
+          "description": "",
+          "example": [
+            {
+              "id": 12,
+              "title": "Wedding Anniversary",
+              "startDate": "2018-09-26",
+              "endDate": "2018-09-26",
+              "centerId": 3,
+              "userId": 8,
+              "active": 1,
+              "createdAt": "2018-05-30T06:39:12.8Z",
+              "updatedAt": "2018-05-30T06:39:12.8Z",
+              "center": {
+                "id": 3,
+                "name": "FM EVENT Centre",
+                "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+                "area": "Lekki",
+                "state": 25,
+                "capacity": 3000,
+                "type": 1,
+                "ownerId": 1,
+                "contactId": 1,
+                "facilities":
+                  "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+                "amount": 65000,
+                "details":
+                  "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+                "image":
+                  "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+                "approve": 1,
+                "active": 1,
+                "createdAt": "2018-12-12T00:00:00Z",
+                "updatedAt": "2018-12-12T00:00:00Z"
+              }
+            }
+          ],
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Event88"
+          }
+        },
+        "count": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "required": ["events", "count"]
+    },
+    "Event88": {
+      "title": "Event88",
+      "example": {
+        "id": 12,
+        "title": "Wedding Anniversary",
+        "startDate": "2018-09-26",
+        "endDate": "2018-09-26",
+        "centerId": 3,
+        "userId": 8,
+        "active": 1,
+        "createdAt": "2018-05-30T06:39:12.8Z",
+        "updatedAt": "2018-05-30T06:39:12.8Z",
+        "center": {
+          "id": 3,
+          "name": "FM EVENT Centre",
+          "address": "Ijaiye-Isheri Road, Aguda-Ogba",
+          "area": "Lekki",
+          "state": 25,
+          "capacity": 3000,
+          "type": 1,
+          "ownerId": 1,
+          "contactId": 1,
+          "facilities":
+            "Chairs,Dance Floor,Air Conditioner,Changing Room,Banquet Style,Internet,Security Cameras,Lighting,Parking Space,Sound System,Stage,Tables,Projector,White Board,Rest Room,Security",
+          "amount": 65000,
+          "details":
+            "Sapphire Hall is located on the first floor of the building with full AC and in a serene and secure environment. Sapphire hall is suitable for all kinds of events with a capacity of 150 guest.",
+          "image":
+            "http://res.cloudinary.com/omokolataiwo/image/upload/v1524637268/WebSize_Sweetgrass20_fvb4ov.jpg",
+          "approve": 1,
+          "active": 1,
+          "createdAt": "2018-12-12T00:00:00Z",
+          "updatedAt": "2018-12-12T00:00:00Z"
+        }
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "example": 12,
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "description": "",
+          "example": "Wedding Anniversary",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "",
+          "example": "2018-09-26",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "",
+          "example": "2018-09-26",
+          "type": "string"
+        },
+        "centerId": {
+          "description": "",
+          "example": 3,
+          "type": "integer",
+          "format": "int32"
+        },
+        "userId": {
+          "description": "",
+          "example": 8,
+          "type": "integer",
+          "format": "int32"
+        },
+        "active": {
+          "description": "",
+          "example": 1,
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdAt": {
+          "description": "",
+          "example": "5/30/2018 6:39:12 AM",
+          "type": "string"
+        },
+        "updatedAt": {
+          "description": "",
+          "example": "5/30/2018 6:39:12 AM",
+          "type": "string"
+        },
+        "center": {
+          "$ref": "#/definitions/Center"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "startDate",
+        "endDate",
+        "centerId",
+        "userId",
+        "active",
+        "createdAt",
+        "updatedAt",
+        "center"
+      ]
+    },
+    "GetEvents90": {
+      "title": "Get Events90",
+      "example": {
+        "status": "error",
+        "errors": {
+          "auth": ["No token provided"]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "status": {
+          "description": "",
+          "example": "error",
+          "type": "string"
+        },
+        "errors": {
+          "$ref": "#/definitions/Errors15"
+        }
+      },
+      "required": ["status", "errors"]
     }
   }
 }

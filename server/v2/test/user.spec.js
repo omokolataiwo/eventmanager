@@ -14,7 +14,7 @@ let lucyToken;
 
 describe('post /users', () => {
   before(() => {
-    models.users.destroy({ truncate: true });
+    models.users.create(userFixture.register.superAdmin);
   });
 
   it('should create a new user', (done) => {
@@ -24,6 +24,8 @@ describe('post /users', () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
         expect(res.body).to.be.an('object');
+        expect(res.body.user.firstName).to.equal('Lucy');
+        expect(res.body.user.lastName).to.equal('Ben');
         done();
       });
   });
@@ -38,8 +40,11 @@ describe('post /users', () => {
         const keys = [...Object.keys(res.body.errors)];
 
         expect('username').to.be.oneOf(keys);
+        expect(res.body.errors.username[0]).to.equal('username has already been taken.');
         expect('email').to.be.oneOf(keys);
+        expect(res.body.errors.email[0]).to.equal('email has already been used.');
         expect('phoneNumber').to.be.oneOf(keys);
+        expect(res.body.errors.phoneNumber[0]).to.equal('phone number has already been used.');
         done();
       });
   });
@@ -56,6 +61,7 @@ describe('post /users', () => {
           .to.be.an('object')
           .that.has.property('matchPassword');
         expect(res.body.errors.matchPassword).to.be.an('array');
+        expect(res.body.errors.matchPassword[0]).to.equal('Match password is not the same as Password');
         done();
       });
   });
@@ -73,6 +79,7 @@ describe('post /users/signin', () => {
         expect(res.body.errors)
           .to.be.an('object')
           .that.has.property('signin');
+        expect(res.body.errors.signin[0]).is.equal('Invalid username or password');
         done();
       });
   });
@@ -103,7 +110,7 @@ describe('get /user/', () => {
         expect(res.body.user)
           .to.be.an('object')
           .that.has.property('firstName')
-          .that.is.equal(userFixture.register.lucy.firstName);
+          .that.is.equal('Lucy');
         done();
       });
   });
@@ -114,6 +121,7 @@ describe('get /user/', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(422);
+        expect(res.body.errors.auth[0]).to.equal('No token provided');
         done();
       });
   });
@@ -125,12 +133,19 @@ describe('get /user/', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(401);
+        expect(res.body.errors.auth[0]).to.equal('Failed to authenticate token.');
         done();
       });
   });
 });
 
 describe('put /user/', () => {
+  after(() => {
+    models.users.destroy({ truncate: true });
+    models.centers.destroy({ truncate: true });
+    models.contacts.destroy({ truncate: true });
+    models.events.destroy({ truncate: true });
+  });
   it('should update user', (done) => {
     const newUser = Object.assign({}, userFixture.register.lucy);
     newUser.username = 'user';
@@ -148,6 +163,8 @@ describe('put /user/', () => {
           .to.be.an('object')
           .that.has.property('firstName')
           .that.is.not.equal(userFixture.register.lucy.firstName);
+        expect(res.body.user.firstName).to.equal('Adeoye');
+        expect(res.body.user.role).to.equal(2);
         done();
       });
   });

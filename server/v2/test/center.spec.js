@@ -21,12 +21,8 @@ let blazeContactId = null;
 
 describe('Base setup', () => {
   before(() => {
-    models.users.destroy({ truncate: true });
-    models.centers.destroy({ truncate: true });
-    models.contacts.destroy({ truncate: true });
     models.users.create(userFixture.register.superAdmin);
   });
-
   it('should create admin account', (done) => {
     request
       .post(`${API_PATH}/users`)
@@ -123,6 +119,7 @@ describe('post /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
         expect(res.body.center).to.deep.have.property('id');
+        expect(res.body.center.name).to.equal('Louise Place');
         centerId = res.body.center.id;
         contactId = res.body.center.contactId;
         done();
@@ -132,7 +129,7 @@ describe('post /centers', () => {
   it('should create center for another user', (done) => {
     const differentCenter = {
       ...centerFixture.create.validCenter,
-      name: 'Center for Another user'
+      name: 'Four Point Hall'
     };
     request
       .post(`${API_PATH}/centers`)
@@ -141,6 +138,7 @@ describe('post /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
         expect(res.body.center).to.deep.have.property('id');
+        expect(res.body.center.name).to.equal('Four Point Hall');
         blazeContactId = res.body.center.contactId;
         done();
       });
@@ -154,6 +152,7 @@ describe('post /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(403);
         expect(res.body.errors).to.deep.have.property('auth');
+        expect(res.body.errors.auth[0]).to.equal('Not authorized');
         done();
       });
   });
@@ -174,6 +173,7 @@ describe('post /centers', () => {
         expect(res.body.center)
           .to.deep.have.property('contactId')
           .that.is.equal(contactId);
+        expect(res.body.center.name).to.equal('New Center with same ID');
         done();
       });
   });
@@ -196,6 +196,7 @@ describe('post /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(422);
         expect(res.body.errors).to.deep.have.property('contactId');
+        expect(res.body.errors.contactId[0]).to.equal('Contact does not exist');
         done();
       });
   });
@@ -209,6 +210,7 @@ describe('put /centers', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body.center.approve).to.equal(1);
         done();
       });
   });
@@ -250,6 +252,7 @@ describe('get /centers', () => {
         expect(res).to.have.status(200);
         expect(res.body.center).to.deep.have.property('contactId');
         expect(res.body.center.id).to.equal(centerId);
+        expect(res.body.center.name).to.equal('Louise Place');
         done();
       });
   });
@@ -261,6 +264,7 @@ describe('get /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(404);
         expect(res.body.errors).to.deep.have.property('center');
+        expect(res.body.errors.center[0]).to.equal('Center not found');
         done();
       });
   });
@@ -280,6 +284,7 @@ describe('put /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(200);
         expect(res.body.center).to.deep.have.property('name');
+        expect(res.body.center.name).to.equal('Louise Palace Center');
         done();
       });
   });
@@ -297,6 +302,7 @@ describe('put /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(422);
         expect(res.body.errors).to.deep.have.property('center');
+        expect(res.body.errors.center[0]).to.equal('Center does not exist');
         done();
       });
   });
@@ -316,6 +322,7 @@ describe('put /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(422);
         expect(res.body.errors).to.deep.have.property('contactId');
+        expect(res.body.errors.contactId[0]).to.equal('Contact does not exist');
         done();
       });
   });
@@ -335,6 +342,7 @@ describe('put /centers', () => {
       .end((err, res) => {
         expect(res).to.have.status(422);
         expect(res.body.errors).to.deep.have.property('contactId');
+        expect(res.body.errors.contactId[0]).to.equal('Invalid contact id');
         done();
       });
   });
@@ -351,6 +359,7 @@ describe('get /centers/contacts', () => {
         expect(res.body.contacts)
           .to.be.an('array')
           .with.lengthOf(2);
+        expect(res.body.contacts[0].lastName).to.equal('Packer');
         done();
       });
   });
@@ -365,12 +374,19 @@ describe('get /centers/events', () => {
       .end((err, res) => {
         expect(res).to.have.status(404);
         expect(res.body.errors).to.deep.have.property('events');
+        expect(res.body.errors.events[0]).to.equal('Events not found.');
         done();
       });
   });
 });
 
 describe('get /centers/search', () => {
+  after(() => {
+    models.users.destroy({ truncate: true });
+    models.centers.destroy({ truncate: true });
+    models.contacts.destroy({ truncate: true });
+    models.events.destroy({ truncate: true });
+  });
   it('should get all centers by name', (done) => {
     const name = 'palace';
     request
@@ -381,6 +397,7 @@ describe('get /centers/search', () => {
         expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
+        expect(res.body.centers[0].name).to.equal('Louise Palace Center');
         done();
       });
   });
@@ -395,6 +412,7 @@ describe('get /centers/search', () => {
         expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
+        expect(res.body.centers[0].capacity).to.equal(3000);
         done();
       });
   });
@@ -409,12 +427,13 @@ describe('get /centers/search', () => {
         expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
+        expect(res.body.centers[0].amount).to.equal(6000000);
         done();
       });
   });
 
   it('should get all centers by area', (done) => {
-    const area = 'lekki';
+    const area = 'lek';
     request
       .get(`${API_PATH}/centers/search?area=${area}`)
       .send()
@@ -423,6 +442,7 @@ describe('get /centers/search', () => {
         expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
+        expect(res.body.centers[0].area).to.equal('Lekki');
         done();
       });
   });
@@ -451,6 +471,7 @@ describe('get /centers/search', () => {
         expect(res.body.centers)
           .to.be.an('array')
           .with.lengthOf(1);
+        expect(res.body.centers[0].facilities.indexOf('chair')).to.equal(7);
         done();
       });
   });
@@ -476,6 +497,7 @@ describe('get /centers/search', () => {
       .send()
       .end((err, res) => {
         expect(res).to.have.status(404);
+        expect(res.body.errors.search[0]).to.equal('Center not found.');
         done();
       });
   });

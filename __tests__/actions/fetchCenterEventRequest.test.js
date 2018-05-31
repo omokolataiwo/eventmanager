@@ -16,7 +16,7 @@ describe('Fetch All Events for a CenterRequest', () => {
 
   describe('Fetch All Events for a Center Action', () => {
     it('should dispatch fetch events action', (done) => {
-      moxios.stubRequest(`${API_PATH}/centers/events`, {
+      moxios.stubRequest(`${API_PATH}/centers/events?page=1`, {
         status: 200,
         response: {
           events: [
@@ -24,7 +24,8 @@ describe('Fetch All Events for a CenterRequest', () => {
               title: 'Birthday Party',
               centerId: 2,
               startDate: '2018-12-4',
-              endDate: '2018-12-4'
+              endDate: '2018-12-4',
+              count: 1
             }
           ]
         }
@@ -38,9 +39,11 @@ describe('Fetch All Events for a CenterRequest', () => {
               title: 'Birthday Party',
               centerId: 2,
               startDate: '2018-12-4',
-              endDate: '2018-12-4'
+              endDate: '2018-12-4',
+              count: 1
             }
-          ]
+          ],
+          count: 1
         }
       ];
       const store = mockStore({ ...userMock });

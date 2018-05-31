@@ -1,5 +1,3 @@
-import { center } from './center';
-
 export const defaultEvent = {
   events: [],
   actions: {
@@ -14,15 +12,13 @@ export const defaultEvent = {
 export const eventBirthday = {
   title: 'Birthday Party',
   startDate: '2018-10-12',
-  endDate: '2018-10-12',
-  center: { ...center }
+  endDate: '2018-10-12'
 };
 
 export const eventWedding = {
   title: 'Wedding Anniversary',
   startDate: '2018-10-12',
-  endDate: '2018-10-12',
-  center: { ...center }
+  endDate: '2018-10-12'
 };
 
 export const events = [eventBirthday, eventWedding];

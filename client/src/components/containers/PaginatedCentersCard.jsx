@@ -38,6 +38,7 @@ const PaginatedCentersCard = ({
           </div>
         ))}
       </div>
+
       <Pagination total={count} handlePagingNav={handlePagingNav} />
     </div>
   );

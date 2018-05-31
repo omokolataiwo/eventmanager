@@ -1,5 +1,4 @@
 import instance from '../utils/axios';
-import { API_PATH } from '../consts';
 import {
   FETCHING_CENTERS_EVENTS,
   RECEIVED_CENTERS_EVENTS,
@@ -14,7 +13,8 @@ import {
  */
 const recievedEvents = events => ({
   type: RECEIVED_CENTERS_EVENTS,
-  events
+  events,
+  count: events[0].count || 0
 });
 
 /**
@@ -33,13 +33,13 @@ const fetchingCenterEventsError = error => ({
  *
  * @returns {void}
  */
-export const fetchCenterEventRequest = () => (dispatch, getState) => {
+export const fetchCenterEventRequest = query => (dispatch, getState) => {
   dispatch({ type: FETCHING_CENTERS_EVENTS });
   instance.defaults.headers.common[
     'x-access-token'
   ] = getState().user.accessToken;
   return instance
-    .get(`/centers/events`)
+    .get(`/centers/events`, { params: query })
     .then(response => {
       dispatch(recievedEvents(response.data.events));
     })

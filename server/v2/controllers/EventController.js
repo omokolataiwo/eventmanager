@@ -222,7 +222,7 @@ export default class EventController {
    */
   static async editEvent(req, res) {
     try {
-      const event = await models.events.findOne({
+      let event = await models.events.findOne({
         where: {
           $and: [{ id: req.params.id }, { userId: req.user.id }]
         }
@@ -286,14 +286,17 @@ export default class EventController {
         });
       }
 
-      return models.events
-        .update(modifiedEvent, {
-          where: { id: req.params.id }
-        })
-        .then(() => {
-          res.status(200).json({ event: modifiedEvent });
-        });
-    } catch (e) {
+      await models.events.update(modifiedEvent, {
+        where: { id: req.params.id }
+      });
+
+      event = await models.events.find({
+        include: [{ model: models.centers, as: 'center' }],
+        where: { id: req.params.id }
+      });
+
+      res.status(200).json({ event });
+    } catch (error) {
       return res.status(500).send({
         status: 'error',
         message: 'Internal Server Error'

@@ -1,5 +1,5 @@
 import instance from '../utils/axios';
-import { API_PATH } from '../consts';
+
 import {
   FETCHING_EVENTS,
   RECEIVED_EVENTS,
@@ -41,14 +41,14 @@ const fetchUserEventError = error => ({ type: FETCHING_EVENTS_ERROR, error });
  *
  * @returns {void}
  */
-export const fetchUserEventsRequest = () => (dispatch, getState) => {
+export const fetchUserEventsRequest = query => (dispatch, getState) => {
   dispatch(requestFetchUserEvent());
   instance.defaults.headers.common[
     'x-access-token'
   ] = getState().user.accessToken;
   dispatch(requestFetchUserEvent);
   return instance
-    .get(`/events`)
+    .get(`/events`, { params: query })
     .then(response => {
       dispatch(userEvents(response.data));
     })
