@@ -63,6 +63,7 @@ export class Create extends React.Component {
     };
     this.handleFormFieldChanged = this.handleFormFieldChanged.bind(this);
     this.changeActiveCenter = this.changeActiveCenter.bind(this);
+    this.handlePagingNav = this.handlePagingNav.bind(this);
   }
 
   /**
@@ -139,6 +140,16 @@ export class Create extends React.Component {
   }
 
   /**
+   * Fetch paging
+   *
+   * @param {number} index page clicked
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    this.props.fetchAllCentersRequest({ page: index });
+  }
+
+  /**
    * Change selected center for event
    *
    * @param {int} centerId - Center ID
@@ -185,7 +196,7 @@ export class Create extends React.Component {
    */
   render() {
     if (this.props.centerAction.getCenters === FETCHING_CENTERS) {
-      return <Preloader />;
+      return <div className="preloader"><Preloader /></div>;
     }
 
     if (this.props.centerAction.getCenters === FETCHING_CENTERS_ERROR) {
@@ -208,41 +219,49 @@ export class Create extends React.Component {
               width="8"
               errorMessage={this.state.errors.title}
             />
+          </div>
 
-            <div className="row">
-              <DatePicker
-                onChange={this.handleFormFieldChanged}
-                id="startDate"
-                type="text"
-                title="Start Date"
-                width="6"
-                errorMessage={this.state.errors.startDate}
-              />
+          <div className="row">
+            <DatePicker
+              onChange={this.handleFormFieldChanged}
+              id="startDate"
+              type="text"
+              title="Start Date"
+              width="6"
+              errorMessage={this.state.errors.startDate}
+            />
 
-              <DatePicker
-                onChange={this.handleFormFieldChanged}
-                id="endDate"
-                type="text"
-                title="End Date"
-                width="6"
-                errorMessage={this.state.errors.endDate}
-              />
-            </div>
+            <DatePicker
+              onChange={this.handleFormFieldChanged}
+              id="endDate"
+              type="text"
+              title="End Date"
+              width="6"
+              errorMessage={this.state.errors.endDate}
+            />
           </div>
 
           <CenterDetailsSimple center={this.state.activeCenter} />
-          <button
-            className="btn blue"
-            onClick={event => this.createEvent(event)}
-          >
-            Book Center
-          </button>
+          <div className="row">
+            <button
+              className="btn blue right"
+              onClick={event => this.createEvent(event)}
+            >
+              Book Center
+            </button>
+          </div>
         </form>
 
         <hr />
         <div className="row">
           <div className="col s12 m12 l12">
-            <h5>Related Centers</h5>
+            <h5>Available Centers</h5>
+            <p style={{ fontSize: '17px', textAlign: 'center' }}>
+              <strong>
+                * You can choose any of the centers below for your event. Simply
+                click on one to update the booking application.
+              </strong>
+            </p>
           </div>
         </div>
         <div className="row center event_center">
@@ -251,6 +270,7 @@ export class Create extends React.Component {
               centers={this.state.centers}
               count={this.state.count}
               click={this.changeActiveCenter}
+              handlePagingNav={this.handlePagingNav}
             />
           </div>
         </div>

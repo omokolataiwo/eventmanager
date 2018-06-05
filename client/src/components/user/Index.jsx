@@ -7,11 +7,17 @@ import $ from 'jquery';
 import fetchUserEventsRequest from '../../actions/fetchUserEventsRequest';
 import fetchUserRequest from '../../actions/fetchUserRequest';
 import deleteEventRequest from '../../actions/deleteEventRequest';
+import reset from '../../actions/reset';
 import HorizontalFeaturedCenters from '../containers/HorizontalFeaturedCenters';
 import Preloader from '../containers/Preloader';
 import { STATES } from '../../consts';
-import { hasFlash, getFlash } from '../../utils/flash';
-import { CREATED_EVENT, FETCHING_EVENTS } from '../../types';
+import { hasFlash, getFlash, addFlash } from '../../utils/flash';
+import {
+  CREATED_EVENT,
+  FETCHING_EVENTS,
+  DELETED_EVENT,
+  RESET_DELETING_EVENT
+} from '../../types';
 import Pagination from '../containers/Pagination';
 
 const propTypes = {
@@ -80,13 +86,45 @@ export class Index extends Component {
   }
 
   /**
+   * Receive new properties from store
+   *
+   * @param {object} newProps New Properties
+   * @returns {void}
+   * @memberof Index
+   */
+  componentWillReceiveProps(newProps) {
+    const { events, actions } = newProps;
+
+    let page = 0;
+
+    if (
+      events.length === 0 &&
+      hasFlash('page') &&
+      (page = getFlash('page')) > 1
+    ) {
+      this.props.fetchUserEventsRequest({ page: page - 1 });
+      this.props.actions.getEvents = FETCHING_EVENTS;
+      addFlash(page - 1);
+      return;
+    }
+
+    if (actions.cancel === DELETED_EVENT) {
+      page = getFlash('page') || 1;
+      this.props.reset(RESET_DELETING_EVENT);
+      this.props.fetchUserEventsRequest({ page });
+      addFlash(page);
+    }
+  }
+
+  /**
    * Fetch paging
    *
    * @param {number} index page cliced
    * @returns {void}
    */
   handlePagingNav(index) {
-    //this.props.fetchAdminCentersRequest({ page: index });
+    this.props.fetchUserEventsRequest({ page: index });
+    addFlash('page', index);
   }
 
   /**
@@ -140,7 +178,7 @@ export class Index extends Component {
       <div className="container container-medium event">
         <div id="modalEvent" className="modal">
           <div className="modal-content">
-            <h5>Are you sure you want to cancle this event?</h5>
+            <h5>Are you sure you want to cancel this event?</h5>
           </div>
           <div className="modal-footer">
             <button
@@ -166,7 +204,7 @@ export class Index extends Component {
             {this.props.events.length ? (
               <div className="row">
                 <div className="col s12 m12 l12">
-                  <div className="row">
+                  <div className="row animated fadeIn">
                     {this.props.events.map(event => {
                       let daysRemaining = moment(event.startDate).diff(
                         moment(),
@@ -220,15 +258,25 @@ export class Index extends Component {
                                   location_on
                                 </i>
                               </div>
-                              <div className="col s12 m9 l9">
-                                <h6 className="truncate">
-                                  {event.center.name}
-                                </h6>
-                                <p>
-                                  {event.center.area},{' '}
-                                  {STATES[event.center.state - 1]}
-                                </p>
-                              </div>
+                              {event.centerId != 0 ? (
+                                <div className="col s12 m9 l9">
+                                  <h6 className="truncate">
+                                    {event.center.name}
+                                  </h6>
+                                  <p>
+                                    {event.center.area},{' '}
+                                    {STATES[event.center.state - 1]}
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="col s12 m9 l9 event-cancelled">
+                                  <h6 className="truncate">EVENT CANCELLED</h6>
+                                  <p>
+                                    You may want to click the edit button above
+                                    to change center.
+                                  </p>
+                                </div>
+                              )}
                             </div>
                             <div className="row timer">
                               <div className="col s12 m2 l2">
@@ -299,5 +347,6 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps, {
   fetchUserEventsRequest,
   fetchUserRequest,
-  deleteEventRequest
+  deleteEventRequest,
+  reset
 })(Index);

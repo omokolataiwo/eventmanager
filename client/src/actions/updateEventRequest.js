@@ -53,7 +53,7 @@ export const updateEventRequest = event => (dispatch, getState) => {
       centerId
     })
     .then(response => {
-      dispatch(updateEvent(response.data));
+      dispatch(updateEvent(response.data.event));
     })
     .catch(errors => {
       dispatch(updateEventError(errors.response.data.errors));

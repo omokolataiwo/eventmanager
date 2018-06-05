@@ -36,6 +36,7 @@ module.exports = (app) => {
 
   app.get('/centers/:id', validateParamID, center.getCenter); // Get a Single Center, does not need authentication
 
+  app.delete('/centers/event/:id', adminAuthentication, center.cancelEvent);
   app.put(
     '/centers/approve/:id',
     validateParamID,

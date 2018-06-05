@@ -15,7 +15,6 @@ const Pagination = ({ total, handlePagingNav }) => {
   if (total <= LIMIT) return null;
 
   const count = Math.ceil(total / LIMIT);
-
   return (
     <ul className="pagination">
       {new Array(count).fill(null).map((array, index) => (

@@ -19,7 +19,7 @@ describe('Create Event Request', () => {
       moxios.stubRequest(`${API_PATH}/events/${event.id}`, {
         status: 200,
         response: {
-          ...event
+          event
         }
       });
       const expectedActions = [

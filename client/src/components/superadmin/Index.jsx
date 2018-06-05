@@ -6,6 +6,7 @@ import axios from 'axios';
 import fetchAllCentersRequest from '../../actions/fetchAllProtectedCentersRequest';
 import approveCenterRequest from '../../actions/approveCenterRequest';
 import Lever from '../containers/forms/Lever';
+import Pagination from '../containers/Pagination';
 
 const propTypes = {
   fetchAllCentersRequest: PropTypes.func.isRequired,
@@ -32,6 +33,7 @@ export class Index extends React.Component {
       centers: []
     };
     this.handleApproveToggle = this.handleApproveToggle.bind(this);
+    this.handlePagingNav = this.handlePagingNav.bind(this);
   }
   /**
    * Fetches centers
@@ -73,6 +75,16 @@ export class Index extends React.Component {
     });
 
     this.setState({ centers });
+  }
+
+  /**
+   * Fetch paging
+   *
+   * @param {number} index page clicked
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    this.props.fetchAllCentersRequest({ page: index });
   }
 
   /**
@@ -132,6 +144,10 @@ export class Index extends React.Component {
         <h4>Registered Centers</h4>
         <hr />
         {this.renderCenters()}
+        <Pagination
+          total={this.props.count}
+          handlePagingNav={this.handlePagingNav}
+        />
       </div>
     );
   }
@@ -146,8 +162,8 @@ Index.propTypes = propTypes;
  * @returns {object} - Extracted states properties
  */
 const mapStateToProps = state => {
-  const { centers } = state.getAvailableCenters;
-  return { centers };
+  const { centers, count } = state.getAvailableCenters;
+  return { centers, count };
 };
 export default connect(mapStateToProps, {
   fetchAllCentersRequest,

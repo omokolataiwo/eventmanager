@@ -20,10 +20,6 @@ let eventId = null;
 
 describe('Event Base setup', () => {
   before(async () => {
-    models.users.destroy({ truncate: true });
-    models.centers.destroy({ truncate: true });
-    models.contacts.destroy({ truncate: true });
-    models.events.destroy({ truncate: true });
     let lucy = Object.assign({}, userFixture.register.lucy);
     lucy = await registerAccount(lucy);
 
@@ -76,6 +72,7 @@ describe('post /events', () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
         expect(res.body.event).to.deep.have.property('id');
+        expect(res.body.event.title).to.equal('Birthday Party');
         eventId = res.body.event.id;
         done();
       });
@@ -95,6 +92,7 @@ describe('post /events', () => {
       .end((err, res) => {
         expect(res).to.have.status(201);
         expect(res.body.event).to.deep.have.property('id');
+        expect(res.body.event.startDate).to.equal('2018-11-20');
         done();
       });
   });
@@ -111,6 +109,7 @@ describe('post /events', () => {
       .end((err, res) => {
         expect(res).to.have.status(409);
         expect(res.body.errors).to.deep.have.property('title');
+        expect(res.body.errors.title[0]).to.equal('Center has already been booked.');
         done();
       });
   });
@@ -126,6 +125,7 @@ describe('post /events', () => {
       .end((err, res) => {
         expect(res).to.have.status(422);
         expect(res.body.errors).to.deep.have.property('centerId');
+        expect(res.body.errors.centerId[0]).to.equal('Invalid center');
         done();
       });
   });
@@ -142,6 +142,7 @@ describe('get /events', () => {
         expect(res.body.events)
           .to.be.an('array')
           .with.lengthOf(2);
+        expect(res.body.events[0].startDate).to.equal('2018-11-20');
         done();
       });
   });
@@ -150,6 +151,7 @@ describe('get /events', () => {
 describe('put /events', () => {
   it('should update event', (done) => {
     const event = Object.assign({}, eventFixture.create.validEvent, {
+      title: 'Birthday Bash',
       centerId
     });
     request
@@ -158,6 +160,7 @@ describe('put /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body.event.title).to.equal('Birthday Bash');
         done();
       });
   });
@@ -174,6 +177,7 @@ describe('put /events', () => {
       .end((err, res) => {
         expect(res).to.have.status(422);
         expect(res.body.errors).to.deep.have.property('auth');
+        expect(res.body.errors.auth[0]).to.equal('No token provided');
         done();
       });
   });
@@ -188,6 +192,7 @@ describe('put /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(404);
+        expect(res.body.errors.event[0]).equal('Event does not exist');
         done();
       });
   });
@@ -202,6 +207,7 @@ describe('put /events', () => {
       .send(event)
       .end((err, res) => {
         expect(res).to.have.status(404);
+        expect(res.body.errors.centerId[0]).to.equal('Invalid center');
         done();
       });
   });
@@ -219,28 +225,38 @@ describe('put /events', () => {
       .end((err, res) => {
         expect(res).to.have.status(409);
         expect(res.body.errors).to.deep.have.property('title');
+        expect(res.body.errors.title[0]).to.equal('Center has already been booked.');
         done();
       });
   });
 });
 
 describe('delete /events', () => {
+  after(() => {
+    models.users.destroy({ truncate: true });
+    models.centers.destroy({ truncate: true });
+    models.contacts.destroy({ truncate: true });
+    models.events.destroy({ truncate: true });
+  });
+
   it('should delete event', (done) => {
     request
       .delete(`${API_PATH}/events/${eventId}`)
       .set('x-access-token', johndoeToken)
       .end((err, res) => {
         expect(res).to.have.status(200);
+        expect(res.body.event.id).to.equal(eventId);
         done();
       });
   });
 
   it('should not delete event with invalid event id', (done) => {
     request
-      .delete(`${API_PATH}/events/53637637`)
+      .delete(`${API_PATH}/events/${eventId}`)
       .set('x-access-token', johndoeToken)
       .end((err, res) => {
         expect(res).to.have.status(404);
+        expect(res.body.errors.event[0]).to.equal('Event does not exist.');
         done();
       });
   });

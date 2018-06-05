@@ -8,6 +8,7 @@ import {
   FETCHING_CENTERS_EVENTS,
   FETCHING_CENTERS_EVENTS_ERRORS
 } from '../../types';
+import Pagination from '../containers/Pagination';
 
 const propTypes = {
   fetchCenterEventRequest: PropTypes.func.isRequired,
@@ -23,6 +24,16 @@ const propTypes = {
  */
 export class Bookings extends React.Component {
   /**
+   * Creates an instance of Bookings.
+   *
+   * @param {any} props React Properties
+   * @memberof Bookings
+   */
+  constructor(props) {
+    super(props);
+    this.handlePagingNav = this.handlePagingNav.bind(this);
+  }
+  /**
    * Get all Eenters and Events
    *
    * @return {void}
@@ -30,6 +41,16 @@ export class Bookings extends React.Component {
    */
   componentDidMount() {
     this.props.fetchCenterEventRequest();
+  }
+
+  /**
+   * Fetch paging
+   *
+   * @param {number} index page cliced
+   * @returns {void}
+   */
+  handlePagingNav(index) {
+    this.props.fetchCenterEventRequest({ page: index });
   }
 
   /**
@@ -83,6 +104,10 @@ export class Bookings extends React.Component {
         <div className="row">
           <div className="col s12 m12 l12 animated fadeIn">
             <BookingTable events={this.props.centersEvents} />
+            <Pagination
+              total={this.props.count}
+              handlePagingNav={this.handlePagingNav}
+            />
           </div>
         </div>
       </div>
@@ -99,7 +124,7 @@ Bookings.propTypes = propTypes;
  * @returns {object} - Extracted object
  */
 const mapStateToProps = state => {
-  let { centersEvents, action } = state.getCentersEvents;
-  return { centersEvents, action };
+  let { centersEvents, action, count } = state.getCentersEvents;
+  return { centersEvents, action, count };
 };
 export default connect(mapStateToProps, { fetchCenterEventRequest })(Bookings);

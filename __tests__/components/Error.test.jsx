@@ -7,7 +7,6 @@ const wrapper = shallow(<Error {...props} />);
 
 describe('Error Component', () => {
   it('should render error component', () => {
-    console.log('========================> ', wrapper.debug());
     expect(wrapper.exists()).toBe(true);
   });
 });
