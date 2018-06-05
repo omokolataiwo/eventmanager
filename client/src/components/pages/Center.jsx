@@ -171,7 +171,7 @@ export class Center extends React.Component {
         <p className="label">Address</p>
         <p className="value address">
           {this.props.center.address}, {this.props.center.area}{' '}
-          {STATES[this.props.center.state]}.
+          {STATES[this.props.center.state - 1]}.
         </p>
         <p className="label">Capacity</p>
         <p className="value capacity">

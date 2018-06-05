@@ -5,28 +5,27 @@
     "An Event Manager, for listing your event center and booking center for your events.",
   "main": "index.js",
   "scripts": {
-    "jest":
-      "jest __tests__ --coverage --collectCoverageFrom=client/src/**/*.{js,jsx} && codecov -t d26319dd-01b7-4456-bb9b-4196ce3c2a9e",
-    "jest:dev":
-      "jest __tests__ --coverage --watch --collectCoverageFrom=client/src/**/*.{js,jsx}",
-    "serverTest":
-      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js && npm run coverage",
-    "test": "npm run serverTest && npm run jest",
-    "build:dev:server":
-      "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
-    "build":
-      "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files && rimraf ./client/dist && NODE_ENV=production webpack --config ./webpack.config.js -p",
-    "nightwatch":
-      "npm run db:reset-test && cd ./client && NODE_ENV=test nightwatch",
-    "start": "node dist/index.js",
-    "start:dev:server": "nodemon dist/index.js",
-    "start:dev:client":
-      "NODE_ENV=development webpack-dev-server --open webpack.config.js",
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "postinstall": "npm run build",
+    "build":
+      "npm run build:server && rimraf ./client/dist && NODE_ENV=production webpack --config ./webpack.config.js -p",
+    "start": "node dist/index.js",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "test": "npm run server:test && npm run client:test",
+    "client:test":
+      "jest __tests__ --coverage --collectCoverageFrom=client/src/**/*.{js,jsx} && codecov -t d26319dd-01b7-4456-bb9b-4196ce3c2a9e",
+    "server:test":
+      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js && npm run coverage",
+    "nightwatch": "npm run db:reset && cd ./client && nightwatch",
+    "start:server:dev": "nodemon dist/index.js",
+    "start:client:dev":
+      "NODE_ENV=development webpack-dev-server --open webpack.config.js",
+    "client:test:dev":
+      "jest __tests__ --coverage --watch --collectCoverageFrom=client/src/**/*.{js,jsx}",
+    "build:server":
+      "rimraf dist/ && babel ./server --out-dir dist/ --ignore ./node_modules,./.babelrc,./package.json,./npm-debug.log,./server/dist --copy-files",
     "db:reset":
       "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:undo:all && sequelize db:seed:all",
-    "db:reset-test":
+    "db:reset:test":
       "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate && NODE_ENV=test sequelize db:seed:undo:all && NODE_ENV=test sequelize db:seed:all"
   },
   "repository": {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import DynamicChips from '../../../../client/src/components/containers/forms/DynamicChips';
 
 const props = {
@@ -8,7 +8,7 @@ const props = {
   value: 'chair,table,camera',
   onChange: jest.fn(() => {})
 };
-const wrapper = shallow(<DynamicChips {...props} />);
+const wrapper = mount(<DynamicChips {...props} />);
 
 describe('DynamicChips Component', () => {
   it('should render contact person form', () => {

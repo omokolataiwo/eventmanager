@@ -225,7 +225,10 @@ export class Index extends Component {
 
                       return (
                         <div className="col s12 m4 l4" key={event.id}>
-                          <div className="card-panel event-card-user">
+                          <div
+                            className="card-panel event-card-user"
+                            style={{ maxHeight: '290px' }}
+                          >
                             <h6 className="truncate">
                               {event.title}
                               <i

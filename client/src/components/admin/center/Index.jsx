@@ -96,10 +96,6 @@ export class Index extends React.Component {
     );
     const { centers } = this.state;
     const activeCenter = centers.find(center => centerId === center.id);
-    this.setState({
-      activeCenter
-    });
-
     return this.setState({ activeCenter });
   }
 

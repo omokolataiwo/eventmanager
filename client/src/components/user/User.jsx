@@ -105,7 +105,9 @@ export class User extends React.Component {
                 </div>
 
                 <div className="login-container">
-                  <Link to="/signout">LOG OUT</Link>
+                  <Link to="/signout" className="signout">
+                    LOG OUT
+                  </Link>
                 </div>
               </div>
             </div>
