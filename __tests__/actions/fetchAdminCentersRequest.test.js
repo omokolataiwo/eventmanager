@@ -5,7 +5,7 @@ import moxios from 'moxios';
 import * as actionType from '../../client/src/types';
 import { fetchAdminCentersRequest } from '../../client/src/actions/fetchAdminCentersRequest';
 import { API_PATH } from '../../client/src/consts';
-import { userMock, event } from '../__mocks__/mockData';
+import { userMock } from '../__mocks__/mockData';
 import instance from '../../client/src/utils/axios';
 
 const mockStore = configureStore([thunk]);
@@ -16,7 +16,7 @@ describe('Fetch Admin Center Request', () => {
 
   describe('Fetch Admin Center Action', () => {
     it('should dispatch fetch admin action', (done) => {
-      moxios.stubRequest(`${API_PATH}/centers/admin?page=1`, {
+      moxios.stubRequest(`${API_PATH}/centers?page=1&admin=true`, {
         status: 200,
         response: {
           centers: [{ name: 'Sheba Center', address: '123 Abiola close' }],

@@ -129,7 +129,7 @@ export class Create extends React.Component {
   handleFormFieldChanged(event) {
     let { value, id } = event.target;
     if (id === 'startDate' || id === 'endDate') {
-      value = moment(value, 'YYYY-MM-D').format('YYYY-MM-D');
+      value = moment(new Date(value), 'YYYY-MM-D').format('YYYY-MM-D');
     }
     this.setState({
       event: {
@@ -196,7 +196,11 @@ export class Create extends React.Component {
    */
   render() {
     if (this.props.centerAction.getCenters === FETCHING_CENTERS) {
-      return <div className="preloader"><Preloader /></div>;
+      return (
+        <div className="preloader">
+          <Preloader />
+        </div>
+      );
     }
 
     if (this.props.centerAction.getCenters === FETCHING_CENTERS_ERROR) {
@@ -299,8 +303,11 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  createEventRequest,
-  fetchAllCentersRequest,
-  resetEventState: () => ({ type: RESET_EVENT_STATE })
-})(Create);
+export default connect(
+  mapStateToProps,
+  {
+    createEventRequest,
+    fetchAllCentersRequest,
+    resetEventState: () => ({ type: RESET_EVENT_STATE })
+  }
+)(Create);

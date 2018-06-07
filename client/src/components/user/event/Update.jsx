@@ -134,7 +134,7 @@ export class Update extends React.Component {
   handleFormFieldChanged(event) {
     let { value, id } = event.target;
     if (id === 'startDate' || id === 'endDate') {
-      value = moment(value, 'YYYY-MM-D').format('YYYY-MM-D');
+      value = moment(new Date(value), 'YYYY-MM-D').format('YYYY-MM-D');
     }
     this.setState({
       event: {
@@ -305,9 +305,12 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  updateEventRequest,
-  fetchUserEventRequest,
-  fetchAllCentersRequest,
-  reset
-})(Update);
+export default connect(
+  mapStateToProps,
+  {
+    updateEventRequest,
+    fetchUserEventRequest,
+    fetchAllCentersRequest,
+    reset
+  }
+)(Update);
