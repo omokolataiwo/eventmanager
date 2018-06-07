@@ -13,6 +13,7 @@ export const center = {
   address: '1 Olaoluwa street',
   area: 'Agege',
   facilities: 'Camera, Stage',
+  image: 'default_image',
   type: 1,
   amount: 300000,
   capacity: 400,

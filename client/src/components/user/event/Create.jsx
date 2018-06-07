@@ -129,7 +129,7 @@ export class Create extends React.Component {
   handleFormFieldChanged(event) {
     let { value, id } = event.target;
     if (id === 'startDate' || id === 'endDate') {
-      value = moment(value).format('YYYY-MM-D');
+      value = moment(value, 'YYYY-MM-D').format('YYYY-MM-D');
     }
     this.setState({
       event: {

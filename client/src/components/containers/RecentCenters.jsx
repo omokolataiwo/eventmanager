@@ -80,7 +80,7 @@ export class RecentCenters extends React.Component {
     }
 
     if (getCenters === RECEIVED_CENTERS && !this.props.centers.length) {
-      return 'No center record yet!';
+      return (<span>No center record yet!</span>);
     }
 
     return (

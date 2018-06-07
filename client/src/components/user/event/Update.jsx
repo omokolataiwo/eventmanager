@@ -29,12 +29,12 @@ const propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({ index: PropTypes.string.isRequired }).isRequired
   }).isRequired,
-  event: PropTypes.arrayOf(PropTypes.shape({
+  event: PropTypes.shape({
     title: PropTypes.string.isRequired,
     startDate: PropTypes.string.isRequired,
     endDate: PropTypes.string.isRequired,
     centerId: PropTypes.number.isRequired
-  })).isRequired,
+  }).isRequired,
   errors: PropTypes.shape().isRequired,
   actions: PropTypes.shape().isRequired,
   reset: PropTypes.func.isRequired
@@ -134,7 +134,7 @@ export class Update extends React.Component {
   handleFormFieldChanged(event) {
     let { value, id } = event.target;
     if (id === 'startDate' || id === 'endDate') {
-      value = moment(value).format('YYYY-MM-D');
+      value = moment(value, 'YYYY-MM-D').format('YYYY-MM-D');
     }
     this.setState({
       event: {

@@ -4,8 +4,8 @@ import PaginatedCentersCard from '../../../client/src/components/containers/Pagi
 
 jest.mock('jquery');
 const props = {
-  click: () => {},
-  handlePagingNav: () => {},
+  click: () => { },
+  handlePagingNav: () => { },
   history: {
     push: jest.fn(() => Promise.resolve(1)),
     replace: jest.fn(() => Promise.resolve(1))
@@ -30,4 +30,9 @@ describe('PaginatedCentersCard Component', () => {
   it('should render self and sub components', () => {
     expect(wrapper.exists()).toBe(true);
   });
+
+  it('should not render when there is no center', () => {
+    wrapper.setProps({ ...props, centers: [] })
+    expect(wrapper.find('span').text()).toEqual('Can not find center');
+  })
 });

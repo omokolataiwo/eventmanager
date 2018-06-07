@@ -3,6 +3,7 @@ import { shallow } from 'enzyme';
 import { Admin } from '../../../client/src/components/admin/Admin';
 import { events } from '../../__mocks__/event';
 const history = [];
+
 const props = {
   authenticated: true,
   userdata: { role: 3 },
@@ -13,7 +14,7 @@ const props = {
 const wrapper = shallow(<Admin {...props} />);
 
 describe('Admin Component', () => {
-  it('Redirect is user is not authorized user.', () => {
+  it('Redirect if user is not authorized user.', () => {
     expect(history.pop()).toEqual('/signin');
   });
   it('Render base component', () => {

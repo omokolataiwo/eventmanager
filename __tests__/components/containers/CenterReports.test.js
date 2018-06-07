@@ -9,12 +9,16 @@ const props = {
   activeCenter: {
     events: [eventBirthday]
   },
-  changeCenter: () => {}
+  changeCenter: () => { }
 };
 const wrapper = shallow(<CenterReports {...props} />);
 
 describe('CenterReports Component', () => {
   it('should render center with events', () => {
-    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('h6').text()).toEqual('1 event');
+  });
+  it('should not render when there is no center', () => {
+    wrapper.setProps({ ...props, centers: [] })
+    expect(wrapper.find('div').text()).toEqual('No center registered. Please register a center.');
   });
 });

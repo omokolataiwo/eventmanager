@@ -17,7 +17,7 @@ const propTypes = {
   match: PropTypes.shape({
     params: PropTypes.shape({ id: PropTypes.string.isRequired }).isRequired
   }).isRequired,
-  count: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
   events: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   center: PropTypes.shape().isRequired,
   action: PropTypes.shape({

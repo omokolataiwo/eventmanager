@@ -10,7 +10,8 @@ const propTypes = {
   onChange: PropTypes.func.isRequired,
   errorMessage: PropTypes.oneOfType([
     PropTypes.bool.isRequired,
-    PropTypes.string.isRequired
+    PropTypes.string.isRequired,
+    PropTypes.arrayOf(PropTypes.string)
   ])
 };
 

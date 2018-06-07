@@ -11,7 +11,7 @@ import { STATES } from '../../consts';
 const PaginatedCentersCard = ({
   centers, count, click, handlePagingNav
 }) => {
-  if (!Array.isArray(centers) || !centers.length) return 'Can not find center';
+  if (!Array.isArray(centers) || !centers.length) return (<span>Can not find center</span>);
   return (
     <div>
       <div className="row center">
@@ -19,7 +19,7 @@ const PaginatedCentersCard = ({
           <div
             onClick={() => click(center.id)}
             tabIndex="-99999"
-            onKeyUp={() => {}}
+            onKeyUp={() => { }}
             role="button"
           >
             <div className="col s12 m4 l4">
