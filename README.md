@@ -116,7 +116,7 @@ You can contribute to this project by:
 4.  Make changes and Commit following this recommended commit message format.
 5.  Raise a pull request against **_develop branch_**.
 
-**Note:** It is recommended to use [airbnb style guide(https://github.com/airbnb/javascript) coding convention when contributing to this codebase.
+**Note:** It is recommended to use [airbnb style guide](https://github.com/airbnb/javascript) coding convention when contributing to this codebase.
 
 ## API Endpoints
 
