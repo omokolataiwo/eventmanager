@@ -10,5 +10,7 @@ client/client/src/.sass-cache
 client/reports
 client/dist
 client/selenium-debug.log
+client/bin/selenium-server-standalone-3.9.1.jar
+client/bin/chromedriver
 .vscode
 project.todo
