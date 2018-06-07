@@ -18,7 +18,9 @@
       "selenium_port": 4444,
       "selenium_host": "localhost",
       "desiredCapabilities": {
-        "args": ["window-size=3000,3000"],
+        "chromeOptions": {
+          "args": ["window-size=2000,1800"]
+        },
         "browserName": "chrome",
         "javascriptEnabled": true,
         "acceptSslCerts": true,

@@ -3,13 +3,14 @@ import { shallow } from 'enzyme';
 import { User } from '../../../client/src/components/user/User';
 import user from '../../__mocks__/user';
 
+const history = [];
 const { userdata, accessToken } = user;
 const props = {
   history: {
-    push: jest.fn(() => {}),
-    replace: jest.fn(() => {})
+    push: jest.fn(path => history.push(path)),
+    replace: jest.fn(() => { })
   },
-  userdata,
+  userdata: { ...userdata, role: 0 },
   authenticated: true,
   match: {
     path: '/user/events'
@@ -23,7 +24,11 @@ const props = {
 const wrapper = shallow(<User {...props} />);
 
 describe('User Component', () => {
-  it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
+  it('redirects to signin page when user is not authorized.', () => {
+    expect(history.pop()).toEqual('/signin');
+    wrapper.unmount();
+  });
+  it('renders component', () => {
+    wrapper.setProps({ ...props, userdata: { ...props.userdata, role: 3 } });
   });
 });

@@ -40,7 +40,7 @@ export const adminCancelEventRequest = event => (dispatch, getState) => {
   ] = getState().user.accessToken;
 
   return instance
-    .delete(`centers/event/${event}`)
+    .delete(`/centers/event/${event}`)
     .then(response => {
       dispatch(deletedEvent(response.data.event.id));
     })

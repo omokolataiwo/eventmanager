@@ -144,15 +144,6 @@ export class Profile extends React.Component {
     const { value, id } = e.target;
     this.setState({ userdata: { ...this.state.userdata, [id]: value } });
 
-    // match password and password, it is a special case validation
-    // it requires to fields
-    if (id === 'matchPassword') {
-      return this.validate(id, {
-        password: this.state.userdata.password,
-        [id]: value
-      });
-    }
-
     this.validate(id, { [id]: value });
   }
   /**
@@ -168,7 +159,6 @@ export class Profile extends React.Component {
     });
     let error = [];
     if (errorMsg !== undefined) error = errorMsg[field];
-
     this.setState({
       errors: { ...this.state.errors, [field]: error }
     });

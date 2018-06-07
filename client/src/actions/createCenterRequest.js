@@ -1,5 +1,5 @@
 import instance from '../utils/axios';
-import { API_PATH } from '../consts';
+
 
 import {
   CREATED_NEW_CENTER,
@@ -48,7 +48,7 @@ export const createCenter = center => (dispatch, getState) => {
   }
 
   return instance
-    .post(`${API_PATH}/centers`, center)
+    .post(`/centers`, center)
     .then(response => dispatch(createdNewCenter(response.data)))
     .catch(error => {
       dispatch(creatingNewCenterError(error.response.data.errors));

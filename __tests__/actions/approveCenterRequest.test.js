@@ -1,3 +1,5 @@
+
+/* global describe beforeEach afterEach it expect */
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
@@ -41,7 +43,7 @@ describe('Approve Center Request', () => {
       });
     });
 
-    it('should return success message when super admin approves center', async (done) => {
+    it('should return error message when super admin approves center', async (done) => {
       const centerId = 'aa';
       moxios.stubRequest(`${API_PATH}/centers/approve/${centerId}`, {
         status: 422,

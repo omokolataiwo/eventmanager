@@ -1,6 +1,7 @@
 import sequelize from 'sequelize';
 import moment from 'moment';
 import models from '../models';
+import adminAuthentication from '../middleware/adminAuthentication';
 import {
   PENDING_CENTER,
   ACTIVE_CENTER,
@@ -84,14 +85,39 @@ export default class CenterController {
    * @param {object} res - Server response
    * @returns {*} - Server response
    */
-  static async getCenters(req, res) {
+  static getCenters(req, res) {
+    if (req.query.admin === 'true') {
+      const isAdmin = adminAuthentication(req, res, undefined, true);
+
+      return isAdmin === true
+        ? CenterController.handleGetCenters(req, res, { isAdmin })
+        : isAdmin;
+    }
+
+    return CenterController.handleGetCenters(req, res, { isAdmin: false });
+  }
+
+  /**
+   * Handle get centers
+   *
+   * @param {object} req - Server request
+   * @param {object} res - Server response
+   * @param {object} options - to get admin center or not
+   * @returns {*} - Server response
+   * @memberof CenterController
+   */
+  static async handleGetCenters(req, res, options) {
     try {
       const page = parseInt(req.query.page, 10) - 1 || 0;
+      const where = {};
+
+      where.ownerId = options.isAdmin ? req.user.id : { $ne: null };
+      if (!options.isAdmin) {
+        where.$and = [{ approve: APPROVED_CENTER }, { active: ACTIVE_CENTER }];
+      }
 
       const queryCondition = {
-        where: {
-          $and: [{ approve: APPROVED_CENTER }, { active: ACTIVE_CENTER }]
-        },
+        where,
         limit: LIMIT,
         offset: LIMIT * page,
         order: [['id', 'DESC']]
@@ -484,7 +510,6 @@ export default class CenterController {
    */
   static getOwnEvents(req, res) {
     const OFFSET = (parseInt(req.query.page, 10) - 1 || 0) * LIMIT;
-
     return models.sequelize
       .query(
         'SELECT events."title", events."startDate", events."endDate", users."firstName", users."lastName", users."phoneNumber", users."email", centers."name", centers."state", (SELECT COUNT(*) FROM centers, events, users WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."userId" = users."id" ) as count  FROM events, centers, users WHERE events."centerId" = centers.id AND centers."ownerId" = :ownerId AND events."userId" = users."id" ORDER BY events.id DESC LIMIT :limit OFFSET :offset',

@@ -5,8 +5,8 @@ import { center } from '../../../__mocks__/center';
 
 const props = {
   center,
-  click: jest.fn(() => {}),
-  handleViewEvents: jest.fn(() => {})
+  click: jest.fn(() => { }),
+  handleViewEvents: jest.fn(() => { })
 };
 
 const wrapper = shallow(<CenterDetailsEdit {...props} />);

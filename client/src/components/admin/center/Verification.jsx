@@ -24,11 +24,9 @@ export class Verification extends React.Component {
    */
   componentWillMount() {
     if (!hasFlash('NEW_CENTER_CREATED')) {
-      this.props.history.push('/admin');
-    } else {
-      getFlash('NEW_CENTER_CREATED'); // Remove from storage
-      this.props.reset(CREATING_NEW_CENTER);
+      return this.props.history.push('/admin');
     }
+    this.props.reset(CREATING_NEW_CENTER);
   }
   /**
    * Renders the page
@@ -37,20 +35,22 @@ export class Verification extends React.Component {
    * @memberof Verification
    */
   render() {
-    return (
-      <div className="container container-medium card">
-        <div className="row">
-          <div className="col s12 m10 l9">
-            <h5>New Center Created.</h5>
-            <p>An application has been opened to review your centre.</p>
-            <p>
-              The centre status will be active when our team is done reviewing
-              your application Thank you.
-            </p>
+    if (hasFlash('NEW_CENTER_CREATED') && getFlash('NEW_CENTER_CREATED')) {
+      return (
+        <div className="container container-medium card">
+          <div className="row">
+            <div className="col s12 m10 l9">
+              <h5>New Center Created.</h5>
+              <p>An application has been opened to review your centre.</p>
+              <p>
+                The centre status will be active when our team is done reviewing
+                your application Thank you.
+              </p>
+            </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 Verification.propTypes = propTypes;

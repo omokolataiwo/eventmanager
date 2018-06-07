@@ -225,7 +225,10 @@ export class Index extends Component {
 
                       return (
                         <div className="col s12 m4 l4" key={event.id}>
-                          <div className="card-panel event-card-user">
+                          <div
+                            className="card-panel event-card-user"
+                            style={{ maxHeight: '290px' }}
+                          >
                             <h6 className="truncate">
                               {event.title}
                               <i
@@ -272,8 +275,8 @@ export class Index extends Component {
                                 <div className="col s12 m9 l9 event-cancelled">
                                   <h6 className="truncate">EVENT CANCELLED</h6>
                                   <p>
-                                    You may want to click the edit button above
-                                    to change center.
+                                      You may want to click the edit button above
+                                      to change center.
                                   </p>
                                 </div>
                               )}
@@ -310,10 +313,10 @@ export class Index extends Component {
               </div>
             ) : (
               <h6 style={{ marginBottom: '150px', marginTop: '20px' }}>
-                You do not have any booking information.
+                  You do not have any booking information.
                 <a href="/user/event" style={{ display: 'block' }}>
-                  Book Your Event Now
-                </a>
+                    Book Your Event Now
+                  </a>
               </h6>
             )}
           </div>

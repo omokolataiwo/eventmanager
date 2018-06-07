@@ -8,10 +8,12 @@ export const defaultCenter = {
 };
 
 export const center = {
-  name: 'Sheba',
+  id: 1,
+  name: 'Sheba Center',
   address: '1 Olaoluwa street',
   area: 'Agege',
   facilities: 'Camera, Stage',
+  image: 'default_image',
   type: 1,
   amount: 300000,
   capacity: 400,
@@ -19,7 +21,10 @@ export const center = {
   active: 1
 };
 
-export const centers = [center, center];
+export const centers = [
+  center,
+  { ...center, id: 2, name: 'Immaculate Garden' }
+];
 
 export const contact = {
   firstName: 'Amosu',
