@@ -15,7 +15,7 @@ Event Manager is an application that manages event centers by giving a platform 
 - [Limitations](#limitations)
 - [How to Contribute](#how-to-contribute)
 - [API Endpoints](#api-endpoints)
-- [Troubleshooting & FAQ](#questions-and-support)
+- [Questions and Support](#questions-and-support)
 - [License](#license)
 
 ## Features
