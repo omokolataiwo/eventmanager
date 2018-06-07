@@ -52,7 +52,7 @@ export const fetchAdminCentersRequest = query => (dispatch, getState) => {
   ] = getState().user.accessToken;
 
   return instance
-    .get(`/centers/admin`, { params: query })
+    .get(`/centers`, { params: { ...query, admin: 'true' } })
     .then(response => {
       const { centers, count } = response.data;
       dispatch(receivedAdminCenter(centers, count));

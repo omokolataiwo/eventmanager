@@ -9,7 +9,7 @@ import { ACCOUNT_TYPE_ADMIN } from './const';
  * @param {object} next  - Next middleware
  * @return {*} - Server response
  */
-export default (req, res, next) => {
+export default (req, res, next, authOnly = false) => {
   const token = req.headers['x-access-token'];
   if (!token) {
     return res.status(422).json({
@@ -32,6 +32,6 @@ export default (req, res, next) => {
       });
     }
     req.user = decoded;
-    return next();
+    return authOnly ? true : next();
   });
 };
