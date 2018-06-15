@@ -31,7 +31,7 @@ const InputField = ({
   if (!id) return null;
 
   return (
-    <div className={`input-field col s12 m${width} l${width}`}>
+    <div className={`input-field col s12 m${width} l${width} ${id}`}>
       <input
         onChange={event => onChange(event)}
         id={id}

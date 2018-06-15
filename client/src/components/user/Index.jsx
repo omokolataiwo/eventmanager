@@ -58,7 +58,6 @@ export class Index extends Component {
     if (hasFlash('saveRoute')) {
       return this.props.history.push(getFlash('saveRoute'));
     }
-
     if (hasFlash(CREATED_EVENT)) {
       toastr.options = {
         positionClass: 'toast-top-full-width',
@@ -230,7 +229,7 @@ export class Index extends Component {
                             style={{ maxHeight: '290px' }}
                           >
                             <h6 className="truncate">
-                              {event.title}
+                              <span>{event.title}</span>
                               <i
                                 onClick={() =>
                                   this.handleDeletePopEvent(event.id)
@@ -275,8 +274,8 @@ export class Index extends Component {
                                 <div className="col s12 m9 l9 event-cancelled">
                                   <h6 className="truncate">EVENT CANCELLED</h6>
                                   <p>
-                                      You may want to click the edit button above
-                                      to change center.
+                                    You may want to click the edit button above
+                                    to change center.
                                   </p>
                                 </div>
                               )}
@@ -313,10 +312,10 @@ export class Index extends Component {
               </div>
             ) : (
               <h6 style={{ marginBottom: '150px', marginTop: '20px' }}>
-                  You do not have any booking information.
+                <span>You do not have any booking information.</span>
                 <a href="/user/event" style={{ display: 'block' }}>
-                    Book Your Event Now
-                  </a>
+                  Book Your Event Now
+                </a>
               </h6>
             )}
           </div>
@@ -347,9 +346,12 @@ const mapStateToProps = state => {
   return { events, count, actions };
 };
 
-export default connect(mapStateToProps, {
-  fetchUserEventsRequest,
-  fetchUserRequest,
-  deleteEventRequest,
-  reset
-})(Index);
+export default connect(
+  mapStateToProps,
+  {
+    fetchUserEventsRequest,
+    fetchUserRequest,
+    deleteEventRequest,
+    reset
+  }
+)(Index);

@@ -30,10 +30,10 @@ const propTypes = {
     params: PropTypes.shape({ index: PropTypes.string.isRequired }).isRequired
   }).isRequired,
   event: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    startDate: PropTypes.string.isRequired,
-    endDate: PropTypes.string.isRequired,
-    centerId: PropTypes.number.isRequired
+    title: PropTypes.string,
+    startDate: PropTypes.string,
+    endDate: PropTypes.string,
+    centerId: PropTypes.number
   }).isRequired,
   errors: PropTypes.shape().isRequired,
   actions: PropTypes.shape().isRequired,

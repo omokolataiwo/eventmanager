@@ -13,7 +13,7 @@ const propTypes = {
  */
 const ContactPersonForm = ({ onFieldChange, errors }) => (
   <span>
-    <div className="row">
+    <div className="row new-contact-form">
       <InputField
         onChange={onFieldChange}
         id="firstName"

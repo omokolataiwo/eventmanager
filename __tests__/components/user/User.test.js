@@ -8,7 +8,7 @@ const { userdata, accessToken } = user;
 const props = {
   history: {
     push: jest.fn(path => history.push(path)),
-    replace: jest.fn(() => { })
+    replace: jest.fn(() => {})
   },
   userdata: { ...userdata, role: 0 },
   authenticated: true,

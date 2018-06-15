@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Signin } from '../../../client/src/components/pages/Signin';
+import toastr from '../../__mocks__/toastr';
 
 const history = [];
 const props = {
@@ -15,60 +16,59 @@ const props = {
   authenticated: false
 };
 localStorage.setItem('newSignup', true);
-const wrapper = shallow(<Signin {...props} />);
+const wrapper = mount(<Signin {...props} />);
 
 describe('Signin Component', () => {
-  it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
+  it('should render self', () => {
+    expect(wrapper.find('input#username').exists()).toBe(true);
+    expect(wrapper.find('input#password').exists()).toBe(true);
+    expect(toastr.success).toHaveBeenCalled();
   });
-  it('should redirect to sign in page', () => {
-    const componentWillReceivePropsSpy = jest.spyOn(
-      wrapper.instance(),
-      'componentWillReceiveProps'
-    );
+  it('should redirect to appropriate page when user signed in', () => {
     wrapper.setProps({
       events: { signin: 'SIGNIN_USER' },
       userdata: { role: 2 }
     });
-    expect(componentWillReceivePropsSpy).toHaveBeenCalled();
     expect(history.pop()).toEqual('/admin');
   });
-  it('should store sign in error message in state', () => {
-    const componentWillReceivePropsSpy = jest.spyOn(
-      wrapper.instance(),
-      'componentWillReceiveProps'
-    );
+  it('should display error message on sign in', () => {
     wrapper.setProps({
       events: { signin: 'SIGNIN_USER_ERROR' },
       errors: {
         signin: ['Invalid username or password']
       }
     });
-    expect(componentWillReceivePropsSpy).toHaveBeenCalled();
-    expect(wrapper.state().errors.signin).toEqual([
-      'Invalid username or password'
-    ]);
+
+    expect(wrapper.find('.error.signin').text()).toEqual(
+      'Invalid username or password '
+    );
   });
   it('Should not sign in with no credential', () => {
-    const instance = wrapper.instance();
-    instance.signin({ preventDefault: jest.fn(() => {}) });
-    expect(wrapper.state().errors.signin).toEqual([
-      'Invalid username or password'
-    ]);
+    wrapper.find('input.btn').simulate('click');
+    expect(wrapper.find('.error.signin').text()).toEqual(
+      'Invalid username or password '
+    );
   });
 
   it('Should sign in user', () => {
-    const instance = wrapper.instance();
-    wrapper.setState({ user: { username: 'adlab', password: 'adpass' } });
-    instance.signin({ preventDefault: jest.fn(() => {}) });
+    wrapper
+      .find('input#username')
+      .simulate('change', { target: { value: 'adlab', id: 'username' } });
+    expect(wrapper.state('user').username).toEqual('adlab');
+    wrapper
+      .find('input#password')
+      .simulate('change', { target: { value: 'adpass', id: 'password' } });
+    expect(wrapper.state('user').password).toEqual('adpass');
+
+    wrapper.find('input.btn').simulate('click');
     expect(props.signinRequest).toHaveBeenCalled();
+    wrapper.unmount();
   });
 
-  it('should change state for each form field', () => {
-    const instance = wrapper.instance();
-    instance.handleFormFieldChanged({
-      target: { value: 'adlab', id: 'username' }
-    });
-    expect(wrapper.state().user.username).toEqual('adlab');
+  it('should not render when user is already authenticated', () => {
+    props.authenticated = true;
+    props.userdata = { role: 3 };
+    const wrapper = mount(<Signin {...props} />);
+    expect(history.pop()).toEqual('/user');
   });
 });

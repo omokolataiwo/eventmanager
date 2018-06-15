@@ -7,6 +7,6 @@ const wrapper = shallow(<Slider />);
 
 describe('Slider Component', () => {
   it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('li img').length).toEqual(7);
   });
 });

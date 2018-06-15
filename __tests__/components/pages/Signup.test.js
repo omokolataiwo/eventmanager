@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Signup } from '../../../client/src/components/pages/Signup';
 import userMock from '../../__mocks__/user';
 
@@ -15,72 +15,99 @@ const props = {
   authenticated: false
 };
 
-const wrapper = shallow(<Signup {...props} />);
+const wrapper = mount(<Signup {...props} />);
 
 describe('Signup Component', () => {
-  it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
+  it('should render self', () => {
+    expect(wrapper.find('.row.card h5 span').text()).toEqual('CREATE ACCOUNT');
   });
 
-  it('should redirect to sign in page', () => {
-    const componentWillReceivePropsSpy = jest.spyOn(
-      wrapper.instance(),
-      'componentWillReceiveProps'
+  it('should displays users error on input field change', () => {
+    wrapper.find('input#firstName').simulate('change', {
+      target: { id: 'firstName', value: 'Mathew' }
+    });
+    wrapper.find('input#lastName').simulate('change', {
+      target: { id: 'lastName', value: 'Andrew' }
+    });
+    wrapper.find('input#email').simulate('change', {
+      target: { id: 'email', value: 'admath@' }
+    });
+    wrapper.find('input#password').simulate('change', {
+      target: { id: 'password', value: '1235' }
+    });
+    wrapper.find('input#matchPassword').simulate('change', {
+      target: { id: 'matchPassword', value: '123' }
+    });
+
+    expect(wrapper.find('.email .errors').text()).toEqual(
+      'Email is not a valid email address '
     );
-    wrapper.setProps({ events: { signup: 'SIGNUP_USER' } });
-    expect(componentWillReceivePropsSpy).toHaveBeenCalled();
-    expect(history.pop()).toEqual('/signin');
+    expect(wrapper.find('.matchPassword .errors').text()).toEqual(
+      'Match password is not the same as Password '
+    );
+
+    // Force sign up despite validation errors
+
+    wrapper.find('.btn').simulate('click');
+    expect(wrapper.find('.email .errors').text()).toEqual(
+      'Email is not a valid email address '
+    );
+    expect(wrapper.find('.matchPassword .errors').text()).toEqual(
+      'Match password is not the same as Password '
+    );
   });
 
   it('should save error messages for invalid server validation', () => {
-    const componentWillReceivePropsSpy = jest.spyOn(
-      wrapper.instance(),
-      'componentWillReceiveProps'
-    );
     wrapper.setProps({
       events: { signup: 'SIGNUP_USER_ERROR' },
       errors: {
         username: ['username has already been used.']
       }
     });
-    expect(componentWillReceivePropsSpy).toHaveBeenCalled();
+
     expect(wrapper.state('errors').username).toEqual([
       'username has already been used.'
     ]);
-  });
-
-  it('should not create new user with invalid user data', () => {
-    const instance = wrapper.instance();
-    instance.registerUser({ preventDefault: jest.fn(() => {}) });
-    expect(wrapper.state().errors.firstName).toEqual([
-      'First name is required.'
-    ]);
-    expect(wrapper.state().errors.username).toEqual(['Username is required.']);
+    expect(wrapper.find('.username .errors').text()).toEqual(
+      'username has already been used. '
+    );
   });
 
   it('should create new user with valid user data', () => {
-    wrapper.setState({
-      userdata: {
-        ...userMock.userdata,
-        password: '123',
-        matchPassword: '123',
-        username: 'admin'
-      }
+    wrapper.find('input#firstName').simulate('change', {
+      target: { id: 'firstName', value: 'Mathew' }
     });
-    const instance = wrapper.instance();
-    instance.registerUser({ preventDefault: jest.fn(() => {}) });
+    wrapper.find('input#lastName').simulate('change', {
+      target: { id: 'lastName', value: 'Andrew' }
+    });
+    wrapper.find('input#phoneNumber').simulate('change', {
+      target: { id: 'phoneNumber', value: '08032108912' }
+    });
+    wrapper.find('input#email').simulate('change', {
+      target: { id: 'email', value: 'admath@mail.com' }
+    });
+    wrapper.find('input#username').simulate('change', {
+      target: { id: 'username', value: 'admath' }
+    });
+    wrapper.find('input#password').simulate('change', {
+      target: { id: 'password', value: '123' }
+    });
+    wrapper.find('input#matchPassword').simulate('change', {
+      target: { id: 'matchPassword', value: '123' }
+    });
+    wrapper.find('.btn').simulate('click');
     expect(props.createUserRequest).toHaveBeenCalled();
   });
 
-  it('should change state for each form field', () => {
-    const instance = wrapper.instance();
-    instance.handleFormFieldChanged({
-      target: { value: 'adlab', id: 'username' }
-    });
-    expect(wrapper.state().userdata.username).toEqual('adlab');
-    instance.handleFormFieldChanged({
-      target: { value: 'secret', id: 'matchPassword' }
-    });
-    expect(wrapper.state().userdata.matchPassword).toEqual('secret');
+  it('should redirect to sign in page on success sign up', () => {
+    wrapper.setProps({ events: { signup: 'SIGNUP_USER' } });
+    expect(history.pop()).toEqual('/signin');
+    wrapper.unmount();
+  });
+
+  it('should not render this component when already signed in', () => {
+    props.authenticated = true;
+    mount(<Signup {...props} />);
+    expect(history.pop()).toEqual('/signout');
   });
 });

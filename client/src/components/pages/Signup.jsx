@@ -181,7 +181,7 @@ export class Signup extends React.Component {
           <div className="col s12 m12 l12">
             <h5>
               <i className="material-icons left">person</i>
-              CREATE ACCOUNT
+              <span>CREATE ACCOUNT</span>
             </h5>
             <form>
               <Error messages={this.state.errors.signup} />
@@ -294,4 +294,7 @@ const mapStateToProps = state => {
   return { events, errors, authenticated };
 };
 
-export default connect(mapStateToProps, { createUserRequest })(Signup);
+export default connect(
+  mapStateToProps,
+  { createUserRequest }
+)(Signup);

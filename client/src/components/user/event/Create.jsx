@@ -30,7 +30,7 @@ const propTypes = {
   centerAction: PropTypes.shape().isRequired,
   actions: PropTypes.shape().isRequired,
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  count: PropTypes.string.isRequired,
+  count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   resetEventState: PropTypes.func.isRequired
 };
 

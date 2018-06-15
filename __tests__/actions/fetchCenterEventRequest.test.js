@@ -1,4 +1,4 @@
-/* global describe beforeEach afterEach it expect */
+/* global describe beforeAll afterAll it expect */
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
@@ -10,12 +10,12 @@ import instance from '../../client/src/utils/axios';
 
 const mockStore = configureStore([thunk]);
 
-describe('Fetch All Events for a CenterRequest', () => {
-  beforeEach(() => moxios.install(instance));
-  afterEach(() => moxios.uninstall());
+describe('Fetch all Events for a center request', () => {
+  beforeAll(() => moxios.install(instance));
+  afterAll(() => moxios.uninstall());
 
   describe('Fetch All Events for a Center Action', () => {
-    it('should dispatch fetch events action', (done) => {
+    it('should dispatch fetch center events action', (done) => {
       moxios.stubRequest(`${API_PATH}/centers/events?page=1`, {
         status: 200,
         response: {

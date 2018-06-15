@@ -38,9 +38,9 @@ describe('Create User Request', () => {
       });
     });
 
-    it('should dispatch created event action', (done) => {
+    it('should dispatch creating user action error messages', (done) => {
       moxios.stubRequest(`${API_PATH}/users`, {
-        status: 500,
+        status: 422,
         response: {
           errors: {
             phoneNumber: ['Invalid Phone Number']
