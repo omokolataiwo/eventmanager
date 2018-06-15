@@ -130,24 +130,16 @@ export class Update extends React.Component {
     } = props;
 
     if (getContactAction.getCenterContact === RECEIVED_CENTER_CONTACTS) {
-      if (contacts.length === 0) {
-        this.setState({
-          center: {
-            ...this.state.center,
-            newContact: true
+      this.setState({
+        center: {
+          ...this.state.center,
+          newContact: contacts.length === 0,
+          contact: {
+            ...this.state.center.contact,
+            existingContacts: contacts
           }
-        });
-      } else {
-        this.setState({
-          center: {
-            ...this.state.center,
-            contact: {
-              ...this.state.center.contact,
-              existingContacts: contacts
-            }
-          }
-        });
-      }
+        }
+      });
       props.reset(RESET_FETCHING_CENTER_CONTACTS);
     }
 
@@ -472,9 +464,12 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  updateCenterRequest,
-  getContactPersonRequest,
-  fetchCenterRequest,
-  reset
-})(Update);
+export default connect(
+  mapStateToProps,
+  {
+    updateCenterRequest,
+    getContactPersonRequest,
+    fetchCenterRequest,
+    reset
+  }
+)(Update);

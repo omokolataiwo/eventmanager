@@ -1,5 +1,4 @@
-
-/* global describe beforeEach afterEach it expect */
+/* global describe beforeAll afterAll it expect */
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import moxios from 'moxios';
@@ -13,8 +12,8 @@ const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
 describe('Approve Center Request', () => {
-  beforeEach(() => moxios.install(instance));
-  afterEach(() => moxios.uninstall());
+  beforeAll(() => moxios.install(instance));
+  afterAll(() => moxios.uninstall());
 
   describe('Approve Center Action', () => {
     it('should return success message when super admin approves center', async (done) => {
@@ -36,14 +35,13 @@ describe('Approve Center Request', () => {
         user: { accessToken: '39hesdv8787338727kj' }
       });
 
-
       store.dispatch(approveCenterRequest(centerId)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);
         done();
       });
     });
 
-    it('should return error message when super admin approves center', async (done) => {
+    it('should return error message when super admin approves center that does not exist', async (done) => {
       const centerId = 'aa';
       moxios.stubRequest(`${API_PATH}/centers/approve/${centerId}`, {
         status: 422,
@@ -66,7 +64,6 @@ describe('Approve Center Request', () => {
         }
       ];
       const store = mockStore({ ...userMock });
-
 
       store.dispatch(approveCenterRequest(centerId)).then(() => {
         expect(store.getActions()).toEqual(expectedActions);

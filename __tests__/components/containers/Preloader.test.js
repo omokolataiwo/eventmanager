@@ -14,7 +14,7 @@ const props = {
 const wrapper = shallow(<Preloader {...props} />);
 
 describe('Preloader Component', () => {
-  it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
+  it('should render self', () => {
+    expect(wrapper.find('.preloader-wrapper').exists()).toBe(true);
   });
 });

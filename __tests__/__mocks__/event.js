@@ -10,12 +10,16 @@ export const defaultEvent = {
 };
 
 export const eventBirthday = {
+  id: 1,
+  eid: 1,
   title: 'Birthday Party',
   startDate: '2018-10-12',
   endDate: '2018-10-12'
 };
 
 export const eventWedding = {
+  id: 2,
+  eid: 2,
   title: 'Wedding Anniversary',
   startDate: '2018-10-12',
   endDate: '2018-10-12'

@@ -1,6 +1,5 @@
 import React from 'react';
 import formatNumber from 'format-num';
-import { Link } from 'react-router-dom';
 import Pagination from './Pagination';
 import { STATES } from '../../consts';
 
@@ -11,11 +10,12 @@ import { STATES } from '../../consts';
  */
 const CentersCard = ({ centers, count, handlePagingNav }) => {
   if (!Array.isArray(centers) || !centers.length) return null;
+
   return (
     <div className="animated fadeIn">
       <div className="row center">
         {centers.map(center => (
-          <Link href="#center" to={`/center/${center.id}`} key={center.id}>
+          <a href={`/center/${center.id}`} key={center.id}>
             <div className="col s12 m4 l4">
               <div className="event-center card">
                 <img src={center.image} alt="Featured Center" />
@@ -29,7 +29,7 @@ const CentersCard = ({ centers, count, handlePagingNav }) => {
                 </div>
               </div>
             </div>
-          </Link>
+          </a>
         ))}
       </div>
       <Pagination total={count} handlePagingNav={handlePagingNav} />

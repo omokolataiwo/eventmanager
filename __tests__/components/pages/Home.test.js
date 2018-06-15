@@ -12,7 +12,6 @@ const wrapper = shallow(<Home {...props} />);
 
 describe('Home Component', () => {
   it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find('.featured-centers')).toHaveLength(1);
+    expect(wrapper.find('h3').text()).toEqual('HOW IT WORKS');
   });
 });

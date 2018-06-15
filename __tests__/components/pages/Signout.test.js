@@ -1,10 +1,14 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 import { Signout } from '../../../client/src/components/pages/Signout';
+import toastr from '../../__mocks__/toastr';
 
+const history = [];
 const props = {
   history: {
-    replace: jest.fn(() => {})
+    replace: jest.fn(path => {
+      history.push(path);
+    })
   },
   signoutRequest: jest.fn(() => {})
 };
@@ -12,7 +16,9 @@ const props = {
 const wrapper = shallow(<Signout {...props} />);
 
 describe('Signout Component', () => {
-  it('should render self and sub components', () => {
-    expect(wrapper.exists()).toBe(true);
+  it('should request signout and redirect to base page', () => {
+    expect(props.signoutRequest).toHaveBeenCalled();
+    expect(toastr.success).toHaveBeenCalledWith('Sign out successfully.');
+    expect(history.pop()).toEqual('/');
   });
 });

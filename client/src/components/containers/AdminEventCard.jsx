@@ -22,7 +22,7 @@ const AdminEventCard = ({ events, handleDeletePopEvent }) => {
         <div className="col s12 m4 l4" key={event.id}>
           <div className="card-panel event-card-admin">
             <h6 className="truncate">
-              {event.title}
+              <span>{event.title}</span>
               {handleDeletePopEvent && (
                 <i
                   onClick={() => handleDeletePopEvent(event.id)}

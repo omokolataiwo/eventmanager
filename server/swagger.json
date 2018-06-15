@@ -506,12 +506,26 @@
     },
     "/centers": {
       "get": {
-        "description": "#### Get all centers that are approved and avaliable.",
+        "description": "#### Get all centers",
         "summary": "Get Centers",
         "tags": ["Centers"],
+        "security": [
+          {
+            "adminToken": []
+          }
+        ],
         "operationId": "CentersGet",
         "produces": ["application/json"],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "admin",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "description":
+              "Set to true to fetch admin centers. NB: Token must be provided."
+          }
+        ],
         "responses": {
           "200": {
             "description": "Got available centers",

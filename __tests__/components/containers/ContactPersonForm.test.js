@@ -7,6 +7,6 @@ const wrapper = shallow(<ContactPersonForm {...props} />);
 
 describe('ContactPersonForm Component', () => {
   it('should render contact person form', () => {
-    expect(wrapper.exists()).toBe(true);
+    expect(wrapper.find('.new-contact-form').exists()).toBe(true);
   });
 });

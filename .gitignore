@@ -14,3 +14,4 @@ client/bin/selenium-server-standalone-3.9.1.jar
 client/bin/chromedriver
 .vscode
 project.todo
+__test__

@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const propTypes = {
-  boolValue: PropTypes.bool.isRequired,
+  boolValue: PropTypes.oneOfType([PropTypes.bool, PropTypes.number]).isRequired,
   handleToggle: PropTypes.func.isRequired,
-  id: PropTypes.string.isRequired,
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   label: PropTypes.bool
 };
 /**

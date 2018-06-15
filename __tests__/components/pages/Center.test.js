@@ -1,6 +1,8 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Center } from '../../../client/src/components/pages/Center';
+import { center } from '../../__mocks__/center';
+import { contactAda } from '../../__mocks__/contact';
 
 const history = [];
 const props = {
@@ -8,13 +10,7 @@ const props = {
     push: jest.fn(path => history.push(path)),
     replace: jest.fn(path => history.push(path))
   },
-  center: {
-    name: 'Sheba Center',
-    contacts: {
-      firstName: 'Adeoye',
-      lastName: 'Taiwo'
-    }
-  },
+  center: {},
   match: {
     params: { id: '2' }
   },
@@ -24,49 +20,44 @@ const props = {
   reset: jest.fn(() => Promise.resolve(1))
 };
 
-const wrapper = shallow(<Center {...props} />);
-wrapper.setProps({
-  action: { getCenter: 'FETCHING_CENTER' }
-});
+const wrapper = mount(<Center {...props} />);
 
 describe('Center Component', () => {
-  it('Render self and sub components', () => {
+  it('render preloader', () => {
+    wrapper.setProps({
+      action: { getCenter: 'FETCHING_CENTER' }
+    });
+    expect(wrapper.find('.preloader-wrapper').exists()).toBe(true);
+  });
+  it('redirect to 404 page when center not found', () => {
+    wrapper.setProps({
+      action: { getCenter: 'FETCHING_CENTER_ERROR' }
+    });
+    expect(history.pop()).toEqual('/404');
+  });
+
+  it('render self with center details', () => {
     wrapper.setProps({
       action: { getCenter: 'RECEIVED_CENTER' },
-      center: { ...props.center }
+      center: { ...center, contacts: null }
+    });
+    expect(wrapper.find('.contact-name').exists()).toBe(false);
+
+    wrapper.setProps({
+      action: { getCenter: 'RECEIVED_CENTER' },
+      center: { ...center, contacts: contactAda }
     });
 
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.find('.center-name').exists()).toBe(true);
     expect(wrapper.find('.center-name').text()).toEqual('Sheba Center');
     expect(wrapper.find('.contact-name').exists()).toBe(true);
-    expect(wrapper.find('.contact-name').text()).toEqual('Adeoye Taiwo');
-    wrapper.setProps({
-      action: { getCenter: 'RECEIVED_CENTER' },
-      center: { ...props.center, contacts: null }
-    });
-    expect(wrapper.find('.contact-name').exists()).toBe(false);
+    expect(wrapper.find('.contact-name').text()).toEqual('Ada Onugwu');
   });
-  it('Redirect to 404 page when center not found', () => {
-    const componentWillReceivePropsSpy = jest.spyOn(
-      wrapper.instance(),
-      'componentWillReceiveProps'
-    );
-    wrapper.setProps({
-      action: { getCenter: 'FETCHING_CENTER_ERROR' }
-    });
-    expect(componentWillReceivePropsSpy).toHaveBeenCalled();
-    expect(history.pop()).toEqual('/404');
-  });
-  it('Redirect to book center page', () => {
-    const instance = wrapper.instance();
-    instance.handleBookEvent({ preventDefault: jest.fn(() => {}) });
+
+  it('redirect to book center page', () => {
+    wrapper.find('.btn.blue').simulate('click');
     expect(history.pop()).toEqual('/user/event/create');
-  });
-  it('Render Preloader', () => {
-    wrapper.setProps({
-      action: { getCenter: 'FETCHING_CENTER' }
-    });
     wrapper.unmount();
   });
 });

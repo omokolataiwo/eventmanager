@@ -140,6 +140,7 @@ export class Create extends React.Component {
         this.setState({
           center: {
             ...this.state.center,
+            newContact: false,
             contact: {
               ...this.state.center.contact,
               existingContacts: contacts
@@ -254,11 +255,10 @@ export class Create extends React.Component {
     const { image } = this.state.center;
     if (!image || (image.type !== 'image/jpeg' && image.type !== 'image/png')) {
       return this.setState({
-        errors:
-          {
-            ...this.state.errors,
-            image: ['Please upload a jpeg/png format image.']
-          }
+        errors: {
+          ...this.state.errors,
+          image: ['Please upload a jpeg/png format image.']
+        }
       });
     }
 
@@ -414,7 +414,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {
-  createCenterRequest,
-  getContactPersonRequest
-})(Create);
+export default connect(
+  mapStateToProps,
+  {
+    createCenterRequest,
+    getContactPersonRequest
+  }
+)(Create);

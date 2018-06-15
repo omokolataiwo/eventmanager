@@ -3,72 +3,119 @@ import { shallow } from 'enzyme';
 import { Index } from '../../../client/src/components/user/Index';
 import { events } from '../../__mocks__/event';
 import { center } from '../../__mocks__/center';
-import user from '../../__mocks__/user';
-import toastr from '../../__mocks__/toastr';
 
-const { userdata, accessToken } = user;
-
-const eventsWithCenter = events.map(event => {
+let eventsWithCenter = events.map(event => {
   return { ...event, center };
 });
+eventsWithCenter[1] = {
+  ...eventsWithCenter[1],
+  centerId: 0,
+  startDate: '2018-2-3'
+};
 
 const history = [];
 
 const props = {
   history: {
-    push: jest.fn((path) => history.push(path)),
-    replace: jest.fn(() => { })
+    push: jest.fn(path => history.push(path)),
+    replace: jest.fn(() => {})
   },
-  fetchUserRequest: jest.fn(() => { }),
-  fetchUserEventsRequest: jest.fn(() => { }),
-  deleteEventRequest: jest.fn(() => { }),
-  reset: jest.fn(() => { }),
-  actions: {},
-  events: eventsWithCenter,
-  count: events.length,
-  accessToken
+  fetchUserRequest: jest.fn(() => {}),
+  fetchUserEventsRequest: jest.fn(() => {}),
+  deleteEventRequest: jest.fn(eventId => {
+    eventsWithCenter = eventsWithCenter.filter(event => event.id !== eventId);
+    localStorage.setItem('page', 2);
+    wrapper.setProps({
+      events: eventsWithCenter,
+      actions: { cancel: 'DELETED_EVENT' }
+    });
+  }),
+  reset: jest.fn(() => {}),
+  actions: {
+    getEvents: 'FETCHING_EVENTS'
+  },
+  events: [],
+  count: 0
 };
-localStorage.setItem('saveRoute', '/user/event');
+localStorage.setItem('CREATED_EVENT', true);
 
 const wrapper = shallow(<Index {...props} />);
 
+const eventsTitleAtIndex = index =>
+  wrapper
+    .find('h6 span')
+    .children()
+    .at(index)
+    .text();
+
 describe('Index Component', () => {
-  it('get events with pagination on previous page', () => {
-    localStorage.setItem('page', 2);
-    wrapper.setProps({ ...props, events: [] })
-    expect(props.fetchUserEventsRequest).toHaveBeenCalled();
+  it('should render preloader', () => {
+    expect(wrapper.find('.preloader').exists()).toEqual(true);
   });
 
-  it('get events when user delete an event', () => {
-    localStorage.setItem('page', 0);
-    wrapper.setProps({ ...props, events: eventsWithCenter, actions: { cancel: 'DELETED_EVENT' } })
-    expect(props.fetchUserEventsRequest).toHaveBeenCalled();
+  it('should render card without event', () => {
+    wrapper.setProps({
+      actions: {
+        getEvents: 'RECEIVED_EVENTS'
+      }
+    });
+    expect(wrapper.find('h6 span').text()).toEqual(
+      'You do not have any booking information.'
+    );
+  });
+  it('should render event card', () => {
+    wrapper.setProps({
+      events: eventsWithCenter,
+      actions: {
+        getEvents: 'RECEIVED_EVENTS'
+      }
+    });
+
+    expect(eventsTitleAtIndex(0)).toEqual('Birthday Party');
+    expect(eventsTitleAtIndex(1)).toEqual('Wedding Anniversary');
   });
 
+  it('redirect to edit page', () => {
+    const editIcon = wrapper.find('.edit');
+    editIcon.at(0).simulate('keyup');
+    editIcon.at(0).simulate('click');
+    expect(history.pop()).toEqual('/user/event/update/1');
+    editIcon.at(1).simulate('keyup');
+    editIcon.at(1).simulate('click');
+    expect(history.pop()).toEqual('/user/event/update/2');
+  });
+
+  it('cancel an event', () => {
+    let deleteIcon = wrapper.find('.delete');
+    deleteIcon.at(0).simulate('keyup');
+    deleteIcon.at(0).simulate('click');
+    expect(wrapper.state('poppedEvent')).toEqual(1);
+    wrapper.find('.red.btn').simulate('click');
+    expect(props.deleteEventRequest).toHaveBeenCalledWith(1);
+    expect(eventsTitleAtIndex(0)).toEqual('Wedding Anniversary');
+
+    // remove the second event
+    deleteIcon = wrapper.find('.delete');
+    deleteIcon.at(0).simulate('click');
+    expect(wrapper.state('poppedEvent')).toEqual(2);
+
+    wrapper.find('.red.btn').simulate('click');
+    expect(props.deleteEventRequest).toHaveBeenCalledWith(2);
+    expect(eventsTitleAtIndex(0)).toEqual(
+      'You do not have any booking information.'
+    );
+  });
 
   it('get events by pagination', () => {
     const instance = wrapper.instance();
     instance.handlePagingNav(3);
     expect(props.fetchUserEventsRequest).toHaveBeenCalled();
-  });
-
-  it('redirect to edit page', () => {
-    const instance = wrapper.instance();
-    instance.handleEditEvent(3);
-    expect(history.pop()).toEqual('/user/event/update/3');
-  });
-
-  it('add event for delete in state', () => {
-    const instance = wrapper.instance();
-    instance.handleDeletePopEvent(3);
-    expect(wrapper.state().poppedEvent).toEqual(3);
-  });
-
-  it('cancel an event', () => {
-    const instance = wrapper.instance();
-    instance.cancelEvent(3);
-    expect(props.deleteEventRequest).toHaveBeenCalled();
     wrapper.unmount();
-    localStorage.setItem('CREATED_EVENT', true);
+  });
+
+  it('should redirect to create event page if user has pending booking choice', () => {
+    localStorage.setItem('saveRoute', '/user/event');
+    shallow(<Index {...props} />);
+    expect(history.pop()).toEqual('/user/event');
   });
 });
