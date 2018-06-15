@@ -121,4 +121,7 @@ const mapStateToProps = state => {
   const { searched, count } = state.searchCenters;
   return { searched, count };
 };
-export default connect(mapStateToProps, { searchCenterRequest })(Search);
+export default connect(
+  mapStateToProps,
+  { searchCenterRequest }
+)(Search);

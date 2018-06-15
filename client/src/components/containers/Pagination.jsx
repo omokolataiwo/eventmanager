@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 const propTypes = {
   total: PropTypes.number.isRequired,
@@ -18,7 +19,7 @@ const Pagination = ({ total, handlePagingNav }) => {
   return (
     <ul className="pagination">
       {new Array(count).fill(null).map((array, index) => (
-        <li className="active">
+        <li className="active" key={Math.floor(moment() * Math.random())}>
           <div onClick={() => handlePagingNav(index + 1)}>{index + 1}</div>
         </li>
       ))}

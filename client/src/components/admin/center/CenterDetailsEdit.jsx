@@ -45,7 +45,7 @@ export const CenterDetailsEdit = ({ center, click, handleViewEvents }) => {
         <div>
           <span className="location">
             <i className="material-icons left">location_on</i>
-            {STATES[state - 1]}
+            <span>{STATES[state - 1]}</span>
           </span>
           &nbsp;
           <span className="type">{CENTER_TYPE[type - 1]}</span>

@@ -6,17 +6,19 @@ const props = {
   history: {
     push: jest.fn(path => history.push(path)),
     replace: jest.fn(path => history.push(path))
-  }
+  },
+  reset: () => {}
 };
-
+localStorage.setItem('NEW_CENTER_CREATED', true);
 const wrapper = shallow(<Verification {...props} />);
 
-localStorage.setItem('NEW_CENTER_CREATED', true);
 describe('Verification Component', () => {
-  it('should not render when center is not created.', () => {
-    expect(history.pop()).toEqual('/admin');
-  });
   it('should render component.', () => {
-    wrapper.setProps({ ...props });
+    expect(wrapper.find('h5').text()).toEqual('New Center Created.');
+  });
+
+  it('should redirect to dashboard if new center is not created.', () => {
+    shallow(<Verification {...props} />);
+    expect(history.pop()).toEqual('/admin');
   });
 });

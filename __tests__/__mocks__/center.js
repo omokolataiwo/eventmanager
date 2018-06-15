@@ -17,7 +17,7 @@ export const center = {
   type: 1,
   amount: 300000,
   capacity: 400,
-  state: 26,
+  state: 25,
   active: 1
 };
 

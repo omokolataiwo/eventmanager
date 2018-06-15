@@ -1,6 +1,7 @@
 import React from 'react';
 import PropsType from 'prop-types';
 import formatNumber from 'format-num';
+import moment from 'moment';
 
 import { STATES, CENTER_TYPE } from '../../../consts';
 
@@ -40,9 +41,11 @@ export const CenterDetailsSimple = ({
           {formatNumber(capacity)} Capacity
         </p>
         <div>
-          {facilities
-            .split(',')
-            .map(facility => <div className="chip">{facility}</div>)}
+          {facilities.split(',').map(facility => (
+            <div className="chip" key={Math.floor(moment() * Math.random())}>
+              {facility}
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const Error = ({ messages, id }) => {
   return (
     <div className={`error ${id}`}>
       {messages.map((message, index) => (
-        <span key={index}>{message}&nbsp;</span> //eslint-disable-line
+        <span key={index}>{message} </span> //eslint-disable-line
       ))}
     </div>
   );

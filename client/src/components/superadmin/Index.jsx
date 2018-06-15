@@ -97,6 +97,7 @@ export class Index extends React.Component {
     if (!Array.isArray(this.state.centers) || !this.state.centers.length) {
       return null;
     }
+
     return (
       <table className="bordered responsive-table">
         <thead>
@@ -165,7 +166,10 @@ const mapStateToProps = state => {
   const { centers, count } = state.getAvailableCenters;
   return { centers, count };
 };
-export default connect(mapStateToProps, {
-  fetchAllCentersRequest,
-  approveCenterRequest
-})(Index);
+export default connect(
+  mapStateToProps,
+  {
+    fetchAllCentersRequest,
+    approveCenterRequest
+  }
+)(Index);
