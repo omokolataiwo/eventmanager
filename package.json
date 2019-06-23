@@ -14,7 +14,7 @@
     "client:test":
       "jest __tests__ --coverage --collectCoverageFrom=client/src/**/*.{js,jsx} && codecov -t d26319dd-01b7-4456-bb9b-4196ce3c2a9e",
     "server:test":
-      "nyc --reporter=html --reporter=text mocha --exit --compilers js:babel-core/register server/v2/test/**/**.spec.js && npm run coverage",
+      "nyc --reporter=html --reporter=text mocha --exit --require js:babel-core/register server/v2/test/**/**.spec.js && npm run coverage",
     "nightwatch": "npm run db:reset && cd ./client && nightwatch",
     "start:server:dev": "nodemon dist/index.js",
     "start:client:dev":
